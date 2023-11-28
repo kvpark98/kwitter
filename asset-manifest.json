@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/learn-korean-well/static/css/main.b12fbfc8.css",
+    "main.js": "/learn-korean-well/static/js/main.f80793e0.js",
+    "index.html": "/learn-korean-well/index.html",
+    "main.b12fbfc8.css.map": "/learn-korean-well/static/css/main.b12fbfc8.css.map",
+    "main.f80793e0.js.map": "/learn-korean-well/static/js/main.f80793e0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b12fbfc8.css",
+    "static/js/main.f80793e0.js"
+  ]
+}
