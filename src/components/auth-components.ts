@@ -4,6 +4,7 @@ export const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   width: 420px;
   padding: 50px 0px;
@@ -11,7 +12,7 @@ export const Wrapper = styled.div`
 export const Title = styled.h1`
   font-size: 42px;
 `;
-export const Form = styled.form`
+export const Forms = styled.form`
   margin-top: 50px;
   margin-bottom: 10px;
   display: flex;
@@ -40,8 +41,12 @@ export const Error = styled.span`
   color: tomato;
 `;
 
-export const Switcher = styled.span`
+export const Switcher = styled.div`
+  width: 100%;
   margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   a {
     margin-left: 5px;
     color: #1d9bf0;

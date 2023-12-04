@@ -5,13 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
   Error,
-  Form,
+  Forms,
   Input,
   Switcher,
   Title,
   Wrapper,
 } from "../components/auth-components";
 import GithubButton from "../components/github-btn";
+import GoogleButton from "../components/google-btn";
 
 export default function CreateAccount() {
   const navigate = useNavigate();
@@ -60,13 +61,12 @@ export default function CreateAccount() {
     } finally {
       setIsLoading(false);
     }
-
     console.log(name, email, password);
   };
   return (
     <Wrapper>
       <Title>Join 〽</Title>
-      <Form onSubmit={onSubmit}>
+      <Forms onSubmit={onSubmit}>
         <Input
           onChange={onChange}
           name="name"
@@ -95,12 +95,15 @@ export default function CreateAccount() {
           type="submit"
           value={isLoading ? "Loading..." : "Create Account"}
         />
-      </Form>
+      </Forms>
       {error !== "" ? <Error>{error}</Error> : null}
       <Switcher>
-        Already have an account? <Link to="/login">Log in &rarr;</Link>
+        <Link to="/login">Login &rarr;</Link>
       </Switcher>
-      <GithubButton />
+      <div className="d-flex justify-content-between">
+        <GoogleButton />
+        <GithubButton />
+      </div>
     </Wrapper>
   );
 }
