@@ -41,16 +41,20 @@ export default function Login() {
     }
   };
 
+  const [show3, setShow3] = useState(false);
+  const handleClose3 = () => setShow3(false);
+  const handleShow3 = () => setShow3(true);
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name, value },
     } = event;
     if (name === "email") {
-      setEmail(value);
+      setEmail(value.replace(/\s/gi, ""));
     } else if (name === "password") {
-      setPassword(value);
+      setPassword(value.replace(/\s/gi, ""));
     } else if (name === "emailPassword") {
-      setEmailPassword(value);
+      setEmailPassword(value.replace(/\s/gi, ""));
     }
   };
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -63,8 +67,13 @@ export default function Login() {
       setIsLoading(true);
       // Log in
       await signInWithEmailAndPassword(auth, email, password);
+
       // Ridirect to the home page
-      navigate("/");
+      if (auth.currentUser?.emailVerified === true) {
+        navigate("/");
+      } else {
+        handleShow3();
+      }
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.message);
@@ -85,6 +94,8 @@ export default function Login() {
       console.log(error);
     }
   };
+
+  console.log(auth.currentUser?.emailVerified);
   return (
     <Wrapper>
       <Title>Log into 〽</Title>
@@ -103,6 +114,7 @@ export default function Login() {
           value={password}
           placeholder="Password"
           type="password"
+          maxLength={20}
           required
         />
         <Input type="submit" value={isLoading ? "Loading..." : "Log in"} />
@@ -118,6 +130,7 @@ export default function Login() {
           </Button>
         </div>
       </Switcher>
+      {/* Modal 1 */}
       <Modal
         show={show}
         onHide={handleClose}
@@ -145,6 +158,7 @@ export default function Login() {
           </Modal.Footer>
         </Form>
       </Modal>
+      {/* Modal 2 */}
       <Modal
         show={show2}
         onHide={handleClose2}
@@ -160,6 +174,25 @@ export default function Login() {
         <Modal.Footer className="border-0">
           <Button variant="secondary" onClick={handleClose2}>
             Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Modal 3 */}
+      <Modal
+        show={show3}
+        onHide={handleClose3}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header className="border-0"></Modal.Header>
+        <Modal.Body>
+          <span className="text-dark">
+            You cannot login until you confirm your email.
+          </span>
+        </Modal.Body>
+        <Modal.Footer className="border-0">
+          <Button variant="secondary" onClick={handleClose3}>
+            Ok
           </Button>
         </Modal.Footer>
       </Modal>
