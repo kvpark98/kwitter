@@ -7,6 +7,7 @@ export default function Home() {
     auth.signOut();
     navigate("/login");
   };
+  console.log(auth.currentUser?.emailVerified);
   return (
     <h1>
       <button onClick={logOut}>Log Out</button>

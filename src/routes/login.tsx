@@ -94,7 +94,7 @@ export default function Login() {
       console.log(error);
     }
   };
-
+  console.log(auth.currentUser);
   console.log(auth.currentUser?.emailVerified);
   return (
     <Wrapper>

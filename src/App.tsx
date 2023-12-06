@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import Loading from "./components/loading";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-route";
+import ProtectedRoute2 from "./components/protected-route 2";
 
 const router = createBrowserRouter([
   {
@@ -33,11 +34,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <ProtectedRoute2>
+        <Login />
+      </ProtectedRoute2>
+    ),
   },
   {
     path: "/create-account",
-    element: <CreateAccount />,
+    element: (
+      <ProtectedRoute2>
+        <CreateAccount />
+      </ProtectedRoute2>
+    ),
   },
 ]);
 
