@@ -19,6 +19,8 @@ import GithubButton from "../components/github-btn";
 import GoogleButton from "../components/google-btn";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import styles from "../App.module.css";
 
 export default function CreateAccount() {
   const navigate = useNavigate();
@@ -27,6 +29,8 @@ export default function CreateAccount() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const [validated, setValidated] = useState(false);
 
   const logOut = () => {
     auth.signOut();
@@ -54,10 +58,20 @@ export default function CreateAccount() {
   };
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setValidated(true);
+
     setError("");
+
     if (isLoading || name === "" || email === "" || password === "") {
       return;
     }
+
     try {
       setIsLoading(true);
 
@@ -91,7 +105,7 @@ export default function CreateAccount() {
   return (
     <Wrapper>
       <Title>Join 〽</Title>
-      <Forms onSubmit={onSubmit}>
+      {/* <Forms onSubmit={onSubmit}>
         <Input
           onChange={onChange}
           name="name"
@@ -122,7 +136,79 @@ export default function CreateAccount() {
           type="submit"
           value={isLoading ? "Loading..." : "Create Account"}
         />
-      </Forms>
+      </Forms> */}
+      <Form
+        noValidate
+        validated={validated}
+        onSubmit={onSubmit}
+        style={{
+          width: "100%",
+          marginTop: "50px",
+          marginBottom: "10px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        <Form.Group controlId="validationName">
+          <Form.Control
+            style={{
+              width: "100%",
+              borderRadius: "50px",
+              border: "none",
+            }}
+            required
+            onChange={onChange}
+            name="name"
+            value={name}
+            type="text"
+            placeholder="Name"
+          />
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            Please enter your name.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="validationEmail">
+          <Form.Control
+            style={{
+              width: "100%",
+              borderRadius: "50px",
+              border: "none",
+            }}
+            required
+            onChange={onChange}
+            name="email"
+            value={email}
+            type="email"
+            placeholder="Email"
+          />
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            Please enter your email.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="validationPassword">
+          <Form.Control
+            style={{
+              width: "100%",
+              borderRadius: "50px",
+              border: "none",
+            }}
+            required
+            onChange={onChange}
+            name="password"
+            value={password}
+            type="password"
+            placeholder="Password"
+          />
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            Please enter your password.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button type="submit">Create Account</Button>
+      </Form>
       {error !== "" ? <Error>{error}</Error> : null}
       <Switcher>
         <Link to="/login">Login &rarr;</Link>

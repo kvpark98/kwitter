@@ -28,6 +28,8 @@ export default function Login() {
   const [emailPassword, setEmailPassword] = useState("");
   const [error, setError] = useState("");
 
+  const [validated, setValidated] = useState(false);
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -59,7 +61,16 @@ export default function Login() {
   };
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setValidated(true);
+
     setError("");
+
     if (isLoading || email === "" || password === "") {
       return;
     }
@@ -98,8 +109,8 @@ export default function Login() {
   console.log(auth.currentUser?.emailVerified);
   return (
     <Wrapper>
-      <Title>Log into 〽</Title>
-      <Forms onSubmit={onSubmit}>
+      <Title>Login</Title>
+      {/* <Forms onSubmit={onSubmit}>
         <Input
           onChange={onChange}
           name="email"
@@ -118,7 +129,58 @@ export default function Login() {
           required
         />
         <Input type="submit" value={isLoading ? "Loading..." : "Log in"} />
-      </Forms>
+      </Forms> */}
+      <Form
+        noValidate
+        validated={validated}
+        onSubmit={onSubmit}
+        style={{
+          width: "100%",
+          marginTop: "50px",
+          marginBottom: "10px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        <Form.Group controlId="validationEmail">
+          <Form.Control
+            style={{
+              width: "100%",
+              borderRadius: "50px",
+              border: "none",
+            }}
+            required
+            onChange={onChange}
+            name="email"
+            value={email}
+            type="email"
+            placeholder="Email"
+          />
+          <Form.Control.Feedback type="invalid">
+            Please enter your email.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="validationPassword">
+          <Form.Control
+            style={{
+              width: "100%",
+              borderRadius: "50px",
+              border: "none",
+            }}
+            required
+            onChange={onChange}
+            name="password"
+            value={password}
+            type="password"
+            placeholder="Password"
+          />
+          <Form.Control.Feedback type="invalid">
+            Please enter your password.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button type="submit">Login</Button>
+      </Form>
       {error !== "" ? <Error>{error}</Error> : null}
       <Switcher>
         <div>

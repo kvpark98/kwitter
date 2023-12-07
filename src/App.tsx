@@ -12,6 +12,7 @@ import Loading from "./components/loading";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-route";
 import ProtectedRoute2 from "./components/protected-route 2";
+import "./App.module.css";
 
 const router = createBrowserRouter([
   {

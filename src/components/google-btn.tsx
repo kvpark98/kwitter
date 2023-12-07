@@ -36,7 +36,6 @@ export default function GoogleButton() {
   return (
     <Button onClick={onClick}>
       <Logo src="/google-logo.png" />
-      Continue with Google
     </Button>
   );
 }
