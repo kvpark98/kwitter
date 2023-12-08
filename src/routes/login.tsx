@@ -4,16 +4,10 @@ import { FirebaseError } from "firebase/app";
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  updatePassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
-import {
-  Error,
-  Forms,
-  Input,
-  Switcher,
-  Title,
-  Wrapper,
-} from "../components/auth-components";
+import { Error, Switcher, Title, Wrapper } from "../components/auth-components";
 import GithubButton from "../components/github-btn";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -27,8 +21,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [emailPassword, setEmailPassword] = useState("");
   const [error, setError] = useState("");
-
-  const [validated, setValidated] = useState(false);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -61,13 +53,6 @@ export default function Login() {
   };
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    setValidated(true);
 
     setError("");
 
@@ -110,29 +95,7 @@ export default function Login() {
   return (
     <Wrapper>
       <Title>Login</Title>
-      {/* <Forms onSubmit={onSubmit}>
-        <Input
-          onChange={onChange}
-          name="email"
-          value={email}
-          placeholder="Email"
-          type="email"
-          required
-        />
-        <Input
-          onChange={onChange}
-          name="password"
-          value={password}
-          placeholder="Password"
-          type="password"
-          maxLength={20}
-          required
-        />
-        <Input type="submit" value={isLoading ? "Loading..." : "Log in"} />
-      </Forms> */}
       <Form
-        noValidate
-        validated={validated}
         onSubmit={onSubmit}
         style={{
           width: "100%",
@@ -174,12 +137,15 @@ export default function Login() {
             value={password}
             type="password"
             placeholder="Password"
+            maxLength={20}
           />
           <Form.Control.Feedback type="invalid">
             Please enter your password.
           </Form.Control.Feedback>
         </Form.Group>
-        <Button type="submit">Login</Button>
+        <Button type="submit" className="rounded-pill fw-bold">
+          {isLoading ? "Loading..." : "Log in"}
+        </Button>
       </Form>
       {error !== "" ? <Error>{error}</Error> : null}
       <Switcher>
