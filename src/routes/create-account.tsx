@@ -13,7 +13,7 @@ import GoogleButton from "../components/google-btn";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import styles from "../App.module.css";
+import Alert from "react-bootstrap/Alert";
 
 export default function CreateAccount() {
   const navigate = useNavigate();
@@ -25,7 +25,6 @@ export default function CreateAccount() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
-
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
@@ -45,14 +44,12 @@ export default function CreateAccount() {
     logOut();
   };
 
-  const [showEmailAlreadyInUseErrorModal, setShowEmailAlreadyInUseErrorModal] =
-    useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
-  const handleShowEmailAlreadyInUseErrorModal = () =>
-    setShowEmailAlreadyInUseErrorModal(true);
+  const handleShowErrorModal = () => setShowErrorModal(true);
 
-  const handleCloseEmailAlreadyInUseErrorModal = async () => {
-    setShowEmailAlreadyInUseErrorModal(false);
+  const handleCloseErrorModal = async () => {
+    setShowErrorModal(false);
   };
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,15 +71,11 @@ export default function CreateAccount() {
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const regex =
-      /^[A-Za-z0-9]{4,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+      /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     setEmail(value.replace(/\s/gi, ""));
     if (value !== "") {
       if (!regex.test(value)) {
         setEmailErrorMessage("Not a valid email format.");
-        setIsEmail(false);
-      } else if (error) {
-        setError("This email is already in use.");
-        setEmailErrorMessage("This email is already in use.");
         setIsEmail(false);
       } else {
         setIsEmail(true);
@@ -95,20 +88,26 @@ export default function CreateAccount() {
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{6,}$/;
+    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
     setPassword(value.replace(/\s/gi, ""));
     if (value !== "") {
       if (!regex.test(value)) {
         setPasswordErrorMessage(
-          "Please enter at least 6 characters including numbers, English, and special characters."
+          "Please enter at least 8 characters including numbers, English, and special characters."
         );
         setIsPassword(false);
       } else {
         setIsPassword(true);
       }
     } else {
-      setPasswordErrorMessage("Please enter your passwords.");
+      setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
+    }
+  };
+
+  const noSpace = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.code === "Space") {
+      event.preventDefault();
     }
   };
 
@@ -117,7 +116,7 @@ export default function CreateAccount() {
     navigate("/login");
   };
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (name === "") {
@@ -129,7 +128,7 @@ export default function CreateAccount() {
       setIsEmail(false);
     }
     if (password === "") {
-      setPasswordErrorMessage("Please enter your passwords.");
+      setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
     }
 
@@ -161,18 +160,19 @@ export default function CreateAccount() {
       handleShowEmailVerificationModal();
     } catch (error) {
       if (error instanceof FirebaseError) {
-        setError("This email is already in use.");
-        handleShowEmailAlreadyInUseErrorModal();
+        setError(error.code);
+        handleShowErrorModal();
       }
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <Wrapper>
       <Title>Create account</Title>
       <Form
-        onSubmit={onSubmit}
+        onSubmit={signIn}
         style={{
           width: "100%",
           marginTop: "50px",
@@ -190,18 +190,15 @@ export default function CreateAccount() {
               border: "none",
             }}
             onChange={handleName}
+            onKeyDown={noSpace}
             name="name"
             value={name}
             type="text"
             placeholder="Name"
             maxLength={20}
           />
-          {isName ? (
-            <div className="mt-1 text-center" style={{ color: "#198754" }}>
-              Good!
-            </div>
-          ) : (
-            <div className="mt-1 text-center" style={{ color: "#dc3545" }}>
+          {!isName && (
+            <div className="mt-1 text-center text-danger">
               {nameErrorMessage}
             </div>
           )}
@@ -214,18 +211,15 @@ export default function CreateAccount() {
               border: "none",
             }}
             onChange={handleEmail}
+            onKeyDown={noSpace}
             name="email"
             value={email}
             type="text"
             placeholder="Email"
             maxLength={50}
           />
-          {isEmail ? (
-            <div className="mt-1 text-center" style={{ color: "#198754" }}>
-              Good!
-            </div>
-          ) : (
-            <div className="mt-1 text-center" style={{ color: "#dc3545" }}>
+          {!isEmail && (
+            <div className="mt-1 text-center text-danger">
               {emailErrorMessage}
             </div>
           )}
@@ -238,18 +232,15 @@ export default function CreateAccount() {
               border: "none",
             }}
             onChange={handlePassword}
+            onKeyDown={noSpace}
             name="password"
             value={password}
             type="password"
             placeholder="Password"
             maxLength={20}
           />
-          {isPassword ? (
-            <div className="mt-1 text-center" style={{ color: "#198754" }}>
-              Good!
-            </div>
-          ) : (
-            <div className="mt-1 text-center" style={{ color: "#dc3545" }}>
+          {!isPassword && (
+            <div className="mt-1 text-center text-danger">
               {passwordErrorMessage}
             </div>
           )}
@@ -268,41 +259,50 @@ export default function CreateAccount() {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header className="border-0 text-dark fw-bold fs-4">
-          Email Verification needed
-        </Modal.Header>
-        <Modal.Body>
-          <span className="text-dark">
-            Please go to your email and click the link for verification.
-          </span>
-        </Modal.Body>
-        <Modal.Footer className="border-0">
-          <Button variant="primary" onClick={handleCloseEmailVerificationModal}>
-            Ok
-          </Button>
-        </Modal.Footer>
+        <Alert variant="warning" className="m-0 p-0">
+          <Modal.Body>
+            <Alert.Heading className="mb-3">
+              Email Verification needed
+            </Alert.Heading>
+            <p>
+              <span>
+                Please go to your email and click the link for verification in
+                order to login.
+              </span>
+            </p>
+          </Modal.Body>
+          <Modal.Footer className="border-0 pt-0 p-3">
+            <Button variant="dark" onClick={handleCloseEmailVerificationModal}>
+              Ok
+            </Button>
+          </Modal.Footer>
+        </Alert>
       </Modal>
-      {/* Email-already-in-use Modal */}
+      {/* Error Modal */}
       <Modal
-        show={showEmailAlreadyInUseErrorModal}
-        onHide={handleCloseEmailAlreadyInUseErrorModal}
+        show={showErrorModal}
+        onHide={handleCloseErrorModal}
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header className="border-0 text-dark fw-bold fs-4">
-          Error
-        </Modal.Header>
-        <Modal.Body>
-          <span className="text-danger">{error}</span>
-        </Modal.Body>
-        <Modal.Footer className="border-0">
-          <Button
-            variant="primary"
-            onClick={handleCloseEmailAlreadyInUseErrorModal}
-          >
-            Ok
-          </Button>
-        </Modal.Footer>
+        <Alert variant="danger" className="m-0 p-0">
+          <Modal.Body>
+            <Alert.Heading className="mb-3">Error</Alert.Heading>
+            <p>
+              <span>
+                {error === "auth/email-already-in-use" &&
+                  "This email is already in use. Please try again with another email."}
+                {error === "auth/too-many-requests" &&
+                  "Too many attempts. Please try again later."}
+              </span>
+            </p>
+          </Modal.Body>
+          <Modal.Footer className="border-0 pt-0 p-3">
+            <Button variant="dark" onClick={handleCloseErrorModal}>
+              Ok
+            </Button>
+          </Modal.Footer>
+        </Alert>
       </Modal>
       <div className="d-flex justify-content-between">
         <GoogleButton />
