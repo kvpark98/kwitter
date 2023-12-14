@@ -11,8 +11,12 @@ import { useEffect, useState } from "react";
 import Loading from "./components/loading";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-route";
-import ProtectedRoute2 from "./components/protected-route 2";
 import "./App.module.css";
+import Confirm from "./routes/confirm";
+import ProtectedRouteLogin from "./components/protected-route-login";
+import ProtectedRouteConfirm from "./components/protected-route-confirm";
+import UpdatePassword from "./routes/update-password";
+import ProtectedRouteUpdatePassword from "./components/protected-route-update-password";
 
 const router = createBrowserRouter([
   {
@@ -36,17 +40,33 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: (
-      <ProtectedRoute2>
+      <ProtectedRouteLogin>
         <Login />
-      </ProtectedRoute2>
+      </ProtectedRouteLogin>
     ),
   },
   {
     path: "/create-account",
     element: (
-      <ProtectedRoute2>
+      <ProtectedRouteLogin>
         <CreateAccount />
-      </ProtectedRoute2>
+      </ProtectedRouteLogin>
+    ),
+  },
+  {
+    path: "/confirm",
+    element: (
+      <ProtectedRouteConfirm>
+        <Confirm />
+      </ProtectedRouteConfirm>
+    ),
+  },
+  {
+    path: "/update-password",
+    element: (
+      <ProtectedRouteUpdatePassword>
+        <UpdatePassword />
+      </ProtectedRouteUpdatePassword>
     ),
   },
 ]);

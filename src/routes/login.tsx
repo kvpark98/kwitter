@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
-  sendPasswordResetEmail,
+  sendSignInLinkToEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
@@ -33,7 +33,12 @@ export default function Login() {
   const [isFindPassword, setIsFindPassword] = useState(false);
 
   const [showFindPasswordModal, setShowFindPasswordModal] = useState(false);
-  const handleCloseFindPasswordModal = () => setShowFindPasswordModal(false);
+  const handleCloseFindPasswordModal = () => {
+    setShowFindPasswordModal(false);
+    setFindPassword("");
+    setFindPasswordErrorMessage("");
+  };
+
   const handleShowFindPasswordModal = () => setShowFindPasswordModal(true);
 
   const [showFindPasswordSuccessModal, setShowFindPasswordSuccessModal] =
@@ -53,11 +58,11 @@ export default function Login() {
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const regex =
+    const regEmail =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     setEmail(value.replace(/\s/gi, ""));
     if (value) {
-      if (!regex.test(value)) {
+      if (!regEmail.test(value)) {
         setEmailErrorMessage("Not a valid email format.");
         setIsEmail(false);
       } else {
@@ -128,11 +133,11 @@ export default function Login() {
 
   const handleFindPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const regex =
+    const regPassword =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     setFindPassword(value.replace(/\s/gi, ""));
     if (value !== "") {
-      if (!regex.test(value)) {
+      if (!regPassword.test(value)) {
         setFindPasswordErrorMessage("Not a valid email format.");
         setIsFindPassword(false);
       } else {
@@ -144,12 +149,18 @@ export default function Login() {
     }
   };
 
+  const actionCodeSettings = {
+    url: "http://127.0.0.1:5173/confirm",
+    handleCodeInApp: true,
+  };
+
   const onFindPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!isFindPassword) return;
     try {
-      await sendPasswordResetEmail(auth, findPassword);
+      await sendSignInLinkToEmail(auth, findPassword, actionCodeSettings);
+      window.localStorage.setItem("emailForSignIn", findPassword);
       handleShowFindPasswordSuccessModal();
     } catch (error) {
       console.log(error);
@@ -216,7 +227,7 @@ export default function Login() {
           )}
         </Form.Group>
         <Button type="submit" className="rounded-pill fw-bold">
-          {isLoading ? "Loading..." : "Log in"}
+          {isLoading ? "Loading..." : "Login"}
         </Button>
       </Form>
       <Switcher>
@@ -278,10 +289,12 @@ export default function Login() {
         <Alert variant="warning" className="m-0 p-0">
           <Modal.Body>
             <Alert.Heading className="mb-3">
-              Your email was verified
+              Please check your email
             </Alert.Heading>
             <p>
-              <span>Please check your email to reset your password.</span>
+              <span>
+                Please go to your email and click the 'Sign in...' link.
+              </span>
             </p>
           </Modal.Body>
           <Modal.Footer className="border-0 pt-0 p-3">

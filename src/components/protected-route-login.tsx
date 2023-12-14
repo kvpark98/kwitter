@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { auth } from "../firebase";
 
-export default function ProtectedRoute2({
+export default function ProtectedRouteLogin({
   children,
 }: {
   children: React.ReactNode;

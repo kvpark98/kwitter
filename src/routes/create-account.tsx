@@ -54,10 +54,13 @@ export default function CreateAccount() {
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    const regName = /^[가-힣a-zA-Z]{2,20}$/;
     setName(value.replace(/\s/gi, ""));
     if (value !== "") {
-      if (value.length < 3) {
-        setNameErrorMessage("Please enter at least 3 characters.");
+      if (!regName.test(value)) {
+        setNameErrorMessage(
+          "Please enter at least 2 characters either in English or Korean."
+        );
         setIsName(false);
       } else {
         setIsName(true);
@@ -70,11 +73,11 @@ export default function CreateAccount() {
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const regex =
+    const regEmail =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     setEmail(value.replace(/\s/gi, ""));
     if (value !== "") {
-      if (!regex.test(value)) {
+      if (!regEmail.test(value)) {
         setEmailErrorMessage("Not a valid email format.");
         setIsEmail(false);
       } else {
@@ -88,10 +91,10 @@ export default function CreateAccount() {
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    const regPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
     setPassword(value.replace(/\s/gi, ""));
     if (value !== "") {
-      if (!regex.test(value)) {
+      if (!regPassword.test(value)) {
         setPasswordErrorMessage(
           "Please enter at least 8 characters including numbers, English, and special characters."
         );
