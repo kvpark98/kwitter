@@ -1,0 +1,29 @@
+import { Navigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { isSignInWithEmailLink } from "firebase/auth";
+
+export default function ProtectedRouteOneTimeLogin({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const user = auth.currentUser;
+
+  if (isSignInWithEmailLink(auth, window.location.href)) {
+    if (user?.emailVerified === true) {
+      return <Navigate to="/change-password" />;
+    } else {
+      return children;
+    }
+  } else {
+    if (user !== null) {
+      if (user?.emailVerified === true) {
+        return <Navigate to="/" />;
+      } else {
+        return <Navigate to="/login" />;
+      }
+    } else {
+      return <Navigate to="/login" />;
+    }
+  }
+}

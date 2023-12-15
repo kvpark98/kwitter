@@ -9,7 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 
-export default function Confirm() {
+export default function OneTimeLogin() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -21,24 +21,28 @@ export default function Confirm() {
 
   const [isEmail, setIsEmail] = useState(false);
 
-  const [showFindPasswordSuccessModal, setShowFindPasswordSuccessModal] =
+  const [showOneTimeLoginSuccessModal, setShowOneTimeLoginSuccessModal] =
     useState(false);
-  const handleCloseFindPasswordSuccessModal = () => {
-    setShowFindPasswordSuccessModal(false);
+  const handleShowOneTimeLoginSuccessModal = () => {
+    setShowOneTimeLoginSuccessModal(true);
   };
-  const handleShowFindPasswordSuccessModal = () => {
-    setShowFindPasswordSuccessModal(true);
+  const handleCloseOneTimeLoginSuccessModal = () => {
+    navigate("/change-password");
+    setShowOneTimeLoginSuccessModal(false);
   };
 
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const handleCloseErrorModal = () => setShowErrorModal(false);
   const handleShowErrorModal = () => setShowErrorModal(true);
+  const handleCloseErrorModal = () => setShowErrorModal(false);
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     const regEmail =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+
     setEmail(value.replace(/\s/gi, ""));
+
     if (value) {
       if (!regEmail.test(value)) {
         setEmailErrorMessage("Not a valid email format.");
@@ -58,7 +62,7 @@ export default function Confirm() {
     }
   };
 
-  const confirm = async (event: React.FormEvent<HTMLFormElement>) => {
+  const oneTimeLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (email === "") {
@@ -77,20 +81,13 @@ export default function Confirm() {
 
       if (isSignInWithEmailLink(auth, window.location.href)) {
         await signInWithEmailLink(auth, email, window.location.href);
-        handleShowFindPasswordSuccessModal();
         window.localStorage.removeItem("emailForSignIn");
-      }
-
-      // Ridirect to the home page
-      if (auth.currentUser?.emailVerified === true) {
-        navigate("/update-password");
-      } else {
-        handleShowErrorModal();
+        handleShowOneTimeLoginSuccessModal();
       }
     } catch (error) {
-      handleShowErrorModal();
       if (error instanceof FirebaseError) {
         setError(error.code);
+        handleShowErrorModal();
         console.log(error.code);
       }
     } finally {
@@ -107,9 +104,9 @@ export default function Confirm() {
 
   return (
     <Wrapper>
-      <Title>Confirm</Title>
+      <Title>Sign in with email</Title>
       <Form
-        onSubmit={confirm}
+        onSubmit={oneTimeLogin}
         style={{
           width: "100%",
           marginTop: "50px",
@@ -141,7 +138,7 @@ export default function Confirm() {
           )}
         </Form.Group>
         <Button type="submit" className="rounded-pill fw-bold">
-          {isLoading ? "Loading..." : "Confirm"}
+          {isLoading ? "Loading..." : "One-time Login"}
         </Button>
       </Form>
       <Switcher>
@@ -149,26 +146,31 @@ export default function Confirm() {
           <Link to="/login">Login &rarr;</Link>
         </div>
       </Switcher>
-      {/* Find Password Success Modal */}
+      {/* One-time Login Success Modal */}
       <Modal
-        show={showFindPasswordSuccessModal}
-        onHide={handleCloseFindPasswordSuccessModal}
+        show={showOneTimeLoginSuccessModal}
+        onHide={handleCloseOneTimeLoginSuccessModal}
         backdrop="static"
         keyboard={false}
       >
         <Alert variant="success" className="m-0 p-0">
           <Modal.Body>
-            <Alert.Heading className="mb-3">Success!</Alert.Heading>
+            <Alert.Heading className="mb-3">
+              One-time Login Success
+            </Alert.Heading>
             <p>
-              <span>Your email has been verified.</span>
+              <span>
+                You were logged in through email link. The link can be used only
+                once, so please make sure to change your password.
+              </span>
             </p>
           </Modal.Body>
           <Modal.Footer className="border-0 pt-0 p-3">
             <Button
               variant="dark"
-              onClick={handleCloseFindPasswordSuccessModal}
+              onClick={handleCloseOneTimeLoginSuccessModal}
             >
-              Close
+              Ok
             </Button>
           </Modal.Footer>
         </Alert>
@@ -190,7 +192,7 @@ export default function Confirm() {
                 {error === "auth/too-many-requests" &&
                   "Too many attempts. Please try again later."}
                 {error === "auth/invalid-email" &&
-                  "Your email is incorrect. Please try again with the same email that you entered earlier."}
+                  "Your email is incorrect. Please enter the email where the link was sent to."}
               </span>
             </p>
           </Modal.Body>

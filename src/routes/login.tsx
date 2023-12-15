@@ -21,22 +21,22 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [findPassword, setFindPassword] = useState("");
+  const [verifyEmail, setVerifyEmail] = useState("");
 
   const [error, setError] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const [findPasswordErrorMessage, setFindPasswordErrorMessage] = useState("");
+  const [verifyEmailErrorMessage, setVerifyEmailErrorMessage] = useState("");
 
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
-  const [isFindPassword, setIsFindPassword] = useState(false);
+  const [isVerifyEmail, setIsVerifyEmail] = useState(false);
 
   const [showFindPasswordModal, setShowFindPasswordModal] = useState(false);
   const handleCloseFindPasswordModal = () => {
     setShowFindPasswordModal(false);
-    setFindPassword("");
-    setFindPasswordErrorMessage("");
+    setVerifyEmail("");
+    setVerifyEmailErrorMessage("");
   };
 
   const handleShowFindPasswordModal = () => setShowFindPasswordModal(true);
@@ -46,7 +46,7 @@ export default function Login() {
   const handleCloseFindPasswordSuccessModal = () =>
     setShowFindPasswordSuccessModal(false);
   const handleShowFindPasswordSuccessModal = () => {
-    if (findPassword) {
+    if (verifyEmail) {
       setShowFindPasswordSuccessModal(true);
       handleCloseFindPasswordModal();
     }
@@ -131,44 +131,49 @@ export default function Login() {
     }
   };
 
-  const handleFindPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVerifyEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const regPassword =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
-    setFindPassword(value.replace(/\s/gi, ""));
+    setVerifyEmail(value.replace(/\s/gi, ""));
     if (value !== "") {
       if (!regPassword.test(value)) {
-        setFindPasswordErrorMessage("Not a valid email format.");
-        setIsFindPassword(false);
+        setVerifyEmailErrorMessage("Not a valid email format.");
+        setIsVerifyEmail(false);
       } else {
-        setIsFindPassword(true);
+        setIsVerifyEmail(true);
       }
     } else {
-      setFindPasswordErrorMessage("Please enter your email.");
-      setIsFindPassword(false);
+      setVerifyEmailErrorMessage("Please enter your email.");
+      setIsVerifyEmail(false);
     }
   };
 
   const actionCodeSettings = {
-    url: "http://127.0.0.1:5173/confirm",
+    url: "http://127.0.0.1:5173/one-time-login",
     handleCodeInApp: true,
   };
 
-  const onFindPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+  const verify = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!isFindPassword) return;
+    if (verifyEmail === "") {
+      setVerifyEmailErrorMessage("Please enter your email.");
+      setIsVerifyEmail(false);
+    }
+
+    if (!isVerifyEmail) return;
     try {
-      await sendSignInLinkToEmail(auth, findPassword, actionCodeSettings);
-      window.localStorage.setItem("emailForSignIn", findPassword);
+      await sendSignInLinkToEmail(auth, verifyEmail, actionCodeSettings);
+      window.localStorage.setItem("emailForSignIn", verifyEmail);
       handleShowFindPasswordSuccessModal();
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(auth.currentUser);
-  console.log(auth.currentUser?.emailVerified);
+  console.log("user : " + auth.currentUser);
+  console.log("emailVerified : " + auth.currentUser?.emailVerified);
 
   return (
     <Wrapper>
@@ -248,23 +253,23 @@ export default function Login() {
         keyboard={false}
       >
         <Alert variant="light" className="m-0 p-0">
-          <Form onSubmit={onFindPassword}>
+          <Form onSubmit={verify}>
             <Modal.Body>
               <Alert.Heading className="mb-3">
                 Please enter your email
               </Alert.Heading>
               <Form.Control
-                onChange={handleFindPassword}
+                onChange={handleVerifyEmail}
                 onKeyDown={noSpace}
                 name="findPassword"
-                value={findPassword}
+                value={verifyEmail}
                 type="text"
                 placeholder="Email"
                 maxLength={50}
               ></Form.Control>
-              {!isFindPassword && (
+              {!isVerifyEmail && (
                 <div className="mt-2 text-center text-danger">
-                  {findPasswordErrorMessage}
+                  {verifyEmailErrorMessage}
                 </div>
               )}
             </Modal.Body>

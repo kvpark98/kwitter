@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { Switcher, Title, Wrapper } from "../components/auth-components";
+import { Title, Wrapper } from "../components/auth-components";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 
-export default function UpdatePassword() {
+export default function ChangePassword() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -17,38 +17,48 @@ export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
 
   const [error, setError] = useState("");
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
 
-  const [isPassword, setIsPassword] = useState(false);
+  const [isNewPassword, setIsNewPassword] = useState(false);
 
-  const [showFindPasswordSuccessModal, setShowFindPasswordSuccessModal] =
+  const [showChangePasswordSuccessModal, setShowChangePasswordSuccessModal] =
     useState(false);
-  const handleCloseFindPasswordSuccessModal = () =>
-    setShowFindPasswordSuccessModal(false);
-  const handleShowFindPasswordSuccessModal = () => {
-    setShowFindPasswordSuccessModal(true);
+  const handleShowChangePasswordSuccessModal = () => {
+    setShowChangePasswordSuccessModal(true);
+  };
+  const handleCloseChangePasswordSuccessModal = () => {
+    logOut();
+    setShowChangePasswordSuccessModal(false);
   };
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const handleCloseErrorModal = () => setShowErrorModal(false);
   const handleShowErrorModal = () => setShowErrorModal(true);
 
-  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const logOut = () => {
+    auth.signOut();
+    navigate("/login");
+  };
+
+  const handleNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     const regPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
+
     setNewPassword(value.replace(/\s/gi, ""));
+
     if (value !== "") {
       if (!regPassword.test(value)) {
-        setPasswordErrorMessage(
+        setNewPasswordErrorMessage(
           "Please enter at least 8 characters including numbers, English, and special characters."
         );
-        setIsPassword(false);
+        setIsNewPassword(false);
       } else {
-        setIsPassword(true);
+        setIsNewPassword(true);
       }
     } else {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
+      setNewPasswordErrorMessage("Please enter your password.");
+      setIsNewPassword(false);
     }
   };
 
@@ -58,15 +68,15 @@ export default function UpdatePassword() {
     }
   };
 
-  const update = async (event: React.FormEvent<HTMLFormElement>) => {
+  const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (newPassword === "") {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
+      setNewPasswordErrorMessage("Please enter your password.");
+      setIsNewPassword(false);
     }
 
-    if (isLoading || !isPassword) {
+    if (isLoading || !isNewPassword) {
       return;
     }
 
@@ -77,19 +87,12 @@ export default function UpdatePassword() {
 
       if (auth.currentUser !== null) {
         await updatePassword(auth.currentUser, newPassword);
-        handleShowFindPasswordSuccessModal();
-      }
-
-      // Ridirect to the home page
-      if (auth.currentUser?.emailVerified === true) {
-        navigate("/");
-      } else {
-        handleShowErrorModal();
+        handleShowChangePasswordSuccessModal();
       }
     } catch (error) {
-      handleShowErrorModal();
       if (error instanceof FirebaseError) {
         setError(error.code);
+        handleShowErrorModal();
         console.log(error.code);
       }
     } finally {
@@ -107,9 +110,9 @@ export default function UpdatePassword() {
 
   return (
     <Wrapper>
-      <Title>Update password</Title>
+      <Title>Change password</Title>
       <Form
-        onSubmit={update}
+        onSubmit={changePassword}
         style={{
           width: "100%",
           marginTop: "50px",
@@ -126,7 +129,7 @@ export default function UpdatePassword() {
               borderRadius: "50px",
               border: "none",
             }}
-            onChange={handlePassword}
+            onChange={handleNewPassword}
             onKeyDown={noSpace}
             name="password"
             value={newPassword}
@@ -134,41 +137,44 @@ export default function UpdatePassword() {
             placeholder="Password"
             maxLength={20}
           />
-          {!isPassword && (
+          {!isNewPassword && (
             <div className="mt-1 text-center text-danger">
-              {passwordErrorMessage}
+              {newPasswordErrorMessage}
             </div>
           )}
         </Form.Group>
         <Button type="submit" className="rounded-pill fw-bold">
-          {isLoading ? "Loading..." : "Update"}
+          {isLoading ? "Loading..." : "Change"}
         </Button>
       </Form>
-      <Switcher>
-        <div>
-          <Link to="/login">Login &rarr;</Link>
-        </div>
-      </Switcher>
       {/* Find Password Success Modal */}
       <Modal
-        show={showFindPasswordSuccessModal}
-        onHide={handleCloseFindPasswordSuccessModal}
+        show={showChangePasswordSuccessModal}
+        onHide={handleCloseChangePasswordSuccessModal}
         backdrop="static"
         keyboard={false}
       >
         <Alert variant="success" className="m-0 p-0">
           <Modal.Body>
-            <Alert.Heading className="mb-3">Success!</Alert.Heading>
+            <Alert.Heading className="mb-3">
+              Password Change Success
+            </Alert.Heading>
             <p>
-              <span>Your password has been updated successfully.</span>
+              <span>
+                Your password has been changed successfully. Please login with
+                your new password.
+              </span>
             </p>
           </Modal.Body>
-          <Modal.Footer className="border-0 pt-0 p-3">
+          <Modal.Footer className="d-flex justify-content-between border-0 pt-0 p-3">
+            <div className="text-danger">
+              <span>Please do not refresh this page!</span>
+            </div>
             <Button
-              variant="dark"
-              onClick={handleCloseFindPasswordSuccessModal}
+              variant="primary"
+              onClick={handleCloseChangePasswordSuccessModal}
             >
-              Close
+              Login &rarr;
             </Button>
           </Modal.Footer>
         </Alert>
@@ -185,12 +191,8 @@ export default function UpdatePassword() {
             <Alert.Heading className="mb-3">Error</Alert.Heading>
             <p>
               <span>
-                {error === "auth/invalid-action-code" &&
-                  "The link from your email has already been used or expired. Please go to 'Login' page and click 'Forgot my password' again to get a new link."}
                 {error === "auth/too-many-requests" &&
                   "Too many attempts. Please try again later."}
-                {error === "auth/invalid-email" &&
-                  "Your email is incorrect. Please try again with the same email that you entered earlier."}
               </span>
             </p>
           </Modal.Body>

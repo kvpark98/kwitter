@@ -12,11 +12,10 @@ import Loading from "./components/loading";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-route";
 import "./App.module.css";
-import Confirm from "./routes/confirm";
 import ProtectedRouteLogin from "./components/protected-route-login";
-import ProtectedRouteConfirm from "./components/protected-route-confirm";
-import UpdatePassword from "./routes/update-password";
-import ProtectedRouteUpdatePassword from "./components/protected-route-update-password";
+import OneTimeLogin from "./routes/one-time-login";
+import ChangePassword from "./routes/change-password";
+import ProtectedRouteOneTimeLogin from "./components/protected-route-one-time-login";
 
 const router = createBrowserRouter([
   {
@@ -54,19 +53,19 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/confirm",
+    path: "/one-time-login",
     element: (
-      <ProtectedRouteConfirm>
-        <Confirm />
-      </ProtectedRouteConfirm>
+      <ProtectedRouteOneTimeLogin>
+        <OneTimeLogin />
+      </ProtectedRouteOneTimeLogin>
     ),
   },
   {
-    path: "/update-password",
+    path: "/change-password",
     element: (
-      <ProtectedRouteUpdatePassword>
-        <UpdatePassword />
-      </ProtectedRouteUpdatePassword>
+      <ProtectedRoute>
+        <ChangePassword />
+      </ProtectedRoute>
     ),
   },
 ]);
