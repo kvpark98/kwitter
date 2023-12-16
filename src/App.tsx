@@ -16,7 +16,6 @@ import ProtectedRouteLogin from "./components/protected-route-login";
 import OneTimeLogin from "./routes/one-time-login";
 import ChangePassword from "./routes/change-password";
 import ProtectedRouteOneTimeLogin from "./components/protected-route-one-time-login";
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -79,6 +78,9 @@ const GlobalStyles = createGlobalStyle`
     background-color: black;
     color: white;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  .alert-dismissible .btn-close {
+    padding: 16px;
   }
 `;
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
@@ -20,16 +20,6 @@ export default function ChangePassword() {
   const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
 
   const [isNewPassword, setIsNewPassword] = useState(false);
-
-  const [showChangePasswordSuccessModal, setShowChangePasswordSuccessModal] =
-    useState(false);
-  const handleShowChangePasswordSuccessModal = () => {
-    setShowChangePasswordSuccessModal(true);
-  };
-  const handleCloseChangePasswordSuccessModal = () => {
-    logOut();
-    setShowChangePasswordSuccessModal(false);
-  };
 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const handleCloseErrorModal = () => setShowErrorModal(false);
@@ -87,7 +77,8 @@ export default function ChangePassword() {
 
       if (auth.currentUser !== null) {
         await updatePassword(auth.currentUser, newPassword);
-        handleShowChangePasswordSuccessModal();
+        window.sessionStorage.setItem("PasswordChanged?", "Success");
+        logOut();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -147,38 +138,6 @@ export default function ChangePassword() {
           {isLoading ? "Loading..." : "Change"}
         </Button>
       </Form>
-      {/* Find Password Success Modal */}
-      <Modal
-        show={showChangePasswordSuccessModal}
-        onHide={handleCloseChangePasswordSuccessModal}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Alert variant="success" className="m-0 p-0">
-          <Modal.Body>
-            <Alert.Heading className="mb-3">
-              Password Change Success
-            </Alert.Heading>
-            <p>
-              <span>
-                Your password has been changed successfully. Please login with
-                your new password.
-              </span>
-            </p>
-          </Modal.Body>
-          <Modal.Footer className="d-flex justify-content-between border-0 pt-0 p-3">
-            <div className="text-danger">
-              <span>Please do not refresh this page!</span>
-            </div>
-            <Button
-              variant="primary"
-              onClick={handleCloseChangePasswordSuccessModal}
-            >
-              Login &rarr;
-            </Button>
-          </Modal.Footer>
-        </Alert>
-      </Modal>
       {/* Error Modal */}
       <Modal
         show={showErrorModal}

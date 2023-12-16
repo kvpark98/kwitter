@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Spinner from "react-bootstrap/Spinner";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -6,14 +7,12 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Text = styled.span`
-  font-size: 24px;
-`;
-
 export default function Loading() {
   return (
     <Wrapper>
-      <Text>Loading...</Text>
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
     </Wrapper>
   );
 }

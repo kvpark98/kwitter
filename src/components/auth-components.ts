@@ -6,7 +6,8 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 420px;
+  max-width: 420px;
+  margin: 0 auto;
   padding: 50px 0px;
 `;
 export const Title = styled.h1`
@@ -43,7 +44,7 @@ export const Error = styled.span`
 
 export const Switcher = styled.div`
   width: 100%;
-  margin-top: 20px;
+  margin-top: 16px;
   display: flex;
   justify-content: space-around;
   align-items: center;
