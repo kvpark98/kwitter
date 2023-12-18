@@ -11,7 +11,7 @@ export default function ProtectedRouteOneTimeLogin({
 
   if (isSignInWithEmailLink(auth, window.location.href)) {
     if (user?.emailVerified === true) {
-      return <Navigate to="/change-password" />;
+      return <Navigate to="/reset-password" />;
     } else {
       return children;
     }
@@ -20,10 +20,10 @@ export default function ProtectedRouteOneTimeLogin({
       if (user?.emailVerified === true) {
         return <Navigate to="/" />;
       } else {
-        return <Navigate to="/login" />;
+        return <Navigate to="/sign-in" />;
       }
     } else {
-      return <Navigate to="/login" />;
+      return <Navigate to="/sign-in" />;
     }
   }
 }

@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
   padding: 50px 0px;
 `;
 export const Title = styled.h1`
-  font-size: 42px;
+  font-size: 40px;
 `;
 export const Forms = styled.form`
   margin-top: 50px;
@@ -46,7 +46,7 @@ export const Switcher = styled.div`
   width: 100%;
   margin-top: 16px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   a {
     margin-left: 5px;

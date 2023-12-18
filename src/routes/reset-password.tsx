@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { Title, Wrapper } from "../components/auth-components";
-import { Button } from "react-bootstrap";
+import { Wrapper } from "../components/auth-components";
+import { Button, Container } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 
-export default function ChangePassword() {
+export default function ResetPassword() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +27,7 @@ export default function ChangePassword() {
 
   const logOut = () => {
     auth.signOut();
-    navigate("/login");
+    navigate("/sign-in");
   };
 
   const handleNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,68 +100,70 @@ export default function ChangePassword() {
   console.log("changed password : " + newPassword);
 
   return (
-    <Wrapper>
-      <Title>Change password</Title>
-      <Form
-        onSubmit={changePassword}
-        style={{
-          width: "100%",
-          marginTop: "50px",
-          marginBottom: "10px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-        }}
-      >
-        <Form.Group>
-          <Form.Control
-            style={{
-              width: "100%",
-              borderRadius: "50px",
-              border: "none",
-            }}
-            onChange={handleNewPassword}
-            onKeyDown={noSpace}
-            name="password"
-            value={newPassword}
-            type="password"
-            placeholder="Password"
-            maxLength={20}
-          />
-          {!isNewPassword && (
-            <div className="mt-1 text-center text-danger">
-              {newPasswordErrorMessage}
-            </div>
-          )}
-        </Form.Group>
-        <Button type="submit" className="rounded-pill fw-bold">
-          {isLoading ? "Loading..." : "Change"}
-        </Button>
-      </Form>
-      {/* Error Modal */}
-      <Modal
-        show={showErrorModal}
-        onHide={handleCloseErrorModal}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Alert variant="danger" className="m-0 p-0">
-          <Modal.Body>
-            <Alert.Heading className="mb-3">Error</Alert.Heading>
-            <p>
-              <span>
-                {error === "auth/too-many-requests" &&
-                  "Too many attempts. Please try again later."}
-              </span>
-            </p>
-          </Modal.Body>
-          <Modal.Footer className="border-0 pt-0 p-3">
-            <Button variant="dark" onClick={handleCloseErrorModal}>
-              Ok
-            </Button>
-          </Modal.Footer>
-        </Alert>
-      </Modal>
-    </Wrapper>
+    <Container>
+      <div className="d-flex justify-content-center align-items-center">
+        <Wrapper>
+          <div className="w-100 mb-1 d-flex justify-content-center">
+            <h1 className="fs-1">Reset your password</h1>
+          </div>
+          <Alert variant="light" className="mt-3 py-4">
+            <Form
+              onSubmit={changePassword}
+              className="d-flex"
+              style={{
+                width: "340px",
+                flexDirection: "column",
+                gap: "15px",
+              }}
+            >
+              <Form.Group controlId="password">
+                <Form.Label>New password</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleNewPassword}
+                  onKeyDown={noSpace}
+                  name="password"
+                  value={newPassword}
+                  type="password"
+                  maxLength={20}
+                />
+                {!isNewPassword && (
+                  <div className="mt-2 text-danger">
+                    {newPasswordErrorMessage}
+                  </div>
+                )}
+              </Form.Group>
+              <Button type="submit" className="fw-bold">
+                {isLoading ? "Loading..." : "Reset"}
+              </Button>
+            </Form>
+          </Alert>
+          {/* Error Modal */}
+          <Modal
+            show={showErrorModal}
+            onHide={handleCloseErrorModal}
+            backdrop="static"
+            keyboard={false}
+          >
+            <Alert variant="danger" className="m-0 p-0">
+              <Modal.Body>
+                <Alert.Heading className="mb-3">Error</Alert.Heading>
+                <p>
+                  <span>
+                    {error === "auth/too-many-requests" &&
+                      "Too many attempts. Please try again later."}
+                  </span>
+                </p>
+              </Modal.Body>
+              <Modal.Footer className="border-0 pt-0 p-3">
+                <Button variant="dark" onClick={handleCloseErrorModal}>
+                  Ok
+                </Button>
+              </Modal.Footer>
+            </Alert>
+          </Modal>
+        </Wrapper>
+      </div>
+    </Container>
   );
 }

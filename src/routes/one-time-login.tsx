@@ -27,7 +27,7 @@ export default function OneTimeLogin() {
     setShowOneTimeLoginSuccessModal(true);
   };
   const handleCloseOneTimeLoginSuccessModal = () => {
-    navigate("/change-password");
+    navigate("/reset-password");
     setShowOneTimeLoginSuccessModal(false);
   };
 
@@ -143,7 +143,7 @@ export default function OneTimeLogin() {
       </Form>
       <Switcher>
         <div>
-          <Link to="/login">Login &rarr;</Link>
+          <Link to="/sign-in">Login &rarr;</Link>
         </div>
       </Switcher>
       {/* One-time Login Success Modal */}

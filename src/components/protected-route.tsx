@@ -14,9 +14,9 @@ export default function ProtectedRoute({
     if (user?.emailVerified === true) {
       return children;
     } else {
-      return <Navigate to="/login" />;
+      return <Navigate to="/sign-in" />;
     }
   } else {
-    return <Navigate to="/login" />;
+    return <Navigate to="/sign-in" />;
   }
 }

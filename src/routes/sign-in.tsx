@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
-import { Switcher, Title, Wrapper } from "../components/auth-components";
+import { Switcher, Wrapper } from "../components/auth-components";
 import GithubButton from "../components/github-btn";
 import { Button, Container } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -14,7 +14,7 @@ import Form from "react-bootstrap/Form";
 import GoogleButton from "../components/google-btn";
 import Alert from "react-bootstrap/Alert";
 
-export default function Login() {
+export default function SignIn() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -91,7 +91,7 @@ export default function Login() {
     }
   };
 
-  const login = async (event: React.FormEvent<HTMLFormElement>) => {
+  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (email === "") {
@@ -123,9 +123,10 @@ export default function Login() {
         handleShowErrorModal();
       }
     } catch (error) {
-      handleShowErrorModal();
       if (error instanceof FirebaseError) {
         setError(error.code);
+        console.log(error);
+        handleShowErrorModal();
       }
     } finally {
       setIsLoading(false);
@@ -180,81 +181,93 @@ export default function Login() {
     <Container>
       <div className="d-flex justify-content-center">
         <Wrapper>
-          <Title>Login</Title>
+          <div className="w-100 mb-1 d-flex justify-content-center">
+            <h1 className="fs-1">Sign in</h1>
+          </div>
           {window.sessionStorage.getItem("PasswordChanged?") === "Success" && (
             <Alert
               variant="success"
-              className="d-flex align-itmes-center m-0 mt-3"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
               dismissible
             >
               <p>New password set successfully.</p>
             </Alert>
           )}
-          <Form
-            onSubmit={login}
-            className="d-flex mt-3"
-            style={{
-              width: "420px",
-              flexDirection: "column",
-              gap: "10px",
-            }}
-          >
-            <Form.Group>
-              <Form.Control
-                style={{
-                  width: "100%",
-                  borderRadius: "50px",
-                  border: "none",
-                }}
-                onChange={handleEmail}
-                onKeyDown={noSpace}
-                name="email"
-                value={email}
-                type="text"
-                placeholder="Email"
-                maxLength={50}
-              />
-              {!isEmail && (
-                <div className="mt-1 text-center text-danger">
-                  {emailErrorMessage}
+          <Alert variant="light" className="mt-3 py-4">
+            <Form
+              onSubmit={signIn}
+              className="d-flex"
+              style={{
+                width: "340px",
+                flexDirection: "column",
+                gap: "15px",
+              }}
+            >
+              <Form.Group controlId="email" className="mb-2">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleEmail}
+                  onKeyDown={noSpace}
+                  name="email"
+                  value={email}
+                  type="text"
+                  maxLength={50}
+                />
+                {!isEmail && (
+                  <div className="mt-2 text-danger">{emailErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Form.Group controlId="password">
+                <div
+                  className="d-flex justify-content-between align-items-center"
+                  style={{ height: "24px" }}
+                >
+                  <Form.Label>Password</Form.Label>
+                  <Button
+                    variant="link"
+                    onClick={handleShowFindPasswordModal}
+                    className="p-0 mb-2 text-decoration-none"
+                  >
+                    Forgot password?
+                  </Button>
                 </div>
-              )}
-            </Form.Group>
-            <Form.Group>
-              <Form.Control
-                style={{
-                  width: "100%",
-                  borderRadius: "50px",
-                  border: "none",
-                }}
-                onChange={handlePassword}
-                onKeyDown={noSpace}
-                name="password"
-                value={password}
-                type="password"
-                placeholder="Password"
-                maxLength={20}
-              />
-              {!isPassword && (
-                <div className="mt-1 text-center text-danger">
-                  {passwordErrorMessage}
-                </div>
-              )}
-            </Form.Group>
-            <Button type="submit" className="rounded-pill fw-bold">
-              {isLoading ? "Loading..." : "Login"}
-            </Button>
-          </Form>
-          <Switcher>
-            <div>
-              <Link to="/create-account">Create account &rarr;</Link>
-            </div>
-            <div>
-              <Button variant="link" onClick={handleShowFindPasswordModal}>
-                Forgot my password
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handlePassword}
+                  onKeyDown={noSpace}
+                  name="password"
+                  value={password}
+                  type="password"
+                  maxLength={20}
+                />
+                {!isPassword && (
+                  <div className="mt-2 text-danger">{passwordErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Button type="submit" className="fw-bold">
+                {isLoading ? "Loading..." : "Sign in"}
               </Button>
-            </div>
-          </Switcher>
+            </Form>
+            <Switcher>
+              <Link to="/sign-up">Create an account &rarr;</Link>
+            </Switcher>
+          </Alert>
+          <div className="w-100 d-flex justify-content-between align-items-center">
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+            <span className="mx-3">OR</span>
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+          </div>
+          <Alert variant="light" className="w-100 mt-3 py-4">
+            <GoogleButton />
+            <GithubButton />
+          </Alert>
           {/* Find Password Modal */}
           <Modal
             show={showFindPasswordModal}
@@ -339,6 +352,9 @@ export default function Login() {
                       "Incorrect email or password. Please try again."}
                     {error === "auth/too-many-requests" &&
                       "Too many attempts. Please try again later."}
+                    {error ===
+                      "auth/account-exists-with-different-credential" &&
+                      "Email is invalid or already taken."}
                     {auth.currentUser &&
                       auth.currentUser?.emailVerified === false &&
                       "Your email was not verified. Please go to your email and click the link for verification in order to login."}
@@ -352,10 +368,6 @@ export default function Login() {
               </Modal.Footer>
             </Alert>
           </Modal>
-          <div className="d-flex justify-content-between">
-            <GoogleButton />
-            <GithubButton />
-          </div>
         </Wrapper>
       </div>
     </Container>
