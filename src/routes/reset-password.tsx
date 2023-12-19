@@ -5,7 +5,6 @@ import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { Wrapper } from "../components/auth-components";
 import { Button, Container } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 
@@ -20,10 +19,6 @@ export default function ResetPassword() {
   const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
 
   const [isNewPassword, setIsNewPassword] = useState(false);
-
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const handleCloseErrorModal = () => setShowErrorModal(false);
-  const handleShowErrorModal = () => setShowErrorModal(true);
 
   const logOut = () => {
     auth.signOut();
@@ -58,7 +53,7 @@ export default function ResetPassword() {
     }
   };
 
-  const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
+  const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (newPassword === "") {
@@ -77,13 +72,16 @@ export default function ResetPassword() {
 
       if (auth.currentUser !== null) {
         await updatePassword(auth.currentUser, newPassword);
-        window.sessionStorage.setItem("PasswordChanged?", "Success");
+
+        window.localStorage.setItem("PasswordChanged?", "True");
+
+        window.localStorage.removeItem("signedInWithEmail?");
+
         logOut();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        handleShowErrorModal();
         console.log(error.code);
       }
     } finally {
@@ -104,11 +102,37 @@ export default function ResetPassword() {
       <div className="d-flex justify-content-center align-items-center">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-1">Reset your password</h1>
+            <h1 className="fs-2">Reset password</h1>
           </div>
+          {window.localStorage.getItem("signedInWithEmail?") === "True" && (
+            <Alert
+              variant="success"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                You were signed in with email link. Please make sure to reset
+                your password.
+              </p>
+            </Alert>
+          )}
+          {error && (
+            <Alert
+              variant="danger"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                <span>
+                  {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again later."}
+                </span>
+              </p>
+            </Alert>
+          )}
           <Alert variant="light" className="mt-3 py-4">
             <Form
-              onSubmit={changePassword}
+              onSubmit={resetPassword}
               className="d-flex"
               style={{
                 width: "340px",
@@ -138,30 +162,6 @@ export default function ResetPassword() {
               </Button>
             </Form>
           </Alert>
-          {/* Error Modal */}
-          <Modal
-            show={showErrorModal}
-            onHide={handleCloseErrorModal}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Alert variant="danger" className="m-0 p-0">
-              <Modal.Body>
-                <Alert.Heading className="mb-3">Error</Alert.Heading>
-                <p>
-                  <span>
-                    {error === "auth/too-many-requests" &&
-                      "Too many attempts. Please try again later."}
-                  </span>
-                </p>
-              </Modal.Body>
-              <Modal.Footer className="border-0 pt-0 p-3">
-                <Button variant="dark" onClick={handleCloseErrorModal}>
-                  Ok
-                </Button>
-              </Modal.Footer>
-            </Alert>
-          </Modal>
         </Wrapper>
       </div>
     </Container>

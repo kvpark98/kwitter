@@ -11,7 +11,6 @@ import { Switcher, Wrapper } from "../components/auth-components";
 import GithubButton from "../components/github-btn";
 import GoogleButton from "../components/google-btn";
 import { Button, Container } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 
@@ -32,25 +31,6 @@ export default function SignUp() {
   const [isName, setIsName] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
-
-  const [showEmailVerificationModal, setShowEmailVerificationModal] =
-    useState(false);
-
-  const handleShowEmailVerificationModal = () =>
-    setShowEmailVerificationModal(true);
-
-  const handleCloseEmailVerificationModal = async () => {
-    setShowEmailVerificationModal(false);
-    logOut();
-  };
-
-  const [showErrorModal, setShowErrorModal] = useState(false);
-
-  const handleShowErrorModal = () => setShowErrorModal(true);
-
-  const handleCloseErrorModal = async () => {
-    setShowErrorModal(false);
-  };
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -119,6 +99,11 @@ export default function SignUp() {
     navigate("/sign-in");
   };
 
+  const actionCodeSettings = {
+    url: "http://127.0.0.1:5173/sign-in",
+    handleCodeInApp: true,
+  };
+
   const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -151,20 +136,21 @@ export default function SignUp() {
         password
       );
 
+      window.localStorage.setItem("verificationNeeded?", "True");
+
       // Verify email
-      await sendEmailVerification(credentials.user);
+      await sendEmailVerification(credentials.user, actionCodeSettings);
 
       // Update the profile
       await updateProfile(credentials.user, {
         displayName: name,
       });
 
-      // Pop up Email verification modal
-      handleShowEmailVerificationModal();
+      logOut();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        handleShowErrorModal();
+        console.log(error.code);
       }
     } finally {
       setIsLoading(false);
@@ -176,8 +162,24 @@ export default function SignUp() {
       <div className="d-flex justify-content-center">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-1">Sign up</h1>
+            <h1 className="fs-2">Sign up</h1>
           </div>
+          {error && (
+            <Alert
+              variant="danger"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                <span>
+                  {error === "auth/email-already-in-use" &&
+                    "This email is already in use. Please try again with another email."}
+                  {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again later."}
+                </span>
+              </p>
+            </Alert>
+          )}
           <Alert variant="light" className="mt-3 py-4">
             <Form
               onSubmit={signIn}
@@ -256,61 +258,6 @@ export default function SignUp() {
             <GoogleButton />
             <GithubButton />
           </Alert>
-          {/* Email Verification Modal */}
-          <Modal
-            show={showEmailVerificationModal}
-            onHide={handleCloseEmailVerificationModal}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Alert variant="warning" className="m-0 p-0">
-              <Modal.Body>
-                <Alert.Heading className="mb-3">
-                  Email Verification needed
-                </Alert.Heading>
-                <p>
-                  <span>
-                    Please go to your email and click the link for verification
-                    in order to login.
-                  </span>
-                </p>
-              </Modal.Body>
-              <Modal.Footer className="border-0 pt-0 p-3">
-                <Button
-                  variant="dark"
-                  onClick={handleCloseEmailVerificationModal}
-                >
-                  Ok
-                </Button>
-              </Modal.Footer>
-            </Alert>
-          </Modal>
-          {/* Error Modal */}
-          <Modal
-            show={showErrorModal}
-            onHide={handleCloseErrorModal}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Alert variant="danger" className="m-0 p-0">
-              <Modal.Body>
-                <Alert.Heading className="mb-3">Error</Alert.Heading>
-                <p>
-                  <span>
-                    {error === "auth/email-already-in-use" &&
-                      "This email is already in use. Please try again with another email."}
-                    {error === "auth/too-many-requests" &&
-                      "Too many attempts. Please try again later."}
-                  </span>
-                </p>
-              </Modal.Body>
-              <Modal.Footer className="border-0 pt-0 p-3">
-                <Button variant="dark" onClick={handleCloseErrorModal}>
-                  Ok
-                </Button>
-              </Modal.Footer>
-            </Alert>
-          </Modal>
         </Wrapper>
       </div>
     </Container>

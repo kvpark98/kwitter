@@ -1,35 +1,31 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { auth } from "../firebase";
 import { Switcher, Wrapper } from "../components/auth-components";
-import GithubButton from "../components/github-btn";
 import { Button, Container } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import GoogleButton from "../components/google-btn";
 import Alert from "react-bootstrap/Alert";
+import { Link } from "react-router-dom";
 
-export default function SignIn() {
-  const navigate = useNavigate();
-
+export default function SendSignInLink() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const [isEmail, setIsEmail] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     const regEmail =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+
     setEmail(value.replace(/\s/gi, ""));
+
     if (value) {
       if (!regEmail.test(value)) {
         setEmailErrorMessage("Not a valid email format.");
@@ -43,36 +39,21 @@ export default function SignIn() {
     }
   };
 
-  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setPassword(value.replace(/\s/gi, ""));
-    if (value !== "") {
-      setIsPassword(true);
-    } else {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
-    }
-  };
-
   const noSpace = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === "Space") {
       event.preventDefault();
     }
   };
 
-  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
+  const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
     }
-    if (password === "") {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
-    }
 
-    if (isLoading || !isEmail || !isPassword) {
+    if (isLoading || !isEmail) {
       return;
     }
 
@@ -81,24 +62,24 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      // Log in
-      await signInWithEmailAndPassword(auth, email, password);
+      //Send sign in link
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
-      window.localStorage.removeItem("PasswordChanged?");
-      window.localStorage.removeItem("verificationNeeded?");
-
-      // Ridirect to the home page
-      if (auth.currentUser?.emailVerified === true) {
-        navigate("/");
-      }
+      window.localStorage.setItem("emailForSignIn", email);
+      window.localStorage.setItem("signInEmailSent?", "True");
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error);
+        console.log(error.code);
       }
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const actionCodeSettings = {
+    url: "http://127.0.0.1:5173/sign-in-with-email",
+    handleCodeInApp: true,
   };
 
   console.log("user : " + auth.currentUser);
@@ -109,26 +90,17 @@ export default function SignIn() {
       <div className="d-flex justify-content-center">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Sign in</h1>
+            <h1 className="fs-2">Send sign in link</h1>
           </div>
-          {window.localStorage.getItem("PasswordChanged?") === "True" && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>New password set successfully.</p>
-            </Alert>
-          )}
-          {window.localStorage.getItem("verificationNeeded?") === "True" && (
+          {window.localStorage.getItem("signInEmailSent?") === "True" && (
             <Alert
               variant="warning"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
               dismissible
             >
               <p>
-                Please go to your email and click the link for verification. If
-                you verified it, you can ignore this message.
+                Check your email for a link to sign in. If it doesn’t appear
+                within a few minutes, check your spam folder.
               </p>
             </Alert>
           )}
@@ -141,7 +113,7 @@ export default function SignIn() {
               <p>
                 <span>
                   {error === "auth/invalid-login-credentials" &&
-                    "Incorrect email or password."}
+                    "Incorrect email or password. Please try again."}
                   {error === "auth/too-many-requests" &&
                     "Too many attempts. Please try again later."}
                   {error === "auth/account-exists-with-different-credential" &&
@@ -166,7 +138,7 @@ export default function SignIn() {
           )}
           <Alert variant="light" className="mt-3 py-4">
             <Form
-              onSubmit={signIn}
+              onSubmit={sendSignInLink}
               className="d-flex"
               style={{
                 width: "340px",
@@ -175,7 +147,10 @@ export default function SignIn() {
               }}
             >
               <Form.Group controlId="email" className="mb-2">
-                <Form.Label>Email address</Form.Label>
+                <Form.Label>
+                  Enter your enrolled email address and we will send you a link
+                  for sign in.
+                </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handleEmail}
@@ -189,54 +164,13 @@ export default function SignIn() {
                   <div className="mt-2 text-danger">{emailErrorMessage}</div>
                 )}
               </Form.Group>
-              <Form.Group controlId="password">
-                <div
-                  className="d-flex justify-content-between align-items-center"
-                  style={{ height: "24px" }}
-                >
-                  <Form.Label>Password</Form.Label>
-                  <Link
-                    to="/send-sign-in-link"
-                    className="p-0 mb-2 text-decoration-none"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <Form.Control
-                  className="border-none mt-1 mb-1"
-                  onChange={handlePassword}
-                  onKeyDown={noSpace}
-                  name="password"
-                  value={password}
-                  type="password"
-                  maxLength={20}
-                />
-                {!isPassword && (
-                  <div className="mt-2 text-danger">{passwordErrorMessage}</div>
-                )}
-              </Form.Group>
               <Button type="submit" className="fw-bold">
-                {isLoading ? "Loading..." : "Sign in"}
+                {isLoading ? "Loading..." : "Send sign in email"}
               </Button>
             </Form>
             <Switcher>
-              <Link to="/sign-up">Create an account &rarr;</Link>
+              <Link to="/sign-in">Sign in &rarr;</Link>
             </Switcher>
-          </Alert>
-          <div className="w-100 d-flex justify-content-between align-items-center">
-            <span
-              className="w-50 border border-secondary"
-              style={{ height: 0 }}
-            ></span>
-            <span className="mx-3">OR</span>
-            <span
-              className="w-50 border border-secondary"
-              style={{ height: 0 }}
-            ></span>
-          </div>
-          <Alert variant="light" className="w-100 mt-3 py-4">
-            <GoogleButton />
-            <GithubButton />
           </Alert>
         </Wrapper>
       </div>
