@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { auth } from "../firebase";
@@ -47,10 +47,12 @@ export default function SignInWithEmail() {
     }
   };
 
-  if (isSignInWithEmailLink(auth, window.location.href)) {
-    window.localStorage.setItem("clickedEmailLink?", "True");
-    window.localStorage.removeItem("signInEmailSent?");
-  }
+  useEffect(() => {
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      window.localStorage.setItem("clickedEmailLink?", "True");
+      window.localStorage.removeItem("signInEmailSent?");
+    }
+  }, []);
 
   const signInwithEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

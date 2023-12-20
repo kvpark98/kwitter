@@ -45,6 +45,11 @@ export default function SendSignInLink() {
     }
   };
 
+  const actionCodeSettings = {
+    url: "http://127.0.0.1:5173/reset-password",
+    handleCodeInApp: true,
+  };
+
   const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -75,11 +80,6 @@ export default function SendSignInLink() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const actionCodeSettings = {
-    url: "http://127.0.0.1:5173/sign-in-with-email",
-    handleCodeInApp: true,
   };
 
   console.log("user : " + auth.currentUser);

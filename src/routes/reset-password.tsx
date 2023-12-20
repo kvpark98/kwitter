@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
+import {
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+  updatePassword,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { Wrapper } from "../components/auth-components";
 import { Button, Container } from "react-bootstrap";
@@ -53,6 +57,24 @@ export default function ResetPassword() {
     }
   };
 
+  useEffect(() => {
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      window.localStorage.setItem("clickedEmailLink?", "True");
+      window.localStorage.removeItem("signInEmailSent?");
+
+      if (window.localStorage.getItem("emailForSignIn") !== null) {
+        signInWithEmailLink(
+          auth,
+          window.localStorage.getItem("emailForSignIn")!,
+          window.location.href
+        );
+        window.localStorage.setItem("signedInWithEmailAtOnce?", "True");
+      } else {
+        navigate("/sign-in-with-email");
+      }
+    }
+  }, []);
+
   const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -75,14 +97,18 @@ export default function ResetPassword() {
 
         window.localStorage.setItem("PasswordChanged?", "True");
 
+        window.localStorage.removeItem("signInEmailSent?");
         window.localStorage.removeItem("signedInWithEmail?");
+        window.localStorage.removeItem("signedInWithEmailAtOnce?");
+        window.localStorage.removeItem("clickedEmailLink?");
+        window.localStorage.removeItem("emailForSignIn");
 
         logOut();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error.code);
+        console.log(error);
       }
     } finally {
       setIsLoading(false);
@@ -104,7 +130,9 @@ export default function ResetPassword() {
           <div className="w-100 mb-1 d-flex justify-content-center">
             <h1 className="fs-2">Reset password</h1>
           </div>
-          {window.localStorage.getItem("signedInWithEmail?") === "True" && (
+          {(window.localStorage.getItem("signedInWithEmail?") === "True" ||
+            window.localStorage.getItem("signedInWithEmailAtOnce?") ===
+              "True") && (
             <Alert
               variant="success"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
