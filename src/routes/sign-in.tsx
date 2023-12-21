@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -18,12 +18,20 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isEmail, setIsEmail] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
+
+  const [isPasswordChanged, setIsPasswordChanged] = useState(
+    window.localStorage.getItem("PasswordChanged?")
+  );
+
+  const [isVerificationNeeded, setIsVerificationNeeded] = useState(
+    window.localStorage.getItem("verificationNeeded?")
+  );
+
   const [error, setError] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-
-  const [isEmail, setIsEmail] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -60,6 +68,11 @@ export default function SignIn() {
     }
   };
 
+  useEffect(() => {
+    window.localStorage.removeItem("verificationNeeded?");
+    window.localStorage.removeItem("PasswordChanged?");
+  }, []);
+
   const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -84,8 +97,8 @@ export default function SignIn() {
       // Log in
       await signInWithEmailAndPassword(auth, email, password);
 
-      window.localStorage.removeItem("PasswordChanged?");
-      window.localStorage.removeItem("verificationNeeded?");
+      setIsVerificationNeeded("");
+      setIsPasswordChanged("");
 
       // Ridirect to the home page
       if (auth.currentUser?.emailVerified === true) {
@@ -95,6 +108,8 @@ export default function SignIn() {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log(error);
+        setIsVerificationNeeded("");
+        setIsPasswordChanged("");
       }
     } finally {
       setIsLoading(false);
@@ -111,16 +126,7 @@ export default function SignIn() {
           <div className="w-100 mb-1 d-flex justify-content-center">
             <h1 className="fs-2">Sign in</h1>
           </div>
-          {window.localStorage.getItem("PasswordChanged?") === "True" && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>New password set successfully.</p>
-            </Alert>
-          )}
-          {window.localStorage.getItem("verificationNeeded?") === "True" && (
+          {isVerificationNeeded && (
             <Alert
               variant="warning"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
@@ -130,6 +136,15 @@ export default function SignIn() {
                 Please go to your email and click the link for verification. If
                 you verified it, you can ignore this message.
               </p>
+            </Alert>
+          )}
+          {isPasswordChanged && (
+            <Alert
+              variant="success"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>New password set successfully.</p>
             </Alert>
           )}
           {error && (
@@ -196,7 +211,7 @@ export default function SignIn() {
                 >
                   <Form.Label>Password</Form.Label>
                   <Link
-                    to="/send-sign-in-link"
+                    to="/send-password-reset-link"
                     className="p-0 mb-2 text-decoration-none"
                   >
                     Forgot password?

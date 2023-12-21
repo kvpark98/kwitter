@@ -10,11 +10,7 @@ export default function ProtectedRouteResetPassword({
   const user = auth.currentUser;
 
   if (isSignInWithEmailLink(auth, window.location.href)) {
-    if (window.localStorage.getItem("emailForSignIn") !== null) {
-      return children;
-    } else {
-      return <Navigate to="/sign-in-with-email" />;
-    }
+    return children;
   } else {
     if (user !== null) {
       if (user?.emailVerified === true) {

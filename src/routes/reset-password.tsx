@@ -15,18 +15,27 @@ import Alert from "react-bootstrap/Alert";
 export default function ResetPassword() {
   const navigate = useNavigate();
 
+  const [isSignedInWithEmail, setIsSignedInWithEmail] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [newPassword, setNewPassword] = useState("");
 
-  const [error, setError] = useState("");
-  const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
+  const [email, setEmail] = useState(window.localStorage.getItem("email")!);
 
   const [isNewPassword, setIsNewPassword] = useState(false);
+
+  const [error, setError] = useState("");
+  const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
 
   const logOut = () => {
     auth.signOut();
     navigate("/sign-in");
+  };
+
+  const redirect = () => {
+    logOut();
+    navigate("/send-password-reset-link");
   };
 
   const handleNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,19 +67,22 @@ export default function ResetPassword() {
   };
 
   useEffect(() => {
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-      window.localStorage.setItem("clickedEmailLink?", "True");
-      window.localStorage.removeItem("signInEmailSent?");
-
-      if (window.localStorage.getItem("emailForSignIn") !== null) {
-        signInWithEmailLink(
-          auth,
-          window.localStorage.getItem("emailForSignIn")!,
-          window.location.href
-        );
-        window.localStorage.setItem("signedInWithEmailAtOnce?", "True");
+    try {
+      if (isSignInWithEmailLink(auth, window.location.href)) {
+        if (email) {
+          setEmail(window.localStorage.getItem("email")!);
+          console.log("email : " + email);
+          signInWithEmailLink(auth, email, window.location.href);
+          setIsSignedInWithEmail(true);
+        }
       } else {
-        navigate("/sign-in-with-email");
+        setEmail("");
+        redirect();
+      }
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+        console.log(error.code);
       }
     }
   }, []);
@@ -97,11 +109,9 @@ export default function ResetPassword() {
 
         window.localStorage.setItem("PasswordChanged?", "True");
 
-        window.localStorage.removeItem("signInEmailSent?");
-        window.localStorage.removeItem("signedInWithEmail?");
-        window.localStorage.removeItem("signedInWithEmailAtOnce?");
-        window.localStorage.removeItem("clickedEmailLink?");
-        window.localStorage.removeItem("emailForSignIn");
+        window.localStorage.removeItem("email");
+
+        setIsSignedInWithEmail(false);
 
         logOut();
       }
@@ -109,6 +119,10 @@ export default function ResetPassword() {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log(error);
+        window.localStorage.removeItem("PasswordChanged?");
+        window.localStorage.removeItem("email");
+        setEmail("");
+        redirect();
       }
     } finally {
       setIsLoading(false);
@@ -130,18 +144,13 @@ export default function ResetPassword() {
           <div className="w-100 mb-1 d-flex justify-content-center">
             <h1 className="fs-2">Reset password</h1>
           </div>
-          {(window.localStorage.getItem("signedInWithEmail?") === "True" ||
-            window.localStorage.getItem("signedInWithEmailAtOnce?") ===
-              "True") && (
+          {isSignedInWithEmail && (
             <Alert
               variant="success"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
               dismissible
             >
-              <p>
-                You were signed in with email link. Please make sure to reset
-                your password.
-              </p>
+              <p>Your email was verified. Please reset your password.</p>
             </Alert>
           )}
           {error && (
@@ -153,6 +162,8 @@ export default function ResetPassword() {
               <p>
                 <span>
                   {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again later."}
+                  {error === "auth/invalid-action-code" &&
                     "Too many attempts. Please try again later."}
                 </span>
               </p>

@@ -13,12 +13,10 @@ import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-route";
 import "./App.module.css";
 import ProtectedRouteLogin from "./components/protected-route-login";
-import SignInWithEmail from "./routes/sign-in-with-email";
 import ResetPassword from "./routes/reset-password";
-import ProtectedRouteSignInWithEmail from "./components/protected-route-sign-in-with-email";
 import { Container } from "react-bootstrap";
-import SendSignInLink from "./routes/send-sign-in-link";
 import ProtectedRouteResetPassword from "./components/protected-route-reset-password";
+import SendPasswordResetLink from "./routes/send-password-reset-link";
 
 const router = createBrowserRouter([
   {
@@ -56,19 +54,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/send-sign-in-link",
+    path: "/send-password-reset-link",
     element: (
       <ProtectedRouteLogin>
-        <SendSignInLink />
+        <SendPasswordResetLink />
       </ProtectedRouteLogin>
-    ),
-  },
-  {
-    path: "/sign-in-with-email",
-    element: (
-      <ProtectedRouteSignInWithEmail>
-        <SignInWithEmail />
-      </ProtectedRouteSignInWithEmail>
     ),
   },
   {

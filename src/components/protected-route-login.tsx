@@ -7,9 +7,6 @@ export default function ProtectedRouteLogin({
   children: React.ReactNode;
 }) {
   const user = auth.currentUser;
-  // if (user?.emailVerified === false) {
-  //   return <Navigate to="/login" />;
-  // }
   if (
     user === null ||
     user?.emailVerified === undefined ||

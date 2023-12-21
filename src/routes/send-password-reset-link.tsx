@@ -8,15 +8,17 @@ import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import { Link } from "react-router-dom";
 
-export default function SendSignInLink() {
+export default function SendPasswordResetLink() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState("");
 
+  const [isEmail, setIsEmail] = useState(false);
+
+  const [isPasswordResetLinkSent, setIsPasswordResetLinkSent] = useState(false);
+
   const [error, setError] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
-
-  const [isEmail, setIsEmail] = useState(false);
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -50,7 +52,9 @@ export default function SendSignInLink() {
     handleCodeInApp: true,
   };
 
-  const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
+  const sendPasswordResetLink = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     if (email === "") {
@@ -67,15 +71,17 @@ export default function SendSignInLink() {
     try {
       setIsLoading(true);
 
-      //Send sign in link
+      //Send password reset link
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
-      window.localStorage.setItem("emailForSignIn", email);
-      window.localStorage.setItem("signInEmailSent?", "True");
+      window.localStorage.setItem("email", email);
+      setIsPasswordResetLinkSent(true);
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log(error.code);
+        window.localStorage.removeItem("email");
+        setIsPasswordResetLinkSent(false);
       }
     } finally {
       setIsLoading(false);
@@ -90,9 +96,9 @@ export default function SendSignInLink() {
       <div className="d-flex justify-content-center">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Send sign in link</h1>
+            <h1 className="fs-2">Send password reset link</h1>
           </div>
-          {window.localStorage.getItem("signInEmailSent?") === "True" && (
+          {isPasswordResetLinkSent && (
             <Alert
               variant="warning"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
@@ -122,23 +128,9 @@ export default function SendSignInLink() {
               </p>
             </Alert>
           )}
-          {auth.currentUser && auth.currentUser?.emailVerified === false && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>
-                <span>
-                  Your email was not verified. Please go to your email and click
-                  the link for verification.
-                </span>
-              </p>
-            </Alert>
-          )}
           <Alert variant="light" className="mt-3 py-4">
             <Form
-              onSubmit={sendSignInLink}
+              onSubmit={sendPasswordResetLink}
               className="d-flex"
               style={{
                 width: "340px",
@@ -165,7 +157,7 @@ export default function SendSignInLink() {
                 )}
               </Form.Group>
               <Button type="submit" className="fw-bold">
-                {isLoading ? "Loading..." : "Send sign in email"}
+                {isLoading ? "Loading..." : "Send password reset email"}
               </Button>
             </Form>
             <Switcher>
