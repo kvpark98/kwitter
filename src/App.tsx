@@ -15,8 +15,9 @@ import "./App.module.css";
 import ProtectedRouteLogin from "./components/protected-route-login";
 import ResetPassword from "./routes/reset-password";
 import { Container } from "react-bootstrap";
-import ProtectedRouteResetPassword from "./components/protected-route-reset-password";
-import SendPasswordResetLink from "./routes/send-password-reset-link";
+import SendSignInLink from "./routes/send-sign-in-link";
+import SignInWithEmail from "./routes/sign-in-with-email";
+import ProtectedRouteSignInWithEmail from "./components/protected-route-sign-in-with-email";
 
 const router = createBrowserRouter([
   {
@@ -54,19 +55,27 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/send-password-reset-link",
+    path: "/send-sign-in-link",
     element: (
       <ProtectedRouteLogin>
-        <SendPasswordResetLink />
+        <SendSignInLink />
       </ProtectedRouteLogin>
+    ),
+  },
+  {
+    path: "/sign-in-with-email",
+    element: (
+      <ProtectedRouteSignInWithEmail>
+        <SignInWithEmail />
+      </ProtectedRouteSignInWithEmail>
     ),
   },
   {
     path: "/reset-password",
     element: (
-      <ProtectedRouteResetPassword>
+      <ProtectedRoute>
         <ResetPassword />
-      </ProtectedRouteResetPassword>
+      </ProtectedRoute>
     ),
   },
 ]);

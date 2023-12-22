@@ -55,19 +55,19 @@ export default function GoogleButton() {
             <p>
               <span>
                 {error === "auth/invalid-login-credentials" &&
-                  "Incorrect email or password. Please try again."}
+                  "Incorrect email or password."}
                 {error === "auth/too-many-requests" &&
-                  "Too many attempts. Please try again later."}
+                  "Too many attempts. Please try again after some delay."}
                 {error === "auth/account-exists-with-different-credential" &&
                   "Email is invalid or already taken."}
                 {auth.currentUser &&
                   auth.currentUser?.emailVerified === false &&
-                  "Your email was not verified. Please go to your email and click the link for verification in order to login."}
+                  "Your email was not verified. Please go to your email and click on the link for verification in order to login."}
               </span>
             </p>
           </Modal.Body>
           <Modal.Footer className="border-0 pt-0 p-3">
-            <Button variant="dark" onClick={handleCloseErrorModal}>
+            <Button variant="outline-danger" onClick={handleCloseErrorModal}>
               Ok
             </Button>
           </Modal.Footer>

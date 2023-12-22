@@ -24,6 +24,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
+
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
@@ -34,8 +35,11 @@ export default function SignUp() {
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     const regName = /^[가-힣a-zA-Z]{2,20}$/;
+
     setName(value.replace(/\s/gi, ""));
+
     if (value !== "") {
       if (!regName.test(value)) {
         setNameErrorMessage(
@@ -53,9 +57,12 @@ export default function SignUp() {
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     const regEmail =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+
     setEmail(value.replace(/\s/gi, ""));
+
     if (value !== "") {
       if (!regEmail.test(value)) {
         setEmailErrorMessage("Not a valid email format.");
@@ -71,8 +78,11 @@ export default function SignUp() {
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     const regPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
+
     setPassword(value.replace(/\s/gi, ""));
+
     if (value !== "") {
       if (!regPassword.test(value)) {
         setPasswordErrorMessage(
@@ -97,6 +107,16 @@ export default function SignUp() {
   const logOut = () => {
     auth.signOut();
     navigate("/sign-in");
+  };
+
+  const reset = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+
+    setNameErrorMessage("");
+    setEmailErrorMessage("");
+    setPasswordErrorMessage("");
   };
 
   const actionCodeSettings = {
@@ -136,7 +156,7 @@ export default function SignUp() {
         password
       );
 
-      window.localStorage.setItem("verificationNeeded?", "True");
+      window.localStorage.setItem("verificationNeeded", "true");
 
       // Verify email
       await sendEmailVerification(credentials.user, actionCodeSettings);
@@ -150,7 +170,7 @@ export default function SignUp() {
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("error : " + error.code);
       }
     } finally {
       setIsLoading(false);
@@ -173,9 +193,17 @@ export default function SignUp() {
               <p>
                 <span>
                   {error === "auth/email-already-in-use" &&
-                    "This email is already in use. Please try again with another email."}
+                    "This email is already in use."}
+                  {error === "auth/account-exists-with-different-credential" &&
+                    "Email is invalid or already taken."}
+                  {error === "auth/invalid-email" &&
+                    "The email address is not valid."}
                   {error === "auth/too-many-requests" &&
-                    "Too many attempts. Please try again later."}
+                    "Too many attempts. Please try again after some delay."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please try again."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
                 </span>
               </p>
             </Alert>
@@ -239,8 +267,11 @@ export default function SignUp() {
                 {isLoading ? "Loading..." : "Sign up"}
               </Button>
             </Form>
-            <Switcher>
-              <Link to="/sign-in">Sign in &rarr;</Link>
+            <Switcher className="d-flex justify-content-between">
+              <Button onClick={reset} type="button" variant="outline-warning">
+                Reset
+              </Button>
+              <Link to="/sign-in">Sign in</Link>
             </Switcher>
           </Alert>
           <div className="w-100 d-flex justify-content-between align-items-center">

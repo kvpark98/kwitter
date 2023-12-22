@@ -22,14 +22,19 @@ export default function SignIn() {
   const [isPassword, setIsPassword] = useState(false);
 
   const [isPasswordChanged, setIsPasswordChanged] = useState(
-    window.localStorage.getItem("PasswordChanged?")
+    window.localStorage.getItem("PasswordChanged")
   );
 
   const [isVerificationNeeded, setIsVerificationNeeded] = useState(
-    window.localStorage.getItem("verificationNeeded?")
+    window.localStorage.getItem("verificationNeeded")
   );
 
-  const [error, setError] = useState("");
+  const [isVerified, setIsverified] = useState("");
+
+  const [error, setError] = useState(
+    window.localStorage.getItem("error") || ""
+  );
+
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
@@ -68,9 +73,23 @@ export default function SignIn() {
     }
   };
 
+  const logOut = () => {
+    auth.signOut();
+    navigate("/sign-in");
+  };
+
+  const reset = () => {
+    setEmail("");
+    setPassword("");
+
+    setEmailErrorMessage("");
+    setPasswordErrorMessage("");
+  };
+
   useEffect(() => {
-    window.localStorage.removeItem("verificationNeeded?");
-    window.localStorage.removeItem("PasswordChanged?");
+    window.localStorage.removeItem("verificationNeeded");
+    window.localStorage.removeItem("PasswordChanged");
+    window.localStorage.removeItem("error");
   }, []);
 
   const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -102,12 +121,16 @@ export default function SignIn() {
 
       // Ridirect to the home page
       if (auth.currentUser?.emailVerified === true) {
+        setIsverified("yes");
         navigate("/");
+      } else {
+        setIsverified("no");
+        logOut();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error);
+        console.log("error : " + error.code);
         setIsVerificationNeeded("");
         setIsPasswordChanged("");
       }
@@ -133,8 +156,8 @@ export default function SignIn() {
               dismissible
             >
               <p>
-                Please go to your email and click the link for verification. If
-                you verified it, you can ignore this message.
+                Please go to your email and click on the link for verification.
+                If you verified it, you can ignore this message.
               </p>
             </Alert>
           )}
@@ -157,24 +180,39 @@ export default function SignIn() {
                 <span>
                   {error === "auth/invalid-login-credentials" &&
                     "Incorrect email or password."}
+                  {error === "auth/user-disabled" &&
+                    "The user corresponding to the given email has been disabled."}
+                  {error === "auth/invalid-action-code" &&
+                    "The link is malformed or has already been used. Please try again."}
+                  {error === "auth/user-not-found" &&
+                    "There is no user corresponding to the given email."}
                   {error === "auth/too-many-requests" &&
-                    "Too many attempts. Please try again later."}
+                    "Too many attempts. Please try again after some delay."}
                   {error === "auth/account-exists-with-different-credential" &&
                     "Email is invalid or already taken."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please try again."}
+                  {error === "auth/requires-recent-login" &&
+                    "Your last sign-in time does not meet the security threshold. Please sign in again."}
+                  {error === "auth/invalid-user-token" &&
+                    "Your credential is no longer valid. Please sign in again."}
+                  {error === "auth/user-token-expired" &&
+                    "Your credential has expired. Please sign in again."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
                 </span>
               </p>
             </Alert>
           )}
-          {auth.currentUser && auth.currentUser?.emailVerified === false && (
+          {isVerified === "no" && (
             <Alert
               variant="danger"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
             >
               <p>
                 <span>
                   Your email was not verified. Please go to your email and click
-                  the link for verification.
+                  on the link for verification.
                 </span>
               </p>
             </Alert>
@@ -211,7 +249,7 @@ export default function SignIn() {
                 >
                   <Form.Label>Password</Form.Label>
                   <Link
-                    to="/send-password-reset-link"
+                    to="/send-sign-in-link"
                     className="p-0 mb-2 text-decoration-none"
                   >
                     Forgot password?
@@ -234,8 +272,11 @@ export default function SignIn() {
                 {isLoading ? "Loading..." : "Sign in"}
               </Button>
             </Form>
-            <Switcher>
-              <Link to="/sign-up">Create an account &rarr;</Link>
+            <Switcher className="d-flex justify-content-between">
+              <Button onClick={reset} type="button" variant="outline-warning">
+                Reset
+              </Button>
+              <Link to="/sign-up">Create an account</Link>
             </Switcher>
           </Alert>
           <div className="w-100 d-flex justify-content-between align-items-center">

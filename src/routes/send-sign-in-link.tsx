@@ -6,9 +6,11 @@ import { Switcher, Wrapper } from "../components/auth-components";
 import { Button, Container } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function SendPasswordResetLink() {
+export default function SendSignInLink() {
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -18,6 +20,7 @@ export default function SendPasswordResetLink() {
   const [isPasswordResetLinkSent, setIsPasswordResetLinkSent] = useState(false);
 
   const [error, setError] = useState("");
+
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,14 +50,18 @@ export default function SendPasswordResetLink() {
     }
   };
 
+  const reset = () => {
+    setEmail("");
+
+    setEmailErrorMessage("");
+  };
+
   const actionCodeSettings = {
-    url: "http://127.0.0.1:5173/reset-password",
+    url: "http://127.0.0.1:5173/sign-in-with-email",
     handleCodeInApp: true,
   };
 
-  const sendPasswordResetLink = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (email === "") {
@@ -71,16 +78,18 @@ export default function SendPasswordResetLink() {
     try {
       setIsLoading(true);
 
-      //Send password reset link
+      // Send sign in link
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
-      window.localStorage.setItem("email", email);
       setIsPasswordResetLinkSent(true);
+
+      setTimeout(() => {
+        navigate("/sign-in");
+      }, 7000);
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error.code);
-        window.localStorage.removeItem("email");
+        console.log("error : " + error.code);
         setIsPasswordResetLinkSent(false);
       }
     } finally {
@@ -96,7 +105,7 @@ export default function SendPasswordResetLink() {
       <div className="d-flex justify-content-center">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Send password reset link</h1>
+            <h1 className="fs-2">Send sign in link</h1>
           </div>
           {isPasswordResetLinkSent && (
             <Alert
@@ -118,19 +127,27 @@ export default function SendPasswordResetLink() {
             >
               <p>
                 <span>
-                  {error === "auth/invalid-login-credentials" &&
-                    "Incorrect email or password. Please try again."}
+                  {error === "auth/invalid-action-code" &&
+                    "The link is malformed or has already been used. Please try again."}
                   {error === "auth/too-many-requests" &&
-                    "Too many attempts. Please try again later."}
-                  {error === "auth/account-exists-with-different-credential" &&
-                    "Email is invalid or already taken."}
+                    "Too many attempts. Please try again after some delay."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please try again."}
+                  {error === "auth/requires-recent-login" &&
+                    "Your last sign-in time does not meet the security threshold. Please sign in again."}
+                  {error === "auth/invalid-user-token" &&
+                    "Your credential is no longer valid. Please sign in again."}
+                  {error === "auth/user-token-expired" &&
+                    "Your credential has expired. Please sign in again."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
                 </span>
               </p>
             </Alert>
           )}
           <Alert variant="light" className="mt-3 py-4">
             <Form
-              onSubmit={sendPasswordResetLink}
+              onSubmit={sendSignInLink}
               className="d-flex"
               style={{
                 width: "340px",
@@ -157,11 +174,14 @@ export default function SendPasswordResetLink() {
                 )}
               </Form.Group>
               <Button type="submit" className="fw-bold">
-                {isLoading ? "Loading..." : "Send password reset email"}
+                {isLoading ? "Loading..." : "Send sign in email"}
               </Button>
             </Form>
-            <Switcher>
-              <Link to="/sign-in">Sign in &rarr;</Link>
+            <Switcher className="d-flex justify-content-between">
+              <Button onClick={reset} type="button" variant="outline-warning">
+                Reset
+              </Button>
+              <Link to="/sign-in">Sign in</Link>
             </Switcher>
           </Alert>
         </Wrapper>
