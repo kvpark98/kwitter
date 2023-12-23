@@ -44,12 +44,8 @@ export const Error = styled.span`
 
 export const Switcher = styled.div`
   width: 100%;
-  margin-top: 16px;
+  margin-top: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
-  a {
-    margin-left: 5px;
-    color: #1d9bf0;
-  }
 `;

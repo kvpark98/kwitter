@@ -82,6 +82,9 @@ export default function SignIn() {
     setEmail("");
     setPassword("");
 
+    setIsEmail(false);
+    setIsPassword(false);
+
     setEmailErrorMessage("");
     setPasswordErrorMessage("");
   };
@@ -183,7 +186,7 @@ export default function SignIn() {
                   {error === "auth/user-disabled" &&
                     "The user corresponding to the given email has been disabled."}
                   {error === "auth/invalid-action-code" &&
-                    "The link is malformed or has already been used. Please try again."}
+                    "The link is malformed or has already been used. Please get a new link."}
                   {error === "auth/user-not-found" &&
                     "There is no user corresponding to the given email."}
                   {error === "auth/too-many-requests" &&
@@ -191,7 +194,7 @@ export default function SignIn() {
                   {error === "auth/account-exists-with-different-credential" &&
                     "Email is invalid or already taken."}
                   {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please try again."}
+                    "A network error has occurred. Please reopen the page."}
                   {error === "auth/requires-recent-login" &&
                     "Your last sign-in time does not meet the security threshold. Please sign in again."}
                   {error === "auth/invalid-user-token" &&
@@ -208,6 +211,7 @@ export default function SignIn() {
             <Alert
               variant="danger"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
             >
               <p>
                 <span>
@@ -238,7 +242,7 @@ export default function SignIn() {
                   type="text"
                   maxLength={50}
                 />
-                {!isEmail && (
+                {!isEmail && emailErrorMessage && (
                   <div className="mt-2 text-danger">{emailErrorMessage}</div>
                 )}
               </Form.Group>
@@ -264,11 +268,11 @@ export default function SignIn() {
                   type="password"
                   maxLength={20}
                 />
-                {!isPassword && (
+                {!isPassword && passwordErrorMessage && (
                   <div className="mt-2 text-danger">{passwordErrorMessage}</div>
                 )}
               </Form.Group>
-              <Button type="submit" className="fw-bold">
+              <Button type="submit" className="mt-2 fw-bold">
                 {isLoading ? "Loading..." : "Sign in"}
               </Button>
             </Form>
@@ -276,7 +280,9 @@ export default function SignIn() {
               <Button onClick={reset} type="button" variant="outline-warning">
                 Reset
               </Button>
-              <Link to="/sign-up">Create an account</Link>
+              <Link to="/sign-up" className="btn btn-outline-success">
+                Create an account
+              </Link>
             </Switcher>
           </Alert>
           <div className="w-100 d-flex justify-content-between align-items-center">

@@ -53,6 +53,8 @@ export default function SendSignInLink() {
   const reset = () => {
     setEmail("");
 
+    setIsEmail(false);
+
     setEmailErrorMessage("");
   };
 
@@ -128,11 +130,11 @@ export default function SendSignInLink() {
               <p>
                 <span>
                   {error === "auth/invalid-action-code" &&
-                    "The link is malformed or has already been used. Please try again."}
+                    "The link is malformed or has already been used. Please get a new link."}
                   {error === "auth/too-many-requests" &&
                     "Too many attempts. Please try again after some delay."}
                   {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please try again."}
+                    "A network error has occurred. Please reopen the page."}
                   {error === "auth/requires-recent-login" &&
                     "Your last sign-in time does not meet the security threshold. Please sign in again."}
                   {error === "auth/invalid-user-token" &&
@@ -155,7 +157,7 @@ export default function SendSignInLink() {
                 gap: "15px",
               }}
             >
-              <Form.Group controlId="email" className="mb-2">
+              <Form.Group controlId="email">
                 <Form.Label>
                   Enter your enrolled email address and we will send you a link
                   for sign in.
@@ -169,11 +171,11 @@ export default function SendSignInLink() {
                   type="text"
                   maxLength={50}
                 />
-                {!isEmail && (
+                {!isEmail && emailErrorMessage && (
                   <div className="mt-2 text-danger">{emailErrorMessage}</div>
                 )}
               </Form.Group>
-              <Button type="submit" className="fw-bold">
+              <Button type="submit" className="mt-2 fw-bold">
                 {isLoading ? "Loading..." : "Send sign in email"}
               </Button>
             </Form>
@@ -181,7 +183,9 @@ export default function SendSignInLink() {
               <Button onClick={reset} type="button" variant="outline-warning">
                 Reset
               </Button>
-              <Link to="/sign-in">Sign in</Link>
+              <Link to="/sign-in" className="btn btn-outline-success">
+                Sign in
+              </Link>
             </Switcher>
           </Alert>
         </Wrapper>

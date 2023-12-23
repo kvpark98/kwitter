@@ -55,10 +55,12 @@ export default function GithubButton() {
               <span>
                 {error === "auth/invalid-login-credentials" &&
                   "Incorrect email or password."}
-                {error === "auth/too-many-requests" &&
-                  "Too many attempts. Please try again after some delay."}
                 {error === "auth/account-exists-with-different-credential" &&
                   "Email is invalid or already taken."}
+                {error === "auth/too-many-requests" &&
+                  "Too many attempts. Please try again after some delay."}
+                {error === "auth/network-request-failed" &&
+                  "A network error has occurred. Please reopen the page."}
                 {auth.currentUser &&
                   auth.currentUser?.emailVerified === false &&
                   "Your email was not verified. Please go to your email and click on the link for verification in order to login."}

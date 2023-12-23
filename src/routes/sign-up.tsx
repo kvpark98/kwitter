@@ -22,16 +22,20 @@ export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
+  const [isName, setIsName] = useState(false);
+  const [isEmail, setIsEmail] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
 
   const [error, setError] = useState("");
 
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-
-  const [isName, setIsName] = useState(false);
-  const [isEmail, setIsEmail] = useState(false);
-  const [isPassword, setIsPassword] = useState(false);
+  const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
+    useState("");
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -85,16 +89,68 @@ export default function SignUp() {
 
     if (value !== "") {
       if (!regPassword.test(value)) {
-        setPasswordErrorMessage(
-          "Please enter at least 8 characters including numbers, English, and special characters."
-        );
-        setIsPassword(false);
+        if (passwordConfirm) {
+          setPasswordErrorMessage(
+            "Please enter at least 8 characters including numbers, English, and special characters."
+          );
+          setPasswordConfirmErrorMessage(
+            "Please make your password valid first."
+          );
+          setIsPassword(false);
+          setIsPasswordConfirm(false);
+        } else {
+          setPasswordErrorMessage(
+            "Please enter at least 8 characters including numbers, English, and special characters."
+          );
+          setIsPassword(false);
+        }
       } else {
-        setIsPassword(true);
+        if (passwordConfirm) {
+          if (value !== passwordConfirm) {
+            setPasswordConfirmErrorMessage("The password does not match.");
+            setIsPassword(true);
+            setIsPasswordConfirm(false);
+          } else {
+            setPasswordConfirmErrorMessage("");
+            setIsPassword(true);
+            setIsPasswordConfirm(true);
+          }
+        } else {
+          setIsPassword(true);
+          setIsPasswordConfirm(false);
+        }
       }
     } else {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
+      if (passwordConfirm) {
+        setPasswordErrorMessage("Please enter your password.");
+        setPasswordConfirmErrorMessage("Please enter your password first.");
+        setIsPassword(false);
+        setIsPasswordConfirm(false);
+      } else {
+        setPasswordErrorMessage("Please enter your password.");
+        setIsPassword(false);
+        setIsPasswordConfirm(false);
+      }
+    }
+  };
+
+  const handlePasswordConfirm = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+
+    setPasswordConfirm(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      if (value !== password) {
+        setPasswordConfirmErrorMessage("The password does not match.");
+        setIsPasswordConfirm(false);
+      } else {
+        setIsPasswordConfirm(true);
+      }
+    } else {
+      setPasswordConfirmErrorMessage("Please confirm your password.");
+      setIsPasswordConfirm(false);
     }
   };
 
@@ -113,10 +169,17 @@ export default function SignUp() {
     setName("");
     setEmail("");
     setPassword("");
+    setPasswordConfirm("");
+
+    setIsName(false);
+    setIsEmail(false);
+    setIsPassword(false);
+    setIsPasswordConfirm(false);
 
     setNameErrorMessage("");
     setEmailErrorMessage("");
     setPasswordErrorMessage("");
+    setPasswordConfirmErrorMessage("");
   };
 
   const actionCodeSettings = {
@@ -139,8 +202,19 @@ export default function SignUp() {
       setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
     }
+    if (passwordConfirm === "") {
+      setPasswordConfirmErrorMessage("Please confirm your password.");
+      setIsPasswordConfirm(false);
+    }
 
-    if (isLoading || !isName || !isEmail || !isPassword) {
+    if (
+      isLoading ||
+      !isName ||
+      !isEmail ||
+      !isPassword ||
+      !isPasswordConfirm ||
+      password !== passwordConfirm
+    ) {
       return;
     }
 
@@ -201,7 +275,7 @@ export default function SignUp() {
                   {error === "auth/too-many-requests" &&
                     "Too many attempts. Please try again after some delay."}
                   {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please try again."}
+                    "A network error has occurred. Please reopen the page."}
                   {error === "auth/web-storage-unsupported" &&
                     "Your browser does not support web storage. Please try again."}
                 </span>
@@ -229,7 +303,7 @@ export default function SignUp() {
                   type="text"
                   maxLength={20}
                 />
-                {!isName && (
+                {!isName && nameErrorMessage && (
                   <div className="mt-2 text-danger">{nameErrorMessage}</div>
                 )}
               </Form.Group>
@@ -244,7 +318,7 @@ export default function SignUp() {
                   type="text"
                   maxLength={50}
                 />
-                {!isEmail && (
+                {!isEmail && emailErrorMessage && (
                   <div className="mt-2 text-danger">{emailErrorMessage}</div>
                 )}
               </Form.Group>
@@ -259,11 +333,29 @@ export default function SignUp() {
                   type="password"
                   maxLength={20}
                 />
-                {!isPassword && (
+                {!isPassword && passwordErrorMessage && (
                   <div className="mt-2 text-danger">{passwordErrorMessage}</div>
                 )}
               </Form.Group>
-              <Button type="submit" className="fw-bold">
+              <Form.Group controlId="passwordConfirm">
+                <Form.Label>Password Confirm</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handlePasswordConfirm}
+                  onKeyDown={noSpace}
+                  name="passwordConfirm"
+                  value={passwordConfirm}
+                  type="password"
+                  maxLength={20}
+                  {...(!isPassword ? { disabled: true } : { disabled: false })}
+                />
+                {!isPasswordConfirm && passwordConfirmErrorMessage && (
+                  <div className="mt-2 text-danger">
+                    {passwordConfirmErrorMessage}
+                  </div>
+                )}
+              </Form.Group>
+              <Button type="submit" className="mt-2 fw-bold">
                 {isLoading ? "Loading..." : "Sign up"}
               </Button>
             </Form>
@@ -271,7 +363,9 @@ export default function SignUp() {
               <Button onClick={reset} type="button" variant="outline-warning">
                 Reset
               </Button>
-              <Link to="/sign-in">Sign in</Link>
+              <Link to="/sign-in" className="btn btn-outline-success">
+                Sign in
+              </Link>
             </Switcher>
           </Alert>
           <div className="w-100 d-flex justify-content-between align-items-center">
