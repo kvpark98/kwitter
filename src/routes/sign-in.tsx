@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { Switcher, Wrapper } from "../components/auth-components";
 import GithubButton from "../components/github-btn";
@@ -20,6 +24,8 @@ export default function SignIn() {
 
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
+
+  const [isRememberMe, setIsRememberMe] = useState(false);
 
   const [isPasswordChanged, setIsPasswordChanged] = useState(
     window.localStorage.getItem("PasswordChanged")
@@ -66,6 +72,11 @@ export default function SignIn() {
       setIsPassword(false);
     }
   };
+
+  const handleRememberMe = () => {
+    setIsRememberMe((current) => !current);
+  };
+  console.log("isRememberMe : " + isRememberMe);
 
   const noSpace = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === "Space") {
@@ -116,13 +127,23 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      // Log in
+      // Existing and future Auth states are now persisted in the current
+      // session only. Closing the window would clear any existing state even
+      // if a user forgets to sign out.
+      auth.setPersistence(browserSessionPersistence);
+
+      // Remember Me
+      if (isRememberMe) {
+        auth.setPersistence(browserLocalPersistence);
+      }
+
+      // Sign in
       await signInWithEmailAndPassword(auth, email, password);
 
       setIsVerificationNeeded("");
       setIsPasswordChanged("");
 
-      // Ridirect to the home page
+      // Ridirect
       if (auth.currentUser?.emailVerified === true) {
         setIsverified("yes");
         navigate("/");
@@ -272,6 +293,19 @@ export default function SignIn() {
                   <div className="mt-2 text-danger">{passwordErrorMessage}</div>
                 )}
               </Form.Group>
+              <div style={{ height: "16px" }}>
+                <Form.Check
+                  onClick={handleRememberMe}
+                  type="checkbox"
+                  id="remember-me"
+                  label="Remember me"
+                  className="min-h-0"
+                  style={{ minHeight: "0" }}
+                />
+                {/* <span className="align-middle" aria-label="remember-me">
+                  Remember me
+                </span> */}
+              </div>
               <Button type="submit" className="mt-2 fw-bold">
                 {isLoading ? "Loading..." : "Sign in"}
               </Button>

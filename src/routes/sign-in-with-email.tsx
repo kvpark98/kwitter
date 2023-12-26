@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { FirebaseError } from "firebase/app";
-import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import {
+  browserSessionPersistence,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { Switcher, Wrapper } from "../components/auth-components";
 import { Button, Container } from "react-bootstrap";
@@ -86,6 +90,11 @@ export default function SignInWithEmail() {
 
     try {
       setIsLoading(true);
+
+      // Existing and future Auth states are now persisted in the current
+      // session only. Closing the window would clear any existing state even
+      // if a user forgets to sign out.
+      auth.setPersistence(browserSessionPersistence);
 
       // Sign in with email
       if (isSignInWithEmailLink(auth, window.location.href)) {

@@ -193,7 +193,9 @@ export default function ResetPassword() {
       <div className="d-flex justify-content-center align-items-center">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Reset password</h1>
+            <h1 className="fs-2 text-center">
+              Reset password for {auth.currentUser?.displayName}
+            </h1>
           </div>
           {isSignedInWithEmail && (
             <Alert
