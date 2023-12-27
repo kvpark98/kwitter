@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { isSignInWithEmailLink } from "firebase/auth";
+import Header from "../components/header";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -17,8 +18,11 @@ export default function Home() {
   );
 
   return (
-    <h1>
-      <button onClick={logOut}>Log Out</button>
-    </h1>
+    <div className="h-100">
+      <Header />
+      <h1>
+        <button onClick={logOut}>Log Out</button>
+      </h1>
+    </div>
   );
 }

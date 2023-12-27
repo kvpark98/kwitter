@@ -14,7 +14,6 @@ import ProtectedRoute from "./components/protected-route";
 import "./App.module.css";
 import ProtectedRouteLogin from "./components/protected-route-login";
 import ResetPassword from "./routes/reset-password";
-import { Container } from "react-bootstrap";
 import SendSignInLink from "./routes/send-sign-in-link";
 import SignInWithEmail from "./routes/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-route-sign-in-with-email";
@@ -91,6 +90,9 @@ const GlobalStyles = createGlobalStyle`
   .alert-dismissible .btn-close {
     padding: 16px;
   }
+  .form-check-input {
+    margin-top: 0;
+  }
 `;
 
 function App() {
@@ -103,10 +105,10 @@ function App() {
     init();
   }, []);
   return (
-    <Container>
+    <div className="h-100">
       <GlobalStyles />
       {isLoading ? <Loading /> : <RouterProvider router={router} />}
-    </Container>
+    </div>
   );
 }
 

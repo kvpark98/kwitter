@@ -1,3 +1,10 @@
+import Header from "../components/header";
+
 export default function Profile() {
-  return <h1>Profile</h1>;
+  return (
+    <div className="h-100">
+      <Header />
+      <h1>Profile</h1>
+    </div>
+  );
 }
