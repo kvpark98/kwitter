@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { Switcher, Wrapper } from "../components/auth-components";
-import { Button, Container } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import { useNavigate } from "react-router-dom";
@@ -35,14 +35,19 @@ export default function SignInWithEmail() {
 
     if (value) {
       if (!regEmail.test(value)) {
-        setEmailErrorMessage("Not a valid email format.");
+        setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+        document.getElementById("email")?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-invalid");
       }
     } else {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
   };
 
@@ -68,6 +73,8 @@ export default function SignInWithEmail() {
     setIsEmail(false);
 
     setEmailErrorMessage("");
+
+    document.getElementById("email")?.classList.remove("form-control-invalid");
   };
 
   useEffect(() => {
@@ -80,6 +87,7 @@ export default function SignInWithEmail() {
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
 
     if (isLoading || !isEmail) {
@@ -128,8 +136,8 @@ export default function SignInWithEmail() {
   );
 
   return (
-    <Container>
-      <div className="d-flex justify-content-center">
+    <div className="h-100">
+      <div className="wrap">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
             <h1 className="fs-2">Sign in with email</h1>
@@ -158,18 +166,17 @@ export default function SignInWithEmail() {
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4">
+          <Alert variant="light" className="mt-3 py-4 w-100">
             <Form
               onSubmit={signInWithEmail}
               className="d-flex"
               style={{
-                width: "340px",
                 flexDirection: "column",
                 gap: "15px",
               }}
             >
-              <Form.Group controlId="email">
-                <Form.Label>
+              <Form.Group>
+                <Form.Label htmlFor="email">
                   Please enter the email address to which the sign-in link was
                   originally sent.
                 </Form.Label>
@@ -177,6 +184,7 @@ export default function SignInWithEmail() {
                   className="border-none mt-1 mb-1"
                   onChange={handleEmail}
                   onKeyDown={noSpace}
+                  id="email"
                   name="email"
                   value={email}
                   type="text"
@@ -198,6 +206,6 @@ export default function SignInWithEmail() {
           </Alert>
         </Wrapper>
       </div>
-    </Container>
+    </div>
   );
 }

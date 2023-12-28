@@ -9,11 +9,12 @@ import {
 import { auth } from "../firebase";
 import { Switcher, Wrapper } from "../components/auth-components";
 import GithubButton from "../components/github-btn";
-import { Button, Container } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import GoogleButton from "../components/google-btn";
 import Alert from "react-bootstrap/Alert";
 import Header from "../components/header";
+import Footer from "../components/footer";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -47,30 +48,46 @@ export default function SignIn() {
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     const regEmail =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+
     setEmail(value.replace(/\s/gi, ""));
+
     if (value) {
       if (!regEmail.test(value)) {
-        setEmailErrorMessage("Not a valid email format.");
+        setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+        document.getElementById("email")?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-invalid");
       }
     } else {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
   };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     setPassword(value.replace(/\s/gi, ""));
+
     if (value !== "") {
       setIsPassword(true);
+      document
+        .getElementById("password")
+        ?.classList.remove("form-control-invalid");
     } else {
       setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
+      document
+        .getElementById("password")
+        ?.classList.add("form-control-invalid");
     }
   };
 
@@ -99,6 +116,12 @@ export default function SignIn() {
 
     setEmailErrorMessage("");
     setPasswordErrorMessage("");
+
+    document.getElementById("email")?.classList.remove("form-control-invalid");
+
+    document
+      .getElementById("password")
+      ?.classList.remove("form-control-invalid");
   };
 
   useEffect(() => {
@@ -113,10 +136,14 @@ export default function SignIn() {
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
     if (password === "") {
       setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
+      document
+        .getElementById("password")
+        ?.classList.add("form-control-invalid");
     }
 
     if (isLoading || !isEmail || !isPassword) {
@@ -170,179 +197,174 @@ export default function SignIn() {
   return (
     <div className="h-100">
       <Header />
-      <Container>
-        <div className="d-flex justify-content-center">
-          <Wrapper>
-            <div className="w-100 mb-1 d-flex justify-content-center">
-              <h1 className="fs-2">Sign in</h1>
-            </div>
-            {isVerificationNeeded && (
-              <Alert
-                variant="warning"
-                className="d-flex align-itmes-center m-0 mt-3 w-100"
-                dismissible
-              >
-                <p>
-                  Please go to your email and click on the link for
-                  verification. If you verified it, you can ignore this message.
-                </p>
-              </Alert>
-            )}
-            {isPasswordChanged && (
-              <Alert
-                variant="success"
-                className="d-flex align-itmes-center m-0 mt-3 w-100"
-                dismissible
-              >
-                <p>New password set successfully.</p>
-              </Alert>
-            )}
-            {error && (
-              <Alert
-                variant="danger"
-                className="d-flex align-itmes-center m-0 mt-3 w-100"
-                dismissible
-              >
-                <p>
-                  <span>
-                    {error === "auth/invalid-login-credentials" &&
-                      "Incorrect email or password."}
-                    {error === "auth/user-disabled" &&
-                      "The user corresponding to the given email has been disabled."}
-                    {error === "auth/invalid-action-code" &&
-                      "The link is malformed or has already been used. Please get a new link."}
-                    {error === "auth/user-not-found" &&
-                      "There is no user corresponding to the given email."}
-                    {error === "auth/too-many-requests" &&
-                      "Too many attempts. Please try again after some delay."}
-                    {error ===
-                      "auth/account-exists-with-different-credential" &&
-                      "Email is invalid or already taken."}
-                    {error === "auth/network-request-failed" &&
-                      "A network error has occurred. Please reopen the page."}
-                    {error === "auth/requires-recent-login" &&
-                      "Your last sign-in time does not meet the security threshold. Please sign in again."}
-                    {error === "auth/invalid-user-token" &&
-                      "Your credential is no longer valid. Please sign in again."}
-                    {error === "auth/user-token-expired" &&
-                      "Your credential has expired. Please sign in again."}
-                    {error === "auth/web-storage-unsupported" &&
-                      "Your browser does not support web storage. Please try again."}
-                  </span>
-                </p>
-              </Alert>
-            )}
-            {isVerified === "no" && (
-              <Alert
-                variant="danger"
-                className="d-flex align-itmes-center m-0 mt-3 w-100"
-                dismissible
-              >
-                <p>
-                  <span>
-                    Your email was not verified. Please go to your email and
-                    click on the link for verification.
-                  </span>
-                </p>
-              </Alert>
-            )}
-            <Alert variant="light" className="mt-3 py-4">
-              <Form
-                onSubmit={signIn}
-                className="d-flex"
-                style={{
-                  width: "340px",
-                  flexDirection: "column",
-                  gap: "15px",
-                }}
-              >
-                <Form.Group controlId="email" className="mb-2">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    className="border-none mt-1 mb-1"
-                    onChange={handleEmail}
-                    onKeyDown={noSpace}
-                    name="email"
-                    value={email}
-                    type="text"
-                    maxLength={50}
-                  />
-                  {!isEmail && emailErrorMessage && (
-                    <div className="mt-2 text-danger">{emailErrorMessage}</div>
-                  )}
-                </Form.Group>
-                <Form.Group controlId="password">
-                  <div
-                    className="d-flex justify-content-between align-items-center"
-                    style={{ height: "24px" }}
+      <div className="wrap">
+        <Wrapper>
+          <div className="w-100 mb-1 d-flex justify-content-center">
+            <h1 className="fs-2">Sign in</h1>
+          </div>
+          {isVerificationNeeded && (
+            <Alert
+              variant="warning"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                Please go to your email and click on the link for verification.
+                If you verified it, you can ignore this message.
+              </p>
+            </Alert>
+          )}
+          {isPasswordChanged && (
+            <Alert
+              variant="success"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>New password set successfully.</p>
+            </Alert>
+          )}
+          {error && (
+            <Alert
+              variant="danger"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                <span>
+                  {error === "auth/invalid-login-credentials" &&
+                    "Incorrect email or password."}
+                  {error === "auth/user-disabled" &&
+                    "The user corresponding to the given email has been disabled."}
+                  {error === "auth/invalid-action-code" &&
+                    "The link is malformed or has already been used. Please get a new link."}
+                  {error === "auth/user-not-found" &&
+                    "There is no user corresponding to the given email."}
+                  {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again after some delay."}
+                  {error === "auth/account-exists-with-different-credential" &&
+                    "Email is invalid or already taken."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please reopen the page."}
+                  {error === "auth/requires-recent-login" &&
+                    "Your last sign-in time does not meet the security threshold. Please sign in again."}
+                  {error === "auth/invalid-user-token" &&
+                    "Your credential is no longer valid. Please sign in again."}
+                  {error === "auth/user-token-expired" &&
+                    "Your credential has expired. Please sign in again."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
+                </span>
+              </p>
+            </Alert>
+          )}
+          {isVerified === "no" && (
+            <Alert
+              variant="danger"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                <span>
+                  Your email was not verified. Please go to your email and click
+                  on the link for verification.
+                </span>
+              </p>
+            </Alert>
+          )}
+          <Alert variant="light" className="mt-3 py-4 w-100">
+            <Form
+              name="signIn"
+              onSubmit={signIn}
+              className="d-flex"
+              style={{
+                flexDirection: "column",
+                gap: "15px",
+              }}
+            >
+              <Form.Group className="mb-2">
+                <Form.Label htmlFor="email">Email address</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleEmail}
+                  onKeyDown={noSpace}
+                  id="email"
+                  name="email"
+                  value={email}
+                  type="text"
+                  maxLength={50}
+                />
+                {!isEmail && emailErrorMessage && (
+                  <div className="mt-2 text-danger">{emailErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Form.Group>
+                <div
+                  className="d-flex justify-content-between align-items-center"
+                  style={{ height: "24px" }}
+                >
+                  <Form.Label htmlFor="password">Password</Form.Label>
+                  <Link
+                    to="/send-sign-in-link"
+                    className="p-0 mb-2 text-decoration-none"
                   >
-                    <Form.Label>Password</Form.Label>
-                    <Link
-                      to="/send-sign-in-link"
-                      className="p-0 mb-2 text-decoration-none"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <Form.Control
-                    className="border-none mt-1 mb-1"
-                    onChange={handlePassword}
-                    onKeyDown={noSpace}
-                    name="password"
-                    value={password}
-                    type="password"
-                    maxLength={20}
-                  />
-                  {!isPassword && passwordErrorMessage && (
-                    <div className="mt-2 text-danger">
-                      {passwordErrorMessage}
-                    </div>
-                  )}
-                </Form.Group>
-                <div style={{ height: "16px" }}>
-                  <Form.Check
-                    onClick={handleRememberMe}
-                    type="checkbox"
-                    id="remember-me"
-                    label="Remember me"
-                    className="min-h-0"
-                    style={{ minHeight: "0" }}
-                  />
-                  {/* <span className="align-middle" aria-label="remember-me">
-                  Remember me
-                </span> */}
+                    Forgot password?
+                  </Link>
                 </div>
-                <Button type="submit" className="mt-2 fw-bold">
-                  {isLoading ? "Loading..." : "Sign in"}
-                </Button>
-              </Form>
-              <Switcher className="d-flex justify-content-between">
-                <Button onClick={reset} type="button" variant="outline-warning">
-                  Reset
-                </Button>
-                <Link to="/sign-up" className="btn btn-outline-success">
-                  Create an account
-                </Link>
-              </Switcher>
-            </Alert>
-            <div className="w-100 d-flex justify-content-between align-items-center">
-              <span
-                className="w-50 border border-secondary"
-                style={{ height: 0 }}
-              ></span>
-              <span className="mx-3">OR</span>
-              <span
-                className="w-50 border border-secondary"
-                style={{ height: 0 }}
-              ></span>
-            </div>
-            <Alert variant="light" className="w-100 mt-3 py-4">
-              <GoogleButton />
-              <GithubButton />
-            </Alert>
-          </Wrapper>
-        </div>
-      </Container>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handlePassword}
+                  onKeyDown={noSpace}
+                  id="password"
+                  name="password"
+                  value={password}
+                  type="password"
+                  maxLength={20}
+                />
+                {!isPassword && passwordErrorMessage && (
+                  <div className="mt-2 text-danger">{passwordErrorMessage}</div>
+                )}
+              </Form.Group>
+              <div style={{ height: "16px" }}>
+                <Form.Check
+                  onClick={handleRememberMe}
+                  type="checkbox"
+                  id="remember-me"
+                  label="Remember me"
+                  className="min-h-0"
+                  style={{ minHeight: "0" }}
+                />
+              </div>
+              <Button type="submit" className="mt-2 fw-bold">
+                {isLoading ? "Loading..." : "Sign in"}
+              </Button>
+            </Form>
+            <Switcher className="d-flex justify-content-between">
+              <Button onClick={reset} type="button" variant="outline-warning">
+                Reset
+              </Button>
+              <Link to="/sign-up" className="btn btn-outline-success">
+                Create an account
+              </Link>
+            </Switcher>
+          </Alert>
+          <div className="w-100 d-flex justify-content-between align-items-center">
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+            <span className="mx-3">OR</span>
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+          </div>
+          <Alert variant="light" className="w-100 mt-3 py-4">
+            <GoogleButton />
+            <GithubButton />
+          </Alert>
+        </Wrapper>
+        <Footer />
+      </div>
     </div>
   );
 }

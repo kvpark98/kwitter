@@ -10,10 +10,11 @@ import { FirebaseError } from "firebase/app";
 import { Switcher, Wrapper } from "../components/auth-components";
 import GithubButton from "../components/github-btn";
 import GoogleButton from "../components/google-btn";
-import { Button, Container } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import Header from "../components/header";
+import Footer from "../components/footer";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -51,12 +52,17 @@ export default function SignUp() {
           "Please enter at least 2 characters either in English or Korean."
         );
         setIsName(false);
+        document.getElementById("name")?.classList.add("form-control-invalid");
       } else {
         setIsName(true);
+        document
+          .getElementById("name")
+          ?.classList.remove("form-control-invalid");
       }
     } else {
       setNameErrorMessage("Please enter your name.");
       setIsName(false);
+      document.getElementById("name")?.classList.add("form-control-invalid");
     }
   };
 
@@ -70,14 +76,19 @@ export default function SignUp() {
 
     if (value !== "") {
       if (!regEmail.test(value)) {
-        setEmailErrorMessage("Not a valid email format.");
+        setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+        document.getElementById("email")?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-invalid");
       }
     } else {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
   };
 
@@ -99,11 +110,20 @@ export default function SignUp() {
           );
           setIsPassword(false);
           setIsPasswordConfirm(false);
+          document
+            .getElementById("password")
+            ?.classList.add("form-control-invalid");
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.add("form-control-invalid");
         } else {
           setPasswordErrorMessage(
             "Please enter at least 8 characters including numbers, English, and special characters."
           );
           setIsPassword(false);
+          document
+            .getElementById("password")
+            ?.classList.add("form-control-invalid");
         }
       } else {
         if (passwordConfirm) {
@@ -111,14 +131,29 @@ export default function SignUp() {
             setPasswordConfirmErrorMessage("The password does not match.");
             setIsPassword(true);
             setIsPasswordConfirm(false);
+            document
+              .getElementById("password")
+              ?.classList.remove("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.add("form-control-invalid");
           } else {
             setPasswordConfirmErrorMessage("");
             setIsPassword(true);
             setIsPasswordConfirm(true);
+            document
+              .getElementById("password")
+              ?.classList.remove("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.remove("form-control-invalid");
           }
         } else {
           setIsPassword(true);
           setIsPasswordConfirm(false);
+          document
+            .getElementById("password")
+            ?.classList.remove("form-control-invalid");
         }
       }
     } else {
@@ -127,10 +162,19 @@ export default function SignUp() {
         setPasswordConfirmErrorMessage("Please enter your password first.");
         setIsPassword(false);
         setIsPasswordConfirm(false);
+        document
+          .getElementById("password")
+          ?.classList.add("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.add("form-control-invalid");
       } else {
         setPasswordErrorMessage("Please enter your password.");
         setIsPassword(false);
         setIsPasswordConfirm(false);
+        document
+          .getElementById("password")
+          ?.classList.add("form-control-invalid");
       }
     }
   };
@@ -146,12 +190,21 @@ export default function SignUp() {
       if (value !== password) {
         setPasswordConfirmErrorMessage("The password does not match.");
         setIsPasswordConfirm(false);
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.add("form-control-invalid");
       } else {
         setIsPasswordConfirm(true);
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-invalid");
       }
     } else {
       setPasswordConfirmErrorMessage("Please confirm your password.");
       setIsPasswordConfirm(false);
+      document
+        .getElementById("passwordConfirm")
+        ?.classList.add("form-control-invalid");
     }
   };
 
@@ -181,6 +234,15 @@ export default function SignUp() {
     setEmailErrorMessage("");
     setPasswordErrorMessage("");
     setPasswordConfirmErrorMessage("");
+
+    document.getElementById("name")?.classList.remove("form-control-invalid");
+    document.getElementById("email")?.classList.remove("form-control-invalid");
+    document
+      .getElementById("password")
+      ?.classList.remove("form-control-invalid");
+    document
+      .getElementById("passwordConfirm")
+      ?.classList.remove("form-control-invalid");
   };
 
   const actionCodeSettings = {
@@ -194,18 +256,26 @@ export default function SignUp() {
     if (name === "") {
       setNameErrorMessage("Please enter your name.");
       setIsName(false);
+      document.getElementById("name")?.classList.add("form-control-invalid");
     }
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
     if (password === "") {
       setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
+      document
+        .getElementById("password")
+        ?.classList.add("form-control-invalid");
     }
     if (passwordConfirm === "") {
       setPasswordConfirmErrorMessage("Please confirm your password.");
       setIsPasswordConfirm(false);
+      document
+        .getElementById("passwordConfirm")
+        ?.classList.add("form-control-invalid");
     }
 
     if (
@@ -255,145 +325,144 @@ export default function SignUp() {
   return (
     <div className="h-100">
       <Header />
-      <Container>
-        <div className="d-flex justify-content-center">
-          <Wrapper>
-            <div className="w-100 mb-1 d-flex justify-content-center">
-              <h1 className="fs-2">Sign up</h1>
-            </div>
-            {error && (
-              <Alert
-                variant="danger"
-                className="d-flex align-itmes-center m-0 mt-3 w-100"
-                dismissible
-              >
-                <p>
-                  <span>
-                    {error === "auth/email-already-in-use" &&
-                      "This email is already in use."}
-                    {error ===
-                      "auth/account-exists-with-different-credential" &&
-                      "Email is invalid or already taken."}
-                    {error === "auth/invalid-email" &&
-                      "The email address is not valid."}
-                    {error === "auth/too-many-requests" &&
-                      "Too many attempts. Please try again after some delay."}
-                    {error === "auth/network-request-failed" &&
-                      "A network error has occurred. Please reopen the page."}
-                    {error === "auth/web-storage-unsupported" &&
-                      "Your browser does not support web storage. Please try again."}
-                  </span>
-                </p>
-              </Alert>
-            )}
-            <Alert variant="light" className="mt-3 py-4">
-              <Form
-                onSubmit={signIn}
-                className="d-flex"
-                style={{
-                  width: "340px",
-                  flexDirection: "column",
-                  gap: "15px",
-                }}
-              >
-                <Form.Group controlId="name" className="mb-2">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control
-                    className="border-none mt-1 mb-1"
-                    onChange={handleName}
-                    onKeyDown={noSpace}
-                    name="name"
-                    value={name}
-                    type="text"
-                    maxLength={20}
-                  />
-                  {!isName && nameErrorMessage && (
-                    <div className="mt-2 text-danger">{nameErrorMessage}</div>
-                  )}
-                </Form.Group>
-                <Form.Group controlId="email" className="mb-2">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    className="border-none mt-1 mb-1"
-                    onChange={handleEmail}
-                    onKeyDown={noSpace}
-                    name="email"
-                    value={email}
-                    type="text"
-                    maxLength={50}
-                  />
-                  {!isEmail && emailErrorMessage && (
-                    <div className="mt-2 text-danger">{emailErrorMessage}</div>
-                  )}
-                </Form.Group>
-                <Form.Group controlId="password">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    className="border-none mt-1 mb-1"
-                    onChange={handlePassword}
-                    onKeyDown={noSpace}
-                    name="password"
-                    value={password}
-                    type="password"
-                    maxLength={20}
-                  />
-                  {!isPassword && passwordErrorMessage && (
-                    <div className="mt-2 text-danger">
-                      {passwordErrorMessage}
-                    </div>
-                  )}
-                </Form.Group>
-                <Form.Group controlId="passwordConfirm">
-                  <Form.Label>Password Confirm</Form.Label>
-                  <Form.Control
-                    className="border-none mt-1 mb-1"
-                    onChange={handlePasswordConfirm}
-                    onKeyDown={noSpace}
-                    name="passwordConfirm"
-                    value={passwordConfirm}
-                    type="password"
-                    maxLength={20}
-                    {...(!isPassword
-                      ? { disabled: true }
-                      : { disabled: false })}
-                  />
-                  {!isPasswordConfirm && passwordConfirmErrorMessage && (
-                    <div className="mt-2 text-danger">
-                      {passwordConfirmErrorMessage}
-                    </div>
-                  )}
-                </Form.Group>
-                <Button type="submit" className="mt-2 fw-bold">
-                  {isLoading ? "Loading..." : "Sign up"}
-                </Button>
-              </Form>
-              <Switcher className="d-flex justify-content-between">
-                <Button onClick={reset} type="button" variant="outline-warning">
-                  Reset
-                </Button>
-                <Link to="/sign-in" className="btn btn-outline-success">
-                  Sign in
-                </Link>
-              </Switcher>
+      <div className="wrap">
+        <Wrapper>
+          <div className="w-100 mb-1 d-flex justify-content-center">
+            <h1 className="fs-2">Sign up</h1>
+          </div>
+          {error && (
+            <Alert
+              variant="danger"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                <span>
+                  {error === "auth/email-already-in-use" &&
+                    "This email is already in use."}
+                  {error === "auth/account-exists-with-different-credential" &&
+                    "Email is invalid or already taken."}
+                  {error === "auth/invalid-email" &&
+                    "The email address is not valid."}
+                  {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again after some delay."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please reopen the page."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
+                </span>
+              </p>
             </Alert>
-            <div className="w-100 d-flex justify-content-between align-items-center">
-              <span
-                className="w-50 border border-secondary"
-                style={{ height: 0 }}
-              ></span>
-              <span className="mx-3">OR</span>
-              <span
-                className="w-50 border border-secondary"
-                style={{ height: 0 }}
-              ></span>
-            </div>
-            <Alert variant="light" className="w-100 mt-3 py-4">
-              <GoogleButton />
-              <GithubButton />
-            </Alert>
-          </Wrapper>
-        </div>
-      </Container>
+          )}
+          <Alert variant="light" className="mt-3 py-4 w-100">
+            <Form
+              onSubmit={signIn}
+              className="d-flex"
+              style={{
+                flexDirection: "column",
+                gap: "15px",
+              }}
+            >
+              <Form.Group className="mb-2">
+                <Form.Label htmlFor="name">Username</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleName}
+                  onKeyDown={noSpace}
+                  id="name"
+                  name="name"
+                  value={name}
+                  type="text"
+                  maxLength={20}
+                />
+                {!isName && nameErrorMessage && (
+                  <div className="mt-2 text-danger">{nameErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label htmlFor="email">Email address</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleEmail}
+                  onKeyDown={noSpace}
+                  id="email"
+                  name="email"
+                  value={email}
+                  type="text"
+                  maxLength={50}
+                />
+                {!isEmail && emailErrorMessage && (
+                  <div className="mt-2 text-danger">{emailErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="password">Password</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handlePassword}
+                  onKeyDown={noSpace}
+                  id="password"
+                  name="password"
+                  value={password}
+                  type="password"
+                  maxLength={20}
+                />
+                {!isPassword && passwordErrorMessage && (
+                  <div className="mt-2 text-danger">{passwordErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Form.Group>
+                <Form.Label htmlFor="passwordConfirm">
+                  Password Confirm
+                </Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handlePasswordConfirm}
+                  onKeyDown={noSpace}
+                  id="passwordConfirm"
+                  name="passwordConfirm"
+                  value={passwordConfirm}
+                  type="password"
+                  maxLength={20}
+                  {...(!isPassword ? { disabled: true } : { disabled: false })}
+                />
+                {!isPasswordConfirm && passwordConfirmErrorMessage && (
+                  <div className="mt-2 text-danger">
+                    {passwordConfirmErrorMessage}
+                  </div>
+                )}
+              </Form.Group>
+              <Button type="submit" className="mt-2 fw-bold">
+                {isLoading ? "Loading..." : "Sign up"}
+              </Button>
+            </Form>
+            <Switcher className="d-flex justify-content-between">
+              <Button onClick={reset} type="button" variant="outline-warning">
+                Reset
+              </Button>
+              <Link to="/sign-in" className="btn btn-outline-success">
+                Sign in
+              </Link>
+            </Switcher>
+          </Alert>
+          <div className="w-100 d-flex justify-content-between align-items-center">
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+            <span className="mx-3">OR</span>
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+          </div>
+          <Alert variant="light" className="w-100 mt-3 py-4">
+            <GoogleButton />
+            <GithubButton />
+          </Alert>
+        </Wrapper>
+        <Footer />
+      </div>
     </div>
   );
 }

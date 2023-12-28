@@ -3,11 +3,12 @@ import { FirebaseError } from "firebase/app";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import { auth } from "../firebase";
 import { Switcher, Wrapper } from "../components/auth-components";
-import { Button, Container } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/header";
+import Footer from "../components/footer";
 
 export default function SendSignInLink() {
   const navigate = useNavigate();
@@ -34,14 +35,19 @@ export default function SendSignInLink() {
 
     if (value) {
       if (!regEmail.test(value)) {
-        setEmailErrorMessage("Not a valid email format.");
+        setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+        document.getElementById("email")?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-invalid");
       }
     } else {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
   };
 
@@ -57,6 +63,8 @@ export default function SendSignInLink() {
     setIsEmail(false);
 
     setEmailErrorMessage("");
+
+    document.getElementById("email")?.classList.remove("form-control-invalid");
   };
 
   const actionCodeSettings = {
@@ -70,6 +78,7 @@ export default function SendSignInLink() {
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+      document.getElementById("email")?.classList.add("form-control-invalid");
     }
 
     if (isLoading || !isEmail) {
@@ -106,94 +115,93 @@ export default function SendSignInLink() {
   return (
     <div className="h-100">
       <Header />
-      <Container>
-        <div className="d-flex justify-content-center">
-          <Wrapper>
-            <div className="w-100 mb-1 d-flex justify-content-center">
-              <h1 className="fs-2">Send sign in link</h1>
-            </div>
-            {isPasswordResetLinkSent && (
-              <Alert
-                variant="warning"
-                className="d-flex align-itmes-center m-0 mt-3 w-100"
-                dismissible
-              >
-                <p>
-                  Check your email for a link to sign in. If it doesn’t appear
-                  within a few minutes, check your spam folder.
-                </p>
-              </Alert>
-            )}
-            {error && (
-              <Alert
-                variant="danger"
-                className="d-flex align-itmes-center m-0 mt-3 w-100"
-                dismissible
-              >
-                <p>
-                  <span>
-                    {error === "auth/invalid-action-code" &&
-                      "The link is malformed or has already been used. Please get a new link."}
-                    {error === "auth/too-many-requests" &&
-                      "Too many attempts. Please try again after some delay."}
-                    {error === "auth/network-request-failed" &&
-                      "A network error has occurred. Please reopen the page."}
-                    {error === "auth/requires-recent-login" &&
-                      "Your last sign-in time does not meet the security threshold. Please sign in again."}
-                    {error === "auth/invalid-user-token" &&
-                      "Your credential is no longer valid. Please sign in again."}
-                    {error === "auth/user-token-expired" &&
-                      "Your credential has expired. Please sign in again."}
-                    {error === "auth/web-storage-unsupported" &&
-                      "Your browser does not support web storage. Please try again."}
-                  </span>
-                </p>
-              </Alert>
-            )}
-            <Alert variant="light" className="mt-3 py-4">
-              <Form
-                onSubmit={sendSignInLink}
-                className="d-flex"
-                style={{
-                  width: "340px",
-                  flexDirection: "column",
-                  gap: "15px",
-                }}
-              >
-                <Form.Group controlId="email">
-                  <Form.Label>
-                    Enter your enrolled email address and we will send you a
-                    link for sign in.
-                  </Form.Label>
-                  <Form.Control
-                    className="border-none mt-1 mb-1"
-                    onChange={handleEmail}
-                    onKeyDown={noSpace}
-                    name="email"
-                    value={email}
-                    type="text"
-                    maxLength={50}
-                  />
-                  {!isEmail && emailErrorMessage && (
-                    <div className="mt-2 text-danger">{emailErrorMessage}</div>
-                  )}
-                </Form.Group>
-                <Button type="submit" className="mt-2 fw-bold">
-                  {isLoading ? "Loading..." : "Send sign in email"}
-                </Button>
-              </Form>
-              <Switcher className="d-flex justify-content-between">
-                <Button onClick={reset} type="button" variant="outline-warning">
-                  Reset
-                </Button>
-                <Link to="/sign-in" className="btn btn-outline-success">
-                  Sign in
-                </Link>
-              </Switcher>
+      <div className="wrap">
+        <Wrapper>
+          <div className="w-100 mb-1 d-flex justify-content-center">
+            <h1 className="fs-2">Send sign in link</h1>
+          </div>
+          {isPasswordResetLinkSent && (
+            <Alert
+              variant="warning"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                Check your email for a link to sign in. If it doesn’t appear
+                within a few minutes, check your spam folder.
+              </p>
             </Alert>
-          </Wrapper>
-        </div>
-      </Container>
+          )}
+          {error && (
+            <Alert
+              variant="danger"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>
+                <span>
+                  {error === "auth/invalid-action-code" &&
+                    "The link is malformed or has already been used. Please get a new link."}
+                  {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again after some delay."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please reopen the page."}
+                  {error === "auth/requires-recent-login" &&
+                    "Your last sign-in time does not meet the security threshold. Please sign in again."}
+                  {error === "auth/invalid-user-token" &&
+                    "Your credential is no longer valid. Please sign in again."}
+                  {error === "auth/user-token-expired" &&
+                    "Your credential has expired. Please sign in again."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
+                </span>
+              </p>
+            </Alert>
+          )}
+          <Alert variant="light" className="mt-3 py-4 w-100">
+            <Form
+              onSubmit={sendSignInLink}
+              className="d-flex"
+              style={{
+                flexDirection: "column",
+                gap: "15px",
+              }}
+            >
+              <Form.Group>
+                <Form.Label htmlFor="email">
+                  Enter your enrolled email address and we will send you a link
+                  for sign in.
+                </Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleEmail}
+                  onKeyDown={noSpace}
+                  id="email"
+                  name="email"
+                  value={email}
+                  type="text"
+                  maxLength={50}
+                />
+                {!isEmail && emailErrorMessage && (
+                  <div className="mt-2 text-danger">{emailErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Button type="submit" className="mt-2 fw-bold">
+                {isLoading ? "Loading..." : "Send sign in email"}
+              </Button>
+            </Form>
+            <Switcher className="d-flex justify-content-between">
+              <Button onClick={reset} type="button" variant="outline-warning">
+                Reset
+              </Button>
+              <Link to="/sign-in" className="btn btn-outline-success">
+                Sign in
+              </Link>
+            </Switcher>
+          </Alert>
+        </Wrapper>
+        <Footer />
+      </div>
     </div>
   );
 }

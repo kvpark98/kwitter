@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { isSignInWithEmailLink } from "firebase/auth";
 import Header from "../components/header";
+import { Wrapper } from "../components/auth-components";
+import Footer from "../components/footer";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -20,9 +22,14 @@ export default function Home() {
   return (
     <div className="h-100">
       <Header />
-      <h1>
-        <button onClick={logOut}>Log Out</button>
-      </h1>
+      <div className="wrap">
+        <Wrapper>
+          <h1>
+            <button onClick={logOut}>Log Out</button>
+          </h1>
+        </Wrapper>
+        <Footer />
+      </div>
     </div>
   );
 }

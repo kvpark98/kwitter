@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import Layout from "./components/layout";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./routes/home";
 import Profile from "./routes/profile";
 import SignIn from "./routes/sign-in";
@@ -84,8 +85,17 @@ const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+  html,
   body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .wrap {
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 200px;
   }
   .alert-dismissible .btn-close {
     padding: 16px;
@@ -93,6 +103,21 @@ const GlobalStyles = createGlobalStyle`
   .form-check-input {
     margin-top: 0;
   }
+  .form-control-invalid {
+    background-image: url("/invalid.svg");
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-repeat: no-repeat;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    border-color: var(--bs-form-invalid-border-color);
+    padding-right: calc(1.5em + 0.75rem);
+  }
+  .form-control-invalid:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #dc3545;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(253, 13, 13, 0.25);
+}
 `;
 
 function App() {

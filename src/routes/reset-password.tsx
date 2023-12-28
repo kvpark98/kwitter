@@ -4,9 +4,11 @@ import { FirebaseError } from "firebase/app";
 import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { Switcher, Wrapper } from "../components/auth-components";
-import { Button, Container } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -52,11 +54,20 @@ export default function ResetPassword() {
           );
           setIsNewPassword(false);
           setIsNewPasswordConfirm(false);
+          document
+            .getElementById("password")
+            ?.classList.add("form-control-invalid");
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.add("form-control-invalid");
         } else {
           setNewPasswordErrorMessage(
             "Please enter at least 8 characters including numbers, English, and special characters."
           );
           setIsNewPassword(false);
+          document
+            .getElementById("password")
+            ?.classList.add("form-control-invalid");
         }
       } else {
         if (newPasswordConfirm) {
@@ -64,14 +75,29 @@ export default function ResetPassword() {
             setNewPasswordConfirmErrorMessage("The password does not match.");
             setIsNewPassword(true);
             setIsNewPasswordConfirm(false);
+            document
+              .getElementById("password")
+              ?.classList.remove("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.add("form-control-invalid");
           } else {
             setNewPasswordConfirmErrorMessage("");
             setIsNewPassword(true);
             setIsNewPasswordConfirm(true);
+            document
+              .getElementById("password")
+              ?.classList.remove("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.remove("form-control-invalid");
           }
         } else {
           setIsNewPassword(true);
           setIsNewPasswordConfirm(false);
+          document
+            .getElementById("password")
+            ?.classList.remove("form-control-invalid");
         }
       }
     } else {
@@ -80,10 +106,19 @@ export default function ResetPassword() {
         setNewPasswordConfirmErrorMessage("Please enter your password first.");
         setIsNewPassword(false);
         setIsNewPasswordConfirm(false);
+        document
+          .getElementById("password")
+          ?.classList.add("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.add("form-control-invalid");
       } else {
         setNewPasswordErrorMessage("Please enter your password.");
         setIsNewPassword(false);
         setIsNewPasswordConfirm(false);
+        document
+          .getElementById("password")
+          ?.classList.add("form-control-invalid");
       }
     }
   };
@@ -99,12 +134,21 @@ export default function ResetPassword() {
       if (value !== newPassword) {
         setNewPasswordConfirmErrorMessage("The password does not match.");
         setIsNewPasswordConfirm(false);
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.add("form-control-invalid");
       } else {
         setIsNewPasswordConfirm(true);
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-invalid");
       }
     } else {
       setNewPasswordConfirmErrorMessage("Please confirm your password.");
       setIsNewPasswordConfirm(false);
+      document
+        .getElementById("passwordConfirm")
+        ?.classList.add("form-control-invalid");
     }
   };
 
@@ -123,6 +167,13 @@ export default function ResetPassword() {
 
     setNewPasswordErrorMessage("");
     setNewPasswordConfirmErrorMessage("");
+
+    document
+      .getElementById("password")
+      ?.classList.remove("form-control-invalid");
+    document
+      .getElementById("passwordConfirm")
+      ?.classList.remove("form-control-invalid");
   };
 
   useEffect(() => {
@@ -136,10 +187,16 @@ export default function ResetPassword() {
     if (newPassword === "") {
       setNewPasswordErrorMessage("Please enter your password.");
       setIsNewPassword(false);
+      document
+        .getElementById("password")
+        ?.classList.add("form-control-invalid");
     }
     if (newPasswordConfirm === "") {
       setNewPasswordConfirmErrorMessage("Please confirm your password.");
       setIsNewPasswordConfirm(false);
+      document
+        .getElementById("passwordConfirm")
+        ?.classList.add("form-control-invalid");
     }
 
     if (
@@ -189,12 +246,14 @@ export default function ResetPassword() {
   console.log("changed password : " + newPassword);
 
   return (
-    <Container>
-      <div className="d-flex justify-content-center align-items-center">
+    <div className="h-100">
+      <Header />
+      <div className="wrap">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
             <h1 className="fs-2 text-center">
-              Reset password for {auth.currentUser?.displayName}
+              <div className="text-center mb-3">Reset password for</div>
+              <div className="text-center">{auth.currentUser?.displayName}</div>
             </h1>
           </div>
           {isSignedInWithEmail && (
@@ -220,22 +279,22 @@ export default function ResetPassword() {
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4">
+          <Alert variant="light" className="mt-3 py-4 w-100">
             <Form
               onSubmit={resetPassword}
               className="d-flex"
               style={{
-                width: "340px",
                 flexDirection: "column",
                 gap: "15px",
               }}
             >
-              <Form.Group controlId="password">
-                <Form.Label>New password</Form.Label>
+              <Form.Group>
+                <Form.Label htmlFor="password">New password</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handleNewPassword}
                   onKeyDown={noSpace}
+                  id="password"
                   name="password"
                   value={newPassword}
                   type="password"
@@ -247,12 +306,15 @@ export default function ResetPassword() {
                   </div>
                 )}
               </Form.Group>
-              <Form.Group controlId="passwordConfirm">
-                <Form.Label>New Password Confirm</Form.Label>
+              <Form.Group>
+                <Form.Label htmlFor="passwordConfirm">
+                  New Password Confirm
+                </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handleNewPasswordConfirm}
                   onKeyDown={noSpace}
+                  id="passwordConfirm"
                   name="passwordConfirm"
                   value={newPasswordConfirm}
                   type="password"
@@ -281,7 +343,8 @@ export default function ResetPassword() {
             </Switcher>
           </Alert>
         </Wrapper>
+        <Footer />
       </div>
-    </Container>
+    </div>
   );
 }
