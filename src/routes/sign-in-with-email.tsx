@@ -33,21 +33,26 @@ export default function SignInWithEmail() {
 
     setEmail(value.replace(/\s/gi, ""));
 
-    if (value) {
+    if (value !== "") {
       if (!regEmail.test(value)) {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+
         document.getElementById("email")?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
+
         document
           .getElementById("email")
           ?.classList.remove("form-control-invalid");
       }
     } else {
-      setEmailErrorMessage("Please enter your email.");
+      setEmailErrorMessage("");
       setIsEmail(false);
-      document.getElementById("email")?.classList.add("form-control-invalid");
+
+      document
+        .getElementById("email")
+        ?.classList.remove("form-control-invalid");
     }
   };
 
@@ -59,11 +64,6 @@ export default function SignInWithEmail() {
 
   const logOut = () => {
     auth.signOut();
-    navigate("/sign-in");
-  };
-
-  const redirect = () => {
-    logOut();
     navigate("/sign-in");
   };
 
@@ -87,6 +87,7 @@ export default function SignInWithEmail() {
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+
       document.getElementById("email")?.classList.add("form-control-invalid");
     }
 
@@ -110,7 +111,7 @@ export default function SignInWithEmail() {
         window.localStorage.setItem("isSignedInWithEmail", "true");
         navigate("/reset-password");
       } else {
-        redirect();
+        logOut();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {

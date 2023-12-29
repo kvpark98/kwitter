@@ -33,21 +33,26 @@ export default function SendSignInLink() {
 
     setEmail(value.replace(/\s/gi, ""));
 
-    if (value) {
+    if (value !== "") {
       if (!regEmail.test(value)) {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+
         document.getElementById("email")?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
+
         document
           .getElementById("email")
           ?.classList.remove("form-control-invalid");
       }
     } else {
-      setEmailErrorMessage("Please enter your email.");
+      setEmailErrorMessage("");
       setIsEmail(false);
-      document.getElementById("email")?.classList.add("form-control-invalid");
+
+      document
+        .getElementById("email")
+        ?.classList.remove("form-control-invalid");
     }
   };
 
@@ -78,6 +83,7 @@ export default function SendSignInLink() {
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+
       document.getElementById("email")?.classList.add("form-control-invalid");
     }
 

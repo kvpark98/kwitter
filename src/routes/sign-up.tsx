@@ -52,17 +52,23 @@ export default function SignUp() {
           "Please enter at least 2 characters either in English or Korean."
         );
         setIsName(false);
+
         document.getElementById("name")?.classList.add("form-control-invalid");
+        document.getElementById("name")?.classList.remove("form-control-valid");
       } else {
         setIsName(true);
+
         document
           .getElementById("name")
           ?.classList.remove("form-control-invalid");
+        document.getElementById("name")?.classList.add("form-control-valid");
       }
     } else {
-      setNameErrorMessage("Please enter your name.");
+      setNameErrorMessage("");
       setIsName(false);
-      document.getElementById("name")?.classList.add("form-control-invalid");
+
+      document.getElementById("name")?.classList.remove("form-control-invalid");
+      document.getElementById("name")?.classList.remove("form-control-valid");
     }
   };
 
@@ -78,17 +84,27 @@ export default function SignUp() {
       if (!regEmail.test(value)) {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+
         document.getElementById("email")?.classList.add("form-control-invalid");
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-valid");
       } else {
         setIsEmail(true);
+
         document
           .getElementById("email")
           ?.classList.remove("form-control-invalid");
+        document.getElementById("email")?.classList.add("form-control-valid");
       }
     } else {
-      setEmailErrorMessage("Please enter your email.");
+      setEmailErrorMessage("");
       setIsEmail(false);
-      document.getElementById("email")?.classList.add("form-control-invalid");
+
+      document
+        .getElementById("email")
+        ?.classList.remove("form-control-invalid");
+      document.getElementById("email")?.classList.remove("form-control-valid");
     }
   };
 
@@ -110,20 +126,41 @@ export default function SignUp() {
           );
           setIsPassword(false);
           setIsPasswordConfirm(false);
+
           document
             .getElementById("password")
             ?.classList.add("form-control-invalid");
           document
+            .getElementById("password")
+            ?.classList.remove("form-control-valid");
+
+          document
             .getElementById("passwordConfirm")
             ?.classList.add("form-control-invalid");
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.remove("form-control-valid");
         } else {
           setPasswordErrorMessage(
             "Please enter at least 8 characters including numbers, English, and special characters."
           );
+          setPasswordConfirmErrorMessage("");
           setIsPassword(false);
+          setIsPasswordConfirm(false);
+
           document
             .getElementById("password")
             ?.classList.add("form-control-invalid");
+          document
+            .getElementById("password")
+            ?.classList.remove("form-control-valid");
+
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.remove("form-control-invalid");
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.remove("form-control-valid");
         }
       } else {
         if (passwordConfirm) {
@@ -131,50 +168,95 @@ export default function SignUp() {
             setPasswordConfirmErrorMessage("The password does not match.");
             setIsPassword(true);
             setIsPasswordConfirm(false);
+
             document
               .getElementById("password")
               ?.classList.remove("form-control-invalid");
             document
+              .getElementById("password")
+              ?.classList.add("form-control-valid");
+
+            document
               .getElementById("passwordConfirm")
               ?.classList.add("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.remove("form-control-valid");
           } else {
             setPasswordConfirmErrorMessage("");
             setIsPassword(true);
             setIsPasswordConfirm(true);
+
             document
               .getElementById("password")
               ?.classList.remove("form-control-invalid");
             document
+              .getElementById("password")
+              ?.classList.add("form-control-valid");
+
+            document
               .getElementById("passwordConfirm")
               ?.classList.remove("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.add("form-control-valid");
           }
         } else {
+          setPasswordConfirmErrorMessage("");
           setIsPassword(true);
           setIsPasswordConfirm(false);
+
           document
             .getElementById("password")
+            ?.classList.remove("form-control-invalid");
+          document
+            .getElementById("password")
+            ?.classList.add("form-control-valid");
+
+          document
+            .getElementById("passwordConfirm")
             ?.classList.remove("form-control-invalid");
         }
       }
     } else {
       if (passwordConfirm) {
-        setPasswordErrorMessage("Please enter your password.");
+        setPasswordErrorMessage("");
         setPasswordConfirmErrorMessage("Please enter your password first.");
         setIsPassword(false);
         setIsPasswordConfirm(false);
+
         document
           .getElementById("password")
-          ?.classList.add("form-control-invalid");
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("password")
+          ?.classList.remove("form-control-valid");
+
         document
           .getElementById("passwordConfirm")
           ?.classList.add("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-valid");
       } else {
-        setPasswordErrorMessage("Please enter your password.");
+        setPasswordErrorMessage("");
+        setPasswordConfirmErrorMessage("");
         setIsPassword(false);
         setIsPasswordConfirm(false);
+
         document
           .getElementById("password")
-          ?.classList.add("form-control-invalid");
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("password")
+          ?.classList.remove("form-control-valid");
+
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-valid");
       }
     }
   };
@@ -190,21 +272,33 @@ export default function SignUp() {
       if (value !== password) {
         setPasswordConfirmErrorMessage("The password does not match.");
         setIsPasswordConfirm(false);
+
         document
           .getElementById("passwordConfirm")
           ?.classList.add("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-valid");
       } else {
         setIsPasswordConfirm(true);
+
         document
           .getElementById("passwordConfirm")
           ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.add("form-control-valid");
       }
     } else {
-      setPasswordConfirmErrorMessage("Please confirm your password.");
+      setPasswordConfirmErrorMessage("");
       setIsPasswordConfirm(false);
+
       document
         .getElementById("passwordConfirm")
-        ?.classList.add("form-control-invalid");
+        ?.classList.remove("form-control-invalid");
+      document
+        .getElementById("passwordConfirm")
+        ?.classList.remove("form-control-valid");
     }
   };
 
@@ -236,13 +330,22 @@ export default function SignUp() {
     setPasswordConfirmErrorMessage("");
 
     document.getElementById("name")?.classList.remove("form-control-invalid");
+    document.getElementById("name")?.classList.remove("form-control-valid");
+
     document.getElementById("email")?.classList.remove("form-control-invalid");
+    document.getElementById("email")?.classList.remove("form-control-valid");
+
     document
       .getElementById("password")
       ?.classList.remove("form-control-invalid");
+    document.getElementById("password")?.classList.remove("form-control-valid");
+
     document
       .getElementById("passwordConfirm")
       ?.classList.remove("form-control-invalid");
+    document
+      .getElementById("passwordConfirm")
+      ?.classList.remove("form-control-valid");
   };
 
   const actionCodeSettings = {
@@ -256,23 +359,27 @@ export default function SignUp() {
     if (name === "") {
       setNameErrorMessage("Please enter your name.");
       setIsName(false);
+
       document.getElementById("name")?.classList.add("form-control-invalid");
     }
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+
       document.getElementById("email")?.classList.add("form-control-invalid");
     }
     if (password === "") {
       setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
+
       document
         .getElementById("password")
         ?.classList.add("form-control-invalid");
     }
-    if (passwordConfirm === "") {
+    if (passwordConfirm === "" && isPassword) {
       setPasswordConfirmErrorMessage("Please confirm your password.");
       setIsPasswordConfirm(false);
+
       document
         .getElementById("passwordConfirm")
         ?.classList.add("form-control-invalid");
@@ -316,6 +423,16 @@ export default function SignUp() {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("error : " + error.code);
+
+        if (error.code === "auth/email-already-in-use") {
+          setIsEmail(false);
+          setEmail("");
+          setEmailErrorMessage("");
+
+          document
+            .getElementById("email")
+            ?.classList.remove("form-control-valid");
+        }
       }
     } finally {
       setIsLoading(false);

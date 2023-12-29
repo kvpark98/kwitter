@@ -117,7 +117,22 @@ const GlobalStyles = createGlobalStyle`
     border-color: #dc3545;
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgba(253, 13, 13, 0.25);
-}
+  }
+  .form-control-valid {
+    background-image: url("/valid.svg");
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-repeat: no-repeat;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    border-color: var(--bs-form-valid-border-color);
+    padding-right: calc(1.5em + 0.75rem);
+  }
+  .form-control-valid:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #75b798;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(1, 79, 18, 0.25);
+  }
 `;
 
 function App() {

@@ -54,21 +54,26 @@ export default function SignIn() {
 
     setEmail(value.replace(/\s/gi, ""));
 
-    if (value) {
+    if (value !== "") {
       if (!regEmail.test(value)) {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
+
         document.getElementById("email")?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
+
         document
           .getElementById("email")
           ?.classList.remove("form-control-invalid");
       }
     } else {
-      setEmailErrorMessage("Please enter your email.");
+      setEmailErrorMessage("");
       setIsEmail(false);
-      document.getElementById("email")?.classList.add("form-control-invalid");
+
+      document
+        .getElementById("email")
+        ?.classList.remove("form-control-invalid");
     }
   };
 
@@ -79,15 +84,17 @@ export default function SignIn() {
 
     if (value !== "") {
       setIsPassword(true);
+
       document
         .getElementById("password")
         ?.classList.remove("form-control-invalid");
     } else {
-      setPasswordErrorMessage("Please enter your password.");
+      setPasswordErrorMessage("");
       setIsPassword(false);
+
       document
         .getElementById("password")
-        ?.classList.add("form-control-invalid");
+        ?.classList.remove("form-control-invalid");
     }
   };
 
@@ -136,11 +143,13 @@ export default function SignIn() {
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+
       document.getElementById("email")?.classList.add("form-control-invalid");
     }
     if (password === "") {
       setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
+
       document
         .getElementById("password")
         ?.classList.add("form-control-invalid");

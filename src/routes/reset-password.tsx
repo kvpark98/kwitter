@@ -19,16 +19,16 @@ export default function ResetPassword() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [newPassword, setNewPassword] = useState("");
-  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const [isNewPassword, setIsNewPassword] = useState(false);
-  const [isNewPasswordConfirm, setIsNewPasswordConfirm] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
 
   const [error, setError] = useState("");
 
-  const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
-  const [newPasswordConfirmErrorMessage, setNewPasswordConfirmErrorMessage] =
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
 
   const logOut = () => {
@@ -36,119 +36,197 @@ export default function ResetPassword() {
     navigate("/sign-in");
   };
 
-  const handleNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    const regNewPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    const regPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
 
-    setNewPassword(value.replace(/\s/gi, ""));
+    setPassword(value.replace(/\s/gi, ""));
 
     if (value !== "") {
-      if (!regNewPassword.test(value)) {
-        if (newPasswordConfirm) {
-          setNewPasswordErrorMessage(
+      if (!regPassword.test(value)) {
+        if (passwordConfirm) {
+          setPasswordErrorMessage(
             "Please enter at least 8 characters including numbers, English, and special characters."
           );
-          setNewPasswordConfirmErrorMessage(
+          setPasswordConfirmErrorMessage(
             "Please make your password valid first."
           );
-          setIsNewPassword(false);
-          setIsNewPasswordConfirm(false);
+          setIsPassword(false);
+          setIsPasswordConfirm(false);
+
           document
             .getElementById("password")
             ?.classList.add("form-control-invalid");
+          document
+            .getElementById("password")
+            ?.classList.remove("form-control-valid");
+
           document
             .getElementById("passwordConfirm")
             ?.classList.add("form-control-invalid");
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.remove("form-control-valid");
         } else {
-          setNewPasswordErrorMessage(
+          setPasswordErrorMessage(
             "Please enter at least 8 characters including numbers, English, and special characters."
           );
-          setIsNewPassword(false);
+          setPasswordConfirmErrorMessage("");
+          setIsPassword(false);
+          setIsPasswordConfirm(false);
+
           document
             .getElementById("password")
             ?.classList.add("form-control-invalid");
+          document
+            .getElementById("password")
+            ?.classList.remove("form-control-valid");
+
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.remove("form-control-invalid");
+          document
+            .getElementById("passwordConfirm")
+            ?.classList.remove("form-control-valid");
         }
       } else {
-        if (newPasswordConfirm) {
-          if (value !== newPasswordConfirm) {
-            setNewPasswordConfirmErrorMessage("The password does not match.");
-            setIsNewPassword(true);
-            setIsNewPasswordConfirm(false);
+        if (passwordConfirm) {
+          if (value !== passwordConfirm) {
+            setPasswordConfirmErrorMessage("The password does not match.");
+            setIsPassword(true);
+            setIsPasswordConfirm(false);
+
             document
               .getElementById("password")
               ?.classList.remove("form-control-invalid");
+            document
+              .getElementById("password")
+              ?.classList.add("form-control-valid");
+
             document
               .getElementById("passwordConfirm")
               ?.classList.add("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.remove("form-control-valid");
           } else {
-            setNewPasswordConfirmErrorMessage("");
-            setIsNewPassword(true);
-            setIsNewPasswordConfirm(true);
+            setPasswordConfirmErrorMessage("");
+            setIsPassword(true);
+            setIsPasswordConfirm(true);
+
             document
               .getElementById("password")
               ?.classList.remove("form-control-invalid");
             document
+              .getElementById("password")
+              ?.classList.add("form-control-valid");
+
+            document
               .getElementById("passwordConfirm")
               ?.classList.remove("form-control-invalid");
+            document
+              .getElementById("passwordConfirm")
+              ?.classList.add("form-control-valid");
           }
         } else {
-          setIsNewPassword(true);
-          setIsNewPasswordConfirm(false);
+          setPasswordConfirmErrorMessage("");
+          setIsPassword(true);
+          setIsPasswordConfirm(false);
+
           document
             .getElementById("password")
+            ?.classList.remove("form-control-invalid");
+          document
+            .getElementById("password")
+            ?.classList.add("form-control-valid");
+
+          document
+            .getElementById("passwordConfirm")
             ?.classList.remove("form-control-invalid");
         }
       }
     } else {
-      if (newPasswordConfirm) {
-        setNewPasswordErrorMessage("Please enter your password.");
-        setNewPasswordConfirmErrorMessage("Please enter your password first.");
-        setIsNewPassword(false);
-        setIsNewPasswordConfirm(false);
+      if (passwordConfirm) {
+        setPasswordErrorMessage("");
+        setPasswordConfirmErrorMessage("Please enter your password first.");
+        setIsPassword(false);
+        setIsPasswordConfirm(false);
+
         document
           .getElementById("password")
-          ?.classList.add("form-control-invalid");
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("password")
+          ?.classList.remove("form-control-valid");
+
         document
           .getElementById("passwordConfirm")
           ?.classList.add("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-valid");
       } else {
-        setNewPasswordErrorMessage("Please enter your password.");
-        setIsNewPassword(false);
-        setIsNewPasswordConfirm(false);
+        setPasswordErrorMessage("");
+        setPasswordConfirmErrorMessage("");
+        setIsPassword(false);
+        setIsPasswordConfirm(false);
+
         document
           .getElementById("password")
-          ?.classList.add("form-control-invalid");
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("password")
+          ?.classList.remove("form-control-valid");
+
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-valid");
       }
     }
   };
 
-  const handleNewPasswordConfirm = (
+  const handlepasswordConfirm = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
 
-    setNewPasswordConfirm(value.replace(/\s/gi, ""));
+    setPasswordConfirm(value.replace(/\s/gi, ""));
 
     if (value !== "") {
-      if (value !== newPassword) {
-        setNewPasswordConfirmErrorMessage("The password does not match.");
-        setIsNewPasswordConfirm(false);
+      if (value !== password) {
+        setPasswordConfirmErrorMessage("The password does not match.");
+        setIsPasswordConfirm(false);
+
         document
           .getElementById("passwordConfirm")
           ?.classList.add("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.remove("form-control-valid");
       } else {
-        setIsNewPasswordConfirm(true);
+        setIsPasswordConfirm(true);
+
         document
           .getElementById("passwordConfirm")
           ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("passwordConfirm")
+          ?.classList.add("form-control-valid");
       }
     } else {
-      setNewPasswordConfirmErrorMessage("Please confirm your password.");
-      setIsNewPasswordConfirm(false);
+      setPasswordConfirmErrorMessage("");
+      setIsPasswordConfirm(false);
+
       document
         .getElementById("passwordConfirm")
-        ?.classList.add("form-control-invalid");
+        ?.classList.remove("form-control-invalid");
+      document
+        .getElementById("passwordConfirm")
+        ?.classList.remove("form-control-valid");
     }
   };
 
@@ -159,21 +237,26 @@ export default function ResetPassword() {
   };
 
   const reset = () => {
-    setNewPassword("");
-    setNewPasswordConfirm("");
+    setPassword("");
+    setPasswordConfirm("");
 
-    setIsNewPassword(false);
-    setIsNewPasswordConfirm(false);
+    setIsPassword(false);
+    setIsPasswordConfirm(false);
 
-    setNewPasswordErrorMessage("");
-    setNewPasswordConfirmErrorMessage("");
+    setPasswordErrorMessage("");
+    setPasswordConfirmErrorMessage("");
 
     document
       .getElementById("password")
       ?.classList.remove("form-control-invalid");
+    document.getElementById("password")?.classList.remove("form-control-valid");
+
     document
       .getElementById("passwordConfirm")
       ?.classList.remove("form-control-invalid");
+    document
+      .getElementById("passwordConfirm")
+      ?.classList.remove("form-control-valid");
   };
 
   useEffect(() => {
@@ -184,16 +267,18 @@ export default function ResetPassword() {
   const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (newPassword === "") {
-      setNewPasswordErrorMessage("Please enter your password.");
-      setIsNewPassword(false);
+    if (password === "") {
+      setPasswordErrorMessage("Please enter your password.");
+      setIsPassword(false);
+
       document
         .getElementById("password")
         ?.classList.add("form-control-invalid");
     }
-    if (newPasswordConfirm === "") {
-      setNewPasswordConfirmErrorMessage("Please confirm your password.");
-      setIsNewPasswordConfirm(false);
+    if (passwordConfirm === "" && isPassword) {
+      setPasswordConfirmErrorMessage("Please confirm your password.");
+      setIsPasswordConfirm(false);
+
       document
         .getElementById("passwordConfirm")
         ?.classList.add("form-control-invalid");
@@ -201,9 +286,9 @@ export default function ResetPassword() {
 
     if (
       isLoading ||
-      !isNewPassword ||
-      !isNewPasswordConfirm ||
-      newPassword !== newPasswordConfirm
+      !isPassword ||
+      !isPasswordConfirm ||
+      password !== passwordConfirm
     ) {
       return;
     }
@@ -214,7 +299,7 @@ export default function ResetPassword() {
       setIsLoading(true);
 
       if (auth.currentUser !== null) {
-        await updatePassword(auth.currentUser, newPassword);
+        await updatePassword(auth.currentUser, password);
 
         window.localStorage.setItem("PasswordChanged", "true");
 
@@ -243,7 +328,7 @@ export default function ResetPassword() {
     "isSignInWithEmailLink : " +
       isSignInWithEmailLink(auth, window.location.href)
   );
-  console.log("changed password : " + newPassword);
+  console.log("changed password : " + password);
 
   return (
     <div className="h-100">
@@ -292,18 +377,16 @@ export default function ResetPassword() {
                 <Form.Label htmlFor="password">New password</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
-                  onChange={handleNewPassword}
+                  onChange={handlePassword}
                   onKeyDown={noSpace}
                   id="password"
                   name="password"
-                  value={newPassword}
+                  value={password}
                   type="password"
                   maxLength={20}
                 />
-                {!isNewPassword && newPasswordErrorMessage && (
-                  <div className="mt-2 text-danger">
-                    {newPasswordErrorMessage}
-                  </div>
+                {!isPassword && passwordErrorMessage && (
+                  <div className="mt-2 text-danger">{passwordErrorMessage}</div>
                 )}
               </Form.Group>
               <Form.Group>
@@ -312,20 +395,18 @@ export default function ResetPassword() {
                 </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
-                  onChange={handleNewPasswordConfirm}
+                  onChange={handlepasswordConfirm}
                   onKeyDown={noSpace}
                   id="passwordConfirm"
                   name="passwordConfirm"
-                  value={newPasswordConfirm}
+                  value={passwordConfirm}
                   type="password"
                   maxLength={20}
-                  {...(!isNewPassword
-                    ? { disabled: true }
-                    : { disabled: false })}
+                  {...(!isPassword ? { disabled: true } : { disabled: false })}
                 />
-                {!isNewPasswordConfirm && newPasswordConfirmErrorMessage && (
+                {!isPasswordConfirm && passwordConfirmErrorMessage && (
                   <div className="mt-2 text-danger">
-                    {newPasswordConfirmErrorMessage}
+                    {passwordConfirmErrorMessage}
                   </div>
                 )}
               </Form.Group>
