@@ -362,7 +362,7 @@ export default function ResetPassword() {
               <p>
                 <span>
                   {error === "auth/requires-recent-login" &&
-                    "Your last sign-in time does not meet the security threshold. Please sign in again."}
+                    "Your new password was not set because your last sign-in time has passed 5 minutes. Please sign in again."}
                 </span>
               </p>
             </Alert>

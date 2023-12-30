@@ -54,7 +54,7 @@ export default function Header() {
                   className="text-decoration-none p-0"
                 >
                   <img
-                    src="https://www.vhv.rs/dpng/d/312-3120300_default-profile-hd-png-download.png"
+                    src="/default-profile.png"
                     alt="Profile image"
                     width="30"
                     height="30"
