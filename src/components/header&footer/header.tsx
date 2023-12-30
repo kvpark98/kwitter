@@ -1,6 +1,6 @@
-import { Button, Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Container, Dropdown, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -44,14 +44,36 @@ export default function Header() {
             </NavDropdown>
             <Nav.Link href="#">FAQS</Nav.Link>
           </Nav>
+
           {auth.currentUser ? (
             <Nav>
-              <Navbar.Text className="me-4">
-                Signed in as: <a href="#">{auth.currentUser.displayName}</a>
-              </Navbar.Text>
-              <Button variant="outline-danger" onClick={logOut}>
-                Sign out
-              </Button>
+              <Dropdown drop="start">
+                <Dropdown.Toggle
+                  variant="link"
+                  id="dropdown-basic"
+                  className="text-decoration-none p-0"
+                >
+                  <img
+                    src="https://www.vhv.rs/dpng/d/312-3120300_default-profile-hd-png-download.png"
+                    alt="Profile image"
+                    width="30"
+                    height="30"
+                    className="rounded-circle align-middle"
+                  />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item disabled>
+                    {auth.currentUser?.displayName}
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                  <Dropdown.Item href="/reset-password">
+                    Reset password
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={logOut}>Sign out</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </Nav>
           ) : (
             <Nav>

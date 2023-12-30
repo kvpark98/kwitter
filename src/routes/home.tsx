@@ -1,17 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { isSignInWithEmailLink } from "firebase/auth";
-import Header from "../components/header";
-import { Wrapper } from "../components/auth-components";
-import Footer from "../components/footer";
+import Header from "../components/header&footer/header";
+import { Wrapper } from "../components/styles/auth-components";
+import Footer from "../components/header&footer/footer";
+import ScrollHome from "../components/scrolls/scrollHome";
 
 export default function Home() {
-  const navigate = useNavigate();
-  const logOut = () => {
-    auth.signOut();
-    navigate("/sign-in");
-  };
-
   console.log("user : " + auth.currentUser);
   console.log("emailVerified : " + auth.currentUser?.emailVerified);
   console.log(
@@ -24,9 +18,8 @@ export default function Home() {
       <Header />
       <div className="wrap">
         <Wrapper>
-          <h1>
-            <button onClick={logOut}>Log Out</button>
-          </h1>
+          <h1>Home</h1>
+          <ScrollHome />
         </Wrapper>
         <Footer />
       </div>

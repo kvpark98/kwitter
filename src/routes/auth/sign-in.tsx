@@ -6,15 +6,15 @@ import {
   browserSessionPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../firebase";
-import { Switcher, Wrapper } from "../components/auth-components";
-import GithubButton from "../components/github-btn";
+import { auth } from "../../firebase";
+import { Switcher, Wrapper } from "../../components/styles/auth-components";
+import GithubButton from "../../components/socialSignIn/github-btn";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import GoogleButton from "../components/google-btn";
+import GoogleButton from "../../components/socialSignIn/google-btn";
 import Alert from "react-bootstrap/Alert";
-import Header from "../components/header";
-import Footer from "../components/footer";
+import Header from "../../components/header&footer/header";
+import Footer from "../../components/header&footer/footer";
 
 export default function SignIn() {
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
-import { Wrapper } from "../components/auth-components";
-import Footer from "../components/footer";
-import Header from "../components/header";
+import { Wrapper } from "../components/styles/auth-components";
+import Footer from "../components/header&footer/footer";
+import Header from "../components/header&footer/header";
+import ScrollProfile from "../components/scrolls/scrollProfile";
 
 export default function Profile() {
   return (
@@ -9,6 +10,7 @@ export default function Profile() {
       <div className="wrap">
         <Wrapper>
           <h1>Profile</h1>
+          <ScrollProfile />
         </Wrapper>
         <Footer />
       </div>

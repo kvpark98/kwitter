@@ -1,39 +1,111 @@
-import React, { useEffect, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
+import { useState } from "react";
+import { auth } from "../../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
-import { auth } from "../firebase";
-import { Switcher, Wrapper } from "../components/auth-components";
+import { Switcher, Wrapper } from "../../components/styles/auth-components";
+import GithubButton from "../../components/socialSignIn/github-btn";
+import GoogleButton from "../../components/socialSignIn/google-btn";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Header from "../components/header";
-import Footer from "../components/footer";
+import Header from "../../components/header&footer/header";
+import Footer from "../../components/header&footer/footer";
 
-export default function ResetPassword() {
+export default function SignUp() {
   const navigate = useNavigate();
-
-  const [isSignedInWithEmail, setIsSignedInWithEmail] = useState(
-    window.localStorage.getItem("isSignedInWithEmail")
-  );
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
+  const [isName, setIsName] = useState(false);
+  const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
 
   const [error, setError] = useState("");
 
+  const [nameErrorMessage, setNameErrorMessage] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
 
-  const logOut = () => {
-    auth.signOut();
-    navigate("/sign-in");
+  const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    const regName = /^[가-힣a-zA-Z]{2,20}$/;
+
+    setName(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      if (!regName.test(value)) {
+        setNameErrorMessage(
+          "Please enter at least 2 characters either in English or Korean."
+        );
+        setIsName(false);
+
+        document.getElementById("name")?.classList.add("form-control-invalid");
+        document.getElementById("name")?.classList.remove("form-control-valid");
+      } else {
+        setIsName(true);
+
+        document
+          .getElementById("name")
+          ?.classList.remove("form-control-invalid");
+        document.getElementById("name")?.classList.add("form-control-valid");
+      }
+    } else {
+      setNameErrorMessage("");
+      setIsName(false);
+
+      document.getElementById("name")?.classList.remove("form-control-invalid");
+      document.getElementById("name")?.classList.remove("form-control-valid");
+    }
+  };
+
+  const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    const regEmail =
+      /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+
+    setEmail(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      if (!regEmail.test(value)) {
+        setEmailErrorMessage("Email format is not valid.");
+        setIsEmail(false);
+
+        document.getElementById("email")?.classList.add("form-control-invalid");
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-valid");
+      } else {
+        setIsEmail(true);
+
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-invalid");
+        document.getElementById("email")?.classList.add("form-control-valid");
+      }
+    } else {
+      setEmailErrorMessage("");
+      setIsEmail(false);
+
+      document
+        .getElementById("email")
+        ?.classList.remove("form-control-invalid");
+      document.getElementById("email")?.classList.remove("form-control-valid");
+    }
   };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -189,7 +261,7 @@ export default function ResetPassword() {
     }
   };
 
-  const handlepasswordConfirm = (
+  const handlePasswordConfirm = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
@@ -236,15 +308,32 @@ export default function ResetPassword() {
     }
   };
 
+  const logOut = () => {
+    auth.signOut();
+    navigate("/sign-in");
+  };
+
   const reset = () => {
+    setName("");
+    setEmail("");
     setPassword("");
     setPasswordConfirm("");
 
+    setIsName(false);
+    setIsEmail(false);
     setIsPassword(false);
     setIsPasswordConfirm(false);
 
+    setNameErrorMessage("");
+    setEmailErrorMessage("");
     setPasswordErrorMessage("");
     setPasswordConfirmErrorMessage("");
+
+    document.getElementById("name")?.classList.remove("form-control-invalid");
+    document.getElementById("name")?.classList.remove("form-control-valid");
+
+    document.getElementById("email")?.classList.remove("form-control-invalid");
+    document.getElementById("email")?.classList.remove("form-control-valid");
 
     document
       .getElementById("password")
@@ -259,14 +348,26 @@ export default function ResetPassword() {
       ?.classList.remove("form-control-valid");
   };
 
-  useEffect(() => {
-    window.localStorage.removeItem("isSignedInWithEmail");
-    window.localStorage.removeItem("error");
-  }, []);
+  const actionCodeSettings = {
+    url: "http://127.0.0.1:5173/sign-in",
+    handleCodeInApp: true,
+  };
 
-  const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (name === "") {
+      setNameErrorMessage("Please enter your name.");
+      setIsName(false);
+
+      document.getElementById("name")?.classList.add("form-control-invalid");
+    }
+    if (email === "") {
+      setEmailErrorMessage("Please enter your email.");
+      setIsEmail(false);
+
+      document.getElementById("email")?.classList.add("form-control-invalid");
+    }
     if (password === "") {
       setPasswordErrorMessage("Please enter your password.");
       setIsPassword(false);
@@ -286,6 +387,8 @@ export default function ResetPassword() {
 
     if (
       isLoading ||
+      !isName ||
+      !isEmail ||
       !isPassword ||
       !isPasswordConfirm ||
       password !== passwordConfirm
@@ -298,37 +401,43 @@ export default function ResetPassword() {
     try {
       setIsLoading(true);
 
-      if (auth.currentUser !== null) {
-        await updatePassword(auth.currentUser, password);
+      // Create an account
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-        window.localStorage.setItem("PasswordChanged", "true");
+      window.localStorage.setItem("verificationNeeded", "true");
 
-        setIsSignedInWithEmail("");
+      // Verify email
+      await sendEmailVerification(credentials.user, actionCodeSettings);
 
-        logOut();
-      }
+      // Update the profile
+      await updateProfile(credentials.user, {
+        displayName: name,
+      });
+
+      logOut();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        window.localStorage.setItem("error", error.code);
         console.log("error : " + error.code);
 
-        window.localStorage.removeItem("PasswordChanged");
-        setIsSignedInWithEmail("");
-        logOut();
+        if (error.code === "auth/email-already-in-use") {
+          setIsEmail(false);
+          setEmail("");
+          setEmailErrorMessage("");
+
+          document
+            .getElementById("email")
+            ?.classList.remove("form-control-valid");
+        }
       }
     } finally {
       setIsLoading(false);
     }
   };
-
-  console.log("user : " + auth.currentUser);
-  console.log("emailVerified : " + auth.currentUser?.emailVerified);
-  console.log(
-    "isSignInWithEmailLink : " +
-      isSignInWithEmailLink(auth, window.location.href)
-  );
-  console.log("changed password : " + password);
 
   return (
     <div className="h-100">
@@ -336,21 +445,9 @@ export default function ResetPassword() {
       <div className="wrap">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2 text-center">
-              <div className="text-center mb-3">Reset password for</div>
-              <div className="text-center">{auth.currentUser?.displayName}</div>
-            </h1>
+            <h1 className="fs-2">Sign up</h1>
           </div>
-          {isSignedInWithEmail && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>Your are signed in with email. Please reset your password.</p>
-            </Alert>
-          )}
-          {error === "auth/requires-recent-login" && (
+          {error && (
             <Alert
               variant="danger"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
@@ -358,23 +455,65 @@ export default function ResetPassword() {
             >
               <p>
                 <span>
-                  {error === "auth/requires-recent-login" &&
-                    "Your last sign-in time does not meet the security threshold. Please sign in again."}
+                  {error === "auth/email-already-in-use" &&
+                    "This email is already in use."}
+                  {error === "auth/account-exists-with-different-credential" &&
+                    "Email is invalid or already taken."}
+                  {error === "auth/invalid-email" &&
+                    "The email address is not valid."}
+                  {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again after some delay."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please reopen the page."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
                 </span>
               </p>
             </Alert>
           )}
           <Alert variant="light" className="mt-3 py-4 w-100">
             <Form
-              onSubmit={resetPassword}
+              onSubmit={signIn}
               className="d-flex"
               style={{
                 flexDirection: "column",
                 gap: "15px",
               }}
             >
+              <Form.Group className="mb-2">
+                <Form.Label htmlFor="name">Username</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleName}
+                  onKeyDown={noSpace}
+                  id="name"
+                  name="name"
+                  value={name}
+                  type="text"
+                  maxLength={20}
+                />
+                {!isName && nameErrorMessage && (
+                  <div className="mt-2 text-danger">{nameErrorMessage}</div>
+                )}
+              </Form.Group>
+              <Form.Group className="mb-2">
+                <Form.Label htmlFor="email">Email address</Form.Label>
+                <Form.Control
+                  className="border-none mt-1 mb-1"
+                  onChange={handleEmail}
+                  onKeyDown={noSpace}
+                  id="email"
+                  name="email"
+                  value={email}
+                  type="text"
+                  maxLength={50}
+                />
+                {!isEmail && emailErrorMessage && (
+                  <div className="mt-2 text-danger">{emailErrorMessage}</div>
+                )}
+              </Form.Group>
               <Form.Group>
-                <Form.Label htmlFor="password">New password</Form.Label>
+                <Form.Label htmlFor="password">Password</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handlePassword}
@@ -391,11 +530,11 @@ export default function ResetPassword() {
               </Form.Group>
               <Form.Group>
                 <Form.Label htmlFor="passwordConfirm">
-                  New Password Confirm
+                  Password Confirm
                 </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
-                  onChange={handlepasswordConfirm}
+                  onChange={handlePasswordConfirm}
                   onKeyDown={noSpace}
                   id="passwordConfirm"
                   name="passwordConfirm"
@@ -410,18 +549,33 @@ export default function ResetPassword() {
                   </div>
                 )}
               </Form.Group>
-              <Button type="submit" className="fw-bold">
-                {isLoading ? "Loading..." : "Reset"}
+              <Button type="submit" className="mt-2 fw-bold">
+                {isLoading ? "Loading..." : "Sign up"}
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
               <Button onClick={reset} type="button" variant="outline-warning">
                 Reset
               </Button>
-              <Link to="/" className="btn btn-outline-success">
-                Next time
+              <Link to="/sign-in" className="btn btn-outline-success">
+                Sign in
               </Link>
             </Switcher>
+          </Alert>
+          <div className="w-100 d-flex justify-content-between align-items-center">
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+            <span className="mx-3">OR</span>
+            <span
+              className="w-50 border border-secondary"
+              style={{ height: 0 }}
+            ></span>
+          </div>
+          <Alert variant="light" className="w-100 mt-3 py-4">
+            <GoogleButton />
+            <GithubButton />
           </Alert>
         </Wrapper>
         <Footer />

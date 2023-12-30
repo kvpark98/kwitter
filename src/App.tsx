@@ -1,23 +1,23 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
-import Layout from "./components/layout";
+import Layout from "./components/styles/layout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./routes/home";
 import Profile from "./routes/profile";
-import SignIn from "./routes/sign-in";
-import SignUp from "./routes/sign-up";
+import SignIn from "./routes/auth/sign-in";
+import SignUp from "./routes/auth/sign-up";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import { useEffect, useState } from "react";
-import Loading from "./components/loading";
+import Loading from "./components/loading/loading";
 import { auth } from "./firebase";
-import ProtectedRoute from "./components/protected-route";
+import ProtectedRoute from "./components/protected-routes/protected-route";
 import "./App.module.css";
-import ProtectedRouteLogin from "./components/protected-route-login";
-import ResetPassword from "./routes/reset-password";
-import SendSignInLink from "./routes/send-sign-in-link";
-import SignInWithEmail from "./routes/sign-in-with-email";
-import ProtectedRouteSignInWithEmail from "./components/protected-route-sign-in-with-email";
+import ProtectedRouteLogin from "./components/protected-routes/protected-route-login";
+import ResetPassword from "./routes/auth/reset-password";
+import SendSignInLink from "./routes/auth/send-sign-in-link";
+import SignInWithEmail from "./routes/auth/sign-in-with-email";
+import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
 
 const router = createBrowserRouter([
   {
@@ -100,6 +100,14 @@ const GlobalStyles = createGlobalStyle`
   .alert-dismissible .btn-close {
     padding: 16px;
   }
+  #scrollToTop {
+    background-color: #0d6efd;
+    color: #f7f7fa;
+  }
+  #scrollToBottom {
+    background-color: #198754;
+    color: #f7f7fa;
+  }
   .form-check-input {
     margin-top: 0;
   }
@@ -133,17 +141,23 @@ const GlobalStyles = createGlobalStyle`
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgba(1, 79, 18, 0.25);
   }
+  .dropstart .dropdown-toggle::before {
+    display: none
+  }
 `;
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+
   const init = async () => {
     await auth.authStateReady();
     setIsLoading(false);
   };
+
   useEffect(() => {
     init();
   }, []);
+
   return (
     <div className="h-100">
       <GlobalStyles />

@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FirebaseError } from "firebase/app";
-import {
-  browserSessionPersistence,
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-} from "firebase/auth";
-import { auth } from "../firebase";
-import { Switcher, Wrapper } from "../components/auth-components";
+import { sendSignInLinkToEmail } from "firebase/auth";
+import { auth } from "../../firebase";
+import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "../../components/header&footer/header";
+import Footer from "../../components/header&footer/footer";
 
-export default function SignInWithEmail() {
+export default function SendSignInLink() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +18,8 @@ export default function SignInWithEmail() {
   const [email, setEmail] = useState("");
 
   const [isEmail, setIsEmail] = useState(false);
+
+  const [isPasswordResetLinkSent, setIsPasswordResetLinkSent] = useState(false);
 
   const [error, setError] = useState("");
 
@@ -62,11 +62,6 @@ export default function SignInWithEmail() {
     }
   };
 
-  const logOut = () => {
-    auth.signOut();
-    navigate("/sign-in");
-  };
-
   const reset = () => {
     setEmail("");
 
@@ -77,11 +72,12 @@ export default function SignInWithEmail() {
     document.getElementById("email")?.classList.remove("form-control-invalid");
   };
 
-  useEffect(() => {
-    window.localStorage.removeItem("error");
-  }, []);
+  const actionCodeSettings = {
+    url: "http://127.0.0.1:5173/sign-in-with-email",
+    handleCodeInApp: true,
+  };
 
-  const signInWithEmail = async (event: React.FormEvent<HTMLFormElement>) => {
+  const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (email === "") {
@@ -100,29 +96,19 @@ export default function SignInWithEmail() {
     try {
       setIsLoading(true);
 
-      // Existing and future Auth states are now persisted in the current
-      // session only. Closing the window would clear any existing state even
-      // if a user forgets to sign out.
-      auth.setPersistence(browserSessionPersistence);
+      // Send sign in link
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
-      // Sign in with email
-      if (isSignInWithEmailLink(auth, window.location.href)) {
-        await signInWithEmailLink(auth, email, window.location.href);
-        window.localStorage.setItem("isSignedInWithEmail", "true");
-        navigate("/reset-password");
-      } else {
-        logOut();
-      }
+      setIsPasswordResetLinkSent(true);
+
+      setTimeout(() => {
+        navigate("/sign-in");
+      }, 7000);
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        window.localStorage.setItem("error", error.code);
         console.log("error : " + error.code);
-
-        window.localStorage.removeItem("isSignedInWithEmail");
-        if (error.code !== "auth/invalid-email") {
-          logOut();
-        }
+        setIsPasswordResetLinkSent(false);
       }
     } finally {
       setIsLoading(false);
@@ -131,29 +117,28 @@ export default function SignInWithEmail() {
 
   console.log("user : " + auth.currentUser);
   console.log("emailVerified : " + auth.currentUser?.emailVerified);
-  console.log(
-    "isSignInWithEmailLink : " +
-      isSignInWithEmailLink(auth, window.location.href)
-  );
 
   return (
     <div className="h-100">
+      <Header />
       <div className="wrap">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Sign in with email</h1>
+            <h1 className="fs-2">Send sign in link</h1>
           </div>
-          {isSignInWithEmailLink(auth, window.location.href) && (
+          {isPasswordResetLinkSent && (
             <Alert
-              variant="success"
+              variant="warning"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
             >
               <p>
-                Your email was verified. Please enter your email one more time.
+                Check your email for a link to sign in. If it doesn’t appear
+                within a few minutes, check your spam folder.
               </p>
             </Alert>
           )}
-          {error === "auth/invalid-email" && (
+          {error && (
             <Alert
               variant="danger"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
@@ -161,15 +146,27 @@ export default function SignInWithEmail() {
             >
               <p>
                 <span>
-                  {error === "auth/invalid-email" &&
-                    "The email provided does not match the sign-in email address."}
+                  {error === "auth/invalid-action-code" &&
+                    "The link is malformed or has already been used. Please get a new link."}
+                  {error === "auth/too-many-requests" &&
+                    "Too many attempts. Please try again after some delay."}
+                  {error === "auth/network-request-failed" &&
+                    "A network error has occurred. Please reopen the page."}
+                  {error === "auth/requires-recent-login" &&
+                    "Your last sign-in time does not meet the security threshold. Please sign in again."}
+                  {error === "auth/invalid-user-token" &&
+                    "Your credential is no longer valid. Please sign in again."}
+                  {error === "auth/user-token-expired" &&
+                    "Your credential has expired. Please sign in again."}
+                  {error === "auth/web-storage-unsupported" &&
+                    "Your browser does not support web storage. Please try again."}
                 </span>
               </p>
             </Alert>
           )}
           <Alert variant="light" className="mt-3 py-4 w-100">
             <Form
-              onSubmit={signInWithEmail}
+              onSubmit={sendSignInLink}
               className="d-flex"
               style={{
                 flexDirection: "column",
@@ -178,8 +175,8 @@ export default function SignInWithEmail() {
             >
               <Form.Group>
                 <Form.Label htmlFor="email">
-                  Please enter the email address to which the sign-in link was
-                  originally sent.
+                  Enter your enrolled email address and we will send you a link
+                  for sign in.
                 </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
@@ -196,16 +193,20 @@ export default function SignInWithEmail() {
                 )}
               </Form.Group>
               <Button type="submit" className="mt-2 fw-bold">
-                {isLoading ? "Loading..." : "Sign in with email"}
+                {isLoading ? "Loading..." : "Send sign in email"}
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
               <Button onClick={reset} type="button" variant="outline-warning">
                 Reset
               </Button>
+              <Link to="/sign-in" className="btn btn-outline-success">
+                Sign in
+              </Link>
             </Switcher>
           </Alert>
         </Wrapper>
+        <Footer />
       </div>
     </div>
   );

@@ -48,3 +48,35 @@ export const Switcher = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const ScrollBtn = styled.div`
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  display: inline-grid;
+  right: 1%;
+  bottom: 15%;
+  z-index: 1;
+`;
+
+export const Top = styled.div`
+  height: 30px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 10px 10px 5px 10px;
+  border: none;
+  border-radius: 30px 30px 0 0;
+  cursor: pointer;
+`;
+
+export const Bottom = styled.div`
+  height: 30px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 5px 10px 10px 10px;
+  border: none;
+  border-radius: 0 0 30px 30px;
+  cursor: pointer;
+`;
