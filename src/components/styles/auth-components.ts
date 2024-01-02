@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   align-items: center;
   max-width: 374px;
   margin: 0 auto;
-  padding: 50px 0px;
+  padding: 70px 0px;
 `;
 export const Title = styled.h1`
   font-size: 40px;

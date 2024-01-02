@@ -67,6 +67,9 @@ export default function Header() {
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                  <Dropdown.Item href="/update-username">
+                    Update Username
+                  </Dropdown.Item>
                   <Dropdown.Item href="/reset-password">
                     Reset password
                   </Dropdown.Item>

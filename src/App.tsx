@@ -18,6 +18,7 @@ import ResetPassword from "./routes/auth/reset-password";
 import SendSignInLink from "./routes/auth/send-sign-in-link";
 import SignInWithEmail from "./routes/auth/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
+import UpdateUsername from "./routes/auth/update-username";
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,14 @@ const router = createBrowserRouter([
       <ProtectedRouteSignInWithEmail>
         <SignInWithEmail />
       </ProtectedRouteSignInWithEmail>
+    ),
+  },
+  {
+    path: "/update-username",
+    element: (
+      <ProtectedRoute>
+        <UpdateUsername />
+      </ProtectedRoute>
     ),
   },
   {
