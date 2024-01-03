@@ -422,7 +422,7 @@ export default function ResetPassword() {
                 Reset
               </Button>
               <Link to="/" className="btn btn-outline-success">
-                Next time
+                Home
               </Link>
             </Switcher>
           </Alert>

@@ -1,13 +1,32 @@
-import { Container, Dropdown, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Nav,
+  NavDropdown,
+  Navbar,
+} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { Alert, Modal } from "react-bootstrap";
+import { deleteUser } from "firebase/auth";
+import { useState } from "react";
 
 export default function Header() {
   const navigate = useNavigate();
 
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
   const logOut = () => {
     auth.signOut();
     navigate("/sign-in");
+  };
+
+  const unregister = () => {
+    deleteUser(auth.currentUser!);
+    logOut();
   };
 
   return (
@@ -44,7 +63,6 @@ export default function Header() {
             </NavDropdown>
             <Nav.Link href="#">FAQS</Nav.Link>
           </Nav>
-
           {auth.currentUser ? (
             <Nav>
               <Dropdown drop="start">
@@ -67,6 +85,7 @@ export default function Header() {
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                  <Dropdown.Divider />
                   <Dropdown.Item href="/update-username">
                     Update Username
                   </Dropdown.Item>
@@ -75,6 +94,10 @@ export default function Header() {
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={logOut}>Sign out</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={handleShowModal}>
+                    Unregister
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Nav>
@@ -86,6 +109,32 @@ export default function Header() {
             </Nav>
           )}
         </Navbar.Collapse>
+        <Modal
+          show={showModal}
+          onHide={handleCloseModal}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Alert variant="danger" className="m-0 p-0">
+            <Modal.Body>
+              <Alert.Heading className="mb-3">Wait!</Alert.Heading>
+              <p>
+                <span>
+                  Once you leave, you can't restore your account. Are you sure
+                  you want to unregister?
+                </span>
+              </p>
+            </Modal.Body>
+            <Modal.Footer className="border-0 pt-0 p-3">
+              <Button variant="outline-primary" onClick={unregister}>
+                Yes
+              </Button>
+              <Button variant="outline-danger" onClick={handleCloseModal}>
+                No
+              </Button>
+            </Modal.Footer>
+          </Alert>
+        </Modal>
       </Container>
     </Navbar>
   );
