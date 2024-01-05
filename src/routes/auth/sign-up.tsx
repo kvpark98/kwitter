@@ -308,7 +308,7 @@ export default function SignUp() {
     }
   };
 
-  const logOut = () => {
+  const signOut = () => {
     auth.signOut();
     navigate("/sign-in");
   };
@@ -418,7 +418,7 @@ export default function SignUp() {
         displayName: name,
       });
 
-      logOut();
+      signOut();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
@@ -461,6 +461,8 @@ export default function SignUp() {
                     "Email is invalid or already taken."}
                   {error === "auth/invalid-email" &&
                     "The email address is not valid."}
+                  {error === "auth/requires-recent-login" &&
+                    "This requires recent sign-in. Please sign in again."}
                   {error === "auth/too-many-requests" &&
                     "Too many attempts. Please try again after some delay."}
                   {error === "auth/network-request-failed" &&
@@ -554,7 +556,7 @@ export default function SignUp() {
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
-              <Button onClick={reset} type="button" variant="outline-warning">
+              <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
               <Link to="/sign-in" className="btn btn-outline-success">

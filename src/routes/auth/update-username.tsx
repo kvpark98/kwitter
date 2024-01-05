@@ -164,7 +164,7 @@ export default function UpdateUsername() {
                   {error === "auth/network-request-failed" &&
                     "A network error has occurred. Please reopen the page."}
                   {error === "auth/requires-recent-login" &&
-                    "Your new password was not set because your last sign-in time has passed 5 minutes. Please sign in again."}
+                    "This requires recent sign-in. Please sign in again."}
                   {error === "auth/invalid-user-token" &&
                     "Your credential is no longer valid. Please sign in again."}
                   {error === "auth/user-token-expired" &&
@@ -205,7 +205,7 @@ export default function UpdateUsername() {
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
-              <Button onClick={reset} type="button" variant="outline-warning">
+              <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
               <Link to="/" className="btn btn-outline-success">

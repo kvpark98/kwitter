@@ -43,7 +43,7 @@ export const Error = styled.span`
 
 export const Switcher = styled.div`
   width: 100%;
-  margin-top: 24px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

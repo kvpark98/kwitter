@@ -62,7 +62,7 @@ export default function SignInWithEmail() {
     }
   };
 
-  const logOut = () => {
+  const signOut = () => {
     auth.signOut();
     navigate("/sign-in");
   };
@@ -108,10 +108,12 @@ export default function SignInWithEmail() {
       // Sign in with email
       if (isSignInWithEmailLink(auth, window.location.href)) {
         await signInWithEmailLink(auth, email, window.location.href);
+
         window.localStorage.setItem("isSignedInWithEmail", "true");
+
         navigate("/reset-password");
       } else {
-        logOut();
+        signOut();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -120,8 +122,9 @@ export default function SignInWithEmail() {
         console.log("error : " + error.code);
 
         window.localStorage.removeItem("isSignedInWithEmail");
+
         if (error.code !== "auth/invalid-email") {
-          logOut();
+          signOut();
         }
       }
     } finally {
@@ -200,7 +203,7 @@ export default function SignInWithEmail() {
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
-              <Button onClick={reset} type="button" variant="outline-warning">
+              <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
             </Switcher>

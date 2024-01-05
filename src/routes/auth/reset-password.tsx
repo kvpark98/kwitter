@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  isSignInWithEmailLink,
+  reauthenticateWithCredential,
+  updatePassword,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button } from "react-bootstrap";
@@ -31,7 +36,7 @@ export default function ResetPassword() {
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
 
-  const logOut = () => {
+  const signOut = () => {
     auth.signOut();
     navigate("/sign-in");
   };
@@ -298,15 +303,20 @@ export default function ResetPassword() {
     try {
       setIsLoading(true);
 
-      if (auth.currentUser !== null) {
-        await updatePassword(auth.currentUser, password);
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser?.email!,
+        password
+      );
 
-        window.localStorage.setItem("PasswordChanged", "true");
+      await reauthenticateWithCredential(auth.currentUser!, credential);
 
-        setIsSignedInWithEmail("");
+      await updatePassword(auth.currentUser!, password);
 
-        logOut();
-      }
+      window.localStorage.setItem("PasswordChanged", "true");
+
+      setIsSignedInWithEmail("");
+
+      signOut();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
@@ -315,7 +325,7 @@ export default function ResetPassword() {
 
         window.localStorage.removeItem("PasswordChanged");
         setIsSignedInWithEmail("");
-        logOut();
+        signOut();
       }
     } finally {
       setIsLoading(false);
@@ -342,7 +352,10 @@ export default function ResetPassword() {
             variant="warning"
             className="d-flex align-itmes-center m-0 mt-3 w-100"
           >
-            <p>Please reset your password within 5 minutes.</p>
+            <p>
+              Please reset your password within 5 minutes, or you have to sign
+              in again.
+            </p>
           </Alert>
           {isSignedInWithEmail && (
             <Alert
@@ -362,7 +375,7 @@ export default function ResetPassword() {
               <p>
                 <span>
                   {error === "auth/requires-recent-login" &&
-                    "Your new password was not set because your last sign-in time has passed 5 minutes. Please sign in again."}
+                    "This requires recent sign-in. Please sign in again."}
                 </span>
               </p>
             </Alert>
@@ -418,7 +431,7 @@ export default function ResetPassword() {
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
-              <Button onClick={reset} type="button" variant="outline-warning">
+              <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
               <Link to="/" className="btn btn-outline-success">

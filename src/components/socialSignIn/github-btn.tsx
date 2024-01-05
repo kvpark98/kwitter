@@ -28,8 +28,11 @@ export default function GithubButton() {
       // session only. Closing the window would clear any existing state even
       // if a user forgets to sign out.
       auth.setPersistence(browserSessionPersistence);
+
       const provider = new GithubAuthProvider();
+
       await signInWithPopup(auth, provider);
+
       navigate("/");
     } catch (error) {
       if (error instanceof FirebaseError) {

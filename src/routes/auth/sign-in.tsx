@@ -37,7 +37,11 @@ export default function SignIn() {
     window.localStorage.getItem("verificationNeeded")
   );
 
-  const [isVerified, setIsverified] = useState("");
+  const [isVerified, setIsVerified] = useState("");
+
+  const [accountDeleted, setAccountDeleted] = useState(
+    window.localStorage.getItem("accountDeleted")
+  );
 
   const [error, setError] = useState(
     window.localStorage.getItem("error") || ""
@@ -109,7 +113,7 @@ export default function SignIn() {
     }
   };
 
-  const logOut = () => {
+  const signOut = () => {
     auth.signOut();
     navigate("/sign-in");
   };
@@ -134,6 +138,7 @@ export default function SignIn() {
   useEffect(() => {
     window.localStorage.removeItem("verificationNeeded");
     window.localStorage.removeItem("PasswordChanged");
+    window.localStorage.removeItem("accountDeleted");
     window.localStorage.removeItem("error");
   }, []);
 
@@ -179,21 +184,24 @@ export default function SignIn() {
 
       setIsVerificationNeeded("");
       setIsPasswordChanged("");
+      setAccountDeleted("");
 
       // Ridirect
       if (auth.currentUser?.emailVerified === true) {
-        setIsverified("yes");
+        setIsVerified("yes");
         navigate("/");
       } else {
-        setIsverified("no");
-        logOut();
+        setIsVerified("no");
+        signOut();
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("error : " + error.code);
+
         setIsVerificationNeeded("");
         setIsPasswordChanged("");
+        setAccountDeleted("");
       }
     } finally {
       setIsLoading(false);
@@ -229,7 +237,19 @@ export default function SignIn() {
               className="d-flex align-itmes-center m-0 mt-3 w-100"
               dismissible
             >
-              <p>New password set successfully.</p>
+              <p>
+                New password set successfully. Please sign in with your new
+                password.
+              </p>
+            </Alert>
+          )}
+          {accountDeleted && (
+            <Alert
+              variant="success"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+              dismissible
+            >
+              <p>Your account has been deleted successfully.</p>
             </Alert>
           )}
           {error && (
@@ -255,7 +275,7 @@ export default function SignIn() {
                   {error === "auth/network-request-failed" &&
                     "A network error has occurred. Please reopen the page."}
                   {error === "auth/requires-recent-login" &&
-                    "Your new password was not set because your last sign-in time has passed 5 minutes. Please sign in again."}
+                    "This requires recent sign-in. Please sign in again."}
                   {error === "auth/invalid-user-token" &&
                     "Your credential is no longer valid. Please sign in again."}
                   {error === "auth/user-token-expired" &&
@@ -348,7 +368,7 @@ export default function SignIn() {
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
-              <Button onClick={reset} type="button" variant="outline-warning">
+              <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
               <Link to="/sign-up" className="btn btn-outline-success">
