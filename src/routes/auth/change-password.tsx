@@ -20,17 +20,17 @@ export default function ChangePassword() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [originalPassword, setOriginalPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
 
-  const [isOriginalPassword, setIsOriginalPassword] = useState(false);
+  const [isCurrentPassword, setIsCurrentPassword] = useState(false);
   const [isNewPassword, setIsNewPassword] = useState(false);
   const [isNewPasswordConfirm, setIsNewPasswordConfirm] = useState(false);
 
   const [error, setError] = useState("");
 
-  const [originalPasswordErrorMessage, setOriginalPasswordErrorMessage] =
+  const [currentPasswordErrorMessage, setCurrentPasswordErrorMessage] =
     useState("");
   const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
   const [newPasswordConfirmErrorMessage, setNewPasswordConfirmErrorMessage] =
@@ -41,26 +41,23 @@ export default function ChangePassword() {
     navigate("/sign-in");
   };
 
-  const handleOriginalPassword = (
+  const handleCurrentPassword = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
 
-    setOriginalPassword(value.replace(/\s/gi, ""));
+    setCurrentPassword(value.replace(/\s/gi, ""));
+
+    document
+      .getElementById("currentPassword")
+      ?.classList.remove("form-control-invalid");
 
     if (value !== "") {
-      setIsOriginalPassword(true);
-
-      document
-        .getElementById("originalPassword")
-        ?.classList.remove("form-control-invalid");
+      setIsCurrentPassword(true);
     } else {
-      setOriginalPasswordErrorMessage("");
-      setIsOriginalPassword(false);
+      setCurrentPasswordErrorMessage("");
 
-      document
-        .getElementById("originalPassword")
-        ?.classList.remove("form-control-invalid");
+      setIsCurrentPassword(false);
     }
   };
 
@@ -73,64 +70,53 @@ export default function ChangePassword() {
 
     if (value !== "") {
       if (!regPassword.test(value)) {
+        setNewPasswordErrorMessage(
+          "Please enter at least 8 characters including numbers, English, and special characters."
+        );
+
+        setIsNewPassword(false);
+        setIsNewPasswordConfirm(false);
+
+        document
+          .getElementById("newPassword")
+          ?.classList.add("form-control-invalid");
+        document
+          .getElementById("newPassword")
+          ?.classList.remove("form-control-valid");
+
+        document
+          .getElementById("newPasswordConfirm")
+          ?.classList.remove("form-control-valid");
+
         if (newPasswordConfirm) {
-          setNewPasswordErrorMessage(
-            "Please enter at least 8 characters including numbers, English, and special characters."
-          );
           setNewPasswordConfirmErrorMessage(
             "Please make your password valid first."
           );
-          setIsNewPassword(false);
-          setIsNewPasswordConfirm(false);
-
-          document
-            .getElementById("newPassword")
-            ?.classList.add("form-control-invalid");
-          document
-            .getElementById("newPassword")
-            ?.classList.remove("form-control-valid");
 
           document
             .getElementById("newPasswordConfirm")
             ?.classList.add("form-control-invalid");
-          document
-            .getElementById("newPasswordConfirm")
-            ?.classList.remove("form-control-valid");
         } else {
-          setNewPasswordErrorMessage(
-            "Please enter at least 8 characters including numbers, English, and special characters."
-          );
           setNewPasswordConfirmErrorMessage("");
-          setIsNewPassword(false);
-          setIsNewPasswordConfirm(false);
-
-          document
-            .getElementById("newPassword")
-            ?.classList.add("form-control-invalid");
-          document
-            .getElementById("newPassword")
-            ?.classList.remove("form-control-valid");
 
           document
             .getElementById("newPasswordConfirm")
             ?.classList.remove("form-control-invalid");
-          document
-            .getElementById("newPasswordConfirm")
-            ?.classList.remove("form-control-valid");
         }
       } else {
+        setIsNewPassword(true);
+
+        document
+          .getElementById("newPassword")
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("newPassword")
+          ?.classList.add("form-control-valid");
+
         if (newPasswordConfirm) {
           if (value !== newPasswordConfirm) {
             setNewPasswordConfirmErrorMessage("The password does not match.");
-            setIsNewPassword(true);
             setIsNewPasswordConfirm(false);
-
-            document
-              .getElementById("newPassword")
-              ?.classList.remove("form-control-invalid");
-            document
-              .getElementById("newPassword")
-              ?.classList.add("form-control-valid");
 
             document
               .getElementById("newPasswordConfirm")
@@ -140,15 +126,7 @@ export default function ChangePassword() {
               ?.classList.remove("form-control-valid");
           } else {
             setNewPasswordConfirmErrorMessage("");
-            setIsNewPassword(true);
             setIsNewPasswordConfirm(true);
-
-            document
-              .getElementById("newPassword")
-              ?.classList.remove("form-control-invalid");
-            document
-              .getElementById("newPassword")
-              ?.classList.add("form-control-valid");
 
             document
               .getElementById("newPasswordConfirm")
@@ -159,15 +137,7 @@ export default function ChangePassword() {
           }
         } else {
           setNewPasswordConfirmErrorMessage("");
-          setIsNewPassword(true);
           setIsNewPasswordConfirm(false);
-
-          document
-            .getElementById("newPassword")
-            ?.classList.remove("form-control-invalid");
-          document
-            .getElementById("newPassword")
-            ?.classList.add("form-control-valid");
 
           document
             .getElementById("newPasswordConfirm")
@@ -175,44 +145,34 @@ export default function ChangePassword() {
         }
       }
     } else {
-      if (newPasswordConfirm) {
-        setNewPasswordErrorMessage("");
-        setNewPasswordConfirmErrorMessage("Please enter your password first.");
-        setIsNewPassword(false);
-        setIsNewPasswordConfirm(false);
+      setNewPasswordErrorMessage("");
 
-        document
-          .getElementById("newPassword")
-          ?.classList.remove("form-control-invalid");
-        document
-          .getElementById("newPassword")
-          ?.classList.remove("form-control-valid");
+      setIsNewPassword(false);
+      setIsNewPasswordConfirm(false);
+
+      document
+        .getElementById("newPassword")
+        ?.classList.remove("form-control-invalid");
+      document
+        .getElementById("newPassword")
+        ?.classList.remove("form-control-valid");
+
+      document
+        .getElementById("newPasswordConfirm")
+        ?.classList.remove("form-control-valid");
+
+      if (newPasswordConfirm) {
+        setNewPasswordConfirmErrorMessage("Please enter your password first.");
 
         document
           .getElementById("newPasswordConfirm")
           ?.classList.add("form-control-invalid");
-        document
-          .getElementById("newPasswordConfirm")
-          ?.classList.remove("form-control-valid");
       } else {
-        setNewPasswordErrorMessage("");
         setNewPasswordConfirmErrorMessage("");
-        setIsNewPassword(false);
-        setIsNewPasswordConfirm(false);
-
-        document
-          .getElementById("newPassword")
-          ?.classList.remove("form-control-invalid");
-        document
-          .getElementById("newPassword")
-          ?.classList.remove("form-control-valid");
 
         document
           .getElementById("newPasswordConfirm")
           ?.classList.remove("form-control-invalid");
-        document
-          .getElementById("newPasswordConfirm")
-          ?.classList.remove("form-control-valid");
       }
     }
   };
@@ -265,20 +225,20 @@ export default function ChangePassword() {
   };
 
   const reset = () => {
-    setOriginalPassword("");
+    setCurrentPassword("");
     setNewPassword("");
     setNewPasswordConfirm("");
 
-    setIsOriginalPassword(false);
+    setIsCurrentPassword(false);
     setIsNewPassword(false);
     setIsNewPasswordConfirm(false);
 
-    setOriginalPasswordErrorMessage("");
+    setCurrentPasswordErrorMessage("");
     setNewPasswordErrorMessage("");
     setNewPasswordConfirmErrorMessage("");
 
     document
-      .getElementById("originalPassword")
+      .getElementById("currentPassword")
       ?.classList.remove("form-control-invalid");
 
     document
@@ -303,12 +263,12 @@ export default function ChangePassword() {
   const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (originalPassword === "") {
-      setOriginalPasswordErrorMessage("Please enter your password.");
-      setIsOriginalPassword(false);
+    if (currentPassword === "") {
+      setCurrentPasswordErrorMessage("Please enter your password.");
+      setIsCurrentPassword(false);
 
       document
-        .getElementById("originalPassword")
+        .getElementById("currentPassword")
         ?.classList.add("form-control-invalid");
     }
     if (newPassword === "") {
@@ -330,7 +290,7 @@ export default function ChangePassword() {
 
     if (
       isLoading ||
-      !isOriginalPassword ||
+      !isCurrentPassword ||
       !isNewPassword ||
       !isNewPasswordConfirm ||
       newPassword !== newPasswordConfirm
@@ -345,22 +305,64 @@ export default function ChangePassword() {
 
       const credential = EmailAuthProvider.credential(
         auth.currentUser?.email!,
-        originalPassword
+        currentPassword
       );
 
       await reauthenticateWithCredential(auth.currentUser!, credential);
 
-      await updatePassword(auth.currentUser!, newPassword);
+      if (currentPassword !== newPassword) {
+        await updatePassword(auth.currentUser!, newPassword);
 
-      window.localStorage.setItem("PasswordChanged", "true");
+        window.localStorage.setItem("PasswordChanged", "true");
 
-      signOut();
+        signOut();
+      } else {
+        throw new Error("auth/same-password");
+      }
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("error : " + error.code);
 
         window.localStorage.removeItem("PasswordChanged");
+
+        if (error.code === "auth/invalid-login-credentials") {
+          setCurrentPassword("");
+
+          setIsCurrentPassword(false);
+
+          setCurrentPasswordErrorMessage("");
+
+          document
+            .getElementById("currentPassword")
+            ?.classList.remove("form-control-invalid");
+        }
+      } else {
+        setError("auth/same-password");
+        console.log(error);
+
+        setNewPassword("");
+        setNewPasswordConfirm("");
+
+        setIsNewPassword(false);
+        setIsNewPasswordConfirm(false);
+
+        setNewPasswordErrorMessage("");
+        setNewPasswordConfirmErrorMessage("");
+
+        document
+          .getElementById("newPassword")
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("newPassword")
+          ?.classList.remove("form-control-valid");
+
+        document
+          .getElementById("newPasswordConfirm")
+          ?.classList.remove("form-control-invalid");
+        document
+          .getElementById("newPasswordConfirm")
+          ?.classList.remove("form-control-valid");
       }
     } finally {
       setIsLoading(false);
@@ -392,7 +394,9 @@ export default function ChangePassword() {
               <p>
                 <span>
                   {error === "auth/invalid-login-credentials" &&
-                    "Your original password is incorrect."}
+                    "Your current password is incorrect."}
+                  {error === "auth/same-password" &&
+                    "Your new password is same with your current password."}
                   {error === "auth/network-request-failed" &&
                     "A network error has occurred. Please reopen the page."}
                   {error === "auth/invalid-user-token" &&
@@ -415,22 +419,22 @@ export default function ChangePassword() {
               }}
             >
               <Form.Group>
-                <Form.Label htmlFor="originalPassword">
-                  Original password
+                <Form.Label htmlFor="currentPassword">
+                  Current password
                 </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
-                  onChange={handleOriginalPassword}
+                  onChange={handleCurrentPassword}
                   onKeyDown={noSpace}
-                  id="originalPassword"
-                  name="originalPassword"
-                  value={originalPassword}
+                  id="currentPassword"
+                  name="currentPassword"
+                  value={currentPassword}
                   type="password"
                   maxLength={20}
                 />
-                {!isOriginalPassword && originalPasswordErrorMessage && (
+                {!isCurrentPassword && currentPasswordErrorMessage && (
                   <div className="mt-2 text-danger">
-                    {originalPasswordErrorMessage}
+                    {currentPasswordErrorMessage}
                   </div>
                 )}
               </Form.Group>

@@ -109,7 +109,7 @@ export default function SignInWithEmail() {
       if (isSignInWithEmailLink(auth, window.location.href)) {
         await signInWithEmailLink(auth, email, window.location.href);
 
-        window.localStorage.setItem("isSignedInWithEmail", "true");
+        window.sessionStorage.setItem("isSignedInWithEmail", "Do not delete");
 
         navigate("/reset-password");
       } else {
@@ -121,7 +121,7 @@ export default function SignInWithEmail() {
         window.localStorage.setItem("error", error.code);
         console.log("error : " + error.code);
 
-        window.localStorage.removeItem("isSignedInWithEmail");
+        window.sessionStorage.removeItem("isSignedInWithEmail");
 
         if (error.code !== "auth/invalid-email") {
           signOut();
@@ -152,7 +152,7 @@ export default function SignInWithEmail() {
               className="d-flex align-itmes-center m-0 mt-3 w-100"
             >
               <p>
-                Your email was verified. Please enter your email one more time.
+                Your email link has been verified. Please confirm your email.
               </p>
             </Alert>
           )}
@@ -181,7 +181,7 @@ export default function SignInWithEmail() {
             >
               <Form.Group>
                 <Form.Label htmlFor="email">
-                  Please enter the email address to which the sign-in link was
+                  Please enter the email address to which the link was
                   originally sent.
                 </Form.Label>
                 <Form.Control

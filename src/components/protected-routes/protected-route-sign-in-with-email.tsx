@@ -9,15 +9,19 @@ export default function ProtectedRouteSignInWithEmail({
 }) {
   const user = auth.currentUser;
 
-  if (isSignInWithEmailLink(auth, window.location.href) && user === null) {
-    return children;
-  } else {
-    if (user !== null) {
-      if (user?.emailVerified === true) {
-        return <Navigate to="/" />;
+  if (user !== null) {
+    if (user?.emailVerified === true) {
+      if (window.sessionStorage.getItem("isSignedInWithEmail")) {
+        return <Navigate to="/reset-password" />;
       } else {
-        return <Navigate to="/sign-in" />;
+        return <Navigate to="/" />;
       }
+    } else {
+      return <Navigate to="/sign-in" />;
+    }
+  } else {
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      return children;
     } else {
       return <Navigate to="/sign-in" />;
     }

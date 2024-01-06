@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
-  EmailAuthProvider,
+  confirmPasswordReset,
   isSignInWithEmailLink,
-  reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -12,15 +11,10 @@ import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Header from "../../components/header&footer/header";
 import Footer from "../../components/header&footer/footer";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
-
-  const [isSignedInWithEmail, setIsSignedInWithEmail] = useState(
-    window.localStorage.getItem("isSignedInWithEmail")
-  );
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -265,7 +259,6 @@ export default function ResetPassword() {
   };
 
   useEffect(() => {
-    window.localStorage.removeItem("isSignedInWithEmail");
     window.localStorage.removeItem("error");
   }, []);
 
@@ -303,18 +296,13 @@ export default function ResetPassword() {
     try {
       setIsLoading(true);
 
-      const credential = EmailAuthProvider.credential(
-        auth.currentUser?.email!,
-        password
-      );
-
-      await reauthenticateWithCredential(auth.currentUser!, credential);
-
       await updatePassword(auth.currentUser!, password);
 
-      window.localStorage.setItem("PasswordChanged", "true");
+      confirmPasswordReset;
 
-      setIsSignedInWithEmail("");
+      window.sessionStorage.removeItem("isSignedInWithEmail");
+
+      window.localStorage.setItem("PasswordChanged", "true");
 
       signOut();
     } catch (error) {
@@ -323,8 +311,8 @@ export default function ResetPassword() {
         window.localStorage.setItem("error", error.code);
         console.log("error : " + error.code);
 
+        window.sessionStorage.removeItem("isSignedInWithEmail");
         window.localStorage.removeItem("PasswordChanged");
-        setIsSignedInWithEmail("");
         signOut();
       }
     } finally {
@@ -342,30 +330,28 @@ export default function ResetPassword() {
 
   return (
     <div className="h-100">
-      <Header />
       <div className="wrap">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
             <h1 className="fs-2 text-center">Reset password</h1>
           </div>
+          {window.sessionStorage.getItem("isSignedInWithEmail") && (
+            <Alert
+              variant="success"
+              className="d-flex align-itmes-center m-0 mt-3 w-100"
+            >
+              <p>Your email has been confirmed.</p>
+            </Alert>
+          )}
           <Alert
             variant="warning"
             className="d-flex align-itmes-center m-0 mt-3 w-100"
           >
             <p>
-              Please reset your password within 5 minutes, or you have to sign
-              in again.
+              Please reset your password within 5 minutes, or you have to get a
+              new link.
             </p>
           </Alert>
-          {isSignedInWithEmail && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>Your are signed in with email. Please reset your password.</p>
-            </Alert>
-          )}
           {error === "auth/requires-recent-login" && (
             <Alert
               variant="danger"
@@ -434,9 +420,6 @@ export default function ResetPassword() {
               <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
-              <Link to="/" className="btn btn-outline-success">
-                Home
-              </Link>
             </Switcher>
           </Alert>
         </Wrapper>

@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
 import { auth } from "../../firebase";
-import { isSignInWithEmailLink } from "firebase/auth";
 
 export default function ProtectedRouteResetPassword({
   children,
@@ -9,19 +8,17 @@ export default function ProtectedRouteResetPassword({
 }) {
   const user = auth.currentUser;
 
-  window.localStorage.getItem("isSignedInWithEmail");
-
-  if (isSignInWithEmailLink(auth, window.location.href)) {
-    return children;
-  } else {
-    if (user !== null) {
-      if (user?.emailVerified === true) {
-        return <Navigate to="/" />;
+  if (user !== null) {
+    if (user?.emailVerified === true) {
+      if (window.sessionStorage.getItem("isSignedInWithEmail")) {
+        return children;
       } else {
-        return <Navigate to="/sign-in" />;
+        return <Navigate to="/" />;
       }
     } else {
       return <Navigate to="/sign-in" />;
     }
+  } else {
+    return <Navigate to="/sign-in" />;
   }
 }

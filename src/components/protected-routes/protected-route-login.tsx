@@ -7,13 +7,18 @@ export default function ProtectedRouteLogin({
   children: React.ReactNode;
 }) {
   const user = auth.currentUser;
-  if (
-    user === null ||
-    user?.emailVerified === undefined ||
-    user?.emailVerified === false
-  ) {
-    return children;
+
+  if (user !== null) {
+    if (user?.emailVerified === true) {
+      if (window.sessionStorage.getItem("isSignedInWithEmail")) {
+        return <Navigate to="/reset-password" />;
+      } else {
+        return <Navigate to="/" />;
+      }
+    } else {
+      return children;
+    }
   } else {
-    return <Navigate to="/" />;
+    return children;
   }
 }
