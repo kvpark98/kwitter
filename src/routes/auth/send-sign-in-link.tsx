@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { FirebaseError } from "firebase/app";
-import { sendSignInLinkToEmail } from "firebase/auth";
+import {
+  fetchSignInMethodsForEmail,
+  sendSignInLinkToEmail,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button } from "react-bootstrap";
@@ -77,13 +80,25 @@ export default function SendSignInLink() {
     handleCodeInApp: true,
   };
 
+  const checkIfEmailExists = async (email: string) => {
+    try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      console.log("signInMethods:", signInMethods);
+
+      // 여기에서 signInMethods를 처리하거나 반환할 수 있음
+      return signInMethods;
+    } catch (error) {
+      console.error("Error checking email existence:", error);
+      throw error; // 에러를 상위 호출자에게 전파
+    }
+  };
+
   const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
-
       document.getElementById("email")?.classList.add("form-control-invalid");
     }
 
@@ -96,18 +111,38 @@ export default function SendSignInLink() {
     try {
       setIsLoading(true);
 
-      // Send sign in link
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      // checkIfEmailExists 함수 호출
+      const signInMethods = await checkIfEmailExists(email);
 
-      setIsPasswordResetLinkSent(true);
+      // signInMethods를 기반으로 다음 동작 수행
+      if (signInMethods.length > 0) {
+        // 이메일이 존재하는 경우에 수행할 동작
+        // Send sign in link
+        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
-      setTimeout(() => {
-        navigate("/sign-in");
-      }, 7000);
+        // sendSignInLinkToEmail 함수가 완료된 후에 setIsPasswordResetLinkSent(true) 호출
+        setIsPasswordResetLinkSent(true);
+      } else {
+        setIsPasswordResetLinkSent(false);
+        // 이메일이 존재하지 않는 경우에 수행할 동작
+        throw new Error("auth/no-email");
+      }
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("error : " + error.code);
+        setIsPasswordResetLinkSent(false);
+      } else {
+        setError("auth/no-email");
+        console.log(error);
+
+        setEmail("");
+        setIsEmail(false);
+        setEmailErrorMessage("");
+        document
+          .getElementById("email")
+          ?.classList.remove("form-control-invalid");
+
         setIsPasswordResetLinkSent(false);
       }
     } finally {
@@ -124,7 +159,7 @@ export default function SendSignInLink() {
       <div className="wrap">
         <Wrapper>
           <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Send sign in link</h1>
+            <h1 className="fs-2">Reset your password</h1>
           </div>
           {isPasswordResetLinkSent && (
             <Alert
@@ -146,6 +181,7 @@ export default function SendSignInLink() {
             >
               <p>
                 <span>
+                  {error === "auth/no-email" && "This email is not signed-up."}
                   {error === "auth/invalid-action-code" &&
                     "The link is malformed or has already been used. Please get a new link."}
                   {error === "auth/too-many-requests" &&
