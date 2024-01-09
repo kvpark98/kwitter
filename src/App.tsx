@@ -21,6 +21,7 @@ import ProtectedRouteSignInWithEmail from "./components/protected-routes/protect
 import UpdateUsername from "./routes/auth/update-username";
 import ChangePassword from "./routes/auth/change-password";
 import ProtectedRouteResetPassword from "./components/protected-routes/protected-route-reset-password";
+import DeleteUSer from "./routes/auth/delete-user";
 
 const router = createBrowserRouter([
   {
@@ -94,6 +95,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ChangePassword />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/delete-user",
+    element: (
+      <ProtectedRoute>
+        <DeleteUSer />
       </ProtectedRoute>
     ),
   },

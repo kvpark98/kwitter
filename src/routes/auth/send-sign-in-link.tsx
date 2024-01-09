@@ -9,13 +9,11 @@ import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Header from "../../components/header&footer/header";
 import Footer from "../../components/header&footer/footer";
 
 export default function SendSignInLink() {
-  const navigate = useNavigate();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState("");
