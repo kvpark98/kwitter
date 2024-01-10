@@ -300,7 +300,7 @@ export default function SignIn() {
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
             <Form
               name="signIn"
               onSubmit={signIn}
