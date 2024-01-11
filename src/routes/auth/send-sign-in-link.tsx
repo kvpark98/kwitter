@@ -83,7 +83,6 @@ export default function SendSignInLink() {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       console.log("signInMethods:", signInMethods);
 
-      // 여기에서 signInMethods를 처리하거나 반환할 수 있음
       return signInMethods;
     } catch (error) {
       console.error("Error checking email existence:", error);
@@ -97,6 +96,7 @@ export default function SendSignInLink() {
     if (email === "") {
       setEmailErrorMessage("Please enter your email.");
       setIsEmail(false);
+
       document.getElementById("email")?.classList.add("form-control-invalid");
     }
 
@@ -118,18 +118,17 @@ export default function SendSignInLink() {
         // Send sign in link
         await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
-        // sendSignInLinkToEmail 함수가 완료된 후에 setIsPasswordResetLinkSent(true) 호출
         setIsPasswordResetLinkSent(true);
       } else {
-        setIsPasswordResetLinkSent(false);
         // 이메일이 존재하지 않는 경우에 수행할 동작
+        setIsPasswordResetLinkSent(false);
         throw new Error("auth/no-email");
       }
     } catch (error) {
+      setIsPasswordResetLinkSent(false);
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("error : " + error.code);
-        setIsPasswordResetLinkSent(false);
       } else {
         setError("auth/no-email");
         console.log(error);
@@ -137,11 +136,10 @@ export default function SendSignInLink() {
         setEmail("");
         setIsEmail(false);
         setEmailErrorMessage("");
+
         document
           .getElementById("email")
           ?.classList.remove("form-control-invalid");
-
-        setIsPasswordResetLinkSent(false);
       }
     } finally {
       setIsLoading(false);
@@ -156,61 +154,54 @@ export default function SendSignInLink() {
       <Header />
       <div className="wrap">
         <Wrapper>
-          <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Reset your password</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Request Sign-In Link</h1>
           </div>
           {isPasswordResetLinkSent && (
-            <Alert
-              variant="warning"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="warning" className="m-0 mt-3 w-100" dismissible>
               <p>
-                Check your email for a link to sign in. If it doesn’t appear
-                within a few minutes, check your spam folder.
+                Please review your email for a sign-in link. In case it doesn't
+                show up within a couple of minutes, kindly inspect your spam
+                folder.
               </p>
             </Alert>
           )}
           {error && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
                 <span>
-                  {error === "auth/no-email" && "This email is not signed-up."}
+                  {error === "auth/no-email" && "This email is not registered."}
                   {error === "auth/invalid-action-code" &&
-                    "The link is malformed or has already been used. Please get a new link."}
+                    "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
+                  {error === "auth/user-not-found" &&
+                    "No user exists for the provided email."}
                   {error === "auth/too-many-requests" &&
-                    "Too many attempts. Please try again after some delay."}
+                    "Excessive attempts. Please retry after a brief delay."}
                   {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please reopen the page."}
+                    "An unexpected network error has occurred. Kindly reopen the page."}
                   {error === "auth/requires-recent-login" &&
-                    "This requires recent sign-in. Please sign in again."}
+                    "Recent sign-in is required. Kindly sign in again."}
                   {error === "auth/invalid-user-token" &&
-                    "Your credential is no longer valid. Please sign in again."}
+                    "Your credentials are not valid."}
                   {error === "auth/user-token-expired" &&
-                    "Your credential has expired. Please sign in again."}
+                    "Your credentials have expired. Please try again."}
                   {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage. Please try again."}
+                    "Your browser does not support web storage."}
+                  {error === "auth/internal-error" &&
+                    "An internal error occurred. Please try again later or contact support for assistance."}
                 </span>
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
             <Form
               onSubmit={sendSignInLink}
-              className="d-flex"
-              style={{
-                flexDirection: "column",
-                gap: "15px",
-              }}
+              className="d-flex flex-column row-gap-3"
             >
               <Form.Group>
                 <Form.Label htmlFor="email">
-                  Enter your enrolled email address and we will send you a link
-                  for sign in.
+                  Provide your registered email address, and we'll send you a
+                  link for signing in.
                 </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
@@ -227,7 +218,7 @@ export default function SendSignInLink() {
                 )}
               </Form.Group>
               <Button type="submit" className="mt-2 fw-bold">
-                {isLoading ? "Loading..." : "Send sign in email"}
+                {isLoading ? "Loading..." : "Send"}
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">

@@ -353,7 +353,7 @@ export default function SignUp() {
     handleCodeInApp: true,
   };
 
-  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
+  const signUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (name === "") {
@@ -401,7 +401,7 @@ export default function SignUp() {
     try {
       setIsLoading(true);
 
-      // Create an account
+      // sign-up
       const credentials = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -410,7 +410,7 @@ export default function SignUp() {
 
       window.localStorage.setItem("verificationNeeded", "true");
 
-      // Verify email
+      // Send verification email
       await sendEmailVerification(credentials.user, actionCodeSettings);
 
       // Update the profile
@@ -418,6 +418,7 @@ export default function SignUp() {
         displayName: name,
       });
 
+      // sign out
       signOut();
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -444,45 +445,44 @@ export default function SignUp() {
       <Header />
       <div className="wrap">
         <Wrapper>
-          <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Sign up</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Sign-Up</h1>
           </div>
           {error && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
                 <span>
+                  {error === "auth/invalid-credential" &&
+                    "The email or password entered is incorrect."}
+                  {error === "auth/user-not-found" &&
+                    "No user exists for the provided email."}
                   {error === "auth/email-already-in-use" &&
                     "This email is already in use."}
                   {error === "auth/account-exists-with-different-credential" &&
-                    "Email is invalid or already taken."}
+                    "The email is either invalid or already in use."}
                   {error === "auth/invalid-email" &&
-                    "The email address is not valid."}
-                  {error === "auth/requires-recent-login" &&
-                    "This requires recent sign-in. Please sign in again."}
+                    "The provided email address is not valid."}
+                  {error === "auth/user-disabled" &&
+                    "The user associated with the provided email has been disabled."}
                   {error === "auth/too-many-requests" &&
-                    "Too many attempts. Please try again after some delay."}
+                    "Excessive attempts. Please retry after a brief delay."}
                   {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please reopen the page."}
+                    "An unexpected network error has occurred. Kindly reopen the page."}
+                  {error === "auth/invalid-user-token" &&
+                    "Your credentials are not valid."}
+                  {error === "auth/user-token-expired" &&
+                    "Your credentials have expired. Please try again."}
                   {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage. Please try again."}
+                    "Your browser does not support web storage."}
+                  {error === "auth/internal-error" &&
+                    "An internal error occurred. Please try again later or contact support for assistance."}
                 </span>
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4 w-100">
-            <Form
-              onSubmit={signIn}
-              className="d-flex"
-              style={{
-                flexDirection: "column",
-                gap: "15px",
-              }}
-            >
-              <Form.Group className="mb-2">
+          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+            <Form onSubmit={signUp} className="d-flex flex-column row-gap-3">
+              <Form.Group>
                 <Form.Label htmlFor="name">Username</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
@@ -498,7 +498,7 @@ export default function SignUp() {
                   <div className="mt-2 text-danger">{nameErrorMessage}</div>
                 )}
               </Form.Group>
-              <Form.Group className="mb-2">
+              <Form.Group>
                 <Form.Label htmlFor="email">Email address</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
@@ -565,17 +565,11 @@ export default function SignUp() {
             </Switcher>
           </Alert>
           <div className="w-100 d-flex justify-content-between align-items-center">
-            <span
-              className="w-50 border border-secondary"
-              style={{ height: 0 }}
-            ></span>
+            <span className="w-50 border border-secondary"></span>
             <span className="mx-3">OR</span>
-            <span
-              className="w-50 border border-secondary"
-              style={{ height: 0 }}
-            ></span>
+            <span className="w-50 border border-secondary"></span>
           </div>
-          <Alert variant="light" className="w-100 mt-3 py-4">
+          <Alert variant="light" className="w-100 mt-3 px-5 py-4">
             <GoogleButton />
             <GithubButton />
           </Alert>

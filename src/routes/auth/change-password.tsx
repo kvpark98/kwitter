@@ -393,7 +393,9 @@ export default function ChangePassword() {
             >
               <p>
                 <span>
-                  {error === "auth/invalid-login-credentials" &&
+                  {error === "auth/invalid-credential" &&
+                    "Your current password is incorrect."}
+                  {error === "auth/wrong-password" &&
                     "Your current password is incorrect."}
                   {error === "auth/same-password" &&
                     "Your new password is same with your current password."}
@@ -409,7 +411,7 @@ export default function ChangePassword() {
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
             <Form
               onSubmit={changePassword}
               className="d-flex"

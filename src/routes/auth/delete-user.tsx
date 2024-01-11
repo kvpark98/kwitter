@@ -217,8 +217,7 @@ export default function DeleteUSer() {
                 <span>
                   {error === "auth/wrong-password" &&
                     "Your password is not correct."}
-                  {error === "auth/invalid-login-credentials" &&
-                    "Incorrect email or password."}
+                  {error === "auth/invalid-credential" && "Incorrect password."}
                   {error === "auth/user-disabled" &&
                     "The user corresponding to the given email has been disabled."}
                   {error === "auth/invalid-action-code" &&

@@ -366,7 +366,7 @@ export default function ResetPassword() {
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
             <Form
               onSubmit={resetPassword}
               className="d-flex"

@@ -143,7 +143,7 @@ export default function SignInWithEmail() {
     <div className="h-100">
       <div className="wrap">
         <Wrapper>
-          <div className="w-100 mb-1 d-flex justify-content-center">
+          <div className="mb-1">
             <h1 className="fs-2">Sign in with email</h1>
           </div>
           {isSignInWithEmailLink(auth, window.location.href) && (
@@ -170,7 +170,7 @@ export default function SignInWithEmail() {
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
             <Form
               onSubmit={signInWithEmail}
               className="d-flex"

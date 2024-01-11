@@ -30,17 +30,17 @@ export default function SignIn() {
   const [isRememberMe, setIsRememberMe] = useState(false);
 
   const [isPasswordChanged, setIsPasswordChanged] = useState(
-    window.localStorage.getItem("PasswordChanged")
+    window.localStorage.getItem("PasswordChanged") || ""
   );
 
   const [isVerificationNeeded, setIsVerificationNeeded] = useState(
-    window.localStorage.getItem("verificationNeeded")
+    window.localStorage.getItem("verificationNeeded") || ""
   );
 
   const [isVerified, setIsVerified] = useState("");
 
   const [accountDeleted, setAccountDeleted] = useState(
-    window.localStorage.getItem("accountDeleted")
+    window.localStorage.getItem("accountDeleted") || ""
   );
 
   const [error, setError] = useState(
@@ -105,7 +105,6 @@ export default function SignIn() {
   const handleRememberMe = () => {
     setIsRememberMe((current) => !current);
   };
-  console.log("isRememberMe : " + isRememberMe);
 
   const noSpace = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === "Space") {
@@ -169,29 +168,24 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      // Existing and future Auth states are now persisted in the current
-      // session only. Closing the window would clear any existing state even
-      // if a user forgets to sign out.
+      // Session sign-in
       auth.setPersistence(browserSessionPersistence);
 
       // Remember Me
       if (isRememberMe) {
+        // Local sign-in
         auth.setPersistence(browserLocalPersistence);
       }
 
       // Sign in
       await signInWithEmailAndPassword(auth, email, password);
 
-      setIsVerificationNeeded("");
-      setIsPasswordChanged("");
-      setAccountDeleted("");
-
-      // Ridirect
+      // Result
       if (auth.currentUser?.emailVerified === true) {
-        setIsVerified("yes");
+        setIsVerified("true");
         navigate("/");
       } else {
-        setIsVerified("no");
+        setIsVerified("false");
         signOut();
       }
     } catch (error) {
@@ -216,101 +210,79 @@ export default function SignIn() {
       <Header />
       <div className="wrap">
         <Wrapper>
-          <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Sign in</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Sign-In</h1>
           </div>
           {isVerificationNeeded && (
-            <Alert
-              variant="warning"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="warning" className="m-0 mt-3 w-100" dismissible>
               <p>
-                Please go to your email and click on the link for verification.
-                If you verified it, you can ignore this message.
+                Kindly navigate to your email and click on the provided link for
+                verification.
               </p>
             </Alert>
           )}
           {isPasswordChanged && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="success" className="m-0 mt-3 w-100" dismissible>
               <p>
-                New password set successfully. Please sign in with your new
-                password.
+                Your new password has been set successfully. Please sign in
+                using your updated password.
               </p>
             </Alert>
           )}
           {accountDeleted && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>Your account has been deleted successfully.</p>
+            <Alert variant="success" className="m-0 mt-3 w-100" dismissible>
+              <p>Your account has been successfully deleted.</p>
+            </Alert>
+          )}
+          {isVerified === "false" && (
+            <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
+              <p>
+                <span>
+                  Your email has not been verified. Please check your email and
+                  click on the verification link.
+                </span>
+              </p>
             </Alert>
           )}
           {error && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
                 <span>
-                  {error === "auth/invalid-login-credentials" &&
-                    "Incorrect email or password."}
+                  {error === "auth/invalid-credential" &&
+                    "The email or password entered is incorrect."}
+                  {error === "auth/wrong-password" &&
+                    "The entered password is incorrect."}
                   {error === "auth/user-disabled" &&
-                    "The user corresponding to the given email has been disabled."}
+                    "The user associated with the provided email has been disabled."}
                   {error === "auth/invalid-action-code" &&
-                    "The link is malformed or has already been used. Please get a new link."}
+                    "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
                   {error === "auth/user-not-found" &&
-                    "There is no user corresponding to the given email."}
+                    "No user exists for the provided email."}
                   {error === "auth/too-many-requests" &&
-                    "Too many attempts. Please try again after some delay."}
+                    "Excessive attempts. Please retry after a brief delay."}
                   {error === "auth/account-exists-with-different-credential" &&
-                    "Email is invalid or already taken."}
+                    "The email is either invalid or already in use."}
                   {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please reopen the page."}
+                    "An unexpected network error has occurred. Kindly reopen the page."}
                   {error === "auth/requires-recent-login" &&
-                    "This requires recent sign-in. Please sign in again."}
+                    "Recent sign-in is required. Kindly sign in again."}
                   {error === "auth/invalid-user-token" &&
-                    "Your credential is no longer valid. Please sign in again."}
+                    "Your credentials are not valid."}
                   {error === "auth/user-token-expired" &&
-                    "Your credential has expired. Please sign in again."}
+                    "Your credentials have expired. Please try again."}
+                  {error === "auth/invalid-user-token" &&
+                    "Your credentials are not valid."}
                   {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage. Please try again."}
+                    "Your browser does not support web storage."}
+                  {error === "auth/internal-error" &&
+                    "An internal error occurred. Please try again later or contact support for assistance."}
                 </span>
               </p>
             </Alert>
           )}
-          {isVerified === "no" && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>
-                <span>
-                  Your email was not verified. Please go to your email and click
-                  on the link for verification.
-                </span>
-              </p>
-            </Alert>
-          )}
-          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
-            <Form
-              name="signIn"
-              onSubmit={signIn}
-              className="d-flex"
-              style={{
-                flexDirection: "column",
-                gap: "15px",
-              }}
-            >
-              <Form.Group className="mb-2">
+          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+            <Form onSubmit={signIn} className="d-flex flex-column row-gap-3">
+              <Form.Group>
                 <Form.Label htmlFor="email">Email address</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
@@ -327,10 +299,7 @@ export default function SignIn() {
                 )}
               </Form.Group>
               <Form.Group>
-                <div
-                  className="d-flex justify-content-between align-items-center"
-                  style={{ height: "24px" }}
-                >
+                <div className="d-flex justify-content-between align-items-center">
                   <Form.Label htmlFor="password">Password</Form.Label>
                   <Link
                     to="/send-sign-in-link"
@@ -353,17 +322,16 @@ export default function SignIn() {
                   <div className="mt-2 text-danger">{passwordErrorMessage}</div>
                 )}
               </Form.Group>
-              <div style={{ height: "16px" }}>
+              <div>
                 <Form.Check
                   onClick={handleRememberMe}
                   type="checkbox"
                   id="remember-me"
                   label="Remember me"
-                  className="min-h-0"
-                  style={{ minHeight: "0" }}
+                  className="m-0"
                 />
               </div>
-              <Button type="submit" className="mt-2 fw-bold">
+              <Button type="submit" className="fw-bold">
                 {isLoading ? "Loading..." : "Sign in"}
               </Button>
             </Form>
@@ -377,17 +345,11 @@ export default function SignIn() {
             </Switcher>
           </Alert>
           <div className="w-100 d-flex justify-content-between align-items-center">
-            <span
-              className="w-50 border border-secondary"
-              style={{ height: 0 }}
-            ></span>
+            <span className="w-50 border border-secondary"></span>
             <span className="mx-3">OR</span>
-            <span
-              className="w-50 border border-secondary"
-              style={{ height: 0 }}
-            ></span>
+            <span className="w-50 border border-secondary"></span>
           </div>
-          <Alert variant="light" className="w-100 mt-3 py-4">
+          <Alert variant="light" className="w-100 mt-3 px-5 py-4">
             <GoogleButton />
             <GithubButton />
           </Alert>
