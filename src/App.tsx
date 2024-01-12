@@ -18,10 +18,10 @@ import ResetPassword from "./routes/auth/reset-password";
 import SendSignInLink from "./routes/auth/send-sign-in-link";
 import SignInWithEmail from "./routes/auth/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
-import UpdateUsername from "./routes/auth/update-username";
 import ChangePassword from "./routes/auth/change-password";
 import ProtectedRouteResetPassword from "./components/protected-routes/protected-route-reset-password";
-import DeleteUSer from "./routes/auth/delete-user";
+import ChangeUsername from "./routes/auth/update-username";
+import DeleteAccount from "./routes/auth/delete-user";
 
 const router = createBrowserRouter([
   {
@@ -75,10 +75,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/update-username",
+    path: "/change-username",
     element: (
       <ProtectedRoute>
-        <UpdateUsername />
+        <ChangeUsername />
       </ProtectedRoute>
     ),
   },
@@ -102,7 +102,7 @@ const router = createBrowserRouter([
     path: "/delete-user",
     element: (
       <ProtectedRoute>
-        <DeleteUSer />
+        <DeleteAccount />
       </ProtectedRoute>
     ),
   },

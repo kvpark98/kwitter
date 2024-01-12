@@ -126,21 +126,15 @@ export default function SendSignInLink() {
       }
     } catch (error) {
       setIsPasswordResetLinkSent(false);
+
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("error : " + error.code);
       } else {
         setError("auth/no-email");
         console.log(error);
-
-        setEmail("");
-        setIsEmail(false);
-        setEmailErrorMessage("");
-
-        document
-          .getElementById("email")
-          ?.classList.remove("form-control-invalid");
       }
+      reset();
     } finally {
       setIsLoading(false);
     }
@@ -155,7 +149,7 @@ export default function SendSignInLink() {
       <div className="wrap">
         <Wrapper>
           <div className="mb-2">
-            <h1 className="fs-2">Request Sign-In Link</h1>
+            <h1 className="fs-2">Request Sign-in Link</h1>
           </div>
           {isPasswordResetLinkSent && (
             <Alert variant="warning" className="m-0 mt-3 w-100" dismissible>
@@ -169,31 +163,33 @@ export default function SendSignInLink() {
           {error && (
             <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
-                <span>
-                  {error === "auth/no-email" && "This email is not registered."}
-                  {error === "auth/invalid-action-code" &&
-                    "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
-                  {error === "auth/user-not-found" &&
-                    "No user exists for the provided email."}
-                  {error === "auth/too-many-requests" &&
-                    "Excessive attempts. Please retry after a brief delay."}
-                  {error === "auth/network-request-failed" &&
-                    "An unexpected network error has occurred. Kindly reopen the page."}
-                  {error === "auth/requires-recent-login" &&
-                    "Recent sign-in is required. Kindly sign in again."}
-                  {error === "auth/invalid-user-token" &&
-                    "Your credentials are not valid."}
-                  {error === "auth/user-token-expired" &&
-                    "Your credentials have expired. Please try again."}
-                  {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage."}
-                  {error === "auth/internal-error" &&
-                    "An internal error occurred. Please try again later or contact support for assistance."}
-                </span>
+                {error === "auth/no-email" && "This email is not registered."}
+                {error === "auth/invalid-action-code" &&
+                  "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
+                {error === "auth/user-disabled" &&
+                  "The user associated with the provided email has been disabled."}
+                {error === "auth/user-not-found" &&
+                  "No user exists for the provided email."}
+                {error === "auth/requires-recent-login" &&
+                  "Security concern. For this action, recent sign-in is required. Please sign in again."}
+                {error === "auth/too-many-requests" &&
+                  "Excessive attempts. Please retry after a brief delay."}
+                {error === "auth/network-request-failed" &&
+                  "An unexpected network error has occurred. Kindly reopen the page."}
+                {error === "auth/invalid-user-token" &&
+                  "Invalid user token. Please sign in again to obtain a valid token."}
+                {error === "auth/user-token-expired" &&
+                  "Your credentials have expired. Please try again."}
+                {error === "auth/web-storage-unsupported" &&
+                  "Your browser does not support web storage."}
+                {error === "auth/internal-error" &&
+                  "An internal error occurred. Please try again later or contact support for assistance."}
+                {error === "auth/unknown" &&
+                  "An unexpected error occurred. Please try again or contact support."}
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
             <Form
               onSubmit={sendSignInLink}
               className="d-flex flex-column row-gap-3"
@@ -218,7 +214,7 @@ export default function SendSignInLink() {
                 )}
               </Form.Group>
               <Button type="submit" className="mt-2 fw-bold">
-                {isLoading ? "Loading..." : "Send"}
+                {isLoading ? "Loading..." : "Send Sign-in Link"}
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
@@ -226,7 +222,7 @@ export default function SendSignInLink() {
                 Reset
               </Button>
               <Link to="/sign-in" className="btn btn-outline-success">
-                Sign in
+                Sign In
               </Link>
             </Switcher>
           </Alert>

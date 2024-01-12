@@ -197,6 +197,7 @@ export default function SignIn() {
         setIsPasswordChanged("");
         setAccountDeleted("");
       }
+      reset();
     } finally {
       setIsLoading(false);
     }
@@ -211,7 +212,7 @@ export default function SignIn() {
       <div className="wrap">
         <Wrapper>
           <div className="mb-2">
-            <h1 className="fs-2">Sign-In</h1>
+            <h1 className="fs-2">Sign In</h1>
           </div>
           {isVerificationNeeded && (
             <Alert variant="warning" className="m-0 mt-3 w-100" dismissible>
@@ -237,53 +238,51 @@ export default function SignIn() {
           {isVerified === "false" && (
             <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
-                <span>
-                  Your email has not been verified. Please check your email and
-                  click on the verification link.
-                </span>
+                Your email has not been verified. Please check your email and
+                click on the verification link.
               </p>
             </Alert>
           )}
           {error && (
             <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
-                <span>
-                  {error === "auth/invalid-credential" &&
-                    "The email or password entered is incorrect."}
-                  {error === "auth/wrong-password" &&
-                    "The entered password is incorrect."}
-                  {error === "auth/user-disabled" &&
-                    "The user associated with the provided email has been disabled."}
-                  {error === "auth/invalid-action-code" &&
-                    "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
-                  {error === "auth/user-not-found" &&
-                    "No user exists for the provided email."}
-                  {error === "auth/too-many-requests" &&
-                    "Excessive attempts. Please retry after a brief delay."}
-                  {error === "auth/account-exists-with-different-credential" &&
-                    "The email is either invalid or already in use."}
-                  {error === "auth/network-request-failed" &&
-                    "An unexpected network error has occurred. Kindly reopen the page."}
-                  {error === "auth/requires-recent-login" &&
-                    "Recent sign-in is required. Kindly sign in again."}
-                  {error === "auth/invalid-user-token" &&
-                    "Your credentials are not valid."}
-                  {error === "auth/user-token-expired" &&
-                    "Your credentials have expired. Please try again."}
-                  {error === "auth/invalid-user-token" &&
-                    "Your credentials are not valid."}
-                  {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage."}
-                  {error === "auth/internal-error" &&
-                    "An internal error occurred. Please try again later or contact support for assistance."}
-                </span>
+                {error === "auth/invalid-credential" &&
+                  "The email or password entered is incorrect."}
+                {error === "auth/wrong-password" &&
+                  "The entered password is incorrect."}
+                {error === "auth/user-disabled" &&
+                  "The user associated with the provided email has been disabled."}
+                {error === "auth/expired-action-code" &&
+                  "The email link has expired. Please request a new link and ensure you use it within the specified time limit."}
+                {error === "auth/invalid-action-code" &&
+                  "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
+                {error === "auth/user-not-found" &&
+                  "No user exists for the provided email."}
+                {error === "auth/account-exists-with-different-credential" &&
+                  "The email is either invalid or already in use."}
+                {error === "auth/requires-recent-login" &&
+                  "Security concern. For this action, recent sign-in is required. Please sign in again."}
+                {error === "auth/too-many-requests" &&
+                  "Excessive attempts. Please retry after a brief delay."}
+                {error === "auth/network-request-failed" &&
+                  "An unexpected network error has occurred. Kindly reopen the page."}
+                {error === "auth/invalid-user-token" &&
+                  "Invalid user token. Please sign in again to obtain a valid token."}
+                {error === "auth/user-token-expired" &&
+                  "Your credentials have expired. Please try again."}
+                {error === "auth/web-storage-unsupported" &&
+                  "Your browser does not support web storage."}
+                {error === "auth/internal-error" &&
+                  "An internal error occurred. Please try again later or contact support for assistance."}
+                {error === "auth/unknown" &&
+                  "An unexpected error occurred. Please try again or contact support."}
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
             <Form onSubmit={signIn} className="d-flex flex-column row-gap-3">
               <Form.Group>
-                <Form.Label htmlFor="email">Email address</Form.Label>
+                <Form.Label htmlFor="email">Email Address</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handleEmail}
@@ -305,7 +304,7 @@ export default function SignIn() {
                     to="/send-sign-in-link"
                     className="p-0 mb-2 text-decoration-none"
                   >
-                    Forgot password?
+                    Forgot Password?
                   </Link>
                 </div>
                 <Form.Control
@@ -316,6 +315,7 @@ export default function SignIn() {
                   name="password"
                   value={password}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                 />
                 {!isPassword && passwordErrorMessage && (
@@ -327,12 +327,12 @@ export default function SignIn() {
                   onClick={handleRememberMe}
                   type="checkbox"
                   id="remember-me"
-                  label="Remember me"
+                  label="Remember Me"
                   className="m-0"
                 />
               </div>
               <Button type="submit" className="fw-bold">
-                {isLoading ? "Loading..." : "Sign in"}
+                {isLoading ? "Loading..." : "Sign In"}
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
@@ -340,7 +340,7 @@ export default function SignIn() {
                 Reset
               </Button>
               <Link to="/sign-up" className="btn btn-outline-success">
-                Create an account
+                Sign Up
               </Link>
             </Switcher>
           </Alert>

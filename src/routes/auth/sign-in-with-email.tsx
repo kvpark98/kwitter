@@ -10,7 +10,7 @@ import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignInWithEmail() {
   const navigate = useNavigate();
@@ -100,12 +100,9 @@ export default function SignInWithEmail() {
     try {
       setIsLoading(true);
 
-      // Existing and future Auth states are now persisted in the current
-      // session only. Closing the window would clear any existing state even
-      // if a user forgets to sign out.
       auth.setPersistence(browserSessionPersistence);
 
-      // Sign in with email
+      // Sign-in with email
       if (isSignInWithEmailLink(auth, window.location.href)) {
         await signInWithEmailLink(auth, email, window.location.href);
 
@@ -118,15 +115,22 @@ export default function SignInWithEmail() {
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        window.localStorage.setItem("error", error.code);
         console.log("error : " + error.code);
+
+        window.localStorage.setItem("error", error.code);
 
         window.sessionStorage.removeItem("isSignedInWithEmail");
 
-        if (error.code !== "auth/invalid-email") {
+        if (
+          error.code !== "auth/user-disabled" &&
+          error.code !== "auth/user-not-found" &&
+          error.code !== "auth/invalid-email" &&
+          error.code !== "auth/too-many-requests"
+        ) {
           signOut();
         }
       }
+      reset();
     } finally {
       setIsLoading(false);
     }
@@ -143,46 +147,52 @@ export default function SignInWithEmail() {
     <div className="h-100">
       <div className="wrap">
         <Wrapper>
-          <div className="mb-1">
-            <h1 className="fs-2">Sign in with email</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Sign In With Email Link</h1>
           </div>
           {isSignInWithEmailLink(auth, window.location.href) && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-            >
+            <Alert variant="success" className="m-0 mt-3 w-100">
               <p>
-                Your email link has been verified. Please confirm your email.
+                Your email link has been successfully validated. Please
+                reconfirm your email address.
               </p>
             </Alert>
           )}
-          {error === "auth/invalid-email" && (
+          {error && (
             <Alert
               variant="danger"
               className="d-flex align-itmes-center m-0 mt-3 w-100"
               dismissible
             >
               <p>
-                <span>
-                  {error === "auth/invalid-email" &&
-                    "The email provided does not match the sign-in email address."}
-                </span>
+                {error === "auth/user-disabled" &&
+                  "Your account has been disabled. Please contact support for further assistance."}
+                {error === "auth/user-not-found" &&
+                  "We couldn't find a user corresponding to the provided email link. Make sure the link is correct, or consider signing up if you haven't already."}
+                {error === "auth/invalid-email" &&
+                  "The provided email does not correspond to the registered sign-in address."}
+                {error === "auth/too-many-requests" &&
+                  "Due to security reasons, we've temporarily blocked your request. Please wait a moment and try again, or contact support for further assistance."}
+                {error === "auth/expired-action-code" &&
+                  "The email link has expired. Please request a new link and ensure you use it within the specified time limit."}
+                {error === "auth/invalid-action-code" &&
+                  "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
+                {error === "auth/internal-error" &&
+                  "An internal error occurred. Please try again later or contact support for assistance."}
+                {error === "auth/unknown" &&
+                  "An unexpected error occurred. Please try again or contact support."}
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
             <Form
               onSubmit={signInWithEmail}
-              className="d-flex"
-              style={{
-                flexDirection: "column",
-                gap: "15px",
-              }}
+              className="d-flex flex-column row-gap-3"
             >
               <Form.Group>
                 <Form.Label htmlFor="email">
-                  Please enter the email address to which the link was
-                  originally sent.
+                  Please provide the email address to which the initial link was
+                  sent.
                 </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
@@ -199,13 +209,16 @@ export default function SignInWithEmail() {
                 )}
               </Form.Group>
               <Button type="submit" className="mt-2 fw-bold">
-                {isLoading ? "Loading..." : "Sign in with email"}
+                {isLoading ? "Loading..." : "One-time Login"}
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
               <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
+              <Link to="/sign-in" className="btn btn-outline-success">
+                Sign In
+              </Link>
             </Switcher>
           </Alert>
         </Wrapper>

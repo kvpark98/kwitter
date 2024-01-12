@@ -14,7 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/header&footer/header";
 import Footer from "../../components/header&footer/footer";
 
-export default function DeleteUSer() {
+export default function DeleteAccount() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -42,19 +42,15 @@ export default function DeleteUSer() {
 
     setPassword(value.replace(/\s/gi, ""));
 
+    document
+      .getElementById("password")
+      ?.classList.remove("form-control-invalid");
+
     if (value !== "") {
       setIsPassword(true);
-
-      document
-        .getElementById("password")
-        ?.classList.remove("form-control-invalid");
     } else {
       setPasswordErrorMessage("");
       setIsPassword(false);
-
-      document
-        .getElementById("password")
-        ?.classList.remove("form-control-invalid");
     }
   };
 
@@ -120,6 +116,7 @@ export default function DeleteUSer() {
   const agreeAll = () => {
     if (!allChecked) {
       setAllChecked(true);
+
       if (
         !dataRemovalChecked ||
         !contentRetentionChecked ||
@@ -130,11 +127,12 @@ export default function DeleteUSer() {
         setContentRetentionChecked(true);
         setRejoiningChecked(true);
         setConsiderationChecked(true);
+
+        reset();
       }
     } else {
       setAllChecked(false);
     }
-    reset();
   };
 
   console.log("dataRemovalChecked : " + dataRemovalChecked);
@@ -146,51 +144,51 @@ export default function DeleteUSer() {
   const deleteAccount = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (password === "") {
+      setPasswordErrorMessage("please enter your password.");
+      setIsPassword(false);
+
+      document
+        .getElementById("password")
+        ?.classList.add("form-control-invalid");
+    }
+
+    if (
+      isLoading ||
+      !isPassword ||
+      !dataRemovalChecked ||
+      !contentRetentionChecked ||
+      !rejoiningChecked ||
+      !considerationChecked
+    ) {
+      return;
+    }
+
+    setError("");
+
     try {
-      if (password === "") {
-        setPasswordErrorMessage("please enter your password.");
-        setIsPassword(false);
-
-        document
-          .getElementById("password")
-          ?.classList.add("form-control-invalid");
-      }
-
-      if (
-        isLoading ||
-        !isPassword ||
-        !dataRemovalChecked ||
-        !contentRetentionChecked ||
-        !rejoiningChecked ||
-        !considerationChecked
-      ) {
-        return;
-      }
-
       setIsLoading(true);
 
-      // 비밀번호 재인증
       const credential = EmailAuthProvider.credential(
         auth.currentUser?.email!,
         password
       );
+
       await reauthenticateWithCredential(auth.currentUser!, credential);
 
-      // 사용자 삭제
       await deleteUser(auth.currentUser!);
 
-      // 로컬 스토리지에 삭제 완료 여부 저장 (클라이언트 측에서의 사용은 제한적이므로 주의)
       window.localStorage.setItem("accountDeleted", "true");
 
-      // 로그아웃
       signOut();
     } catch (error) {
-      // 에러 코드에 따라 세부적인 처리를 추가할 수 있음
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.error("Error deleting account:", error.code);
+        console.log("error : " + error.code);
+
         window.localStorage.removeItem("accountDeleted");
       }
+      reset();
     } finally {
       setIsLoading(false);
     }
@@ -204,41 +202,33 @@ export default function DeleteUSer() {
       <Header />
       <div className="wrap">
         <Wrapper>
-          <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2">Delete your account</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Delete Account</h1>
           </div>
           {error && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
-                <span>
-                  {error === "auth/wrong-password" &&
-                    "Your password is not correct."}
-                  {error === "auth/invalid-credential" && "Incorrect password."}
-                  {error === "auth/user-disabled" &&
-                    "The user corresponding to the given email has been disabled."}
-                  {error === "auth/invalid-action-code" &&
-                    "The link is malformed or has already been used. Please get a new link."}
-                  {error === "auth/user-not-found" &&
-                    "There is no user corresponding to the given email."}
-                  {error === "auth/too-many-requests" &&
-                    "Too many attempts. Please try again after some delay."}
-                  {error === "auth/account-exists-with-different-credential" &&
-                    "Email is invalid or already taken."}
-                  {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please reopen the page."}
-                  {error === "auth/requires-recent-login" &&
-                    "This requires recent sign-in. Please sign in again."}
-                  {error === "auth/invalid-user-token" &&
-                    "Your credential is no longer valid. Please sign in again."}
-                  {error === "auth/user-token-expired" &&
-                    "Your credential has expired. Please sign in again."}
-                  {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage. Please try again."}
-                </span>
+                {(error === "auth/wrong-password" ||
+                  error === "auth/invalid-credential") &&
+                  "Your password is incorrect."}
+                {error === "auth/user-not-found" &&
+                  "User not found. Please verify your account and try again."}
+                {error === "auth/user-disabled" &&
+                  "Account disabled. Please contact support to re-enable your account."}
+                {error === "auth/requires-recent-login" &&
+                  "Security concern. For this action, recent sign-in is required. Please sign in again."}
+                {error === "auth/too-many-requests" &&
+                  "Excessive attempts. Please retry after a brief delay."}
+                {error === "auth/network-request-failed" &&
+                  "An unexpected network error has occurred. Kindly reopen the page."}
+                {error === "auth/invalid-user-token" &&
+                  "Invalid user token. Please sign in again to obtain a valid token."}
+                {error === "auth/web-storage-unsupported" &&
+                  "Your browser does not support web storage."}
+                {error === "auth/internal-error" &&
+                  "An internal error occurred. Please try again later or contact support for assistance."}
+                {error === "auth/unknown" &&
+                  "An unexpected error occurred. Please try again or contact support."}
               </p>
             </Alert>
           )}
@@ -351,24 +341,25 @@ export default function DeleteUSer() {
                 </div>
               </Form.Group>
             </Form>
+            <Switcher className="d-flex justify-content-end">
+              <Link to="/" className="btn btn-outline-success">
+                Home
+              </Link>
+            </Switcher>
           </Alert>
           {dataRemovalChecked &&
             contentRetentionChecked &&
             rejoiningChecked &&
             considerationChecked && (
-              <Alert variant="light" className="mt-3 py-4 w-100">
+              <Alert variant="light" className="mt-3 px-4 py-4 w-100">
                 <Form
                   onSubmit={deleteAccount}
-                  className="d-flex"
-                  style={{
-                    flexDirection: "column",
-                    gap: "15px",
-                  }}
+                  className="d-flex flex-column row-gap-3"
                 >
                   <Form.Group>
                     <Form.Label htmlFor="password">
-                      Please enter your password to securely withdraw your
-                      account.
+                      Kindly input your password for a secure account
+                      withdrawal.
                     </Form.Label>
                     <Form.Control
                       className="border-none mt-1 mb-1"
@@ -378,7 +369,8 @@ export default function DeleteUSer() {
                       name="password"
                       value={password}
                       type="password"
-                      maxLength={50}
+                      autoComplete="new-password"
+                      maxLength={20}
                     />
                     {!isPassword && passwordErrorMessage && (
                       <div className="mt-2 text-danger">
@@ -391,7 +383,7 @@ export default function DeleteUSer() {
                     variant="danger"
                     className="mt-2 fw-bold"
                   >
-                    {isLoading ? "Loading..." : "Delete"}
+                    {isLoading ? "Loading..." : "Delete Account"}
                   </Button>
                 </Form>
                 <Switcher className="d-flex justify-content-between">
@@ -404,44 +396,6 @@ export default function DeleteUSer() {
                 </Switcher>
               </Alert>
             )}
-
-          {/* Error Modal
-        <Modal
-          show={showErrorModal}
-          onHide={handleCloseErrorModal}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Alert variant="danger" className="m-0 p-0">
-            <Modal.Body>
-              <Alert.Heading className="mb-3">Error</Alert.Heading>
-              <p>
-                <span>
-                  {error === "auth/invalid-login-credentials" &&
-                    "Incorrect email or password."}
-                  {error === "auth/requires-recent-login" &&
-                    "This requires recent sign-in. Please sign in again."}
-                  {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please reopen the page."}
-                  {error === "auth/invalid-user-token" &&
-                    "Your credential is no longer valid. Please sign in again."}
-                  {error === "auth/user-token-expired" &&
-                    "Your credential has expired. Please sign in again."}
-                  {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage. Please try again."}
-                </span>
-              </p>
-            </Modal.Body>
-            <Modal.Footer className="border-0 pt-0 p-3">
-              <Button variant="outline-dark" onClick={handleCloseErrorModal}>
-                Close
-              </Button>
-              <Button variant="outline-primary" onClick={goBackModal}>
-                Back
-              </Button>
-            </Modal.Footer>
-          </Alert>
-        </Modal> */}
         </Wrapper>
         <Footer />
       </div>

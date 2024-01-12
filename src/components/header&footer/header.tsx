@@ -25,11 +25,7 @@ export default function Header() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
+          <Nav className="me-auto my-2 my-lg-0" navbarScroll>
             <Nav.Link href="#action1">Home</Nav.Link>
             <Nav.Link href="#action2">Pricing</Nav.Link>
             <NavDropdown title="Features" id="navbarScrollingDropdown">
@@ -67,17 +63,17 @@ export default function Header() {
                   <Dropdown.Divider />
                   <Dropdown.Item href="/profile">Profile</Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href="/update-username">
-                    Update Username
+                  <Dropdown.Item href="/change-username">
+                    Change Username
                   </Dropdown.Item>
                   <Dropdown.Item href="/change-password">
-                    Change password
+                    Change Password
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>
+                  <Dropdown.Item onClick={signOut}>Sign Out</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item href="/delete-user">
-                    Delete account
+                    Delete Account
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -85,7 +81,7 @@ export default function Header() {
           ) : (
             <Nav>
               <Link to="/sign-in" className="btn btn-outline-success me-2">
-                Sign in
+                Sign In
               </Link>
             </Nav>
           )}

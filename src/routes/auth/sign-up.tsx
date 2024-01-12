@@ -435,6 +435,7 @@ export default function SignUp() {
             ?.classList.remove("form-control-valid");
         }
       }
+      reset();
     } finally {
       setIsLoading(false);
     }
@@ -446,41 +447,41 @@ export default function SignUp() {
       <div className="wrap">
         <Wrapper>
           <div className="mb-2">
-            <h1 className="fs-2">Sign-Up</h1>
+            <h1 className="fs-2">Sign Up</h1>
           </div>
           {error && (
             <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
-                <span>
-                  {error === "auth/invalid-credential" &&
-                    "The email or password entered is incorrect."}
-                  {error === "auth/user-not-found" &&
-                    "No user exists for the provided email."}
-                  {error === "auth/email-already-in-use" &&
-                    "This email is already in use."}
-                  {error === "auth/account-exists-with-different-credential" &&
-                    "The email is either invalid or already in use."}
-                  {error === "auth/invalid-email" &&
-                    "The provided email address is not valid."}
-                  {error === "auth/user-disabled" &&
-                    "The user associated with the provided email has been disabled."}
-                  {error === "auth/too-many-requests" &&
-                    "Excessive attempts. Please retry after a brief delay."}
-                  {error === "auth/network-request-failed" &&
-                    "An unexpected network error has occurred. Kindly reopen the page."}
-                  {error === "auth/invalid-user-token" &&
-                    "Your credentials are not valid."}
-                  {error === "auth/user-token-expired" &&
-                    "Your credentials have expired. Please try again."}
-                  {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage."}
-                  {error === "auth/internal-error" &&
-                    "An internal error occurred. Please try again later or contact support for assistance."}
-                </span>
+                {error === "auth/invalid-credential" &&
+                  "The email or password entered is incorrect."}
+                {error === "auth/user-not-found" &&
+                  "No user exists for the provided email."}
+                {error === "auth/email-already-in-use" &&
+                  "This email is already in use."}
+                {error === "auth/account-exists-with-different-credential" &&
+                  "The email is either invalid or already in use."}
+                {error === "auth/invalid-email" &&
+                  "The provided email address is not valid."}
+                {error === "auth/user-disabled" &&
+                  "The user associated with the provided email has been disabled."}
+                {error === "auth/too-many-requests" &&
+                  "Excessive attempts. Please retry after a brief delay."}
+                {error === "auth/network-request-failed" &&
+                  "An unexpected network error has occurred. Kindly reopen the page."}
+                {error === "auth/invalid-user-token" &&
+                  "Invalid user token. Please sign in again to obtain a valid token."}
+                {error === "auth/user-token-expired" &&
+                  "Your credentials have expired. Please try again."}
+                {error === "auth/web-storage-unsupported" &&
+                  "Your browser does not support web storage."}
+                {error === "auth/internal-error" &&
+                  "An internal error occurred. Please try again later or contact support for assistance."}
+                {error === "auth/unknown" &&
+                  "An unexpected error occurred. Please try again or contact support."}
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
             <Form onSubmit={signUp} className="d-flex flex-column row-gap-3">
               <Form.Group>
                 <Form.Label htmlFor="name">Username</Form.Label>
@@ -499,7 +500,7 @@ export default function SignUp() {
                 )}
               </Form.Group>
               <Form.Group>
-                <Form.Label htmlFor="email">Email address</Form.Label>
+                <Form.Label htmlFor="email">Email Address</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handleEmail}
@@ -524,6 +525,7 @@ export default function SignUp() {
                   name="password"
                   value={password}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                 />
                 {!isPassword && passwordErrorMessage && (
@@ -542,6 +544,7 @@ export default function SignUp() {
                   name="passwordConfirm"
                   value={passwordConfirm}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                   {...(!isPassword ? { disabled: true } : { disabled: false })}
                 />
@@ -552,7 +555,7 @@ export default function SignUp() {
                 )}
               </Form.Group>
               <Button type="submit" className="mt-2 fw-bold">
-                {isLoading ? "Loading..." : "Sign up"}
+                {isLoading ? "Loading..." : "Sign Up"}
               </Button>
             </Form>
             <Switcher className="d-flex justify-content-between">
@@ -560,7 +563,7 @@ export default function SignUp() {
                 Reset
               </Button>
               <Link to="/sign-in" className="btn btn-outline-success">
-                Sign in
+                Sign In
               </Link>
             </Switcher>
           </Alert>

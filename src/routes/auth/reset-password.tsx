@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import {
-  confirmPasswordReset,
-  isSignInWithEmailLink,
-  updatePassword,
-} from "firebase/auth";
+import { isSignInWithEmailLink, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { Switcher, Wrapper } from "../../components/styles/auth-components";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import Footer from "../../components/header&footer/footer";
@@ -30,9 +26,18 @@ export default function ResetPassword() {
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
 
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
   const signOut = () => {
     auth.signOut();
     navigate("/sign-in");
+  };
+
+  const navigateToHome = () => {
+    window.sessionStorage.removeItem("isSignedInWithEmail");
+    navigate("/");
   };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,8 +303,6 @@ export default function ResetPassword() {
 
       await updatePassword(auth.currentUser!, password);
 
-      confirmPasswordReset;
-
       window.sessionStorage.removeItem("isSignedInWithEmail");
 
       window.localStorage.setItem("PasswordChanged", "true");
@@ -308,13 +311,17 @@ export default function ResetPassword() {
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        window.localStorage.setItem("error", error.code);
         console.log("error : " + error.code);
 
-        window.sessionStorage.removeItem("isSignedInWithEmail");
+        window.localStorage.setItem("error", error.code);
+
         window.localStorage.removeItem("PasswordChanged");
-        signOut();
+
+        if (error.code === "auth/requires-recent-login") {
+          signOut();
+        }
       }
+      reset();
     } finally {
       setIsLoading(false);
     }
@@ -326,57 +333,53 @@ export default function ResetPassword() {
     "isSignInWithEmailLink : " +
       isSignInWithEmailLink(auth, window.location.href)
   );
-  console.log("changed password : " + password);
 
   return (
     <div className="h-100">
       <div className="wrap">
         <Wrapper>
-          <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2 text-center">Reset password</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Reset Password</h1>
           </div>
           {window.sessionStorage.getItem("isSignedInWithEmail") && (
-            <Alert
-              variant="success"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-            >
-              <p>Your email has been confirmed.</p>
-            </Alert>
-          )}
-          <Alert
-            variant="warning"
-            className="d-flex align-itmes-center m-0 mt-3 w-100"
-          >
-            <p>
-              Please reset your password within 5 minutes, or you have to get a
-              new link.
-            </p>
-          </Alert>
-          {error === "auth/requires-recent-login" && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="success" className="m-0 mt-3 w-100">
               <p>
-                <span>
-                  {error === "auth/requires-recent-login" &&
-                    "This requires recent sign-in. Please sign in again."}
-                </span>
+                You have successfully signed in using the email link. Kindly
+                proceed to reset your password within the next 5 minutes.
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+          {error && (
+            <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
+              <p>
+                {error === "auth/user-not-found" &&
+                  "User not found. Please verify your account and try again."}
+                {error === "auth/user-disabled" &&
+                  "Account disabled. Please contact support to re-enable your account."}
+                {error === "auth/requires-recent-login" &&
+                  "Security concern. For this action, recent sign-in is required. Please sign in again."}
+                {error === "auth/too-many-requests" &&
+                  "Excessive attempts. Please retry after a brief delay."}
+                {error === "auth/network-request-failed" &&
+                  "An unexpected network error has occurred. Kindly reopen the page."}
+                {error === "auth/invalid-user-token" &&
+                  "Invalid user token. Please sign in again to obtain a valid token."}
+                {error === "auth/web-storage-unsupported" &&
+                  "Your browser does not support web storage."}
+                {error === "auth/internal-error" &&
+                  "An internal error occurred. Please try again later or contact support for assistance."}
+                {error === "auth/unknown" &&
+                  "An unexpected error occurred. Please try again or contact support."}
+              </p>
+            </Alert>
+          )}
+          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
             <Form
               onSubmit={resetPassword}
-              className="d-flex"
-              style={{
-                flexDirection: "column",
-                gap: "15px",
-              }}
+              className="d-flex flex-column row-gap-3"
             >
               <Form.Group>
-                <Form.Label htmlFor="password">New password</Form.Label>
+                <Form.Label htmlFor="password">New Password</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handlePassword}
@@ -385,6 +388,7 @@ export default function ResetPassword() {
                   name="password"
                   value={password}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                 />
                 {!isPassword && passwordErrorMessage && (
@@ -403,6 +407,7 @@ export default function ResetPassword() {
                   name="passwordConfirm"
                   value={passwordConfirm}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                   {...(!isPassword ? { disabled: true } : { disabled: false })}
                 />
@@ -412,7 +417,7 @@ export default function ResetPassword() {
                   </div>
                 )}
               </Form.Group>
-              <Button type="submit" className="fw-bold">
+              <Button type="submit" className="mt-2 fw-bold">
                 {isLoading ? "Loading..." : "Reset"}
               </Button>
             </Form>
@@ -420,8 +425,35 @@ export default function ResetPassword() {
               <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
+              <Button variant="outline-success" onClick={handleShowModal}>
+                Home
+              </Button>
             </Switcher>
           </Alert>
+          <Modal
+            show={showModal}
+            onHide={handleCloseModal}
+            backdrop="static"
+            keyboard={false}
+          >
+            <Alert variant="warning" className="m-0 p-0">
+              <Modal.Body>
+                <Alert.Heading className="mb-3">Alert</Alert.Heading>
+                <p>
+                  If you don't reset your password now, you'll need to request a
+                  new link. Would you like to proceed?
+                </p>
+              </Modal.Body>
+              <Modal.Footer className="border-0 pt-0 p-3">
+                <Button variant="outline-dark" onClick={handleCloseModal}>
+                  Close
+                </Button>
+                <Button variant="outline-primary" onClick={navigateToHome}>
+                  Proceed
+                </Button>
+              </Modal.Footer>
+            </Alert>
+          </Modal>
         </Wrapper>
         <Footer />
       </div>

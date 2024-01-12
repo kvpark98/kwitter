@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
   EmailAuthProvider,
-  isSignInWithEmailLink,
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
@@ -326,7 +325,10 @@ export default function ChangePassword() {
 
         window.localStorage.removeItem("PasswordChanged");
 
-        if (error.code === "auth/invalid-login-credentials") {
+        if (
+          error.code === "auth/invalid-login-credentials" ||
+          error.code === "auth/wrong-password"
+        ) {
           setCurrentPassword("");
 
           setIsCurrentPassword(false);
@@ -371,58 +373,54 @@ export default function ChangePassword() {
 
   console.log("user : " + auth.currentUser);
   console.log("emailVerified : " + auth.currentUser?.emailVerified);
-  console.log(
-    "isSignInWithEmailLink : " +
-      isSignInWithEmailLink(auth, window.location.href)
-  );
-  console.log("changed password : " + newPassword);
 
   return (
     <div className="h-100">
       <Header />
       <div className="wrap">
         <Wrapper>
-          <div className="w-100 mb-1 d-flex justify-content-center">
-            <h1 className="fs-2 text-center">Change password</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Change Password</h1>
           </div>
           {error && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
+            <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
-                <span>
-                  {error === "auth/invalid-credential" &&
-                    "Your current password is incorrect."}
-                  {error === "auth/wrong-password" &&
-                    "Your current password is incorrect."}
-                  {error === "auth/same-password" &&
-                    "Your new password is same with your current password."}
-                  {error === "auth/network-request-failed" &&
-                    "A network error has occurred. Please reopen the page."}
-                  {error === "auth/invalid-user-token" &&
-                    "Your credential is no longer valid. Please sign in again."}
-                  {error === "auth/user-token-expired" &&
-                    "Your credential has expired. Please sign in again."}
-                  {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage. Please try again."}
-                </span>
+                {(error === "auth/wrong-password" ||
+                  error === "auth/invalid-credential") &&
+                  "Your current password is incorrect."}
+                {error === "auth/same-password" &&
+                  "Your new password is the same as your current password."}
+                {error === "auth/user-not-found" &&
+                  "User not found. Please verify your account and try again."}
+                {error === "auth/user-disabled" &&
+                  "Account disabled. Please contact support to re-enable your account."}
+                {error === "auth/requires-recent-login" &&
+                  "Security concern. For this action, recent sign-in is required. Please sign in again."}
+                {error === "auth/too-many-requests" &&
+                  "Excessive attempts. Please retry after a brief delay."}
+                {error === "auth/network-request-failed" &&
+                  "An unexpected network error has occurred. Kindly reopen the page."}
+                {error === "auth/invalid-user-token" &&
+                  "Invalid user token. Please sign in again to obtain a valid token."}
+                {error === "auth/user-token-expired" &&
+                  "Your credentials have expired. Please try again."}
+                {error === "auth/web-storage-unsupported" &&
+                  "Your browser does not support web storage."}
+                {error === "auth/internal-error" &&
+                  "An internal error occurred. Please try again later or contact support for assistance."}
+                {error === "auth/unknown" &&
+                  "An unexpected error occurred. Please try again or contact support."}
               </p>
             </Alert>
           )}
-          <Alert variant="light" className="mt-3 px-5 py-4 w-100">
+          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
             <Form
               onSubmit={changePassword}
-              className="d-flex"
-              style={{
-                flexDirection: "column",
-                gap: "15px",
-              }}
+              className="d-flex flex-column row-gap-3"
             >
               <Form.Group>
                 <Form.Label htmlFor="currentPassword">
-                  Current password
+                  Current Password
                 </Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
@@ -432,6 +430,7 @@ export default function ChangePassword() {
                   name="currentPassword"
                   value={currentPassword}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                 />
                 {!isCurrentPassword && currentPasswordErrorMessage && (
@@ -441,7 +440,7 @@ export default function ChangePassword() {
                 )}
               </Form.Group>
               <Form.Group>
-                <Form.Label htmlFor="newPassword">New password</Form.Label>
+                <Form.Label htmlFor="newPassword">New Password</Form.Label>
                 <Form.Control
                   className="border-none mt-1 mb-1"
                   onChange={handleNewPassword}
@@ -450,6 +449,7 @@ export default function ChangePassword() {
                   name="newPassword"
                   value={newPassword}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                 />
                 {!isNewPassword && newPasswordErrorMessage && (
@@ -470,6 +470,7 @@ export default function ChangePassword() {
                   name="newPasswordConfirm"
                   value={newPasswordConfirm}
                   type="password"
+                  autoComplete="new-password"
                   maxLength={20}
                   {...(!isNewPassword
                     ? { disabled: true }
@@ -481,7 +482,7 @@ export default function ChangePassword() {
                   </div>
                 )}
               </Form.Group>
-              <Button type="submit" className="fw-bold">
+              <Button type="submit" className="mt-2 fw-bold">
                 {isLoading ? "Loading..." : "Change"}
               </Button>
             </Form>
