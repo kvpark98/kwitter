@@ -84,13 +84,6 @@ export default function SignInWithEmail() {
   const signInWithEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (email === "") {
-      setEmailErrorMessage("Please enter your email.");
-      setIsEmail(false);
-
-      document.getElementById("email")?.classList.add("form-control-invalid");
-    }
-
     if (isLoading || !isEmail) {
       return;
     }
@@ -102,7 +95,6 @@ export default function SignInWithEmail() {
 
       auth.setPersistence(browserSessionPersistence);
 
-      // Sign-in with email
       if (isSignInWithEmailLink(auth, window.location.href)) {
         await signInWithEmailLink(auth, email, window.location.href);
 
@@ -208,7 +200,11 @@ export default function SignInWithEmail() {
                   <div className="mt-2 text-danger">{emailErrorMessage}</div>
                 )}
               </Form.Group>
-              <Button type="submit" className="mt-2 fw-bold">
+              <Button
+                type="submit"
+                className="mt-2 fw-bold"
+                {...(!isEmail ? { disabled: true } : { disabled: false })}
+              >
                 {isLoading ? "Loading..." : "One-time Login"}
               </Button>
             </Form>

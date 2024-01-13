@@ -356,35 +356,6 @@ export default function SignUp() {
   const signUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (name === "") {
-      setNameErrorMessage("Please enter your name.");
-      setIsName(false);
-
-      document.getElementById("name")?.classList.add("form-control-invalid");
-    }
-    if (email === "") {
-      setEmailErrorMessage("Please enter your email.");
-      setIsEmail(false);
-
-      document.getElementById("email")?.classList.add("form-control-invalid");
-    }
-    if (password === "") {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
-
-      document
-        .getElementById("password")
-        ?.classList.add("form-control-invalid");
-    }
-    if (passwordConfirm === "" && isPassword) {
-      setPasswordConfirmErrorMessage("Please confirm your password.");
-      setIsPasswordConfirm(false);
-
-      document
-        .getElementById("passwordConfirm")
-        ?.classList.add("form-control-invalid");
-    }
-
     if (
       isLoading ||
       !isName ||
@@ -401,7 +372,6 @@ export default function SignUp() {
     try {
       setIsLoading(true);
 
-      // sign-up
       const credentials = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -410,15 +380,12 @@ export default function SignUp() {
 
       window.localStorage.setItem("verificationNeeded", "true");
 
-      // Send verification email
       await sendEmailVerification(credentials.user, actionCodeSettings);
 
-      // Update the profile
       await updateProfile(credentials.user, {
         displayName: name,
       });
 
-      // sign out
       signOut();
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -554,7 +521,13 @@ export default function SignUp() {
                   </div>
                 )}
               </Form.Group>
-              <Button type="submit" className="mt-2 fw-bold">
+              <Button
+                type="submit"
+                className="mt-2 fw-bold"
+                {...(!isName || !isEmail || !isPassword || !isPasswordConfirm
+                  ? { disabled: true }
+                  : { disabled: false })}
+              >
                 {isLoading ? "Loading..." : "Sign Up"}
               </Button>
             </Form>

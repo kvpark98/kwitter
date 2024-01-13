@@ -29,19 +29,19 @@ export default function SignIn() {
 
   const [isRememberMe, setIsRememberMe] = useState(false);
 
-  const [isPasswordChanged, setIsPasswordChanged] = useState(
-    window.localStorage.getItem("PasswordChanged") || ""
-  );
-
   const [isVerificationNeeded, setIsVerificationNeeded] = useState(
     window.localStorage.getItem("verificationNeeded") || ""
   );
 
-  const [isVerified, setIsVerified] = useState("");
+  const [isPasswordChanged, setIsPasswordChanged] = useState(
+    window.localStorage.getItem("PasswordChanged") || ""
+  );
 
   const [accountDeleted, setAccountDeleted] = useState(
     window.localStorage.getItem("accountDeleted") || ""
   );
+
+  const [isVerified, setIsVerified] = useState("");
 
   const [error, setError] = useState(
     window.localStorage.getItem("error") || ""
@@ -144,21 +144,6 @@ export default function SignIn() {
   const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (email === "") {
-      setEmailErrorMessage("Please enter your email.");
-      setIsEmail(false);
-
-      document.getElementById("email")?.classList.add("form-control-invalid");
-    }
-    if (password === "") {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
-
-      document
-        .getElementById("password")
-        ?.classList.add("form-control-invalid");
-    }
-
     if (isLoading || !isEmail || !isPassword) {
       return;
     }
@@ -168,19 +153,14 @@ export default function SignIn() {
     try {
       setIsLoading(true);
 
-      // Session sign-in
       auth.setPersistence(browserSessionPersistence);
 
-      // Remember Me
       if (isRememberMe) {
-        // Local sign-in
         auth.setPersistence(browserLocalPersistence);
       }
 
-      // Sign in
       await signInWithEmailAndPassword(auth, email, password);
 
-      // Result
       if (auth.currentUser?.emailVerified === true) {
         setIsVerified("true");
         navigate("/");
@@ -331,7 +311,13 @@ export default function SignIn() {
                   className="m-0"
                 />
               </div>
-              <Button type="submit" className="fw-bold">
+              <Button
+                type="submit"
+                className="fw-bold"
+                {...(!isEmail || !isPassword
+                  ? { disabled: true }
+                  : { disabled: false })}
+              >
                 {isLoading ? "Loading..." : "Sign In"}
               </Button>
             </Form>

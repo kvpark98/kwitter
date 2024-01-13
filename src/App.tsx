@@ -12,16 +12,15 @@ import { useEffect, useState } from "react";
 import Loading from "./components/loading/loading";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-routes/protected-route";
-import "./App.module.css";
-import ProtectedRouteLogin from "./components/protected-routes/protected-route-login";
 import ResetPassword from "./routes/auth/reset-password";
 import SendSignInLink from "./routes/auth/send-sign-in-link";
 import SignInWithEmail from "./routes/auth/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
 import ChangePassword from "./routes/auth/change-password";
 import ProtectedRouteResetPassword from "./components/protected-routes/protected-route-reset-password";
-import ChangeUsername from "./routes/auth/update-username";
-import DeleteAccount from "./routes/auth/delete-user";
+import ChangeUsername from "./routes/auth/change-username";
+import DeleteAccount from "./routes/auth/delete-account";
+import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 
 const router = createBrowserRouter([
   {
@@ -45,25 +44,25 @@ const router = createBrowserRouter([
   {
     path: "/sign-in",
     element: (
-      <ProtectedRouteLogin>
+      <ProtectedRouteSignIn>
         <SignIn />
-      </ProtectedRouteLogin>
+      </ProtectedRouteSignIn>
     ),
   },
   {
     path: "/sign-up",
     element: (
-      <ProtectedRouteLogin>
+      <ProtectedRouteSignIn>
         <SignUp />
-      </ProtectedRouteLogin>
+      </ProtectedRouteSignIn>
     ),
   },
   {
     path: "/send-sign-in-link",
     element: (
-      <ProtectedRouteLogin>
+      <ProtectedRouteSignIn>
         <SendSignInLink />
-      </ProtectedRouteLogin>
+      </ProtectedRouteSignIn>
     ),
   },
   {
@@ -99,7 +98,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/delete-user",
+    path: "/delete-account",
     element: (
       <ProtectedRoute>
         <DeleteAccount />

@@ -86,19 +86,12 @@ export default function SendSignInLink() {
       return signInMethods;
     } catch (error) {
       console.error("Error checking email existence:", error);
-      throw error; // 에러를 상위 호출자에게 전파
+      throw error;
     }
   };
 
   const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (email === "") {
-      setEmailErrorMessage("Please enter your email.");
-      setIsEmail(false);
-
-      document.getElementById("email")?.classList.add("form-control-invalid");
-    }
 
     if (isLoading || !isEmail) {
       return;
@@ -109,18 +102,13 @@ export default function SendSignInLink() {
     try {
       setIsLoading(true);
 
-      // checkIfEmailExists 함수 호출
       const signInMethods = await checkIfEmailExists(email);
 
-      // signInMethods를 기반으로 다음 동작 수행
       if (signInMethods.length > 0) {
-        // 이메일이 존재하는 경우에 수행할 동작
-        // Send sign in link
         await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
         setIsPasswordResetLinkSent(true);
       } else {
-        // 이메일이 존재하지 않는 경우에 수행할 동작
         setIsPasswordResetLinkSent(false);
         throw new Error("auth/no-email");
       }
@@ -213,7 +201,11 @@ export default function SendSignInLink() {
                   <div className="mt-2 text-danger">{emailErrorMessage}</div>
                 )}
               </Form.Group>
-              <Button type="submit" className="mt-2 fw-bold">
+              <Button
+                type="submit"
+                className="mt-2 fw-bold"
+                {...(!isEmail ? { disabled: true } : { disabled: false })}
+              >
                 {isLoading ? "Loading..." : "Send Sign-in Link"}
               </Button>
             </Form>

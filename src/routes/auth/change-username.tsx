@@ -80,13 +80,6 @@ export default function ChangeUsername() {
   const changeName = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (name === "") {
-      setNameErrorMessage("Please enter your name.");
-      setIsName(false);
-
-      document.getElementById("name")?.classList.add("form-control-invalid");
-    }
-
     if (isLoading || !isName) {
       return;
     }
@@ -181,7 +174,11 @@ export default function ChangeUsername() {
                   <div className="mt-2 text-danger">{nameErrorMessage}</div>
                 )}
               </Form.Group>
-              <Button type="submit" className="mt-2 fw-bold">
+              <Button
+                type="submit"
+                className="mt-2 fw-bold"
+                {...(!isName ? { disabled: true } : { disabled: false })}
+              >
                 {isLoading ? "Loading..." : "Change"}
               </Button>
             </Form>

@@ -7,6 +7,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
 export default function Loading() {
   return (
     <Wrapper>

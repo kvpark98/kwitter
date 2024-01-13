@@ -270,23 +270,6 @@ export default function ResetPassword() {
   const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (password === "") {
-      setPasswordErrorMessage("Please enter your password.");
-      setIsPassword(false);
-
-      document
-        .getElementById("password")
-        ?.classList.add("form-control-invalid");
-    }
-    if (passwordConfirm === "" && isPassword) {
-      setPasswordConfirmErrorMessage("Please confirm your password.");
-      setIsPasswordConfirm(false);
-
-      document
-        .getElementById("passwordConfirm")
-        ?.classList.add("form-control-invalid");
-    }
-
     if (
       isLoading ||
       !isPassword ||
@@ -417,7 +400,13 @@ export default function ResetPassword() {
                   </div>
                 )}
               </Form.Group>
-              <Button type="submit" className="mt-2 fw-bold">
+              <Button
+                type="submit"
+                className="mt-2 fw-bold"
+                {...(!isPassword || !isPasswordConfirm
+                  ? { disabled: true }
+                  : { disabled: false })}
+              >
                 {isLoading ? "Loading..." : "Reset"}
               </Button>
             </Form>

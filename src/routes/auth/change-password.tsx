@@ -262,31 +262,6 @@ export default function ChangePassword() {
   const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (currentPassword === "") {
-      setCurrentPasswordErrorMessage("Please enter your password.");
-      setIsCurrentPassword(false);
-
-      document
-        .getElementById("currentPassword")
-        ?.classList.add("form-control-invalid");
-    }
-    if (newPassword === "") {
-      setNewPasswordErrorMessage("Please enter your password.");
-      setIsNewPassword(false);
-
-      document
-        .getElementById("newPassword")
-        ?.classList.add("form-control-invalid");
-    }
-    if (newPasswordConfirm === "" && isNewPassword) {
-      setNewPasswordConfirmErrorMessage("Please confirm your password.");
-      setIsNewPasswordConfirm(false);
-
-      document
-        .getElementById("newPasswordConfirm")
-        ?.classList.add("form-control-invalid");
-    }
-
     if (
       isLoading ||
       !isCurrentPassword ||
@@ -482,7 +457,15 @@ export default function ChangePassword() {
                   </div>
                 )}
               </Form.Group>
-              <Button type="submit" className="mt-2 fw-bold">
+              <Button
+                type="submit"
+                className="mt-2 fw-bold"
+                {...(!isCurrentPassword ||
+                !isNewPassword ||
+                !isNewPasswordConfirm
+                  ? { disabled: true }
+                  : { disabled: false })}
+              >
                 {isLoading ? "Loading..." : "Change"}
               </Button>
             </Form>
