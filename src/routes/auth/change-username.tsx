@@ -7,10 +7,12 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import Header from "../../components/header&footer/header";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../components/header&footer/footer";
 
 export default function ChangeUsername() {
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [name, setName] = useState("");
@@ -60,6 +62,10 @@ export default function ChangeUsername() {
     if (event.code === "Space") {
       event.preventDefault();
     }
+  };
+
+  const goBack = () => {
+    navigate(-1);
   };
 
   const reset = () => {
@@ -186,9 +192,9 @@ export default function ChangeUsername() {
               <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
-              <Link to="/" className="btn btn-outline-success">
-                Home
-              </Link>
+              <Button onClick={goBack} type="button" variant="outline-success">
+                Back
+              </Button>
             </Switcher>
           </Alert>
         </Wrapper>

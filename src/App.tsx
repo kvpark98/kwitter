@@ -2,8 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import Layout from "./components/styles/layout";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Home from "./routes/home";
 import Profile from "./routes/profile";
+import Home from "./routes/home";
 import SignIn from "./routes/auth/sign-in";
 import SignUp from "./routes/auth/sign-up";
 import { createGlobalStyle } from "styled-components";
@@ -21,6 +21,8 @@ import ProtectedRouteResetPassword from "./components/protected-routes/protected
 import ChangeUsername from "./routes/auth/change-username";
 import DeleteAccount from "./routes/auth/delete-account";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
+import SettingsHome from "./routes/settingsHome";
+import SettingsAccount from "./routes/settingsAccount";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,26 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "settings/account/change-username",
+        element: <ChangeUsername />,
+      },
+      {
+        path: "settings/account/change-password",
+        element: <ChangePassword />,
+      },
+      {
+        path: "settings/account/delete-account",
+        element: <DeleteAccount />,
+      },
+      {
+        path: "settings",
+        element: <SettingsHome />,
+      },
+      {
+        path: "settings/account",
+        element: <SettingsAccount />,
       },
     ],
   },
@@ -73,36 +95,13 @@ const router = createBrowserRouter([
       </ProtectedRouteSignInWithEmail>
     ),
   },
-  {
-    path: "/change-username",
-    element: (
-      <ProtectedRoute>
-        <ChangeUsername />
-      </ProtectedRoute>
-    ),
-  },
+
   {
     path: "/reset-password",
     element: (
       <ProtectedRouteResetPassword>
         <ResetPassword />
       </ProtectedRouteResetPassword>
-    ),
-  },
-  {
-    path: "/change-password",
-    element: (
-      <ProtectedRoute>
-        <ChangePassword />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/delete-account",
-    element: (
-      <ProtectedRoute>
-        <DeleteAccount />
-      </ProtectedRoute>
     ),
   },
 ]);

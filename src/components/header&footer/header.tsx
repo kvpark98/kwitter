@@ -1,5 +1,5 @@
 import { Container, Dropdown, Nav, NavDropdown, Navbar } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
 export default function Header() {
@@ -39,71 +39,48 @@ export default function Header() {
             </NavDropdown>
             <Nav.Link href="#">FAQS</Nav.Link>
           </Nav>
-          {auth.currentUser ? (
-            <Nav>
-              <Dropdown drop="start">
-                <Dropdown.Toggle
-                  variant="link"
-                  id="dropdown-basic"
-                  className="text-decoration-none p-0"
-                  aria-controls="s"
-                >
+          <Nav>
+            <Dropdown drop="start">
+              <Dropdown.Toggle
+                variant="link"
+                id="dropdown-basic"
+                className="text-decoration-none p-0"
+                aria-controls="s"
+              >
+                <img
+                  src="/default-profile.png"
+                  alt="Profile image"
+                  width="30"
+                  height="30"
+                  className="rounded-circle align-middle bg-light"
+                />
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item className="d-flex align-items-center" disabled>
                   <img
                     src="/default-profile.png"
                     alt="Profile image"
                     width="30"
                     height="30"
-                    className="rounded-circle align-middle bg-light"
+                    className="rounded-circle align-middle bg-secondary me-3"
                   />
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item className="d-flex align-items-center" disabled>
-                    <img
-                      src="/default-profile.png"
-                      alt="Profile image"
-                      width="30"
-                      height="30"
-                      className="rounded-circle align-middle bg-secondary me-3"
-                    />
-                    <p>{auth.currentUser?.displayName}</p>
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item href="/profile">Profile</Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown drop="start" className="px-3">
-                    <Dropdown.Toggle
-                      variant="link"
-                      id="dropdown-basic"
-                      className="text-decoration-none text-dark p-0"
-                    >
-                      Account
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="/change-username">
-                        Change Username
-                      </Dropdown.Item>
-                      <Dropdown.Divider />
-                      <Dropdown.Item href="/change-password">
-                        Change Password
-                      </Dropdown.Item>
-                      <Dropdown.Divider />
-                      <Dropdown.Item href="/delete-account">
-                        Delete Account
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown.Divider />
+                  <p>
+                    {auth.currentUser ? auth.currentUser.displayName : "Null"}
+                  </p>
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item href="/settings">Settings</Dropdown.Item>
+                <Dropdown.Divider />
+                {auth.currentUser ? (
                   <Dropdown.Item onClick={signOut}>Sign Out</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Nav>
-          ) : (
-            <Nav>
-              <Link to="/sign-in" className="btn btn-outline-success">
-                Sign In
-              </Link>
-            </Nav>
-          )}
+                ) : (
+                  <Dropdown.Item href="/sign-in">Sign In</Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -77,6 +77,10 @@ export default function DeleteAccount() {
     navigate("/sign-in");
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     if (
       !dataRemovalChecked ||
@@ -342,9 +346,9 @@ export default function DeleteAccount() {
               </Form.Group>
             </Form>
             <Switcher className="d-flex justify-content-end">
-              <Link to="/" className="btn btn-outline-success">
-                Home
-              </Link>
+              <Button onClick={goBack} type="button" variant="outline-success">
+                Back
+              </Button>
             </Switcher>
           </Alert>
           {dataRemovalChecked &&

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
   EmailAuthProvider,
@@ -221,6 +221,10 @@ export default function ChangePassword() {
     if (event.code === "Space") {
       event.preventDefault();
     }
+  };
+
+  const goBack = () => {
+    navigate(-1);
   };
 
   const reset = () => {
@@ -473,9 +477,9 @@ export default function ChangePassword() {
               <Button onClick={reset} type="button" variant="outline-info">
                 Reset
               </Button>
-              <Link to="/" className="btn btn-outline-success">
-                Home
-              </Link>
+              <Button onClick={goBack} type="button" variant="outline-success">
+                Back
+              </Button>
             </Switcher>
           </Alert>
         </Wrapper>
