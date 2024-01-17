@@ -56,22 +56,29 @@ export default function Header() {
                 />
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item className="d-flex align-items-center" disabled>
-                  <img
-                    src="/default-profile.png"
-                    alt="Profile image"
-                    width="30"
-                    height="30"
-                    className="rounded-circle align-middle bg-secondary me-3"
-                  />
-                  <p>
-                    {auth.currentUser ? auth.currentUser.displayName : "Null"}
-                  </p>
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item href="/profile">Profile</Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item href="/settings">Settings</Dropdown.Item>
+                {auth.currentUser && (
+                  <div>
+                    <Dropdown.Item
+                      className="d-flex align-items-center"
+                      disabled
+                    >
+                      <img
+                        src="/default-profile.png"
+                        alt="Profile image"
+                        width="30"
+                        height="30"
+                        className="rounded-circle align-middle bg-secondary me-3"
+                      />
+                      <p>
+                        {auth.currentUser
+                          ? auth.currentUser.displayName
+                          : "Please Sign In."}
+                      </p>
+                    </Dropdown.Item>
+                    <Dropdown.Divider />
+                  </div>
+                )}
+                <Dropdown.Item href="/settings/profile">Settings</Dropdown.Item>
                 <Dropdown.Divider />
                 {auth.currentUser ? (
                   <Dropdown.Item onClick={signOut}>Sign Out</Dropdown.Item>

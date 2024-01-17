@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import Layout from "./components/styles/layout";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Profile from "./routes/profile";
 import Home from "./routes/home";
 import SignIn from "./routes/auth/sign-in";
 import SignUp from "./routes/auth/sign-up";
@@ -21,8 +20,8 @@ import ProtectedRouteResetPassword from "./components/protected-routes/protected
 import ChangeUsername from "./routes/auth/change-username";
 import DeleteAccount from "./routes/auth/delete-account";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
-import SettingsHome from "./routes/settingsHome";
-import SettingsAccount from "./routes/settingsAccount";
+import SettingsAccount from "./routes/settings/settings-account";
+import SettingsProfile from "./routes/settings/settings-profile";
 
 const router = createBrowserRouter([
   {
@@ -38,8 +37,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "profile",
-        element: <Profile />,
+        path: "settings/profile",
+        element: <SettingsProfile />,
+      },
+      {
+        path: "settings/account",
+        element: <SettingsAccount />,
       },
       {
         path: "settings/account/change-username",
@@ -52,14 +55,6 @@ const router = createBrowserRouter([
       {
         path: "settings/account/delete-account",
         element: <DeleteAccount />,
-      },
-      {
-        path: "settings",
-        element: <SettingsHome />,
-      },
-      {
-        path: "settings/account",
-        element: <SettingsAccount />,
       },
     ],
   },
@@ -177,11 +172,29 @@ function App() {
 
   const init = async () => {
     await auth.authStateReady();
+
+    const storedElement = window.sessionStorage.getItem("element");
+    if (!storedElement) {
+      window.sessionStorage.setItem("element", "Profile");
+    }
+
     setIsLoading(false);
   };
 
   useEffect(() => {
     init();
+
+    const handlePage = () => {
+      if (!window.location.href.includes("settings")) {
+        window.sessionStorage.removeItem("element");
+      }
+    };
+
+    window.addEventListener("beforeunload", handlePage);
+
+    return () => {
+      window.removeEventListener("beforeunload", handlePage);
+    };
   }, []);
 
   return (
