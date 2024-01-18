@@ -54,21 +54,18 @@ export default function SignUp() {
         setIsName(false);
 
         document.getElementById("name")?.classList.add("form-control-invalid");
-        document.getElementById("name")?.classList.remove("form-control-valid");
       } else {
         setIsName(true);
 
         document
           .getElementById("name")
           ?.classList.remove("form-control-invalid");
-        document.getElementById("name")?.classList.add("form-control-valid");
       }
     } else {
       setNameErrorMessage("");
       setIsName(false);
 
       document.getElementById("name")?.classList.remove("form-control-invalid");
-      document.getElementById("name")?.classList.remove("form-control-valid");
     }
   };
 
@@ -86,16 +83,12 @@ export default function SignUp() {
         setIsEmail(false);
 
         document.getElementById("email")?.classList.add("form-control-invalid");
-        document
-          .getElementById("email")
-          ?.classList.remove("form-control-valid");
       } else {
         setIsEmail(true);
 
         document
           .getElementById("email")
           ?.classList.remove("form-control-invalid");
-        document.getElementById("email")?.classList.add("form-control-valid");
       }
     } else {
       setEmailErrorMessage("");
@@ -104,14 +97,14 @@ export default function SignUp() {
       document
         .getElementById("email")
         ?.classList.remove("form-control-invalid");
-      document.getElementById("email")?.classList.remove("form-control-valid");
     }
   };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    const regPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    const regPassword =
+      /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]).{8,}$/;
 
     setPassword(value.replace(/\s/gi, ""));
 
@@ -330,10 +323,8 @@ export default function SignUp() {
     setPasswordConfirmErrorMessage("");
 
     document.getElementById("name")?.classList.remove("form-control-invalid");
-    document.getElementById("name")?.classList.remove("form-control-valid");
 
     document.getElementById("email")?.classList.remove("form-control-invalid");
-    document.getElementById("email")?.classList.remove("form-control-valid");
 
     document
       .getElementById("password")
@@ -391,18 +382,7 @@ export default function SignUp() {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("error : " + error.code);
-
-        if (error.code === "auth/email-already-in-use") {
-          setIsEmail(false);
-          setEmail("");
-          setEmailErrorMessage("");
-
-          document
-            .getElementById("email")
-            ?.classList.remove("form-control-valid");
-        }
       }
-      reset();
     } finally {
       setIsLoading(false);
     }

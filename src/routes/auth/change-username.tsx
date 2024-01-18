@@ -40,21 +40,18 @@ export default function ChangeUsername() {
         setIsName(false);
 
         document.getElementById("name")?.classList.add("form-control-invalid");
-        document.getElementById("name")?.classList.remove("form-control-valid");
       } else {
         setIsName(true);
 
         document
           .getElementById("name")
           ?.classList.remove("form-control-invalid");
-        document.getElementById("name")?.classList.add("form-control-valid");
       }
     } else {
       setNameErrorMessage("");
       setIsName(false);
 
       document.getElementById("name")?.classList.remove("form-control-invalid");
-      document.getElementById("name")?.classList.remove("form-control-valid");
     }
   };
 
@@ -76,7 +73,6 @@ export default function ChangeUsername() {
     setNameErrorMessage("");
 
     document.getElementById("name")?.classList.remove("form-control-invalid");
-    document.getElementById("name")?.classList.remove("form-control-valid");
   };
 
   useEffect(() => {
@@ -109,7 +105,6 @@ export default function ChangeUsername() {
 
         setIsUpdated(false);
       }
-      reset();
     } finally {
       setIsLoading(false);
     }

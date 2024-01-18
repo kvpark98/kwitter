@@ -122,7 +122,6 @@ export default function SendSignInLink() {
         setError("auth/no-email");
         console.log(error);
       }
-      reset();
     } finally {
       setIsLoading(false);
     }

@@ -177,7 +177,6 @@ export default function SignIn() {
         setIsPasswordChanged("");
         setAccountDeleted("");
       }
-      reset();
     } finally {
       setIsLoading(false);
     }
@@ -226,18 +225,16 @@ export default function SignIn() {
           {error && (
             <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
-                {error === "auth/invalid-credential" &&
+                {(error === "auth/invalid-credential" ||
+                  error === "auth/wrong-password" ||
+                  error === "auth/user-not-found") &&
                   "The email or password entered is incorrect."}
-                {error === "auth/wrong-password" &&
-                  "The entered password is incorrect."}
                 {error === "auth/user-disabled" &&
                   "The user associated with the provided email has been disabled."}
                 {error === "auth/expired-action-code" &&
                   "The email link has expired. Please request a new link and ensure you use it within the specified time limit."}
                 {error === "auth/invalid-action-code" &&
                   "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
-                {error === "auth/user-not-found" &&
-                  "No user exists for the provided email."}
                 {error === "auth/account-exists-with-different-credential" &&
                   "The email is either invalid or already in use."}
                 {error === "auth/requires-recent-login" &&

@@ -63,7 +63,8 @@ export default function ChangePassword() {
   const handleNewPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    const regPassword = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    const regPassword =
+      /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]).{8,}$/;
 
     setNewPassword(value.replace(/\s/gi, ""));
 

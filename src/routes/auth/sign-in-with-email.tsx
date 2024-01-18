@@ -11,6 +11,7 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
+import Footer from "../../components/header&footer/footer";
 
 export default function SignInWithEmail() {
   const navigate = useNavigate();
@@ -122,7 +123,6 @@ export default function SignInWithEmail() {
           signOut();
         }
       }
-      reset();
     } finally {
       setIsLoading(false);
     }
@@ -218,6 +218,7 @@ export default function SignInWithEmail() {
             </Switcher>
           </Alert>
         </Wrapper>
+        <Footer />
       </div>
     </div>
   );

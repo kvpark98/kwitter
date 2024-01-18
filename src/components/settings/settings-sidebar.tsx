@@ -1,28 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Nav } from "react-bootstrap";
 
 export default function SettingsSidebar() {
   const settingsElements = useMemo(() => {
     return ["Profile", "Account"];
   }, []);
-
-  const sessionElement = window.sessionStorage.getItem("element");
-  const [element, setElement] = useState(sessionElement || "Profile");
-
-  const selectElement = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    const targetText = event.currentTarget.innerText;
-
-    setElement(targetText);
-  };
-
-  useEffect(() => {
-    window.sessionStorage.setItem("element", element);
-  }, [element]);
-
-  console.log("element : " + element);
-  console.log("sessionElement : " + sessionElement);
 
   return (
     <div
@@ -36,11 +18,10 @@ export default function SettingsSidebar() {
               href={`/settings/${element.toLowerCase()}`}
               id={element}
               eventKey={element}
-              onClick={selectElement}
-              {...(sessionElement === element
+              {...(window.location.href.includes(element.toLowerCase())
                 ? { className: "" }
                 : { className: "text-dark" })}
-              {...(sessionElement === element
+              {...(window.location.href.includes(element.toLowerCase())
                 ? { active: true }
                 : { active: false })}
             >

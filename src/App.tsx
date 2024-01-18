@@ -172,29 +172,11 @@ function App() {
 
   const init = async () => {
     await auth.authStateReady();
-
-    const storedElement = window.sessionStorage.getItem("element");
-    if (!storedElement) {
-      window.sessionStorage.setItem("element", "Profile");
-    }
-
     setIsLoading(false);
   };
 
   useEffect(() => {
     init();
-
-    const handlePage = () => {
-      if (!window.location.href.includes("settings")) {
-        window.sessionStorage.removeItem("element");
-      }
-    };
-
-    window.addEventListener("beforeunload", handlePage);
-
-    return () => {
-      window.removeEventListener("beforeunload", handlePage);
-    };
   }, []);
 
   return (
