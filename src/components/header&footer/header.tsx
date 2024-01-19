@@ -1,9 +1,23 @@
-import { Container, Dropdown, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Container,
+  Dropdown,
+  Modal,
+  Nav,
+  NavDropdown,
+  Navbar,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { useState } from "react";
 
 export default function Header() {
   const navigate = useNavigate();
+
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const signOut = () => {
     auth.signOut();
@@ -69,11 +83,7 @@ export default function Header() {
                         height="30"
                         className="rounded-circle align-middle bg-secondary me-3"
                       />
-                      <p>
-                        {auth.currentUser
-                          ? auth.currentUser.displayName
-                          : "Please Sign In."}
-                      </p>
+                      <p>{auth.currentUser.displayName}</p>
                     </Dropdown.Item>
                     <Dropdown.Divider />
                   </div>
@@ -81,7 +91,9 @@ export default function Header() {
                 <Dropdown.Item href="/settings/profile">Settings</Dropdown.Item>
                 <Dropdown.Divider />
                 {auth.currentUser ? (
-                  <Dropdown.Item onClick={signOut}>Sign Out</Dropdown.Item>
+                  <Dropdown.Item onClick={handleShowModal}>
+                    Sign Out
+                  </Dropdown.Item>
                 ) : (
                   <Dropdown.Item href="/sign-in">Sign In</Dropdown.Item>
                 )}
@@ -89,6 +101,30 @@ export default function Header() {
             </Dropdown>
           </Nav>
         </Navbar.Collapse>
+        <Modal
+          show={showModal}
+          onHide={handleCloseModal}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Alert variant="warning" className="m-0 p-0">
+            <Modal.Body>
+              <Alert.Heading className="mb-3">Are You Sure?</Alert.Heading>
+              <p>
+                Signing out will end your current session. Do you want to
+                proceed?
+              </p>
+            </Modal.Body>
+            <Modal.Footer className="border-0 pt-0 p-3">
+              <Button variant="outline-dark" onClick={handleCloseModal}>
+                Cancel
+              </Button>
+              <Button variant="outline-primary" onClick={signOut}>
+                Sign Out
+              </Button>
+            </Modal.Footer>
+          </Alert>
+        </Modal>
       </Container>
     </Navbar>
   );

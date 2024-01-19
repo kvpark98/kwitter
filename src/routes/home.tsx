@@ -3,6 +3,7 @@ import Header from "../components/header&footer/header";
 import { Wrapper } from "../components/styles/auth-components";
 import Footer from "../components/header&footer/footer";
 import ScrollHome from "../components/scrolls/scrollHome";
+import PostTweetForm from "../components/post-tweet-form";
 
 export default function Home() {
   console.log("user : " + auth.currentUser);
@@ -13,7 +14,10 @@ export default function Home() {
       <Header />
       <div className="wrap">
         <Wrapper>
-          <h1>Home</h1>
+          <div className="mb-2">
+            <h1 className="fs-2">Post Tweets</h1>
+          </div>
+          <PostTweetForm />
           <ScrollHome />
         </Wrapper>
         <Footer />

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export default function SettingsSidebar() {
   const settingsElements = useMemo(() => {
@@ -14,19 +15,15 @@ export default function SettingsSidebar() {
       <Nav className="nav nav-pills flex-column">
         {settingsElements.map((element) => (
           <Nav.Item key={element}>
-            <Nav.Link
-              href={`/settings/${element.toLowerCase()}`}
+            <Link
+              to={`/settings/${element.toLowerCase()}`}
               id={element}
-              eventKey={element}
               {...(window.location.href.includes(element.toLowerCase())
-                ? { className: "" }
-                : { className: "text-dark" })}
-              {...(window.location.href.includes(element.toLowerCase())
-                ? { active: true }
-                : { active: false })}
+                ? { className: "nav-link active" }
+                : { className: "nav-link text-dark" })}
             >
               <span>{element}</span>
-            </Nav.Link>
+            </Link>
           </Nav.Item>
         ))}
       </Nav>
