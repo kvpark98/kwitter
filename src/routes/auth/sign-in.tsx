@@ -193,7 +193,7 @@ export default function SignIn() {
           <div className="mb-2">
             <h1 className="fs-2">Sign In</h1>
           </div>
-          {isVerificationNeeded && (
+          {isVerificationNeeded && !error && (
             <Alert variant="warning" className="m-0 mt-3 w-100" dismissible>
               <p>
                 Kindly navigate to your email and click on the provided link for
@@ -201,7 +201,7 @@ export default function SignIn() {
               </p>
             </Alert>
           )}
-          {isPasswordChanged && (
+          {isPasswordChanged && !error && (
             <Alert variant="success" className="m-0 mt-3 w-100" dismissible>
               <p>
                 Your new password has been set successfully. Please sign in
@@ -209,12 +209,12 @@ export default function SignIn() {
               </p>
             </Alert>
           )}
-          {accountDeleted && (
+          {accountDeleted && !error && (
             <Alert variant="success" className="m-0 mt-3 w-100" dismissible>
               <p>Your account has been successfully deleted.</p>
             </Alert>
           )}
-          {isVerified === "false" && (
+          {isVerified === "false" && !error && (
             <Alert variant="danger" className="m-0 mt-3 w-100" dismissible>
               <p>
                 Your email has not been verified. Please check your email and

@@ -121,7 +121,7 @@ export default function ChangeUsername() {
           <div className="mb-2">
             <h1 className="fs-2">Change Username</h1>
           </div>
-          {isUpdated && (
+          {isUpdated && !error && (
             <Alert variant="success" className="m-0 mt-3 w-100" dismissible>
               <p>New username successfully configured.</p>
             </Alert>

@@ -138,7 +138,7 @@ export default function SendSignInLink() {
           <div className="mb-2">
             <h1 className="fs-2">Request Sign-in Link</h1>
           </div>
-          {isPasswordResetLinkSent && (
+          {isPasswordResetLinkSent && !error && (
             <Alert variant="warning" className="m-0 mt-3 w-100" dismissible>
               <p>
                 Please review your email for a sign-in link. In case it doesn't
