@@ -4,6 +4,7 @@ import { Wrapper } from "../components/styles/auth-components";
 import Footer from "../components/header&footer/footer";
 import ScrollHome from "../components/scrolls/scrollHome";
 import PostMessage from "../components/messages/post-message";
+import TimeLine from "../components/messages/time-line";
 
 export default function Home() {
   console.log("user : " + auth.currentUser);
@@ -18,6 +19,7 @@ export default function Home() {
             <h1 className="fs-2">Post Messages</h1>
           </div>
           <PostMessage />
+          <TimeLine />
           <ScrollHome />
         </Wrapper>
         <Footer />
