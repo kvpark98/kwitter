@@ -104,10 +104,7 @@ export default function PostMessage() {
         // 파일 크기가 1MB 이하인지 확인
         if (file.size <= 1024 * 1024) {
           // Firebase Storage에 업로드할 위치 참조 생성
-          const locationRef = ref(
-            storage,
-            `messages/${user.uid}-${user.displayName}/${doc.id}`
-          );
+          const locationRef = ref(storage, `messages/${user.uid}/${doc.id}`);
 
           // 파일을 업로드하고 결과를 받아옴
           const result = await uploadBytes(locationRef, file);
@@ -127,6 +124,10 @@ export default function PostMessage() {
       }
 
       setPostUploaded(true);
+
+      setTimeout(() => {
+        setPostUploaded(false);
+      }, 5000);
 
       resetMessageSubmit();
       resetPhotoSubmit();
@@ -152,7 +153,7 @@ export default function PostMessage() {
     <div className="w-100">
       {postUploaded && !error && (
         <Alert variant="success" className="m-0 mt-3 w-100" dismissible>
-          <p>Tweet successfully posted!</p>
+          <p>Message successfully posted!</p>
         </Alert>
       )}
       {error && (

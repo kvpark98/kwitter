@@ -9,7 +9,7 @@ export default function SettingsTitle() {
           width="25"
           height="25"
           fill="currentColor"
-          className="bi bi-gear me-3"
+          className="bi bi-gear me-2"
           viewBox="0 0 16 16"
         >
           <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
