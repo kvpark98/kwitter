@@ -1,10 +1,9 @@
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { useState } from "react";
-import { Alert, Button } from "react-bootstrap";
+import { Alert, Button, ButtonGroup } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { auth, db, storage } from "../../firebase";
 import { FirebaseError } from "firebase/app";
-import { Switcher } from "../styles/auth-components";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function PostMessage() {
@@ -227,34 +226,34 @@ export default function PostMessage() {
               className="d-none mb-4"
               accept="image/*"
             />
-            <Button
-              type="submit"
-              variant="primary"
-              className="w-100 fw-bold"
-              {...(!isMessage || !isFile
-                ? { disabled: true }
-                : { disabled: false })}
-            >
-              {isLoading ? "Posting..." : "Post Message"}
-            </Button>
           </Form.Group>
+          <ButtonGroup className="w-100 mb-4">
+            <Button
+              onClick={resetPhotoButton}
+              type="button"
+              variant="outline-info"
+            >
+              Reset Photo
+            </Button>
+            <Button
+              onClick={resetMessageButton}
+              type="button"
+              variant="outline-info"
+            >
+              Reset Message
+            </Button>
+          </ButtonGroup>
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-100 fw-bold"
+            {...(!isMessage || !isFile
+              ? { disabled: true }
+              : { disabled: false })}
+          >
+            {isLoading ? "Posting..." : "Post Message"}
+          </Button>
         </Form>
-        <Switcher className="d-flex justify-content-between">
-          <Button
-            onClick={resetPhotoButton}
-            type="button"
-            variant="outline-info"
-          >
-            Reset Photo
-          </Button>
-          <Button
-            onClick={resetMessageButton}
-            type="button"
-            variant="outline-info"
-          >
-            Reset Message
-          </Button>
-        </Switcher>
       </Alert>
     </div>
   );
