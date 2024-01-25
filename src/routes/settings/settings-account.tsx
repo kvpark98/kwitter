@@ -4,6 +4,7 @@ import Header from "../../components/header&footer/header";
 import { Link } from "react-router-dom";
 import SettingsSidebar from "../../components/settings/settings-sidebar";
 import SettingsTitle from "../../components/settings/settings-title";
+import ScrollProfile from "../../components/scrolls/scrollProfile";
 
 export default function SettingsAccount() {
   return (
@@ -58,6 +59,7 @@ export default function SettingsAccount() {
               </div>
             </div>
           </div>
+          <ScrollProfile />
         </Container>
         <Footer />
       </div>

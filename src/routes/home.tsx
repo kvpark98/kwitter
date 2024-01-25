@@ -15,9 +15,6 @@ export default function Home() {
       <Header />
       <div className="wrap">
         <Wrapper>
-          <div className="mb-2">
-            <h1 className="fs-2">Post Messages</h1>
-          </div>
           <PostMessage />
           <TimeLine />
           <ScrollHome />

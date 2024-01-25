@@ -20,12 +20,12 @@ export default function ScrollHome() {
     const handleShowButton = () => {
       const scrollLocation = window.scrollY;
 
+      scrollLocation > 100 ? setShowButton(true) : setShowButton(false);
+
       window.sessionStorage.setItem(
         "homeScrollLocation",
         scrollLocation.toString()
       );
-
-      scrollLocation > 100 ? setShowButton(true) : setShowButton(false);
     };
 
     const homeScrollLocation =
