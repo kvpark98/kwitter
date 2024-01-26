@@ -71,6 +71,7 @@ export default function Message({
       setIsLoading(false);
     }
   };
+
   return (
     <div className="w-100">
       <Card

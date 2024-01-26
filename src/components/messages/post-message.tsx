@@ -14,13 +14,14 @@ export default function PostMessage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [message, setMessage] = useState("");
+
   const [file, setFile] = useState<File | null>(null);
 
   const [isMessage, setIsMessage] = useState(false);
 
-  const [error, setError] = useState("");
-
   const [postUploaded, setPostUploaded] = useState(false);
+
+  const [error, setError] = useState("");
 
   const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.currentTarget.value;
@@ -68,7 +69,9 @@ export default function PostMessage() {
 
   const resetPhotoSubmit = () => {
     setFile(null);
-    fileInput.value = "";
+    if (file) {
+      fileInput.value = "";
+    }
   };
 
   const resetPhotoButton = () => {
@@ -96,17 +99,17 @@ export default function PostMessage() {
         userId: user.uid,
       });
 
-      // 만약 파일이 존재한다면
+      // 파일이 있는 경우
       if (file) {
-        // 파일 크기가 1MB 이하인지 확인
+        // 파일의 크기가 1MB 이하인지 확인
         if (file.size <= 1024 * 1024) {
           // Firebase Storage에 업로드할 위치 참조 생성
           const locationRef = ref(storage, `messages/${user.uid}/${doc.id}`);
 
-          // 파일을 업로드하고 결과를 받아옴
+          // 파일 업로드 및 결과 받아오기
           const result = await uploadBytes(locationRef, file);
 
-          // 업로드된 파일의 다운로드 URL을 가져옴
+          // 업로드된 파일의 다운로드 URL 가져오기
           const url = await getDownloadURL(result.ref);
 
           // Firestore db의 문서를 업데이트하여 다운로드 URL을 추가
@@ -120,15 +123,19 @@ export default function PostMessage() {
         }
       }
 
+      // 포스트가 등록되었음을 표시
       setPostUploaded(true);
 
+      // 포스트 등록 상태를 5초 후에 초기화
       setTimeout(() => {
         setPostUploaded(false);
       }, 5000);
 
+      // 메시지 및 파일 상태를 초기화
       resetMessageSubmit();
       resetPhotoSubmit();
     } catch (error) {
+      // 에러 발생 시 포스트 등록 상태를 초기화
       setPostUploaded(false);
 
       if (error instanceof FirebaseError) {
@@ -139,6 +146,7 @@ export default function PostMessage() {
         console.log(error);
       }
 
+      // 메시지 및 파일 상태를 초기화
       resetMessageSubmit();
       resetPhotoSubmit();
     } finally {
@@ -150,7 +158,7 @@ export default function PostMessage() {
     <div className="w-100">
       <h1 className="fs-2 text-center mb-4">Post Message</h1>
       {postUploaded && !error && (
-        <Alert variant="success" className="m-0 mt-3 w-100" dismissible>
+        <Alert variant="success" className="m-0 mt-3 w-100">
           <p>Message successfully posted!</p>
         </Alert>
       )}

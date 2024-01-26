@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Alert,
+  Badge,
   Button,
   ButtonGroup,
   Card,
@@ -9,36 +10,44 @@ import {
   Modal,
 } from "react-bootstrap";
 import { ModifyMessageProps } from "./message";
-import { auth } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
+import { FirebaseError } from "firebase/app";
+import { deleteField, doc, updateDoc } from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 export default function ModifyMessage({
   id,
-  timeAgo,
-  createdAt,
   message,
   photo,
-  userId,
-  username,
   showModifyModal,
-  handleShowModifyModal,
   handleCloseModifyModal,
 }: ModifyMessageProps) {
   const user = auth.currentUser;
-
-  const textArea = document.getElementById("textarea") as HTMLInputElement;
 
   const newFileInput = document.getElementById("newFile") as HTMLInputElement;
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState(message);
+
   const [newFile, setNewFile] = useState<File | null>(null);
 
-  const [isNewMessage, setIsNewMessage] = useState(false);
+  const [isNewMessage, setIsNewMessage] = useState(true);
+
+  const [postModified, setPostModified] = useState(false);
+
+  const [deletePhotoClicked, setDeletePhotoClicked] = useState(false);
 
   const [error, setError] = useState("");
 
-  const [postModified, setPostModified] = useState(false);
+  const handleDeletePhotoClicked = () => {
+    setDeletePhotoClicked((current) => !current);
+  };
 
   const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.currentTarget.value;
@@ -76,8 +85,7 @@ export default function ModifyMessage({
 
   const resetMessageSubmit = () => {
     setNewMessage(message);
-    textArea.value = message;
-    setIsNewMessage(false);
+    setIsNewMessage(true);
   };
 
   const resetMessageButton = () => {
@@ -87,7 +95,9 @@ export default function ModifyMessage({
 
   const resetPhotoSubmit = () => {
     setNewFile(null);
-    newFileInput.value = "";
+    if (newFile) {
+      newFileInput.value = "";
+    }
   };
 
   const resetPhotoButton = () => {
@@ -98,6 +108,87 @@ export default function ModifyMessage({
 
   const modifyMessage = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (isLoading || !isNewMessage || newMessage.length > 180 || !user) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      setIsLoading(true);
+
+      // Firestore의 메시지 문서 업데이트
+      await updateDoc(doc(db, "messages", id), {
+        message: newMessage,
+        createdAt: Date.now(),
+      });
+
+      // 새로운 파일이 있는 경우
+      if (newFile) {
+        // 이전 이미지가 있는 경우
+        if (photo) {
+          // Storage에서 이전 이미지 삭제
+          const photoRef = ref(storage, `messages/${user.uid}/${id}`);
+          await deleteObject(photoRef);
+        }
+        // 새로운 파일의 크기가 1MB 이하인지 확인
+        if (newFile.size <= 1024 * 1024) {
+          // Firebase Storage에 업로드할 위치 참조 생성
+          const locationRef = ref(storage, `messages/${user.uid}/${id}`);
+
+          // 파일 업로드 및 결과 받아오기
+          const result = await uploadBytes(locationRef, newFile);
+
+          // 업로드된 파일의 다운로드 URL 가져오기
+          const url = await getDownloadURL(result.ref);
+
+          // Firestore db의 문서를 업데이트하여 다운로드 URL을 추가
+          await updateDoc(doc(db, "messages", id), {
+            photo: url,
+          });
+        } else {
+          // 파일 크기가 1MB를 초과하면 에러 발생
+          setNewFile(null);
+          setError("size-exhausted");
+        }
+      }
+
+      // 기존 이미지만 삭제
+      if (deletePhotoClicked) {
+        await updateDoc(doc(db, "messages", id), {
+          photo: deleteField(),
+        });
+
+        const photoRef = ref(storage, `messages/${user.uid}/${id}`);
+        await deleteObject(photoRef);
+      }
+
+      // 포스트가 수정되었음을 표시
+      setPostModified(true);
+
+      // 포스트 수정 상태를 5초 후에 초기화
+      setTimeout(() => {
+        setPostModified(false);
+      }, 5000);
+    } catch (error) {
+      // 에러 발생 시 포스트 수정 상태를 초기화
+      setPostModified(false);
+
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+        console.log(error.code);
+      } else {
+        setError("size-exhausted");
+        console.log(error);
+      }
+
+      // 메시지 및 파일 상태를 초기화
+      resetMessageSubmit();
+      resetPhotoSubmit();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -109,64 +200,69 @@ export default function ModifyMessage({
         keyboard={false}
         centered
       >
-        <Alert variant="light" className="m-0">
-          <Modal.Header className="d-flex justify-content-center align-items-center border-0 pb-2">
-            <Alert.Heading className="m-0 fs-2">Modify Message</Alert.Heading>
-          </Modal.Header>
-          <Modal.Body>
-            {error && (
-              <Alert variant="danger" className="m-0 mb-3 w-100">
-                <p>
-                  {error === "permission-denied" &&
-                    "Access Denied. You lack the necessary permissions to add/update a document."}
-                  {error === "not-found" &&
-                    "Document not found. The document you are trying to add/update does not exist."}
-                  {error === "resource-exhausted" &&
-                    "Resource Limit Exceeded. The operation could not be completed due to resource constraints."}
-                  {error === "invalid-argument" &&
-                    "Invalid Argument. Ensure that the data you are attempting to add/update is correctly formatted."}
-                  {error === "size-exhausted" &&
-                    "File size exceeds 1MB. Please choose a smaller file."}
-                  {error === "already exists" && "Data update failed."}
-                  {error === "storage/quota-exceeded" &&
-                    "Storage quota exceeded. Please free up space or try again later."}
-                  {error === "storage/unauthenticated" &&
-                    "User authentication required. Please sign in and try again."}
-                  {error === "storage/unauthorized" &&
-                    "Access denied. You lack the necessary permissions."}
-                  {error === "storage/object-not-found" &&
-                    "Unable to retrieve download URL. The requested file does not exist."}
-                  {(error === "unknown" || error === "unknown-error") &&
-                    "An unexpected error occurred. Please try again later."}
-                  {error === "auth/invalid-display-name" &&
-                    "Invalid display name. Please provide a valid name."}
-                  {error === "auth/invalid-photo-url" &&
-                    "Invalid photo URL. Please provide a valid URL for your profile picture."}
-                  {error === "auth/user-not-found" &&
-                    "User not found. Please verify your account and try again."}
-                  {error === "auth/user-disabled" &&
-                    "Account disabled. Please contact support to re-enable your account."}
-                  {error === "auth/too-many-requests" &&
-                    "Excessive attempts. Please retry after a brief delay."}
-                  {error === "auth/network-request-failed" &&
-                    "An unexpected network error has occurred. Kindly reopen the page."}
-                  {error === "auth/web-storage-unsupported" &&
-                    "Your browser does not support web storage."}
-                  {error === "auth/internal-error" &&
-                    "An internal error occurred. Please try again later or contact support for assistance."}
-                  {error === "auth/unknown" &&
-                    "An unexpected error occurred. Please try again or contact support."}
-                </p>
-              </Alert>
-            )}
-            <Form className="w-100" onSubmit={modifyMessage}>
+        <Form className="w-100" onSubmit={modifyMessage}>
+          <Alert variant="light" className="m-0">
+            <Modal.Header className="d-flex justify-content-center align-items-center border-0 pb-2">
+              <Alert.Heading className="m-0 fs-2">Modify Message</Alert.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              {postModified && !error && (
+                <Alert variant="success" className="m-0 mb-3 w-100">
+                  <p>Message successfully Modified!</p>
+                </Alert>
+              )}
+              {error && (
+                <Alert variant="danger" className="m-0 mb-3 w-100">
+                  <p>
+                    {error === "permission-denied" &&
+                      "Access Denied. You lack the necessary permissions to add/update a document."}
+                    {error === "not-found" &&
+                      "Document not found. The document you are trying to add/update does not exist."}
+                    {error === "resource-exhausted" &&
+                      "Resource Limit Exceeded. The operation could not be completed due to resource constraints."}
+                    {error === "invalid-argument" &&
+                      "Invalid Argument. Ensure that the data you are attempting to add/update is correctly formatted."}
+                    {error === "size-exhausted" &&
+                      "File size exceeds 1MB. Please choose a smaller file."}
+                    {error === "already exists" && "Data update failed."}
+                    {error === "storage/quota-exceeded" &&
+                      "Storage quota exceeded. Please free up space or try again later."}
+                    {error === "storage/unauthenticated" &&
+                      "User authentication required. Please sign in and try again."}
+                    {error === "storage/unauthorized" &&
+                      "Access denied. You lack the necessary permissions."}
+                    {error === "storage/object-not-found" &&
+                      "Unable to retrieve download URL. The requested file does not exist."}
+                    {(error === "unknown" || error === "unknown-error") &&
+                      "An unexpected error occurred. Please try again later."}
+                    {error === "auth/invalid-display-name" &&
+                      "Invalid display name. Please provide a valid name."}
+                    {error === "auth/invalid-photo-url" &&
+                      "Invalid photo URL. Please provide a valid URL for your profile picture."}
+                    {error === "auth/user-not-found" &&
+                      "User not found. Please verify your account and try again."}
+                    {error === "auth/user-disabled" &&
+                      "Account disabled. Please contact support to re-enable your account."}
+                    {error === "auth/too-many-requests" &&
+                      "Excessive attempts. Please retry after a brief delay."}
+                    {error === "auth/network-request-failed" &&
+                      "An unexpected network error has occurred. Kindly reopen the page."}
+                    {error === "auth/web-storage-unsupported" &&
+                      "Your browser does not support web storage."}
+                    {error === "auth/internal-error" &&
+                      "An internal error occurred. Please try again later or contact support for assistance."}
+                    {error === "auth/unknown" &&
+                      "An unexpected error occurred. Please try again or contact support."}
+                  </p>
+                </Alert>
+              )}
               <Form.Group>
                 <InputGroup className="d-flex">
                   <Form.Control
                     id="textarea"
                     as="textarea"
                     onChange={handleMessage}
-                    defaultValue={message}
+                    value={newMessage}
                     rows={5}
                     maxLength={180}
                     className="mb-3 w-75"
@@ -203,23 +299,52 @@ export default function ModifyMessage({
                             className="position-relative w-100 h-100 rounded-end"
                             title="Change Photo"
                           />
-                          <Button
-                            variant="danger"
-                            title="Delete Photo"
-                            className="position-absolute top-0 end-0"
-                            style={{ padding: "1px 5px" }}
+                          <Form.Label
+                            htmlFor="deletePhoto"
+                            className="m-0"
+                            onClick={handleDeletePhotoClicked}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              className="bi bi-trash3"
-                              viewBox="0 0 16 16"
+                            <Badge
+                              bg={deletePhotoClicked ? "danger" : "light"}
+                              title={
+                                deletePhotoClicked
+                                  ? "Delete Checked"
+                                  : "Delete Unchecked"
+                              }
+                              className="d-flex align-items-center position-absolute top-0 end-0 p-1 border border-2 border-danger"
+
+                              // onClick={deletePhoto}
                             >
-                              <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-                            </svg>
-                          </Button>
+                              {deletePhotoClicked ? (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-trash3-fill"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5" />
+                                </svg>
+                              ) : (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-trash3 text-danger"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                                </svg>
+                              )}
+                            </Badge>
+                          </Form.Label>
+                          <Form.Check
+                            id="deletePhoto"
+                            type="checkbox"
+                            className="d-none"
+                          ></Form.Check>
                         </div>
                       ) : (
                         <div
@@ -265,20 +390,24 @@ export default function ModifyMessage({
                   </Button>
                 </ButtonGroup>
               </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer className="border-0 pt-0 p-3">
-            <Button variant="primary w-100 m-0 mb-3">
-              {isLoading ? "Saving..." : "Save"}
-            </Button>
-            <Button
-              variant="outline-dark w-100 m-0"
-              onClick={handleCloseModifyModal}
-            >
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </Alert>
+            </Modal.Body>
+            <Modal.Footer className="border-0 pt-0 p-3">
+              <Button
+                type="submit"
+                variant="primary w-100 m-0 mb-3"
+                {...(!isNewMessage ? { disabled: true } : { disabled: false })}
+              >
+                {isLoading ? "Modifying..." : "Modify"}
+              </Button>
+              <Button
+                variant="outline-dark w-100 m-0"
+                onClick={handleCloseModifyModal}
+              >
+                Close
+              </Button>
+            </Modal.Footer>
+          </Alert>
+        </Form>
       </Modal>
     </div>
   );
