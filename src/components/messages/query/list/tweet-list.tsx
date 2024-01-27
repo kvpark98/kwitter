@@ -7,22 +7,11 @@ import {
   query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../../firebase";
-import Message from "./message";
+import { db } from "../../../../firebase";
+import Tweet, { ITweet } from "../detail/tweet";
 
-// 메시지 객체의 타입 정의
-export interface IMessage {
-  id: string;
-  timeAgo: string | undefined;
-  createdAt: string;
-  message: string;
-  photo?: string;
-  userId: string;
-  username: string;
-}
-
-export default function TimeLine() {
-  const [messages, setMessages] = useState<IMessage[]>([]);
+export default function TweetList() {
+  const [tweets, setTweets] = useState<ITweet[]>([]);
 
   // 메시지 생성일을 시간 경과 표시 형식으로 변환하는 함수
   const formatTimeAgo = (createdAt: string) => {
@@ -74,16 +63,16 @@ export default function TimeLine() {
 
     const fetchMessages = async () => {
       // Firestore 쿼리 생성
-      const messageQuery = query(
-        collection(db, "messages"),
+      const tweetQuery = query(
+        collection(db, "tweets"),
         orderBy("createdAt", "desc"),
         limit(25)
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 사용
-      unsubscribe = await onSnapshot(messageQuery, (snapshot) => {
+      unsubscribe = await onSnapshot(tweetQuery, (snapshot) => {
         // 스냅샷을 메시지 배열로 변환
-        const messages = snapshot.docs.map((doc) => {
+        const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
           const { createdAt, message, photo, userId, username } = doc.data();
 
@@ -99,7 +88,7 @@ export default function TimeLine() {
           };
         });
         // 상태 업데이트
-        setMessages(messages);
+        setTweets(tweets);
       });
     };
 
@@ -112,10 +101,10 @@ export default function TimeLine() {
   }, []);
 
   return (
-    messages.length !== 0 && (
+    tweets.length !== 0 && (
       <div className="w-100 overflow-y-scroll" style={{ maxHeight: "600px" }}>
-        {messages.map((message) => {
-          return <Message key={message.id} {...message} />;
+        {tweets.map((tweet) => {
+          return <Tweet key={tweet.id} {...tweet} />;
         })}
       </div>
     )
