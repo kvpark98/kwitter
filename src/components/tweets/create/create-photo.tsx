@@ -1,30 +1,23 @@
-import { Card, Form, InputGroup } from "react-bootstrap";
-import ModifyPhotoDeleteCheck from "./modify-photo-delete-check";
+import { Form, InputGroup } from "react-bootstrap";
 
-export interface ModifyPhotoProps {
-  newFileInputRef: React.RefObject<HTMLInputElement>;
-  newFile: File | null;
-  handleNewFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  photo?: string | undefined;
-  deletePhotoClicked: boolean;
-  handleDeletePhotoClicked: () => void;
+export interface CreatePhotoProps {
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  file: File | null;
+  handleFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function ModifyPhoto({
-  newFileInputRef,
-  newFile,
-  handleNewFile,
-  photo,
-  deletePhotoClicked,
-  handleDeletePhotoClicked,
-}: ModifyPhotoProps) {
+export default function CreatePhoto({
+  fileInputRef,
+  file,
+  handleFile,
+}: CreatePhotoProps) {
   return (
-    <InputGroup.Text className="w-25 mb-3 p-0">
+    <InputGroup.Text className="w-25 mb-4 p-0">
       <Form.Label
-        htmlFor="newFile"
-        className="btn btn-outline-secondary w-100 h-100 border-0 m-0 p-0"
+        htmlFor="file"
+        className="btn btn-outline-secondary w-100 h-100 border-0 m-0 rounded-end"
       >
-        {newFile ? (
+        {file ? (
           <div
             className="d-flex justify-content-center align-items-center h-100"
             title="Change Photo"
@@ -39,20 +32,6 @@ export default function ModifyPhoto({
             >
               <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
             </svg>
-          </div>
-        ) : photo ? (
-          <div className="w-100 h-100">
-            <Card.Img
-              variant="top"
-              src={photo}
-              alt="Photo"
-              className="position-relative w-100 h-100 rounded-end"
-              title="Change Photo"
-            />
-            <ModifyPhotoDeleteCheck
-              deletePhotoClicked={deletePhotoClicked}
-              handleDeletePhotoClicked={handleDeletePhotoClicked}
-            />
           </div>
         ) : (
           <div
@@ -73,10 +52,10 @@ export default function ModifyPhoto({
         )}
       </Form.Label>
       <Form.Control
-        onChange={handleNewFile}
-        ref={newFileInputRef}
+        onChange={handleFile}
+        ref={fileInputRef}
         type="file"
-        id="newFile"
+        id="file"
         className="d-none mb-4"
         accept="image/*"
       />

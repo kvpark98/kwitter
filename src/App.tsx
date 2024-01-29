@@ -165,6 +165,10 @@ const GlobalStyles = createGlobalStyle`
   .dropstart .dropdown-toggle::before {
     display: none
   }
+  .card-img-top {
+    border-top-left-radius: 0;
+    border-top-right-radius: var(--bs-card-inner-border-radius);
+  }
 `;
 
 function App() {

@@ -1,6 +1,6 @@
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import ModifyTweetSuccess from "../../alert/success/tweets/modify/modify-tweet-success";
-import ModifyTweetErrors from "../../alert/error/post/modify/modify-tweet-errors";
+import ModifyTweetErrors from "../../alert/error/tweets/modify/modify-tweet-errors";
 import ModifyReset from "./modify-reset";
 import ModifyInputGroup from "./modify-input-group";
 

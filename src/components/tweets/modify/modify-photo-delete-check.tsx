@@ -10,7 +10,7 @@ export default function ModifyPhotoDeleteCheck({
   handleDeletePhotoClicked,
 }: ModifyPhotoDeleteCheckProps) {
   return (
-    <div>
+    <div style={{ height: 0 }}>
       <Form.Label
         htmlFor="deletePhoto"
         className="m-0"

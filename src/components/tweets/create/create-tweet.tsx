@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { auth, db, storage } from "../../../firebase";
 import { FirebaseError } from "firebase/app";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import CreateTweetErrors from "../../alert/error/post/create/create-tweet-errors";
-import CreateTweetSuccess from "../../alert/success/tweets/create/create-tweet-success";
 import CreateTweetForm from "./create-tweet-form";
 
 export default function CreateTweet() {
@@ -35,6 +33,8 @@ export default function CreateTweet() {
       setIsMessage(false);
     }
   };
+
+  console.log("fileInputRef", fileInputRef);
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetCreated(false);
@@ -128,6 +128,10 @@ export default function CreateTweet() {
         }
       }
 
+      // 메시지 및 파일 상태를 초기화
+      resetMessageSubmit();
+      resetPhotoSubmit();
+
       // 트윗이 등록되었음을 표시
       setTweetCreated(true);
 
@@ -135,10 +139,6 @@ export default function CreateTweet() {
       setTimeout(() => {
         setTweetCreated(false);
       }, 5000);
-
-      // 메시지 및 파일 상태를 초기화
-      resetMessageSubmit();
-      resetPhotoSubmit();
     } catch (error) {
       // 에러 발생 시 트윗 등록 상태를 초기화
       setTweetCreated(false);
@@ -166,11 +166,9 @@ export default function CreateTweet() {
 
   return (
     <div className="w-100">
-      <h1 className="fs-2 text-center mb-4">Create Tweet</h1>
-      {tweetCreated && !error && <CreateTweetSuccess />}
-      {error && <CreateTweetErrors error={error} />}
       <CreateTweetForm
         isLoading={isLoading}
+        error={error}
         fileInputRef={fileInputRef}
         message={message}
         handleMessage={handleMessage}
@@ -180,6 +178,7 @@ export default function CreateTweet() {
         resetMessageButton={resetMessageButton}
         resetPhotoButton={resetPhotoButton}
         createTweet={createTweet}
+        tweetCreated={tweetCreated}
       />
     </div>
   );

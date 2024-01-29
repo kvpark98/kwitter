@@ -17,9 +17,7 @@ export default function TweetBody({
         <Card.Title className="fw-bold mb-3">{username}</Card.Title>
         <Card.Text>{message}</Card.Text>
       </Card.Body>
-      {photo && (
-        <Card.Img variant="top" src={photo} className="w-25 h-25 rounded-end" />
-      )}
+      {photo && <Card.Img variant="top" src={photo} className="w-25 h-25" />}
     </div>
   );
 }

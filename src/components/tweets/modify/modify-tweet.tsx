@@ -60,6 +60,10 @@ export default function ModifyTweet({
     }
   };
 
+  console.log("newFile", newFile);
+  console.log("photo", photo);
+  console.log("newFileInputRef", newFileInputRef);
+
   const handleNewFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetModified(false);
 
@@ -166,6 +170,10 @@ export default function ModifyTweet({
         await deleteObject(photoRef);
       }
 
+      // 파일 상태를 초기화
+      resetPhotoSubmit();
+      setDeletePhotoClicked(false);
+
       // 트윗이 수정되었음을 표시
       setTweetModified(true);
 
@@ -173,9 +181,6 @@ export default function ModifyTweet({
       setTimeout(() => {
         setTweetModified(false);
       }, 5000);
-
-      // 파일 상태를 초기화
-      resetPhotoSubmit();
     } catch (error) {
       // 에러 발생 시 트윗 수정 상태를 초기화
       setTweetModified(false);
