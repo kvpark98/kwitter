@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { auth, db, storage } from "../../../firebase";
 import { FirebaseError } from "firebase/app";
-import { deleteField, doc, updateDoc } from "firebase/firestore";
 import {
+  FirestoreError,
+  deleteField,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import {
+  StorageError,
   deleteObject,
   getDownloadURL,
   ref,
@@ -28,7 +34,8 @@ export default function ModifyTweet({
 }: ModifyTweetProps) {
   const user = auth.currentUser;
 
-  const newFileInputRef = React.createRef<HTMLInputElement>();
+  const newFileInputRef = useRef<HTMLInputElement>(null);
+  console.log("newFileInputRef", newFileInputRef.current?.value);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -60,10 +67,6 @@ export default function ModifyTweet({
     }
   };
 
-  console.log("newFile", newFile);
-  console.log("photo", photo);
-  console.log("newFileInputRef", newFileInputRef);
-
   const handleNewFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetModified(false);
 
@@ -75,6 +78,7 @@ export default function ModifyTweet({
       if (selectedFile.size <= 1024 * 1024) {
         setNewFile(selectedFile);
         setError("");
+        console.log("newFileInputRef", newFileInputRef.current?.value);
       } else {
         setNewFile(null);
         if (newFileInputRef.current) {
@@ -174,6 +178,10 @@ export default function ModifyTweet({
       resetPhotoSubmit();
       setDeletePhotoClicked(false);
 
+      setTimeout(() => {
+        console.log("newFileInputRef", newFileInputRef.current?.value);
+      }, 1000);
+
       // 트윗이 수정되었음을 표시
       setTweetModified(true);
 
@@ -186,6 +194,12 @@ export default function ModifyTweet({
       setTweetModified(false);
 
       if (error instanceof FirebaseError) {
+        setError(error.code);
+        console.log(error.code);
+      } else if (error instanceof FirestoreError) {
+        setError(error.code);
+        console.log(error.code);
+      } else if (error instanceof StorageError) {
         setError(error.code);
         console.log(error.code);
       } else {
