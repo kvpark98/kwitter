@@ -74,6 +74,7 @@ export default function ModifyTweet({
 
     if (files && files.length === 1) {
       const selectedFile = files[0];
+      setDeletePhotoClicked(false);
 
       if (selectedFile.size <= 1024 * 1024) {
         setNewFile(selectedFile);

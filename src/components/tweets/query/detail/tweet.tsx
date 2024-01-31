@@ -1,15 +1,15 @@
 import { Card } from "react-bootstrap";
 import { useState } from "react";
 import { FirebaseError } from "firebase/app";
-import { deleteDoc, doc } from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
+import { FirestoreError, deleteDoc, doc } from "firebase/firestore";
+import { StorageError, deleteObject, ref } from "firebase/storage";
 import { auth, db, storage } from "../../../../firebase";
 import ModifyTweet from "../../modify/modify-tweet";
 import TweetBody from "./tweet-body";
 import TweetFooter from "./tweet-footer";
 import TweetDeleteModal from "../../../modals/delete/tweet-delete-modal";
 
-export interface Tweet {
+export interface ITweet {
   id: string;
   timeAgo: string | undefined;
   createdAt: string;
@@ -26,7 +26,7 @@ export default function Tweet({
   photo,
   userId,
   username,
-}: Tweet) {
+}: ITweet) {
   const user = auth.currentUser;
 
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +38,17 @@ export default function Tweet({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleShowDeleteModal = () => setShowDeleteModal(true);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
+
+  const [showDeleteErrorsModal, setShowDeleteErrorsModal] = useState(false);
+  const handleShowDeleteErrorsModal = () => setShowDeleteErrorsModal(true);
+  const handleCloseDeleteErrorsModal = () => setShowDeleteErrorsModal(false);
+  const handleDeleteTweet = () => {
+    setShowDeleteErrorsModal(false);
+    deleteTweet();
+    if (error) {
+      handleShowDeleteErrorsModal();
+    }
+  };
 
   const [error, setError] = useState("");
 
@@ -59,10 +70,21 @@ export default function Tweet({
         await deleteObject(photoRef);
       }
     } catch (error) {
+      handleShowDeleteErrorsModal();
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("FirebaseError", error.code);
+      } else if (error instanceof FirestoreError) {
+        setError(error.code);
+        console.log("FirestoreError", error.code);
+      } else if (error instanceof StorageError) {
+        setError(error.code);
+        console.log("StorageError", error.code);
+      } else {
+        setError("size-exhausted");
+        console.log(error);
       }
+      console.log("showDeleteErrorsModal", showDeleteErrorsModal);
     } finally {
       setIsLoading(false);
     }
@@ -93,9 +115,12 @@ export default function Tweet({
         />
       )}
       <TweetDeleteModal
+        error={error}
         showDeleteModal={showDeleteModal}
         handleCloseDeleteModal={handleCloseDeleteModal}
-        deleteTweet={deleteTweet}
+        handleDeleteTweet={handleDeleteTweet}
+        showDeleteErrorsModal={showDeleteErrorsModal}
+        handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}
       />
     </div>
   );
