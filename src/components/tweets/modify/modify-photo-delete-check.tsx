@@ -1,27 +1,27 @@
 import { Badge, Form } from "react-bootstrap";
 
 export interface ModifyPhotoDeleteCheckProps {
-  deletePhotoClicked: boolean;
-  handleDeletePhotoClicked: () => void;
+  deletePhotoChecked: boolean;
+  handleDeletePhotoChecked: () => void;
 }
 
 export default function ModifyPhotoDeleteCheck({
-  deletePhotoClicked,
-  handleDeletePhotoClicked,
+  deletePhotoChecked,
+  handleDeletePhotoChecked,
 }: ModifyPhotoDeleteCheckProps) {
   return (
     <div style={{ height: 0 }}>
       <Form.Label
         htmlFor="deletePhoto"
         className="m-0"
-        onClick={handleDeletePhotoClicked}
+        onClick={handleDeletePhotoChecked}
       >
         <Badge
-          bg={deletePhotoClicked ? "danger" : "light"}
-          title={deletePhotoClicked ? "Delete Checked" : "Delete Unchecked"}
+          bg={deletePhotoChecked ? "danger" : "light"}
+          title={deletePhotoChecked ? "Delete Checked" : "Delete Unchecked"}
           className="d-flex align-items-center position-absolute top-0 end-0 p-1 border border-2 border-danger"
         >
-          {deletePhotoClicked ? (
+          {deletePhotoChecked ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"

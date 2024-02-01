@@ -14,8 +14,8 @@ export interface ModifyTweetFormProps {
   newFile: File | null;
   handleNewFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   photo: string | undefined;
-  deletePhotoClicked: boolean;
-  handleDeletePhotoClicked: () => void;
+  deletePhotoChecked: boolean;
+  handleDeletePhotoChecked: () => void;
   resetMessageButton: () => void;
   resetPhotoButton: () => void;
   modifyTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -33,8 +33,8 @@ export default function ModifyTweetForm({
   newFile,
   handleNewFile,
   photo,
-  deletePhotoClicked,
-  handleDeletePhotoClicked,
+  deletePhotoChecked,
+  handleDeletePhotoChecked,
   resetMessageButton,
   resetPhotoButton,
   modifyTweet,
@@ -57,8 +57,8 @@ export default function ModifyTweetForm({
             newFile={newFile}
             handleNewFile={handleNewFile}
             photo={photo}
-            deletePhotoClicked={deletePhotoClicked}
-            handleDeletePhotoClicked={handleDeletePhotoClicked}
+            deletePhotoChecked={deletePhotoChecked}
+            handleDeletePhotoChecked={handleDeletePhotoChecked}
           />
           <ModifyReset
             resetMessageButton={resetMessageButton}

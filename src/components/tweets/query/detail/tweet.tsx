@@ -40,15 +40,11 @@ export default function Tweet({
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
   const [showDeleteErrorsModal, setShowDeleteErrorsModal] = useState(false);
-  const handleShowDeleteErrorsModal = () => setShowDeleteErrorsModal(true);
-  const handleCloseDeleteErrorsModal = () => setShowDeleteErrorsModal(false);
-  const handleDeleteTweet = () => {
-    setShowDeleteErrorsModal(false);
-    deleteTweet();
-    if (error) {
-      handleShowDeleteErrorsModal();
-    }
+  const handleShowDeleteErrorsModal = () => {
+    handleCloseDeleteModal();
+    setShowDeleteErrorsModal(true);
   };
+  const handleCloseDeleteErrorsModal = () => setShowDeleteErrorsModal(false);
 
   const [error, setError] = useState("");
 
@@ -61,16 +57,15 @@ export default function Tweet({
     try {
       setIsLoading(true);
 
-      // Firestore db에서 트윗 문서 삭제
-      await deleteDoc(doc(db, "tweets", id));
-
       // 이미지가 있는 경우 Storage에서 이미지 삭제
       if (photo) {
         const photoRef = ref(storage, `tweets/${user.uid}/${id}`);
         await deleteObject(photoRef);
       }
+
+      // Firestore db에서 트윗 문서 삭제
+      await deleteDoc(doc(db, "tweets", id));
     } catch (error) {
-      handleShowDeleteErrorsModal();
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("FirebaseError", error.code);
@@ -84,7 +79,7 @@ export default function Tweet({
         setError("size-exhausted");
         console.log(error);
       }
-      console.log("showDeleteErrorsModal", showDeleteErrorsModal);
+      handleShowDeleteErrorsModal();
     } finally {
       setIsLoading(false);
     }
@@ -115,10 +110,11 @@ export default function Tweet({
         />
       )}
       <TweetDeleteModal
+        isLoading={isLoading}
         error={error}
         showDeleteModal={showDeleteModal}
         handleCloseDeleteModal={handleCloseDeleteModal}
-        handleDeleteTweet={handleDeleteTweet}
+        deleteTweet={deleteTweet}
         showDeleteErrorsModal={showDeleteErrorsModal}
         handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}
       />

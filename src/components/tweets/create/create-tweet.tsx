@@ -19,7 +19,6 @@ export default function CreateTweet() {
   const user = auth.currentUser;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  console.log("fileInputRef", fileInputRef.current?.value);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,7 +55,6 @@ export default function CreateTweet() {
       if (selectedFile.size <= 1024 * 1024) {
         setFile(selectedFile);
         setError("");
-        console.log("fileInputRef", fileInputRef.current?.value);
       } else {
         setFile(null);
         if (fileInputRef.current) {
@@ -141,9 +139,6 @@ export default function CreateTweet() {
       // 메시지 및 파일 상태를 초기화
       resetMessageSubmit();
       resetPhotoSubmit();
-      setTimeout(() => {
-        console.log("fileInputRef", fileInputRef.current?.value);
-      }, 1000);
 
       // 트윗이 등록되었음을 표시
       setTweetCreated(true);
@@ -158,13 +153,13 @@ export default function CreateTweet() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("FirebaseError", error.code);
       } else if (error instanceof FirestoreError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("FirestoreError", error.code);
       } else if (error instanceof StorageError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("StorageError", error.code);
       } else {
         setError("size-exhausted");
         console.log(error);

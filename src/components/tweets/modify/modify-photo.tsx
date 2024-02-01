@@ -6,8 +6,8 @@ export interface ModifyPhotoProps {
   newFile: File | null;
   handleNewFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   photo?: string | undefined;
-  deletePhotoClicked: boolean;
-  handleDeletePhotoClicked: () => void;
+  deletePhotoChecked: boolean;
+  handleDeletePhotoChecked: () => void;
 }
 
 export default function ModifyPhoto({
@@ -15,8 +15,8 @@ export default function ModifyPhoto({
   newFile,
   handleNewFile,
   photo,
-  deletePhotoClicked,
-  handleDeletePhotoClicked,
+  deletePhotoChecked,
+  handleDeletePhotoChecked,
 }: ModifyPhotoProps) {
   return (
     <InputGroup.Text className="w-25 mb-3 p-0">
@@ -50,8 +50,8 @@ export default function ModifyPhoto({
               title="Change Photo"
             />
             <ModifyPhotoDeleteCheck
-              deletePhotoClicked={deletePhotoClicked}
-              handleDeletePhotoClicked={handleDeletePhotoClicked}
+              deletePhotoChecked={deletePhotoChecked}
+              handleDeletePhotoChecked={handleDeletePhotoChecked}
             />
           </div>
         ) : (

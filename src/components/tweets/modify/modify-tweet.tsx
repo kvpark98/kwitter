@@ -35,7 +35,6 @@ export default function ModifyTweet({
   const user = auth.currentUser;
 
   const newFileInputRef = useRef<HTMLInputElement>(null);
-  console.log("newFileInputRef", newFileInputRef.current?.value);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,12 +46,12 @@ export default function ModifyTweet({
 
   const [tweetModified, setTweetModified] = useState(false);
 
-  const [deletePhotoClicked, setDeletePhotoClicked] = useState(false);
+  const [deletePhotoChecked, setDeletePhotoChecked] = useState(false);
 
   const [error, setError] = useState("");
 
-  const handleDeletePhotoClicked = () => {
-    setDeletePhotoClicked((current) => !current);
+  const handleDeletePhotoChecked = () => {
+    setDeletePhotoChecked((current) => !current);
   };
 
   const handleNewMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -74,12 +73,11 @@ export default function ModifyTweet({
 
     if (files && files.length === 1) {
       const selectedFile = files[0];
-      setDeletePhotoClicked(false);
+      setDeletePhotoChecked(false);
 
       if (selectedFile.size <= 1024 * 1024) {
         setNewFile(selectedFile);
         setError("");
-        console.log("newFileInputRef", newFileInputRef.current?.value);
       } else {
         setNewFile(null);
         if (newFileInputRef.current) {
@@ -129,12 +127,6 @@ export default function ModifyTweet({
     try {
       setIsLoading(true);
 
-      // Firestore의 트윗 문서 업데이트
-      await updateDoc(doc(db, "tweets", id), {
-        message: newMessage,
-        createdAt: Date.now(),
-      });
-
       // 새로운 파일이 있는 경우
       if (newFile) {
         // 이전 이미지가 있는 경우
@@ -166,7 +158,7 @@ export default function ModifyTweet({
       }
 
       // 기존 이미지만 삭제
-      if (deletePhotoClicked) {
+      if (deletePhotoChecked) {
         await updateDoc(doc(db, "tweets", id), {
           photo: deleteField(),
         });
@@ -175,13 +167,15 @@ export default function ModifyTweet({
         await deleteObject(photoRef);
       }
 
+      // Firestore의 트윗 문서 업데이트
+      await updateDoc(doc(db, "tweets", id), {
+        message: newMessage,
+        createdAt: Date.now(),
+      });
+
       // 파일 상태를 초기화
       resetPhotoSubmit();
-      setDeletePhotoClicked(false);
-
-      setTimeout(() => {
-        console.log("newFileInputRef", newFileInputRef.current?.value);
-      }, 1000);
+      setDeletePhotoChecked(false);
 
       // 트윗이 수정되었음을 표시
       setTweetModified(true);
@@ -196,13 +190,13 @@ export default function ModifyTweet({
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("FirebaseError", error.code);
       } else if (error instanceof FirestoreError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("FirestoreError", error.code);
       } else if (error instanceof StorageError) {
         setError(error.code);
-        console.log(error.code);
+        console.log("StorageError", error.code);
       } else {
         setError("size-exhausted");
         console.log(error);
@@ -239,8 +233,8 @@ export default function ModifyTweet({
         newFile={newFile}
         handleNewFile={handleNewFile}
         photo={photo}
-        deletePhotoClicked={deletePhotoClicked}
-        handleDeletePhotoClicked={handleDeletePhotoClicked}
+        deletePhotoChecked={deletePhotoChecked}
+        handleDeletePhotoChecked={handleDeletePhotoChecked}
         resetMessageButton={resetMessageButton}
         resetPhotoButton={resetPhotoButton}
         modifyTweet={modifyTweet}

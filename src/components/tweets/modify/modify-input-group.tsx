@@ -9,8 +9,8 @@ export interface ModifyInputGroupProps {
   newFile: File | null;
   handleNewFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   photo?: string | undefined;
-  deletePhotoClicked: boolean;
-  handleDeletePhotoClicked: () => void;
+  deletePhotoChecked: boolean;
+  handleDeletePhotoChecked: () => void;
 }
 
 export default function ModifyInputGroup({
@@ -20,8 +20,8 @@ export default function ModifyInputGroup({
   newFile,
   handleNewFile,
   photo,
-  deletePhotoClicked,
-  handleDeletePhotoClicked,
+  deletePhotoChecked,
+  handleDeletePhotoChecked,
 }: ModifyInputGroupProps) {
   return (
     <Form.Group>
@@ -35,8 +35,8 @@ export default function ModifyInputGroup({
           newFile={newFile}
           handleNewFile={handleNewFile}
           photo={photo}
-          deletePhotoClicked={deletePhotoClicked}
-          handleDeletePhotoClicked={handleDeletePhotoClicked}
+          deletePhotoChecked={deletePhotoChecked}
+          handleDeletePhotoChecked={handleDeletePhotoChecked}
         />
       </InputGroup>
     </Form.Group>
