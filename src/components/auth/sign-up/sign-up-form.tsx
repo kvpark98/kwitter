@@ -1,24 +1,33 @@
-import { Alert, Button, Form } from "react-bootstrap";
-import { Switcher, Wrapper } from "../../styles/auth-components";
-import { Link } from "react-router-dom";
+import { Alert, Form } from "react-bootstrap";
+import { Wrapper } from "../../styles/auth-components";
 import SignUpErrors from "../../alert/error/auth/sign-up/sign-up-errors";
 import SignUpSocialSignIn from "./sign-up-social-sign-in";
+import SignUpName from "./sign-up-name";
+import SignUpEmail from "./sign-up-email";
+import SignUpPassword from "./sign-up-password";
+import SignUpPasswordConfirm from "./sign-up-password-confirm";
+import SignUpButton from "./sign-up-button";
+import SignUpSwitcher from "./sign-up-switcher";
 
 export interface SignUpFormProps {
   isLoading: boolean;
   error: string;
+  nameInputRef: React.RefObject<HTMLInputElement>;
   name: string;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isName: boolean;
   nameErrorMessage: string;
+  emailInputRef: React.RefObject<HTMLInputElement>;
   email: string;
   handleEmail: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isEmail: boolean;
   emailErrorMessage: string;
+  passwordInputRef: React.RefObject<HTMLInputElement>;
   password: string;
   handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
   passwordErrorMessage: string;
+  passwordConfirmInputRef: React.RefObject<HTMLInputElement>;
   passwordConfirm: string;
   handlePasswordConfirm: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPasswordConfirm: boolean;
@@ -31,18 +40,22 @@ export interface SignUpFormProps {
 export default function SignUpForm({
   isLoading,
   error,
+  nameInputRef,
   name,
   handleName,
   isName,
   nameErrorMessage,
+  emailInputRef,
   email,
   handleEmail,
   isEmail,
   emailErrorMessage,
+  passwordInputRef,
   password,
   handlePassword,
   isPassword,
   passwordErrorMessage,
+  passwordConfirmInputRef,
   passwordConfirm,
   handlePasswordConfirm,
   isPasswordConfirm,
@@ -53,99 +66,52 @@ export default function SignUpForm({
 }: SignUpFormProps) {
   return (
     <Wrapper>
-      <div className="mb-2">
-        <h1 className="fs-2">Sign Up</h1>
-      </div>
+      <h1 className="fs-2 mb-2">Sign Up</h1>
       {error && <SignUpErrors error={error} />}
       <Alert variant="light" className="mt-3 px-4 py-4 w-100">
         <Form onSubmit={signUp} className="d-flex flex-column row-gap-3">
-          <Form.Group>
-            <Form.Label htmlFor="name">Username</Form.Label>
-            <Form.Control
-              className="border-none mt-1 mb-1"
-              onChange={handleName}
-              onKeyDown={noSpace}
-              id="name"
-              name="name"
-              value={name}
-              type="text"
-              maxLength={20}
-            />
-            {!isName && nameErrorMessage && (
-              <div className="mt-2 text-danger">{nameErrorMessage}</div>
-            )}
-          </Form.Group>
-          <Form.Group>
-            <Form.Label htmlFor="email">Email Address</Form.Label>
-            <Form.Control
-              className="border-none mt-1 mb-1"
-              onChange={handleEmail}
-              onKeyDown={noSpace}
-              id="email"
-              name="email"
-              value={email}
-              type="text"
-              maxLength={50}
-            />
-            {!isEmail && emailErrorMessage && (
-              <div className="mt-2 text-danger">{emailErrorMessage}</div>
-            )}
-          </Form.Group>
-          <Form.Group>
-            <Form.Label htmlFor="password">Password</Form.Label>
-            <Form.Control
-              className="border-none mt-1 mb-1"
-              onChange={handlePassword}
-              onKeyDown={noSpace}
-              id="password"
-              name="password"
-              value={password}
-              type="password"
-              autoComplete="new-password"
-              maxLength={20}
-            />
-            {!isPassword && passwordErrorMessage && (
-              <div className="mt-2 text-danger">{passwordErrorMessage}</div>
-            )}
-          </Form.Group>
-          <Form.Group>
-            <Form.Label htmlFor="passwordConfirm">Password Confirm</Form.Label>
-            <Form.Control
-              className="border-none mt-1 mb-1"
-              onChange={handlePasswordConfirm}
-              onKeyDown={noSpace}
-              id="passwordConfirm"
-              name="passwordConfirm"
-              value={passwordConfirm}
-              type="password"
-              autoComplete="new-password"
-              maxLength={20}
-              {...(!isPassword ? { disabled: true } : { disabled: false })}
-            />
-            {!isPasswordConfirm && passwordConfirmErrorMessage && (
-              <div className="mt-2 text-danger">
-                {passwordConfirmErrorMessage}
-              </div>
-            )}
-          </Form.Group>
-          <Button
-            type="submit"
-            className="mt-2 fw-bold"
-            {...(!isName || !isEmail || !isPassword || !isPasswordConfirm
-              ? { disabled: true }
-              : { disabled: false })}
-          >
-            {isLoading ? "Loading..." : "Sign Up"}
-          </Button>
+          <SignUpName
+            nameInputRef={nameInputRef}
+            name={name}
+            handleName={handleName}
+            isName={isName}
+            nameErrorMessage={nameErrorMessage}
+            noSpace={noSpace}
+          />
+          <SignUpEmail
+            emailInputRef={emailInputRef}
+            email={email}
+            handleEmail={handleEmail}
+            isEmail={isEmail}
+            emailErrorMessage={emailErrorMessage}
+            noSpace={noSpace}
+          />
+          <SignUpPassword
+            passwordInputRef={passwordInputRef}
+            password={password}
+            handlePassword={handlePassword}
+            isPassword={isPassword}
+            passwordErrorMessage={passwordErrorMessage}
+            noSpace={noSpace}
+          />
+          <SignUpPasswordConfirm
+            passwordConfirmInputRef={passwordConfirmInputRef}
+            passwordConfirm={passwordConfirm}
+            handlePasswordConfirm={handlePasswordConfirm}
+            isPassword={isPassword}
+            isPasswordConfirm={isPasswordConfirm}
+            passwordConfirmErrorMessage={passwordConfirmErrorMessage}
+            noSpace={noSpace}
+          />
+          <SignUpButton
+            isLoading={isLoading}
+            isName={isName}
+            isEmail={isEmail}
+            isPassword={isPassword}
+            isPasswordConfirm={isPasswordConfirm}
+          />
         </Form>
-        <Switcher className="d-flex justify-content-between">
-          <Button onClick={reset} type="button" variant="outline-info">
-            Reset
-          </Button>
-          <Link to="/sign-in" className="btn btn-outline-success">
-            Sign In
-          </Link>
-        </Switcher>
+        <SignUpSwitcher reset={reset} />
       </Alert>
       <SignUpSocialSignIn />
     </Wrapper>

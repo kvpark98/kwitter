@@ -3,7 +3,7 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
@@ -12,6 +12,11 @@ import Footer from "../../components/header&footer/footer";
 import SignUpForm from "../../components/auth/sign-up/sign-up-form";
 
 export default function SignUp() {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmInputRef = useRef<HTMLInputElement>(null);
+
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -48,19 +53,17 @@ export default function SignUp() {
         );
         setIsName(false);
 
-        document.getElementById("name")?.classList.add("form-control-invalid");
+        nameInputRef.current?.classList.add("form-control-invalid");
       } else {
         setIsName(true);
 
-        document
-          .getElementById("name")
-          ?.classList.remove("form-control-invalid");
+        nameInputRef.current?.classList.remove("form-control-invalid");
       }
     } else {
       setNameErrorMessage("");
       setIsName(false);
 
-      document.getElementById("name")?.classList.remove("form-control-invalid");
+      nameInputRef.current?.classList.remove("form-control-invalid");
     }
   };
 
@@ -77,21 +80,17 @@ export default function SignUp() {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
 
-        document.getElementById("email")?.classList.add("form-control-invalid");
+        emailInputRef.current?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
 
-        document
-          .getElementById("email")
-          ?.classList.remove("form-control-invalid");
+        emailInputRef.current?.classList.remove("form-control-invalid");
       }
     } else {
       setEmailErrorMessage("");
       setIsEmail(false);
 
-      document
-        .getElementById("email")
-        ?.classList.remove("form-control-invalid");
+      emailInputRef.current?.classList.remove("form-control-invalid");
     }
   };
 
@@ -115,19 +114,15 @@ export default function SignUp() {
           setIsPassword(false);
           setIsPasswordConfirm(false);
 
-          document
-            .getElementById("password")
-            ?.classList.add("form-control-invalid");
-          document
-            .getElementById("password")
-            ?.classList.remove("form-control-valid");
+          passwordInputRef.current?.classList.add("form-control-invalid");
+          passwordInputRef.current?.classList.remove("form-control-valid");
 
-          document
-            .getElementById("passwordConfirm")
-            ?.classList.add("form-control-invalid");
-          document
-            .getElementById("passwordConfirm")
-            ?.classList.remove("form-control-valid");
+          passwordConfirmInputRef.current?.classList.add(
+            "form-control-invalid"
+          );
+          passwordConfirmInputRef.current?.classList.remove(
+            "form-control-valid"
+          );
         } else {
           setPasswordErrorMessage(
             "Please enter at least 8 characters including numbers, English, and special characters."
@@ -136,19 +131,15 @@ export default function SignUp() {
           setIsPassword(false);
           setIsPasswordConfirm(false);
 
-          document
-            .getElementById("password")
-            ?.classList.add("form-control-invalid");
-          document
-            .getElementById("password")
-            ?.classList.remove("form-control-valid");
+          passwordInputRef.current?.classList.add("form-control-invalid");
+          passwordInputRef.current?.classList.remove("form-control-valid");
 
-          document
-            .getElementById("passwordConfirm")
-            ?.classList.remove("form-control-invalid");
-          document
-            .getElementById("passwordConfirm")
-            ?.classList.remove("form-control-valid");
+          passwordConfirmInputRef.current?.classList.remove(
+            "form-control-invalid"
+          );
+          passwordConfirmInputRef.current?.classList.remove(
+            "form-control-valid"
+          );
         }
       } else {
         if (passwordConfirm) {
@@ -157,53 +148,41 @@ export default function SignUp() {
             setIsPassword(true);
             setIsPasswordConfirm(false);
 
-            document
-              .getElementById("password")
-              ?.classList.remove("form-control-invalid");
-            document
-              .getElementById("password")
-              ?.classList.add("form-control-valid");
+            passwordInputRef.current?.classList.remove("form-control-invalid");
+            passwordInputRef.current?.classList.add("form-control-valid");
 
-            document
-              .getElementById("passwordConfirm")
-              ?.classList.add("form-control-invalid");
-            document
-              .getElementById("passwordConfirm")
-              ?.classList.remove("form-control-valid");
+            passwordConfirmInputRef.current?.classList.add(
+              "form-control-invalid"
+            );
+            passwordConfirmInputRef.current?.classList.remove(
+              "form-control-valid"
+            );
           } else {
             setPasswordConfirmErrorMessage("");
             setIsPassword(true);
             setIsPasswordConfirm(true);
 
-            document
-              .getElementById("password")
-              ?.classList.remove("form-control-invalid");
-            document
-              .getElementById("password")
-              ?.classList.add("form-control-valid");
+            passwordInputRef.current?.classList.remove("form-control-invalid");
+            passwordInputRef.current?.classList.add("form-control-valid");
 
-            document
-              .getElementById("passwordConfirm")
-              ?.classList.remove("form-control-invalid");
-            document
-              .getElementById("passwordConfirm")
-              ?.classList.add("form-control-valid");
+            passwordConfirmInputRef.current?.classList.remove(
+              "form-control-invalid"
+            );
+            passwordConfirmInputRef.current?.classList.add(
+              "form-control-valid"
+            );
           }
         } else {
           setPasswordConfirmErrorMessage("");
           setIsPassword(true);
           setIsPasswordConfirm(false);
 
-          document
-            .getElementById("password")
-            ?.classList.remove("form-control-invalid");
-          document
-            .getElementById("password")
-            ?.classList.add("form-control-valid");
+          passwordInputRef.current?.classList.remove("form-control-invalid");
+          passwordInputRef.current?.classList.add("form-control-valid");
 
-          document
-            .getElementById("passwordConfirm")
-            ?.classList.remove("form-control-invalid");
+          passwordConfirmInputRef.current?.classList.remove(
+            "form-control-invalid"
+          );
         }
       }
     } else {
@@ -213,38 +192,24 @@ export default function SignUp() {
         setIsPassword(false);
         setIsPasswordConfirm(false);
 
-        document
-          .getElementById("password")
-          ?.classList.remove("form-control-invalid");
-        document
-          .getElementById("password")
-          ?.classList.remove("form-control-valid");
+        passwordInputRef.current?.classList.remove("form-control-invalid");
+        passwordInputRef.current?.classList.remove("form-control-valid");
 
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.add("form-control-invalid");
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.remove("form-control-valid");
+        passwordConfirmInputRef.current?.classList.add("form-control-invalid");
+        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
       } else {
         setPasswordErrorMessage("");
         setPasswordConfirmErrorMessage("");
         setIsPassword(false);
         setIsPasswordConfirm(false);
 
-        document
-          .getElementById("password")
-          ?.classList.remove("form-control-invalid");
-        document
-          .getElementById("password")
-          ?.classList.remove("form-control-valid");
+        passwordInputRef.current?.classList.remove("form-control-invalid");
+        passwordInputRef.current?.classList.remove("form-control-valid");
 
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.remove("form-control-invalid");
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.remove("form-control-valid");
+        passwordConfirmInputRef.current?.classList.remove(
+          "form-control-invalid"
+        );
+        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
       }
     }
   };
@@ -261,32 +226,22 @@ export default function SignUp() {
         setPasswordConfirmErrorMessage("The password does not match.");
         setIsPasswordConfirm(false);
 
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.add("form-control-invalid");
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.remove("form-control-valid");
+        passwordConfirmInputRef.current?.classList.add("form-control-invalid");
+        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
       } else {
         setIsPasswordConfirm(true);
 
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.remove("form-control-invalid");
-        document
-          .getElementById("passwordConfirm")
-          ?.classList.add("form-control-valid");
+        passwordConfirmInputRef.current?.classList.remove(
+          "form-control-invalid"
+        );
+        passwordConfirmInputRef.current?.classList.add("form-control-valid");
       }
     } else {
       setPasswordConfirmErrorMessage("");
       setIsPasswordConfirm(false);
 
-      document
-        .getElementById("passwordConfirm")
-        ?.classList.remove("form-control-invalid");
-      document
-        .getElementById("passwordConfirm")
-        ?.classList.remove("form-control-valid");
+      passwordConfirmInputRef.current?.classList.remove("form-control-invalid");
+      passwordConfirmInputRef.current?.classList.remove("form-control-valid");
     }
   };
 
@@ -317,21 +272,15 @@ export default function SignUp() {
     setPasswordErrorMessage("");
     setPasswordConfirmErrorMessage("");
 
-    document.getElementById("name")?.classList.remove("form-control-invalid");
+    nameInputRef.current?.classList.remove("form-control-invalid");
 
-    document.getElementById("email")?.classList.remove("form-control-invalid");
+    emailInputRef.current?.classList.remove("form-control-invalid");
 
-    document
-      .getElementById("password")
-      ?.classList.remove("form-control-invalid");
-    document.getElementById("password")?.classList.remove("form-control-valid");
+    passwordInputRef.current?.classList.remove("form-control-invalid");
+    passwordInputRef.current?.classList.remove("form-control-valid");
 
-    document
-      .getElementById("passwordConfirm")
-      ?.classList.remove("form-control-invalid");
-    document
-      .getElementById("passwordConfirm")
-      ?.classList.remove("form-control-valid");
+    passwordConfirmInputRef.current?.classList.remove("form-control-invalid");
+    passwordConfirmInputRef.current?.classList.remove("form-control-valid");
   };
 
   const actionCodeSettings = {
@@ -394,18 +343,22 @@ export default function SignUp() {
         <SignUpForm
           isLoading={isLoading}
           error={error}
+          nameInputRef={nameInputRef}
           name={name}
           handleName={handleName}
           isName={isName}
           nameErrorMessage={nameErrorMessage}
+          emailInputRef={emailInputRef}
           email={email}
           handleEmail={handleEmail}
           isEmail={isEmail}
           emailErrorMessage={emailErrorMessage}
+          passwordInputRef={passwordInputRef}
           password={password}
           handlePassword={handlePassword}
           isPassword={isPassword}
           passwordErrorMessage={passwordErrorMessage}
+          passwordConfirmInputRef={passwordConfirmInputRef}
           passwordConfirm={passwordConfirm}
           handlePasswordConfirm={handlePasswordConfirm}
           isPasswordConfirm={isPasswordConfirm}
