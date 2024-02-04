@@ -127,6 +127,13 @@ export default function SignIn() {
     window.localStorage.removeItem("PasswordChanged");
     window.localStorage.removeItem("accountDeleted");
     window.localStorage.removeItem("error");
+
+    setTimeout(() => {
+      setIsVerificationNeeded("");
+      setIsPasswordChanged("");
+      setAccountDeleted("");
+      setError("");
+    }, 5000);
   }, []);
 
   const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
