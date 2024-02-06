@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import {
   browserSessionPersistence,
@@ -6,14 +6,13 @@ import {
   signInWithEmailLink,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import { Switcher, Wrapper } from "../../components/styles/auth-components";
-import { Button } from "react-bootstrap";
-import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Footer from "../../components/header&footer/footer";
+import SignInWithEmailForm from "../../components/auth/sign-in-with-email/sign-in-with-email-form";
 
 export default function SignInWithEmail() {
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -39,21 +38,17 @@ export default function SignInWithEmail() {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
 
-        document.getElementById("email")?.classList.add("form-control-invalid");
+        emailInputRef.current?.classList.add("form-control-invalid");
       } else {
         setIsEmail(true);
 
-        document
-          .getElementById("email")
-          ?.classList.remove("form-control-invalid");
+        emailInputRef.current?.classList.remove("form-control-invalid");
       }
     } else {
       setEmailErrorMessage("");
       setIsEmail(false);
 
-      document
-        .getElementById("email")
-        ?.classList.remove("form-control-invalid");
+      emailInputRef.current?.classList.remove("form-control-invalid");
     }
   };
 
@@ -75,7 +70,7 @@ export default function SignInWithEmail() {
 
     setEmailErrorMessage("");
 
-    document.getElementById("email")?.classList.remove("form-control-invalid");
+    emailInputRef.current?.classList.remove("form-control-invalid");
   };
 
   useEffect(() => {
@@ -106,13 +101,13 @@ export default function SignInWithEmail() {
         signOut();
       }
     } catch (error) {
+      window.sessionStorage.removeItem("isSignedInWithEmail");
+
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("error : " + error.code);
+        console.log("FirebaseError", error.code);
 
         window.localStorage.setItem("error", error.code);
-
-        window.sessionStorage.removeItem("isSignedInWithEmail");
 
         if (
           error.code !== "auth/user-disabled" &&
@@ -123,101 +118,37 @@ export default function SignInWithEmail() {
           signOut();
         }
       }
+
+      setTimeout(() => {
+        setError("");
+      }, 5000);
     } finally {
       setIsLoading(false);
     }
   };
 
-  console.log("user : " + auth.currentUser);
-  console.log("emailVerified : " + auth.currentUser?.emailVerified);
+  console.log("user", auth.currentUser);
+  console.log("emailVerified", auth.currentUser?.emailVerified);
   console.log(
-    "isSignInWithEmailLink : " +
-      isSignInWithEmailLink(auth, window.location.href)
+    "isSignInWithEmailLink",
+    isSignInWithEmailLink(auth, window.location.href)
   );
 
   return (
     <div className="h-100">
       <div className="wrap">
-        <Wrapper>
-          <div className="mb-2">
-            <h1 className="fs-2">Sign In With Email Link</h1>
-          </div>
-          {isSignInWithEmailLink(auth, window.location.href) && (
-            <Alert variant="success" className="m-0 mt-3 w-100">
-              <p>
-                Your email link has been successfully validated. Please
-                reconfirm your email address.
-              </p>
-            </Alert>
-          )}
-          {error && (
-            <Alert
-              variant="danger"
-              className="d-flex align-itmes-center m-0 mt-3 w-100"
-              dismissible
-            >
-              <p>
-                {error === "auth/user-disabled" &&
-                  "Your account has been disabled. Please contact support for further assistance."}
-                {error === "auth/user-not-found" &&
-                  "We couldn't find a user corresponding to the provided email link. Make sure the link is correct, or consider signing up if you haven't already."}
-                {error === "auth/invalid-email" &&
-                  "The provided email does not correspond to the registered sign-in address."}
-                {error === "auth/too-many-requests" &&
-                  "Due to security reasons, we've temporarily blocked your request. Please wait a moment and try again, or contact support for further assistance."}
-                {error === "auth/expired-action-code" &&
-                  "The email link has expired. Please request a new link and ensure you use it within the specified time limit."}
-                {error === "auth/invalid-action-code" &&
-                  "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
-                {error === "auth/internal-error" &&
-                  "An internal error occurred. Please try again later or contact support for assistance."}
-                {error === "auth/unknown" &&
-                  "An unexpected error occurred. Please try again or contact support."}
-              </p>
-            </Alert>
-          )}
-          <Alert variant="light" className="mt-3 px-4 py-4 w-100">
-            <Form
-              onSubmit={signInWithEmail}
-              className="d-flex flex-column row-gap-3"
-            >
-              <Form.Group>
-                <Form.Label htmlFor="email">
-                  Please provide the email address to which the initial link was
-                  sent.
-                </Form.Label>
-                <Form.Control
-                  className="border-none mt-1 mb-1"
-                  onChange={handleEmail}
-                  onKeyDown={noSpace}
-                  id="email"
-                  name="email"
-                  value={email}
-                  type="text"
-                  maxLength={50}
-                />
-                {!isEmail && emailErrorMessage && (
-                  <div className="mt-2 text-danger">{emailErrorMessage}</div>
-                )}
-              </Form.Group>
-              <Button
-                type="submit"
-                className="mt-2 fw-bold"
-                {...(!isEmail ? { disabled: true } : { disabled: false })}
-              >
-                {isLoading ? "Loading..." : "One-time Login"}
-              </Button>
-            </Form>
-            <Switcher className="d-flex justify-content-between">
-              <Button onClick={reset} type="button" variant="outline-info">
-                Reset
-              </Button>
-              <Link to="/sign-in" className="btn btn-outline-success">
-                Sign In
-              </Link>
-            </Switcher>
-          </Alert>
-        </Wrapper>
+        <SignInWithEmailForm
+          emailInputRef={emailInputRef}
+          isLoading={isLoading}
+          error={error}
+          email={email}
+          handleEmail={handleEmail}
+          isEmail={isEmail}
+          emailErrorMessage={emailErrorMessage}
+          noSpace={noSpace}
+          reset={reset}
+          signInWithEmail={signInWithEmail}
+        />
         <Footer />
       </div>
     </div>
