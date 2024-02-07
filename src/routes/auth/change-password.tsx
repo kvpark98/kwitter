@@ -11,8 +11,8 @@ import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Header from "../../components/header&footer/header";
-import Footer from "../../components/header&footer/footer";
+import Header from "../../components/header&footer/header/header";
+import Footer from "../../components/header&footer/footer/footer";
 
 export default function ChangePassword() {
   const navigate = useNavigate();

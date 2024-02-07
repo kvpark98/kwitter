@@ -7,8 +7,8 @@ import { useRef, useState } from "react";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import Header from "../../components/header&footer/header";
-import Footer from "../../components/header&footer/footer";
+import Header from "../../components/header&footer/header/header";
+import Footer from "../../components/header&footer/footer/footer";
 import SignUpForm from "../../components/auth/sign-up/sign-up-form";
 
 export default function SignUp() {

@@ -7,7 +7,7 @@ import { auth, db, storage } from "../../../../firebase";
 import ModifyTweet from "../../modify/modify-tweet";
 import TweetBody from "./tweet-body";
 import TweetFooter from "./tweet-footer";
-import TweetDeleteModal from "../../../modals/delete/tweet-delete-modal";
+import TweetDeleteModal from "../../../modals/warning/tweet-delete-modal";
 
 export interface ITweet {
   id: string;

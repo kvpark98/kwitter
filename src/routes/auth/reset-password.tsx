@@ -7,7 +7,7 @@ import { Switcher, Wrapper } from "../../components/styles/auth-components";
 import { Button, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Footer from "../../components/header&footer/footer";
+import Footer from "../../components/header&footer/footer/footer";
 
 export default function ResetPassword() {
   const navigate = useNavigate();

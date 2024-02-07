@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { updateProfile } from "firebase/auth";
 import { auth } from "../../firebase";
-import Header from "../../components/header&footer/header";
+import Header from "../../components/header&footer/header/header";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../components/header&footer/footer";
+import Footer from "../../components/header&footer/footer/footer";
 import ChangeUsernameForm from "../../components/auth/change-username/change-username-form";
 
 export default function ChangeUsername() {

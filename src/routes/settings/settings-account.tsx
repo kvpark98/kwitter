@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
-import Footer from "../../components/header&footer/footer";
-import Header from "../../components/header&footer/header";
+import Footer from "../../components/header&footer/footer/footer";
+import Header from "../../components/header&footer/header/header";
 import SettingsSidebar from "../../components/settings/settings-sidebar";
 import SettingsTitle from "../../components/settings/settings-title";
 import ScrollProfile from "../../components/scrolls/scrollProfile";

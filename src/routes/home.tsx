@@ -1,6 +1,6 @@
-import Header from "../components/header&footer/header";
+import Header from "../components/header&footer/header/header";
 import { Wrapper } from "../components/styles/auth-components";
-import Footer from "../components/header&footer/footer";
+import Footer from "../components/header&footer/footer/footer";
 import ScrollHome from "../components/scrolls/scrollHome";
 import CreateTweet from "../components/tweets/create/create-tweet";
 import TweetList from "../components/tweets/query/list/tweet-list";
