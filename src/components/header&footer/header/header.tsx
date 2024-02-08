@@ -4,6 +4,7 @@ import { auth } from "../../../firebase";
 import { useState } from "react";
 import SignOutModal from "../../modals/warning/sign-out-modal";
 import HeaderProfile from "./header-profile";
+import HeaderTitle from "./header-title";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -20,16 +21,7 @@ export default function Header() {
   return (
     <Navbar bg="dark" variant="dark" sticky="top">
       <Container fluid>
-        <Navbar.Brand href="/">
-          <img
-            src="/vite.svg"
-            width="30"
-            height="30"
-            className="align-middle me-2"
-            alt="Learn-Korean-Well"
-          />
-          <span className="align-middle">Learn-Korean-Well</span>
-        </Navbar.Brand>
+        <HeaderTitle />
         {auth.currentUser && (
           <HeaderProfile handleShowModal={handleShowModal} />
         )}
