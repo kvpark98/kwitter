@@ -351,9 +351,6 @@ export default function ChangePassword() {
     }
   };
 
-  console.log("user : " + auth.currentUser);
-  console.log("emailVerified : " + auth.currentUser?.emailVerified);
-
   return (
     <div className="h-100">
       <Header />
