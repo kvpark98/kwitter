@@ -1,22 +1,27 @@
 import { Form } from "react-bootstrap";
 
-export interface DeleteAccountPasswordFormPasswordProps {
+export interface ResetPasswordPasswordProps {
+  passwordInputRef: React.RefObject<HTMLInputElement>;
   password: string;
   handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isPassword: boolean;
+  passwordErrorMessage: string;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export default function DeleteAccountPasswordFormPassword({
+export default function ResetPasswordPassword({
+  passwordInputRef,
   password,
   handlePassword,
+  isPassword,
+  passwordErrorMessage,
   noSpace,
-}: DeleteAccountPasswordFormPasswordProps) {
+}: ResetPasswordPasswordProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="password">
-        Kindly input your password for a secure account withdrawal.
-      </Form.Label>
+      <Form.Label htmlFor="password">New Password</Form.Label>
       <Form.Control
+        ref={passwordInputRef}
         className="border-none mt-1 mb-1"
         onChange={handlePassword}
         onKeyDown={noSpace}
@@ -27,6 +32,9 @@ export default function DeleteAccountPasswordFormPassword({
         autoComplete="new-password"
         maxLength={20}
       />
+      {!isPassword && passwordErrorMessage && (
+        <div className="mt-2 text-danger">{passwordErrorMessage}</div>
+      )}
     </Form.Group>
   );
 }

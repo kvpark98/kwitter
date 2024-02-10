@@ -1,7 +1,7 @@
 import { Alert, Form } from "react-bootstrap";
-import DeleteAccountPasswordFormPassword from "./delete-account-password-form-password";
-import DeleteAccountPasswordFormButton from "./delete-account-password-form-button";
-import DeleteAccountPasswordFormSwitcher from "./delete-account-password-form-switcher";
+import DeleteAccountPasswordButton from "./delete-account-password-button";
+import DeleteAccountPasswordPassword from "./delete-account-password-password";
+import DeleteAccountPasswordSwitcher from "./delete-account-password-switcher";
 
 export interface DeleteAccountPasswordFormProps {
   isLoading: boolean;
@@ -25,17 +25,17 @@ export default function DeleteAccountPasswordForm({
   return (
     <Alert variant="light" className="mt-3 px-4 py-4 w-100">
       <Form onSubmit={deleteAccount} className="d-flex flex-column row-gap-3">
-        <DeleteAccountPasswordFormPassword
+        <DeleteAccountPasswordPassword
           password={password}
           handlePassword={handlePassword}
           noSpace={noSpace}
         />
-        <DeleteAccountPasswordFormButton
+        <DeleteAccountPasswordButton
           isLoading={isLoading}
           isPassword={isPassword}
         />
       </Form>
-      <DeleteAccountPasswordFormSwitcher reset={reset} />
+      <DeleteAccountPasswordSwitcher reset={reset} />
     </Alert>
   );
 }

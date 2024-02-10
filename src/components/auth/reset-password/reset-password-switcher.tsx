@@ -1,22 +1,23 @@
 import { Button } from "react-bootstrap";
 import { Switcher } from "../../styles/auth-components";
-import { Link } from "react-router-dom";
 
-export interface DeleteAccountPasswordFormSwitcherProps {
+export interface ResetPasswordSwitcherProps {
   reset: () => void;
+  handleShowModal: () => void;
 }
 
-export default function DeleteAccountPasswordFormSwitcher({
+export default function ResetPasswordSwitcher({
   reset,
-}: DeleteAccountPasswordFormSwitcherProps) {
+  handleShowModal,
+}: ResetPasswordSwitcherProps) {
   return (
     <Switcher className="d-flex justify-content-between">
       <Button onClick={reset} type="button" variant="outline-info">
         Reset
       </Button>
-      <Link to="/" className="btn btn-outline-success">
+      <Button variant="outline-success" onClick={handleShowModal}>
         Home
-      </Link>
+      </Button>
     </Switcher>
   );
 }
