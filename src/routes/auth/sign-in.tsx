@@ -13,7 +13,6 @@ import SignInForm from "../../components/auth/sign-in/sign-in-form";
 
 export default function SignIn() {
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const passwordInputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
@@ -46,7 +45,6 @@ export default function SignIn() {
   );
 
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -82,13 +80,8 @@ export default function SignIn() {
 
     if (value !== "") {
       setIsPassword(true);
-
-      passwordInputRef.current?.classList.remove("form-control-invalid");
     } else {
-      setPasswordErrorMessage("");
       setIsPassword(false);
-
-      passwordInputRef.current?.classList.remove("form-control-invalid");
     }
   };
 
@@ -115,11 +108,8 @@ export default function SignIn() {
     setIsPassword(false);
 
     setEmailErrorMessage("");
-    setPasswordErrorMessage("");
 
     emailInputRef.current?.classList.remove("form-control-invalid");
-
-    passwordInputRef.current?.classList.remove("form-control-invalid");
   };
 
   useEffect(() => {
@@ -162,21 +152,21 @@ export default function SignIn() {
       } else {
         setShowEmailNotVerified(true);
 
+        signOut();
+
         setTimeout(() => {
           setShowEmailNotVerified(false);
         }, 5000);
-
-        signOut();
       }
     } catch (error) {
+      setIsVerificationNeeded("");
+      setIsPasswordChanged("");
+      setAccountDeleted("");
+
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("FirebaseError", error.code);
       }
-
-      setIsVerificationNeeded("");
-      setIsPasswordChanged("");
-      setAccountDeleted("");
 
       setTimeout(() => {
         setError("");
@@ -194,22 +184,20 @@ export default function SignIn() {
       <Header />
       <div className="wrap">
         <SignInForm
+          emailInputRef={emailInputRef}
           isLoading={isLoading}
           error={error}
           isVerificationNeeded={isVerificationNeeded}
           isPasswordChanged={isPasswordChanged}
           accountDeleted={accountDeleted}
           showEmailNotVerified={showEmailNotVerified}
-          emailInputRef={emailInputRef}
           email={email}
           handleEmail={handleEmail}
           isEmail={isEmail}
           emailErrorMessage={emailErrorMessage}
-          passwordInputRef={passwordInputRef}
           password={password}
           handlePassword={handlePassword}
           isPassword={isPassword}
-          passwordErrorMessage={passwordErrorMessage}
           handleRememberMe={handleRememberMe}
           noSpace={noSpace}
           reset={reset}

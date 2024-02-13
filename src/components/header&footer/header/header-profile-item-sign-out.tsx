@@ -10,7 +10,7 @@ export default function HeaderProfileItemSignOut({
   return (
     <Dropdown.Item
       onClick={handleShowModal}
-      className="d-flex justify-content-center align-items-center"
+      className="d-flex align-items-center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

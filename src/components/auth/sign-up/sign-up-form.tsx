@@ -1,7 +1,6 @@
 import { Alert, Form } from "react-bootstrap";
 import { Wrapper } from "../../styles/auth-components";
 import SignUpErrors from "../../alert/error/auth/sign-up/sign-up-errors";
-import SignUpSocialSignIn from "./sign-up-social-sign-in";
 import SignUpName from "./sign-up-name";
 import SignUpEmail from "./sign-up-email";
 import SignUpPassword from "./sign-up-password";
@@ -113,7 +112,6 @@ export default function SignUpForm({
         </Form>
         <SignUpSwitcher reset={reset} />
       </Alert>
-      <SignUpSocialSignIn />
     </Wrapper>
   );
 }

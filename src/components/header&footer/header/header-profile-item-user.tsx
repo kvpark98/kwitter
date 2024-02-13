@@ -3,10 +3,7 @@ import { auth } from "../../../firebase";
 
 export default function HeaderProfileItemUser() {
   return (
-    <Dropdown.Item
-      className="d-flex justify-content-center align-items-center"
-      disabled
-    >
+    <Dropdown.Item className="d-flex align-items-center" disabled>
       <img
         src="/default-profile.png"
         alt="Profile Image"

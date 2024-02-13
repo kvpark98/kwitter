@@ -4,7 +4,7 @@ export default function HeaderProfileItemSettings() {
   return (
     <Dropdown.Item
       href="/settings/profile"
-      className="d-flex justify-content-center align-items-center"
+      className="d-flex align-items-center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
