@@ -104,52 +104,41 @@ export default function SignUp() {
 
     if (value !== "") {
       if (!regPassword.test(value)) {
+        setPasswordErrorMessage(
+          "Please enter at least 8 characters including numbers, English, and special characters."
+        );
+
+        setIsPassword(false);
+        setIsPasswordConfirm(false);
+
+        passwordInputRef.current?.classList.add("form-control-invalid");
+        passwordInputRef.current?.classList.remove("form-control-valid");
+
+        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
         if (passwordConfirm) {
-          setPasswordErrorMessage(
-            "Please enter at least 8 characters including numbers, English, and special characters."
-          );
           setPasswordConfirmErrorMessage(
             "Please make your password valid first."
           );
-          setIsPassword(false);
-          setIsPasswordConfirm(false);
-
-          passwordInputRef.current?.classList.add("form-control-invalid");
-          passwordInputRef.current?.classList.remove("form-control-valid");
 
           passwordConfirmInputRef.current?.classList.add(
             "form-control-invalid"
           );
-          passwordConfirmInputRef.current?.classList.remove(
-            "form-control-valid"
-          );
         } else {
-          setPasswordErrorMessage(
-            "Please enter at least 8 characters including numbers, English, and special characters."
-          );
           setPasswordConfirmErrorMessage("");
-          setIsPassword(false);
-          setIsPasswordConfirm(false);
-
-          passwordInputRef.current?.classList.add("form-control-invalid");
-          passwordInputRef.current?.classList.remove("form-control-valid");
 
           passwordConfirmInputRef.current?.classList.remove(
             "form-control-invalid"
           );
-          passwordConfirmInputRef.current?.classList.remove(
-            "form-control-valid"
-          );
         }
       } else {
+        setIsPassword(true);
+
+        passwordInputRef.current?.classList.remove("form-control-invalid");
+        passwordInputRef.current?.classList.add("form-control-valid");
         if (passwordConfirm) {
           if (value !== passwordConfirm) {
             setPasswordConfirmErrorMessage("The password does not match.");
-            setIsPassword(true);
             setIsPasswordConfirm(false);
-
-            passwordInputRef.current?.classList.remove("form-control-invalid");
-            passwordInputRef.current?.classList.add("form-control-valid");
 
             passwordConfirmInputRef.current?.classList.add(
               "form-control-invalid"
@@ -159,11 +148,7 @@ export default function SignUp() {
             );
           } else {
             setPasswordConfirmErrorMessage("");
-            setIsPassword(true);
             setIsPasswordConfirm(true);
-
-            passwordInputRef.current?.classList.remove("form-control-invalid");
-            passwordInputRef.current?.classList.add("form-control-valid");
 
             passwordConfirmInputRef.current?.classList.remove(
               "form-control-invalid"
@@ -174,11 +159,7 @@ export default function SignUp() {
           }
         } else {
           setPasswordConfirmErrorMessage("");
-          setIsPassword(true);
           setIsPasswordConfirm(false);
-
-          passwordInputRef.current?.classList.remove("form-control-invalid");
-          passwordInputRef.current?.classList.add("form-control-valid");
 
           passwordConfirmInputRef.current?.classList.remove(
             "form-control-invalid"
@@ -186,30 +167,24 @@ export default function SignUp() {
         }
       }
     } else {
-      if (passwordConfirm) {
-        setPasswordErrorMessage("");
-        setPasswordConfirmErrorMessage("Please enter your password first.");
-        setIsPassword(false);
-        setIsPasswordConfirm(false);
+      setPasswordErrorMessage("");
+      setIsPassword(false);
+      setIsPasswordConfirm(false);
 
-        passwordInputRef.current?.classList.remove("form-control-invalid");
-        passwordInputRef.current?.classList.remove("form-control-valid");
+      passwordInputRef.current?.classList.remove("form-control-invalid");
+      passwordInputRef.current?.classList.remove("form-control-valid");
+
+      passwordConfirmInputRef.current?.classList.remove("form-control-valid");
+      if (passwordConfirm) {
+        setPasswordConfirmErrorMessage("Please enter your password first.");
 
         passwordConfirmInputRef.current?.classList.add("form-control-invalid");
-        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
       } else {
-        setPasswordErrorMessage("");
         setPasswordConfirmErrorMessage("");
-        setIsPassword(false);
-        setIsPasswordConfirm(false);
-
-        passwordInputRef.current?.classList.remove("form-control-invalid");
-        passwordInputRef.current?.classList.remove("form-control-valid");
 
         passwordConfirmInputRef.current?.classList.remove(
           "form-control-invalid"
         );
-        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
       }
     }
   };
@@ -323,6 +298,8 @@ export default function SignUp() {
 
       signOut();
     } catch (error) {
+      window.localStorage.removeItem("verificationNeeded");
+
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("FirebaseError", error.code);
