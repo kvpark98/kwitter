@@ -1,7 +1,7 @@
 import { Dropdown } from "react-bootstrap";
 import HeaderProfileItemUser from "./header-profile-item-user";
-import HeaderProfileItemSettings from "./header-profile-item-settings";
 import HeaderProfileItemSignOut from "./header-profile-item-sign-out";
+import HeaderProfileItemAccount from "./header-profile-item-account";
 
 export interface HeaderProfileMenuProps {
   handleShowModal: () => void;
@@ -14,7 +14,7 @@ export default function HeaderProfileMenu({
     <Dropdown.Menu>
       <HeaderProfileItemUser />
       <Dropdown.Divider />
-      <HeaderProfileItemSettings />
+      <HeaderProfileItemAccount />
       <Dropdown.Divider />
       <HeaderProfileItemSignOut handleShowModal={handleShowModal} />
     </Dropdown.Menu>

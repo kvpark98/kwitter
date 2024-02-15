@@ -20,8 +20,8 @@ import ProtectedRouteResetPassword from "./components/protected-routes/protected
 import ChangeUsername from "./routes/auth/change-username";
 import DeleteAccount from "./routes/auth/delete-account";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
-import SettingsAccount from "./routes/settings/settings-account";
-import SettingsProfile from "./routes/settings/settings-profile";
+import Profile from "./routes/profile";
+import Account from "./routes/account/account";
 
 const router = createBrowserRouter([
   {
@@ -37,23 +37,23 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "settings/profile",
-        element: <SettingsProfile />,
+        path: "/profile",
+        element: <Profile />,
       },
       {
-        path: "settings/account",
-        element: <SettingsAccount />,
+        path: "/account",
+        element: <Account />,
       },
       {
-        path: "settings/account/change-username",
+        path: "/account/change-username",
         element: <ChangeUsername />,
       },
       {
-        path: "settings/account/change-password",
+        path: "/account/change-password",
         element: <ChangePassword />,
       },
       {
-        path: "settings/account/delete-account",
+        path: "/account/delete-account",
         element: <DeleteAccount />,
       },
     ],
