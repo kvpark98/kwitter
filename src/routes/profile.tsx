@@ -4,6 +4,7 @@ import { auth, storage } from "../firebase";
 import { useRef, useState } from "react";
 import {
   StorageError,
+  deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
@@ -19,8 +20,6 @@ export default function Profile() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [avatar, setAvatar] = useState(user?.photoURL);
-
-  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   const [error, setError] = useState("");
 
@@ -51,24 +50,55 @@ export default function Profile() {
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
           }
-
-          setUploadSuccess(true);
-
-          setTimeout(() => {
-            setUploadSuccess(false);
-          }, 5000);
         } else {
-          setUploadSuccess(false);
           throw new Error("size-exhausted");
         }
       }
     } catch (error) {
-      setUploadSuccess(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+        console.log("FirebaseError", error.code);
+      } else if (error instanceof FirestoreError) {
+        setError(error.code);
+        console.log("FirestoreError", error.code);
+      } else if (error instanceof StorageError) {
+        setError(error.code);
+        console.log("StorageError", error.code);
+      } else {
+        setError("size-exhausted");
+        console.log(error);
+      }
+
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    if (!avatar) {
+      return;
+    }
+
+    try {
+      setAvatar(null);
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
 
+      await updateProfile(user!, {
+        photoURL: "",
+      });
+
+      const photoRef = ref(storage, `avatars/${user?.uid}`);
+
+      await deleteObject(photoRef);
+    } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("FirebaseError", error.code);
@@ -95,11 +125,11 @@ export default function Profile() {
       <div className="wrap">
         <ProfileContent
           user={user}
-          uploadSuccess={uploadSuccess}
           error={error}
           avatar={avatar}
           fileInputRef={fileInputRef}
           handleAvatar={handleAvatar}
+          handleDeleteAvatar={handleDeleteAvatar}
         />
         <Footer />
       </div>
