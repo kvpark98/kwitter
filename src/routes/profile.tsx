@@ -121,7 +121,7 @@ export default function Profile() {
 
   return (
     <div className="h-100">
-      <Header />
+      <Header avatar={avatar} />
       <div className="wrap">
         <ProfileContent
           user={user}

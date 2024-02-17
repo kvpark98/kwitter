@@ -6,7 +6,11 @@ import SignOutModal from "../../modals/warning/sign-out-modal";
 import HeaderProfile from "./header-profile";
 import HeaderTitle from "./header-title";
 
-export default function Header() {
+export interface HeaderProps {
+  avatar: string | null | undefined;
+}
+
+export default function Header({ avatar }: HeaderProps) {
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
@@ -23,7 +27,7 @@ export default function Header() {
       <Container fluid>
         <HeaderTitle />
         {auth.currentUser && (
-          <HeaderProfile handleShowModal={handleShowModal} />
+          <HeaderProfile avatar={avatar} handleShowModal={handleShowModal} />
         )}
       </Container>
       <SignOutModal
