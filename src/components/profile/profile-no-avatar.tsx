@@ -6,7 +6,7 @@ export default function ProfileNoAvatar() {
       htmlFor="avatar"
       title="Add Avatar"
       className="d-flex justify-content-center align-items-center btn btn-light m-0 p-0 border-0 rounded-circle"
-      style={{ width: "180px", height: "180px" }}
+      style={{ width: "160px", height: "160px" }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

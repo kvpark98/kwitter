@@ -16,7 +16,7 @@ export default function HeaderProfileToggle({ avatar }: HeaderProfileProps) {
       className="text-decoration-none p-0"
     >
       <img
-        src={avatar ?? "/default-profile.png"}
+        src={(avatar || user?.photoURL) ?? "/default-profile.png"}
         alt="Profile Image"
         width="30"
         height="30"

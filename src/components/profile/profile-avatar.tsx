@@ -12,7 +12,7 @@ export default function ProfileAvatar({
   return (
     <div
       className="rounded-circle overflow-hidden"
-      style={{ width: "180px", height: "180px" }}
+      style={{ width: "160px", height: "160px" }}
     >
       <Form.Label htmlFor="avatar" className="btn m-0 p-0 border-0">
         <Card.Img src={avatar!} title="Change Avatar"></Card.Img>

@@ -13,7 +13,7 @@ import Tweet, { ITweet } from "../detail/tweet";
 export default function TweetList() {
   const [tweets, setTweets] = useState<ITweet[]>([]);
 
-  // 메시지 생성일을 시간 경과 표시 형식으로 변환하는 함수
+  // tweet 생성일을 시간 경과 표시 형식으로 변환하는 함수
   const formatTimeAgo = (createdAt: string) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
@@ -57,11 +57,13 @@ export default function TweetList() {
     }
   };
 
-  // 컴포넌트가 마운트될 때 메시지 가져오기
+  // 컴포넌트가 마운트될 때 tweet 가져오기
   useEffect(() => {
+    // Firestore 구독을 위한 변수
     let unsubscribe: Unsubscribe | null = null;
 
-    const fetchMessages = async () => {
+    // 사용자의 tweet을 가져오는 함수
+    const fetchTweets = async () => {
       // Firestore 쿼리 생성
       const tweetQuery = query(
         collection(db, "tweets"),
@@ -69,14 +71,14 @@ export default function TweetList() {
         limit(25)
       );
 
-      // 실시간 업데이트를 수신하기 위해 onSnapshot 사용
+      // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
       unsubscribe = await onSnapshot(tweetQuery, (snapshot) => {
-        // 스냅샷을 메시지 배열로 변환
+        // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
           const { createdAt, message, photo, userId, username } = doc.data();
 
-          // 새로운 메시지 객체 생성
+          // 새로운 tweet 객체 생성
           return {
             id: doc.id,
             timeAgo: formatTimeAgo(createdAt),
@@ -92,11 +94,12 @@ export default function TweetList() {
       });
     };
 
-    fetchMessages();
+    // fetchTweets 함수 호출
+    fetchTweets();
 
     // 컴포넌트가 언마운트되면 Firestore 구독 해제
     return () => {
-      unsubscribe && unsubscribe();
+      unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
   }, []);
 
