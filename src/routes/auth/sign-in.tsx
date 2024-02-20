@@ -181,7 +181,7 @@ export default function SignIn() {
 
   return (
     <div className="h-100">
-      <Header />
+      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <SignInForm
           emailInputRef={emailInputRef}

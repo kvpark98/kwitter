@@ -131,7 +131,7 @@ export default function SendSignInLink() {
 
   return (
     <div className="h-100">
-      <Header />
+      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <SendSignInLinkForm
           emailInputRef={emailInputRef}

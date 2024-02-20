@@ -174,7 +174,7 @@ export default function DeleteAccount() {
 
   return (
     <div className="h-100">
-      <Header />
+      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <DeleteAccountForm
           isLoading={isLoading}

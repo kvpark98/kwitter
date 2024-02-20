@@ -17,7 +17,6 @@ import SignInWithEmail from "./routes/auth/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
 import ChangePassword from "./routes/auth/change-password";
 import ProtectedRouteResetPassword from "./components/protected-routes/protected-route-reset-password";
-import ChangeUsername from "./routes/auth/change-username";
 import DeleteAccount from "./routes/auth/delete-account";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 import Profile from "./routes/profile";
@@ -43,10 +42,6 @@ const router = createBrowserRouter([
       {
         path: "/account",
         element: <Account />,
-      },
-      {
-        path: "/account/change-username",
-        element: <ChangeUsername />,
       },
       {
         path: "/account/change-password",

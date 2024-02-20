@@ -8,7 +8,7 @@ export default function ChangeUsernameErrors({
   error,
 }: ChangeUsernameErrorsProps) {
   return (
-    <Alert variant="danger" className="m-0 mt-3 w-100">
+    <Alert variant="danger" className="m-0 mb-3 w-100">
       <p>
         {error === "auth/invalid-display-name" &&
           "Invalid display name. Please provide a valid name."}

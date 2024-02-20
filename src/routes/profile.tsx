@@ -29,6 +29,10 @@ export default function Profile() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [showModifyModal, setShowModifyModal] = useState(false);
+  const handleShowModifyModal = () => setShowModifyModal(true);
+  const handleCloseModifyModal = () => setShowModifyModal(false);
+
   const [avatar, setAvatar] = useState(user?.photoURL);
 
   const [tweets, setTweets] = useState<ITweet[]>([]);
@@ -251,6 +255,9 @@ export default function Profile() {
           error={error}
           avatar={avatar}
           fileInputRef={fileInputRef}
+          showModifyModal={showModifyModal}
+          handleShowModifyModal={handleShowModifyModal}
+          handleCloseModifyModal={handleCloseModifyModal}
           handleAvatar={handleAvatar}
           handleDeleteAvatar={handleDeleteAvatar}
           tweets={tweets}

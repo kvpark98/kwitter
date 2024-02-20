@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { updateProfile } from "firebase/auth";
-import { auth } from "../../firebase";
-import Header from "../../components/header&footer/header/header";
-import { useNavigate } from "react-router-dom";
-import Footer from "../../components/header&footer/footer/footer";
-import ChangeUsernameForm from "../../components/auth/change-username/change-username-form";
+import { auth } from "../../../firebase";
+import ChangeUsernameForm from "./change-username-form";
+import { Modal } from "react-bootstrap";
 
-export default function ChangeUsername() {
+export interface ChangeUsernameProps {
+  showModifyModal: boolean;
+  handleCloseModifyModal: () => void;
+}
+
+export default function ChangeUsername({
+  showModifyModal,
+  handleCloseModifyModal,
+}: ChangeUsernameProps) {
   const nameInputRef = useRef<HTMLInputElement>(null);
-
-  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,10 +60,6 @@ export default function ChangeUsername() {
     if (event.code === "Space") {
       event.preventDefault();
     }
-  };
-
-  const goBack = () => {
-    navigate(-1);
   };
 
   const reset = () => {
@@ -116,25 +116,27 @@ export default function ChangeUsername() {
   };
 
   return (
-    <div className="h-100">
-      <Header />
-      <div className="wrap">
-        <ChangeUsernameForm
-          nameInputRef={nameInputRef}
-          isLoading={isLoading}
-          error={error}
-          name={name}
-          handleName={handleName}
-          isName={isName}
-          nameErrorMessage={nameErrorMessage}
-          noSpace={noSpace}
-          reset={reset}
-          goBack={goBack}
-          changeName={changeName}
-          isUpdated={isUpdated}
-        />
-        <Footer />
-      </div>
-    </div>
+    <Modal
+      show={showModifyModal}
+      onHide={handleCloseModifyModal}
+      backdrop="static"
+      keyboard={false}
+      centered
+    >
+      <ChangeUsernameForm
+        nameInputRef={nameInputRef}
+        isLoading={isLoading}
+        error={error}
+        name={name}
+        handleName={handleName}
+        isName={isName}
+        nameErrorMessage={nameErrorMessage}
+        noSpace={noSpace}
+        reset={reset}
+        changeName={changeName}
+        isUpdated={isUpdated}
+        handleCloseModifyModal={handleCloseModifyModal}
+      />
+    </Modal>
   );
 }

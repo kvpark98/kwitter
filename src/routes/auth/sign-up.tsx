@@ -315,7 +315,7 @@ export default function SignUp() {
 
   return (
     <div className="h-100">
-      <Header />
+      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <SignUpForm
           isLoading={isLoading}

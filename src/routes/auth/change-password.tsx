@@ -312,7 +312,7 @@ export default function ChangePassword() {
 
   return (
     <div className="h-100">
-      <Header />
+      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <ChangePasswordForm
           newPasswordInputRef={newPasswordInputRef}
