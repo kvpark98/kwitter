@@ -31,7 +31,6 @@ export default function Profile() {
 
   const [showModifyModal, setShowModifyModal] = useState(false);
   const handleShowModifyModal = () => setShowModifyModal(true);
-  const handleCloseModifyModal = () => setShowModifyModal(false);
 
   const [avatar, setAvatar] = useState(user?.photoURL);
 
@@ -256,8 +255,8 @@ export default function Profile() {
           avatar={avatar}
           fileInputRef={fileInputRef}
           showModifyModal={showModifyModal}
+          setShowModifyModal={setShowModifyModal}
           handleShowModifyModal={handleShowModifyModal}
-          handleCloseModifyModal={handleCloseModifyModal}
           handleAvatar={handleAvatar}
           handleDeleteAvatar={handleDeleteAvatar}
           tweets={tweets}

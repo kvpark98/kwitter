@@ -1,26 +1,33 @@
 import { useEffect, useRef, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { updateProfile } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "../../../../firebase";
 import ChangeUsernameForm from "./change-username-form";
 import { Modal } from "react-bootstrap";
 
 export interface ChangeUsernameProps {
   showModifyModal: boolean;
-  handleCloseModifyModal: () => void;
+  setShowModifyModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ChangeUsername({
   showModifyModal,
-  handleCloseModifyModal,
+  setShowModifyModal,
 }: ChangeUsernameProps) {
+  const user = auth.currentUser;
+
   const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const handleCloseModifyModal = () => {
+    setShowModifyModal(false);
+    reset();
+  };
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState(user?.displayName);
 
-  const [isName, setIsName] = useState(false);
+  const [isName, setIsName] = useState(true);
 
   const [isUpdated, setIsUpdated] = useState(false);
 
@@ -63,9 +70,9 @@ export default function ChangeUsername({
   };
 
   const reset = () => {
-    setName("");
+    setName(user?.displayName);
 
-    setIsName(false);
+    setIsName(true);
 
     setNameErrorMessage("");
 

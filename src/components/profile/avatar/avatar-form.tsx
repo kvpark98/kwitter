@@ -1,29 +1,26 @@
 import { Form } from "react-bootstrap";
-import ProfileAvatar from "./profile-avatar";
-import ProfileNoAvatar from "./profile-no-avatar";
+import Avatar from "./avatar";
+import NoAvatar from "./no-avatar";
 
-export interface ProfileFormProps {
+export interface AvatarFormProps {
   avatar: string | null | undefined;
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleAvatar: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleDeleteAvatar: () => Promise<void>;
 }
 
-export default function ProfileForm({
+export default function AvatarForm({
   avatar,
   fileInputRef,
   handleAvatar,
   handleDeleteAvatar,
-}: ProfileFormProps) {
+}: AvatarFormProps) {
   return (
     <div className="d-flex justify-content-center align-items-center position-relative mb-4">
       {Boolean(avatar) ? (
-        <ProfileAvatar
-          avatar={avatar}
-          handleDeleteAvatar={handleDeleteAvatar}
-        />
+        <Avatar avatar={avatar} handleDeleteAvatar={handleDeleteAvatar} />
       ) : (
-        <ProfileNoAvatar />
+        <NoAvatar />
       )}
       <Form.Control
         ref={fileInputRef}

@@ -7,7 +7,7 @@ export interface ChangeUsernameFormProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
   error: string;
-  name: string;
+  name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isName: boolean;
   nameErrorMessage: string;

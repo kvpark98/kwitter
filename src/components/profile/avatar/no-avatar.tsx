@@ -1,6 +1,6 @@
 import { Form } from "react-bootstrap";
 
-export default function ProfileNoAvatar() {
+export default function NoAvatar() {
   return (
     <Form.Label
       htmlFor="avatar"

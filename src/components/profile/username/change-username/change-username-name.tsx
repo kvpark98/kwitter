@@ -2,7 +2,7 @@ import { Form } from "react-bootstrap";
 
 export interface ChangeUsernameNameProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
-  name: string;
+  name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isName: boolean;
   nameErrorMessage: string;
@@ -19,7 +19,7 @@ export default function ChangeUsernameName({
 }: ChangeUsernameNameProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="name">New Username</Form.Label>
+      <Form.Label htmlFor="name">Username</Form.Label>
       <Form.Control
         ref={nameInputRef}
         className="border-none mt-1 mb-1"
@@ -27,7 +27,7 @@ export default function ChangeUsernameName({
         onKeyDown={noSpace}
         id="name"
         name="name"
-        value={name}
+        value={name!}
         type="text"
         maxLength={20}
       />

@@ -1,10 +1,10 @@
-import Tweet, { ITweet } from "../tweets/query/detail/tweet";
+import Tweet, { ITweet } from "../../tweets/query/detail/tweet";
 
-export interface ProfileUserTweetsProps {
+export interface UserTweetsProps {
   tweets: ITweet[];
 }
 
-export default function ProfileUserTweets({ tweets }: ProfileUserTweetsProps) {
+export default function UserTweets({ tweets }: UserTweetsProps) {
   return (
     <div className="w-100 overflow-y-scroll" style={{ maxHeight: "600px" }}>
       {tweets.map((tweet) => {

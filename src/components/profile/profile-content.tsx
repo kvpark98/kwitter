@@ -2,10 +2,10 @@ import ProfileErrors from "../alert/error/profile/profile-errors";
 import { Wrapper } from "../styles/auth-components";
 import ScrollProfile from "../scrolls/scrollProfile";
 import { User } from "firebase/auth";
-import ProfileForm from "./profile-form";
 import { ITweet } from "../tweets/query/detail/tweet";
-import ProfileUserTweets from "./profile-user-tweets";
-import ProfileTitle from "./profile-title";
+import UsernameTitle from "./username/username-title";
+import UserTweets from "./user-tweets/user-tweets";
+import AvatarForm from "./avatar/avatar-form";
 
 export interface ProfileContentProps {
   user: User | null;
@@ -13,8 +13,8 @@ export interface ProfileContentProps {
   avatar: string | null | undefined;
   fileInputRef: React.RefObject<HTMLInputElement>;
   showModifyModal: boolean;
+  setShowModifyModal: React.Dispatch<React.SetStateAction<boolean>>;
   handleShowModifyModal: () => void;
-  handleCloseModifyModal: () => void;
   handleAvatar: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleDeleteAvatar: () => Promise<void>;
   tweets: ITweet[];
@@ -26,28 +26,28 @@ export default function ProfileContent({
   avatar,
   fileInputRef,
   showModifyModal,
+  setShowModifyModal,
   handleShowModifyModal,
-  handleCloseModifyModal,
   handleAvatar,
   handleDeleteAvatar,
   tweets,
 }: ProfileContentProps) {
   return (
     <Wrapper>
-      <ProfileTitle
+      <UsernameTitle
         user={user}
         showModifyModal={showModifyModal}
+        setShowModifyModal={setShowModifyModal}
         handleShowModifyModal={handleShowModifyModal}
-        handleCloseModifyModal={handleCloseModifyModal}
       />
       {error && <ProfileErrors error={error} />}
-      <ProfileForm
+      <AvatarForm
         avatar={avatar}
         fileInputRef={fileInputRef}
         handleAvatar={handleAvatar}
         handleDeleteAvatar={handleDeleteAvatar}
       />
-      {tweets.length !== 0 && <ProfileUserTweets tweets={tweets} />}
+      {tweets.length !== 0 && <UserTweets tweets={tweets} />}
       <ScrollProfile />
     </Wrapper>
   );

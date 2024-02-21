@@ -1,13 +1,13 @@
 import { Modal } from "react-bootstrap";
-import ChangeUsernameSuccess from "../../alert/success/auth/change-username/change-username-success";
-import ChangeUsernameErrors from "../../alert/error/auth/change-username/change-username-errors";
+import ChangeUsernameSuccess from "../../../alert/success/auth/change-username/change-username-success";
+import ChangeUsernameErrors from "../../../alert/error/auth/change-username/change-username-errors";
 import ChangeUsernameName from "./change-username-name";
 import ChangeUsernameReset from "./change-username-reset";
 
 export interface ChangeUsernameBodyProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
   error: string;
-  name: string;
+  name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isName: boolean;
   nameErrorMessage: string;
