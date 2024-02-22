@@ -1,13 +1,11 @@
-import { Card } from "react-bootstrap";
 import { useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { FirestoreError, deleteDoc, doc } from "firebase/firestore";
 import { StorageError, deleteObject, ref } from "firebase/storage";
 import { auth, db, storage } from "../../../../firebase";
 import ModifyTweet from "../../modify/modify-tweet";
-import TweetBody from "./tweet-body";
-import TweetFooter from "./tweet-footer";
 import TweetDeleteModal from "../../../modals/warning/tweet-delete-modal";
+import TweetCard from "./tweet-card";
 
 export interface ITweet {
   id: string;
@@ -87,19 +85,16 @@ export default function Tweet({
 
   return (
     <div className="w-100">
-      <Card
-        {...(user?.uid === userId && { border: "success" })}
-        className="mb-4"
-      >
-        <TweetBody message={message} photo={photo} username={username} />
-        <TweetFooter
-          user={user}
-          timeAgo={timeAgo}
-          userId={userId}
-          handleShowModifyModal={handleShowModifyModal}
-          handleShowDeleteModal={handleShowDeleteModal}
-        />
-      </Card>
+      <TweetCard
+        user={user}
+        timeAgo={timeAgo}
+        message={message}
+        photo={photo}
+        userId={userId}
+        username={username}
+        handleShowModifyModal={handleShowModifyModal}
+        handleShowDeleteModal={handleShowDeleteModal}
+      />
       {showModifyModal && (
         <ModifyTweet
           id={id}

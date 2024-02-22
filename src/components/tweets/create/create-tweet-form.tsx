@@ -1,8 +1,9 @@
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Form } from "react-bootstrap";
 import CreateReset from "./create-reset";
 import CreateInputGroup from "./create-input-group";
 import CreateTweetSuccess from "../../alert/success/tweets/create/create-tweet-success";
 import CreateTweetErrors from "../../alert/error/tweets/create/create-tweet-errors";
+import CreateTweetButton from "./create-tweet-button";
 
 export interface CreateTweetFormProps {
   isLoading: boolean;
@@ -51,14 +52,7 @@ export default function CreateTweetForm({
             resetMessageButton={resetMessageButton}
             resetPhotoButton={resetPhotoButton}
           />
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-100 fw-bold"
-            {...(!isMessage ? { disabled: true } : { disabled: false })}
-          >
-            {isLoading ? "Creating..." : "Create"}
-          </Button>
+          <CreateTweetButton isLoading={isLoading} isMessage={isMessage} />
         </Form>
       </Alert>
     </div>

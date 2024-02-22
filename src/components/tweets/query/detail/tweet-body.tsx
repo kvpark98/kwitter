@@ -2,7 +2,7 @@ import { Card } from "react-bootstrap";
 
 export interface TweetBodyProps {
   message: string;
-  photo?: string;
+  photo?: string | undefined;
   username: string;
 }
 
@@ -13,11 +13,11 @@ export default function TweetBody({
 }: TweetBodyProps) {
   return (
     <div className="d-flex">
-      <Card.Body>
-        <Card.Title className="fw-bold mb-3">{username}</Card.Title>
+      <Card.Body style={{ maxWidth: "323.7px" }}>
+        <Card.Title className="fw-bold mb-2">{username}</Card.Title>
         <Card.Text>{message}</Card.Text>
       </Card.Body>
-      {photo && <Card.Img variant="top" src={photo} className="w-25 h-25" />}
+      {photo && <Card.Img variant="top" src={photo} className="w-25" />}
     </div>
   );
 }
