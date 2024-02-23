@@ -19,7 +19,7 @@ export default function ModifyMessage({
       maxLength={180}
       className="mb-3 w-75"
       style={{ resize: "none" }}
-      placeholder="Your message..."
+      placeholder="What is happening?!"
     />
   );
 }

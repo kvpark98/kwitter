@@ -1,6 +1,5 @@
 import { Alert, Form } from "react-bootstrap";
 import ModifyFooter from "./modify-footer";
-import ModifyHeader from "./modify-header";
 import ModifyBody from "./modify-body";
 
 export interface ModifyTweetFormProps {
@@ -43,7 +42,6 @@ export default function ModifyTweetForm({
   return (
     <Form className="w-100" onSubmit={modifyTweet}>
       <Alert variant="light" className="m-0">
-        <ModifyHeader />
         <ModifyBody
           error={error}
           newFileInputRef={newFileInputRef}

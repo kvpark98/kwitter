@@ -36,10 +36,9 @@ export default function CreateTweetForm({
 }: CreateTweetFormProps) {
   return (
     <div>
-      <h1 className="fs-2 text-center mb-4">Create Tweet</h1>
       {tweetCreated && !error && <CreateTweetSuccess />}
       {error && <CreateTweetErrors error={error} />}
-      <Alert variant="light" className="mt-3 px-4 py-4 w-100">
+      <Alert variant="light" className="px-4 py-4 w-100">
         <Form className="w-100" onSubmit={createTweet}>
           <CreateInputGroup
             fileInputRef={fileInputRef}

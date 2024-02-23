@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { Card } from "react-bootstrap";
-import TweetFooterButtons from "./tweet-footer-buttons";
+import TweetFooterDropdown from "./tweet-footer-dropdown";
 
 export interface TweetFooterProps {
   user: User | null;
@@ -18,10 +18,10 @@ export default function TweetFooter({
   handleShowDeleteModal,
 }: TweetFooterProps) {
   return (
-    <Card.Footer className="d-flex justify-content-between">
+    <Card.Footer className="d-flex justify-content-between align-items-center">
       <p className="d-flex align-items-center text-muted">{timeAgo}</p>
       {user?.uid === userId && (
-        <TweetFooterButtons
+        <TweetFooterDropdown
           handleShowModifyModal={handleShowModifyModal}
           handleShowDeleteModal={handleShowDeleteModal}
         />

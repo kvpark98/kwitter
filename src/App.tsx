@@ -164,6 +164,9 @@ const GlobalStyles = createGlobalStyle`
     border-top-left-radius: 0;
     border-top-right-radius: var(--bs-card-inner-border-radius);
   }
+  .dropdown-toggle::after {
+    display: none;
+}
 `;
 
 function App() {

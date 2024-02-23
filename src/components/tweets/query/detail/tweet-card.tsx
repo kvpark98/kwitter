@@ -25,7 +25,10 @@ export default function TweetCard({
   handleShowDeleteModal,
 }: TweetCardProps) {
   return (
-    <Card {...(user?.uid === userId && { border: "dark" })} className="mb-4">
+    <Card
+      {...(user?.uid === userId && { border: "secondary" })}
+      className="mb-4"
+    >
       <TweetBody message={message} photo={photo} username={username} />
       <TweetFooter
         user={user}

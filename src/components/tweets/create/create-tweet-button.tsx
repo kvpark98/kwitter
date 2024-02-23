@@ -16,7 +16,7 @@ export default function CreateTweetButton({
       className="w-100 fw-bold"
       {...(!isMessage ? { disabled: true } : { disabled: false })}
     >
-      {isLoading ? "Creating..." : "Create"}
+      {isLoading ? "Posting..." : "Post"}
     </Button>
   );
 }

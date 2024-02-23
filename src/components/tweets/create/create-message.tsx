@@ -18,7 +18,7 @@ export default function CreateMessage({
       maxLength={180}
       className="w-75 mb-4"
       style={{ resize: "none" }}
-      placeholder="Your message..."
+      placeholder="What is happening?!"
     />
   );
 }
