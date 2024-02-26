@@ -30,6 +30,8 @@ export default function CreateTweet() {
 
   const [tweetCreated, setTweetCreated] = useState(false);
 
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
+
   const [error, setError] = useState("");
 
   const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -53,13 +55,25 @@ export default function CreateTweet() {
       const selectedFile = files[0];
 
       if (selectedFile.size <= 1024 * 1024) {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const result = reader.result as string;
+          setImagePreviewUrl(result);
+        };
+        reader.readAsDataURL(selectedFile);
+
         setFile(selectedFile);
+
         setError("");
       } else {
         setFile(null);
+        setImagePreviewUrl("");
+
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
+
         setError("size-exhausted");
 
         setTimeout(() => {
@@ -81,6 +95,7 @@ export default function CreateTweet() {
 
   const resetPhotoSubmit = () => {
     setFile(null);
+    setImagePreviewUrl("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -140,6 +155,8 @@ export default function CreateTweet() {
       resetMessageSubmit();
       resetPhotoSubmit();
 
+      setImagePreviewUrl("");
+
       // 트윗이 등록되었음을 표시
       setTweetCreated(true);
 
@@ -150,6 +167,8 @@ export default function CreateTweet() {
     } catch (error) {
       // 에러 발생 시 트윗 등록 상태를 초기화
       setTweetCreated(false);
+
+      setImagePreviewUrl("");
 
       if (error instanceof FirebaseError) {
         setError(error.code);
@@ -189,6 +208,7 @@ export default function CreateTweet() {
         isMessage={isMessage}
         file={file}
         handleFile={handleFile}
+        imagePreviewUrl={imagePreviewUrl}
         resetMessageButton={resetMessageButton}
         resetPhotoButton={resetPhotoButton}
         createTweet={createTweet}
