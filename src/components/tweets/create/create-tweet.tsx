@@ -206,7 +206,6 @@ export default function CreateTweet() {
         message={message}
         handleMessage={handleMessage}
         isMessage={isMessage}
-        file={file}
         handleFile={handleFile}
         imagePreviewUrl={imagePreviewUrl}
         resetMessageButton={resetMessageButton}

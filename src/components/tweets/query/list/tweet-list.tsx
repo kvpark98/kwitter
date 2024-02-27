@@ -105,7 +105,7 @@ export default function TweetList() {
 
   return (
     tweets.length !== 0 && (
-      <div className="w-100 overflow-y-scroll" style={{ maxHeight: "600px" }}>
+      <div>
         {tweets.map((tweet) => {
           return <Tweet key={tweet.id} {...tweet} />;
         })}

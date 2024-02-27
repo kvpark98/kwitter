@@ -1,10 +1,12 @@
 import { Button } from "react-bootstrap";
 
-export interface CreateResetProps {
+export interface CreateButtonResetProps {
   resetMessageButton: () => void;
 }
 
-export default function CreateReset({ resetMessageButton }: CreateResetProps) {
+export default function CreateButtonReset({
+  resetMessageButton,
+}: CreateButtonResetProps) {
   return (
     <Button
       type="button"
