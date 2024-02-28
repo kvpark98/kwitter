@@ -1,3 +1,4 @@
+import { Button } from "react-bootstrap";
 import CreateButtonPhoto from "./create-button-photo.tsx";
 import CreateButtonReset from "./create-button-reset.tsx";
 import CreateButtonSubmit from "./create-button-submit.tsx.tsx";
@@ -8,6 +9,7 @@ export interface CreateButtonsProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetMessageButton: () => void;
+  handleCloseCreateModal: () => void;
 }
 
 export default function CreateButtons({
@@ -16,6 +18,7 @@ export default function CreateButtons({
   fileInputRef,
   handleFile,
   resetMessageButton,
+  handleCloseCreateModal,
 }: CreateButtonsProps) {
   return (
     <div className="d-flex justify-content-between">
@@ -26,7 +29,17 @@ export default function CreateButtons({
         />
         <CreateButtonReset resetMessageButton={resetMessageButton} />
       </div>
-      <CreateButtonSubmit isLoading={isLoading} isMessage={isMessage} />
+      <div>
+        <Button
+          type="button"
+          variant="dark"
+          className="me-2 rounded-pill"
+          onClick={handleCloseCreateModal}
+        >
+          Close
+        </Button>
+        <CreateButtonSubmit isLoading={isLoading} isMessage={isMessage} />
+      </div>
     </div>
   );
 }

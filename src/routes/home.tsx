@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import Header from "../components/header&footer/header/header";
 import ScrollHome from "../components/scrolls/scrollHome";
 import CreateTweet from "../components/tweets/create/create-tweet";
@@ -7,6 +7,10 @@ import { auth } from "../firebase";
 import { Button, Container, Nav } from "react-bootstrap";
 
 export default function Home() {
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const handleShowCreateModal = () => setShowCreateModal(true);
+  const handleCloseCreateModal = () => setShowCreateModal(false);
+
   return (
     <div className="h-100">
       <Header avatar={auth.currentUser?.photoURL} />
@@ -118,13 +122,20 @@ export default function Home() {
                 <span>Sign Out</span>
               </Nav.Link>
             </Nav.Item>
-            <Button type="button" className="mt-3 rounded-pill fs-5 fw-bold">
+            <Button
+              type="button"
+              className="mt-3 rounded-pill fs-5 fw-bold"
+              onClick={handleShowCreateModal}
+            >
               Post
             </Button>
           </Nav>
         </div>
         <div className="h-100 m-auto" style={{ maxWidth: "500px" }}>
-          <CreateTweet />
+          <CreateTweet
+            showCreateModal={showCreateModal}
+            handleCloseCreateModal={handleCloseCreateModal}
+          />
           <TweetList />
           <ScrollHome />
         </div>

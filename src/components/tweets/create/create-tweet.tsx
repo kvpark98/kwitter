@@ -14,8 +14,17 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import CreateTweetForm from "./create-tweet-form";
+import { Modal } from "react-bootstrap";
 
-export default function CreateTweet() {
+export interface CreateTweetProps {
+  showCreateModal: boolean;
+  handleCloseCreateModal: () => void;
+}
+
+export default function CreateTweet({
+  showCreateModal,
+  handleCloseCreateModal,
+}: CreateTweetProps) {
   const user = auth.currentUser;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -198,7 +207,13 @@ export default function CreateTweet() {
   };
 
   return (
-    <div className="w-100">
+    <Modal
+      show={showCreateModal}
+      onHide={handleCloseCreateModal}
+      backdrop="static"
+      keyboard={false}
+      centered
+    >
       <CreateTweetForm
         isLoading={isLoading}
         error={error}
@@ -212,7 +227,8 @@ export default function CreateTweet() {
         resetPhotoButton={resetPhotoButton}
         createTweet={createTweet}
         tweetCreated={tweetCreated}
+        handleCloseCreateModal={handleCloseCreateModal}
       />
-    </div>
+    </Modal>
   );
 }
