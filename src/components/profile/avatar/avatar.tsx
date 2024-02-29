@@ -12,12 +12,11 @@ export default function Avatar({ avatar, handleDeleteAvatar }: AvatarProps) {
       className="rounded-circle overflow-hidden"
       style={{ width: "130px", height: "130px" }}
     >
-      <Form.Label htmlFor="avatar" className="btn m-0 p-0 border-0 h-100">
-        <Card.Img
-          src={avatar!}
-          title="Change Avatar"
-          className="h-100"
-        ></Card.Img>
+      <Form.Label
+        htmlFor="avatar"
+        className="btn m-0 p-0 border-0 w-100 h-100 ratio ratio-1x1"
+      >
+        <Card.Img src={avatar!} title="Change Avatar" />
       </Form.Label>
       <AvatarDeleteButton handleDeleteAvatar={handleDeleteAvatar} />
     </div>
