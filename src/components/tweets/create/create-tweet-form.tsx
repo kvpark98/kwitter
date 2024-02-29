@@ -37,34 +37,32 @@ export default function CreateTweetForm({
   handleCloseCreateModal,
 }: CreateTweetFormProps) {
   return (
-    <div>
-      <Form className="w-100" onSubmit={createTweet}>
-        <Alert
-          variant="light"
-          className="m-0 p-4 overflow-y-auto"
-          style={{ maxHeight: "600px" }}
-        >
-          {tweetCreated && !error && <CreateTweetSuccess />}
-          {error && <CreateTweetErrors error={error} />}
-          <div className="d-flex w-100">
-            <CreateTweetProfile />
-            <CreateMessagePhoto
-              message={message}
-              handleMessage={handleMessage}
-              imagePreviewUrl={imagePreviewUrl}
-              resetPhotoButton={resetPhotoButton}
-            />
-          </div>
-          <CreateButtons
-            isLoading={isLoading}
-            isMessage={isMessage}
-            fileInputRef={fileInputRef}
-            handleFile={handleFile}
-            resetMessageButton={resetMessageButton}
-            handleCloseCreateModal={handleCloseCreateModal}
+    <Form className="w-100" onSubmit={createTweet}>
+      <Alert
+        variant="light"
+        className="m-0 p-4 overflow-y-auto"
+        style={{ maxHeight: "600px" }}
+      >
+        {tweetCreated && !error && <CreateTweetSuccess />}
+        {error && <CreateTweetErrors error={error} />}
+        <div className="d-flex w-100">
+          <CreateTweetProfile />
+          <CreateMessagePhoto
+            message={message}
+            handleMessage={handleMessage}
+            imagePreviewUrl={imagePreviewUrl}
+            resetPhotoButton={resetPhotoButton}
           />
-        </Alert>
-      </Form>
-    </div>
+        </div>
+        <CreateButtons
+          isLoading={isLoading}
+          isMessage={isMessage}
+          fileInputRef={fileInputRef}
+          handleFile={handleFile}
+          resetMessageButton={resetMessageButton}
+          handleCloseCreateModal={handleCloseCreateModal}
+        />
+      </Alert>
+    </Form>
   );
 }

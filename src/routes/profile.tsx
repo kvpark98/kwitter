@@ -1,5 +1,3 @@
-import Footer from "../components/header&footer/footer/footer";
-import Header from "../components/header&footer/header/header";
 import { auth, db, storage } from "../firebase";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -23,6 +21,8 @@ import {
 } from "firebase/firestore";
 import ProfileContent from "../components/profile/profile-content";
 import { ITweet } from "../components/tweets/query/detail/tweet";
+import SideBar from "../components/header&footer/sidebar/side-bar";
+import { Container } from "react-bootstrap";
 
 export default function Profile() {
   const user = auth.currentUser;
@@ -246,9 +246,9 @@ export default function Profile() {
   }, []);
 
   return (
-    <div className="h-100">
-      <Header avatar={avatar} />
-      <div className="wrap">
+    <Container fluid className="h-100">
+      <SideBar />
+      <div className="h-100 m-auto" style={{ maxWidth: "500px" }}>
         <ProfileContent
           user={user}
           error={error}
@@ -261,8 +261,7 @@ export default function Profile() {
           handleDeleteAvatar={handleDeleteAvatar}
           tweets={tweets}
         />
-        <Footer />
       </div>
-    </div>
+    </Container>
   );
 }

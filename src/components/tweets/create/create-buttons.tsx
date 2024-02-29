@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import CreateButtonClose from "./create-button-close.tsx";
 import CreateButtonPhoto from "./create-button-photo.tsx";
 import CreateButtonReset from "./create-button-reset.tsx";
 import CreateButtonSubmit from "./create-button-submit.tsx.tsx";
@@ -30,14 +30,7 @@ export default function CreateButtons({
         <CreateButtonReset resetMessageButton={resetMessageButton} />
       </div>
       <div>
-        <Button
-          type="button"
-          variant="dark"
-          className="me-2 rounded-pill"
-          onClick={handleCloseCreateModal}
-        >
-          Close
-        </Button>
+        <CreateButtonClose handleCloseCreateModal={handleCloseCreateModal} />
         <CreateButtonSubmit isLoading={isLoading} isMessage={isMessage} />
       </div>
     </div>

@@ -1,20 +1,20 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
 export interface SignOutModalProps {
-  showModal: boolean;
-  handleCloseModal: () => void;
+  showSignOutModal: boolean;
+  handleCloseSignOutModal: () => void;
   signOut: () => void;
 }
 
 export default function SignOutModal({
-  showModal,
-  handleCloseModal,
+  showSignOutModal,
+  handleCloseSignOutModal,
   signOut,
 }: SignOutModalProps) {
   return (
     <Modal
-      show={showModal}
-      onHide={handleCloseModal}
+      show={showSignOutModal}
+      onHide={handleCloseSignOutModal}
       backdrop="static"
       keyboard={false}
     >
@@ -26,7 +26,7 @@ export default function SignOutModal({
           </p>
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0 p-3">
-          <Button variant="outline-dark" onClick={handleCloseModal}>
+          <Button variant="outline-dark" onClick={handleCloseSignOutModal}>
             Cancel
           </Button>
           <Button variant="outline-danger" onClick={signOut}>
