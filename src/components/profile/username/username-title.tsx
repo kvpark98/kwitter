@@ -16,7 +16,7 @@ export default function UsernameTitle({
   handleShowModifyModal,
 }: UsernameTitleProps) {
   return (
-    <div className="d-flex align-items-center mb-4">
+    <div className="d-flex justify-content-center align-items-center mb-4">
       <h1 className="fs-2 me-2">{user?.displayName ?? "Anonymous"}</h1>
       <UsernameModifyButton handleShowModifyModal={handleShowModifyModal} />
       <ChangeUsername

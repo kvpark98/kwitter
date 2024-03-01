@@ -21,7 +21,7 @@ import {
 } from "firebase/firestore";
 import ProfileContent from "../components/profile/profile-content";
 import { ITweet } from "../components/tweets/query/detail/tweet";
-import SideBar from "../components/header&footer/sidebar/side-bar";
+import SideBar from "../components/header&footer/side-bar/side-bar";
 import { Container } from "react-bootstrap";
 
 export default function Profile() {
@@ -248,7 +248,7 @@ export default function Profile() {
   return (
     <Container fluid className="h-100">
       <SideBar />
-      <div className="h-100 m-auto" style={{ maxWidth: "500px" }}>
+      <div className="h-100 m-auto" style={{ maxWidth: "600px" }}>
         <ProfileContent
           user={user}
           error={error}

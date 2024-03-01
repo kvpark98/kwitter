@@ -16,12 +16,14 @@ export default function AvatarForm({
   handleDeleteAvatar,
 }: AvatarFormProps) {
   return (
-    <div className="d-flex justify-content-center align-items-center position-relative mb-4">
-      {Boolean(avatar) ? (
-        <Avatar avatar={avatar} handleDeleteAvatar={handleDeleteAvatar} />
-      ) : (
-        <NoAvatar />
-      )}
+    <div className="d-flex justify-content-center align-items-center mb-4">
+      <div className="position-relative">
+        {Boolean(avatar) ? (
+          <Avatar avatar={avatar} handleDeleteAvatar={handleDeleteAvatar} />
+        ) : (
+          <NoAvatar />
+        )}
+      </div>
       <Form.Control
         ref={fileInputRef}
         onChange={handleAvatar}

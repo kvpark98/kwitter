@@ -29,14 +29,16 @@ export default function TweetCard({
       {...(user?.uid === userId && { border: "secondary" })}
       className="mb-4"
     >
-      <TweetBody message={message} photo={photo} username={username} />
-      <TweetFooter
+      <TweetBody
         user={user}
-        timeAgo={timeAgo}
+        message={message}
+        photo={photo}
+        username={username}
         userId={userId}
         handleShowModifyModal={handleShowModifyModal}
         handleShowDeleteModal={handleShowDeleteModal}
       />
+      <TweetFooter timeAgo={timeAgo} />
     </Card>
   );
 }

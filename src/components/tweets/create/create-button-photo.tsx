@@ -14,7 +14,7 @@ export default function CreateButtonPhoto({
       <Form.Label
         htmlFor="file"
         title="Image"
-        className="d-flex align-items-center btn btn-outline-dark border-0 m-0 rounded-circle me-2"
+        className="d-flex align-items-center btn btn-outline-secondary border-0 m-0 rounded-circle me-2"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

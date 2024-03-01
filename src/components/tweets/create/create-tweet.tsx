@@ -18,12 +18,12 @@ import { Modal } from "react-bootstrap";
 
 export interface CreateTweetProps {
   showCreateModal: boolean;
-  handleCloseCreateModal: () => void;
+  setShowCreateModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function CreateTweet({
   showCreateModal,
-  handleCloseCreateModal,
+  setShowCreateModal,
 }: CreateTweetProps) {
   const user = auth.currentUser;
 
@@ -42,6 +42,12 @@ export default function CreateTweet({
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
 
   const [error, setError] = useState("");
+
+  const handleCloseCreateModal = () => {
+    setShowCreateModal(false);
+    resetMessageButton();
+    resetPhotoButton();
+  };
 
   const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.currentTarget.value;

@@ -6,7 +6,7 @@ export interface UserTweetsProps {
 
 export default function UserTweets({ tweets }: UserTweetsProps) {
   return (
-    <div className="w-100 overflow-y-scroll" style={{ maxHeight: "600px" }}>
+    <div>
       {tweets.map((tweet) => {
         return <Tweet key={tweet.id} {...tweet} />;
       })}

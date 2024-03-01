@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 import ScrollProfile from "../../components/scrolls/scrollProfile";
 import AccountTitle from "../../components/account/account-title";
 import AccountContent from "../../components/account/account-content";
-import SideBar from "../../components/header&footer/sidebar/side-bar";
+import SideBar from "../../components/header&footer/side-bar/side-bar";
 
 export default function Account() {
   return (

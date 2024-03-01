@@ -1,5 +1,4 @@
 import ProfileErrors from "../alert/error/profile/profile-errors";
-import { Wrapper } from "../styles/auth-components";
 import ScrollProfile from "../scrolls/scrollProfile";
 import { User } from "firebase/auth";
 import { ITweet } from "../tweets/query/detail/tweet";
@@ -33,7 +32,7 @@ export default function ProfileContent({
   tweets,
 }: ProfileContentProps) {
   return (
-    <Wrapper>
+    <div className="pt-5">
       <UsernameTitle
         user={user}
         showModifyModal={showModifyModal}
@@ -49,6 +48,6 @@ export default function ProfileContent({
       />
       {tweets.length !== 0 && <UserTweets tweets={tweets} />}
       <ScrollProfile />
-    </Wrapper>
+    </div>
   );
 }

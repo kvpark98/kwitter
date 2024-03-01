@@ -166,7 +166,11 @@ const GlobalStyles = createGlobalStyle`
   }
   .dropdown-toggle::after {
     display: none;
-}
+  }
+  .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: var(--bs-nav-pills-link-active-color);
+    background-color: #212529;
+  }
 `;
 
 function App() {
