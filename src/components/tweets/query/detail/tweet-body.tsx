@@ -1,6 +1,7 @@
 import { Card } from "react-bootstrap";
-import TweetFooterDropdown from "./tweet-footer-dropdown";
 import { User } from "firebase/auth";
+import TweetBodyProfile from "./tweet-body-profile";
+import TweetBodyContent from "./tweet-body-content";
 
 export interface TweetBodyProps {
   user: User | null;
@@ -22,20 +23,17 @@ export default function TweetBody({
   handleShowDeleteModal,
 }: TweetBodyProps) {
   return (
-    <Card.Body className="d-block">
-      <div className="d-flex justify-content-between mb-3">
-        <Card.Title className="fw-bold">{username}</Card.Title>
-        {user?.uid === userId && (
-          <TweetFooterDropdown
-            handleShowModifyModal={handleShowModifyModal}
-            handleShowDeleteModal={handleShowDeleteModal}
-          />
-        )}
-      </div>
-      <Card.Text>{message}</Card.Text>
-      {photo && (
-        <Card.Img variant="top" src={photo} className="mt-3 rounded-4" />
-      )}
+    <Card.Body className="d-flex">
+      <TweetBodyProfile />
+      <TweetBodyContent
+        user={user}
+        message={message}
+        photo={photo}
+        username={username}
+        userId={userId}
+        handleShowModifyModal={handleShowModifyModal}
+        handleShowDeleteModal={handleShowDeleteModal}
+      />
     </Card.Body>
   );
 }

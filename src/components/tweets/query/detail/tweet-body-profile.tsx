@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { auth } from "../../../firebase";
+import { auth } from "../../../../firebase";
 
-export default function CreateTweetProfile() {
+export default function TweetBodyProfile() {
   return (
     <div className="me-2">
       <Link to="/profile" title={auth.currentUser?.displayName!}>
