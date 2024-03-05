@@ -11,13 +11,12 @@ export default function ModifyMessage({
 }: ModifyMessageProps) {
   return (
     <Form.Control
-      id="textarea"
       as="textarea"
       onChange={handleNewMessage}
       value={newMessage}
       rows={5}
       maxLength={180}
-      className="mb-3 w-75"
+      className="mb-4 rounded-4"
       style={{ resize: "none" }}
       placeholder="What is happening?!"
     />

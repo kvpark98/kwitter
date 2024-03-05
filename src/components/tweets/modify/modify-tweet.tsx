@@ -46,13 +46,9 @@ export default function ModifyTweet({
 
   const [tweetModified, setTweetModified] = useState(false);
 
-  const [deletePhotoChecked, setDeletePhotoChecked] = useState(false);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
 
   const [error, setError] = useState("");
-
-  const handleDeletePhotoChecked = () => {
-    setDeletePhotoChecked((current) => !current);
-  };
 
   const handleNewMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.currentTarget.value;
@@ -69,24 +65,42 @@ export default function ModifyTweet({
   const handleNewFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetModified(false);
 
-    const { files } = event.currentTarget;
+    const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
     if (files && files.length === 1) {
-      const selectedFile = files[0];
-      setDeletePhotoChecked(false);
+      // 파일이 존재하고 하나만 선택된 경우
+      const selectedFile = files[0]; // 첫 번째 선택된 파일
 
       if (selectedFile.size <= 1024 * 1024) {
-        setNewFile(selectedFile);
-        setError("");
+        // 파일 크기가 1MB 이하인 경우
+        const reader = new FileReader(); // FileReader 객체를 생성
+
+        reader.onload = () => {
+          // 파일을 읽은 후
+          const result = reader.result as string; // 결과를 문자열로 변환
+          setImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
+        };
+        reader.readAsDataURL(selectedFile); // 파일을 Data URL로 읽기
+
+        setNewFile(selectedFile); // 선택된 파일을 상태로 설정
+
+        setError(""); // 에러 메시지 초기화
       } else {
-        setNewFile(null);
+        // 파일 크기가 1MB를 초과하는 경우
+        setNewFile(null); // 선택된 파일 상태를 null로 설정
+
+        setImagePreviewUrl(""); // 이미지 미리보기 URL을 초기화
+
         if (newFileInputRef.current) {
-          newFileInputRef.current.value = "";
+          // 파일 입력(input) 참조가 있는 경우
+          newFileInputRef.current.value = ""; // 파일 값을 초기화
         }
-        setError("size-exhausted");
+
+        setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
 
         setTimeout(() => {
-          setError("");
+          // 5초 후
+          setError(""); // 에러 메시지 초기화
         }, 5000);
       }
     }
@@ -104,6 +118,7 @@ export default function ModifyTweet({
 
   const resetPhotoSubmit = () => {
     setNewFile(null);
+    setImagePreviewUrl("");
     if (newFileInputRef.current) {
       newFileInputRef.current.value = "";
     }
@@ -113,6 +128,16 @@ export default function ModifyTweet({
     resetPhotoSubmit();
     setError("");
     setTweetModified(false);
+  };
+
+  const deletePhoto = async () => {
+    // 기존 이미지 삭제
+    await updateDoc(doc(db, "tweets", id), {
+      photo: deleteField(),
+    });
+
+    const photoRef = ref(storage, `tweets/${user?.uid}/${id}`);
+    await deleteObject(photoRef);
   };
 
   const modifyTweet = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -157,16 +182,6 @@ export default function ModifyTweet({
         }
       }
 
-      // 기존 이미지만 삭제
-      if (deletePhotoChecked) {
-        await updateDoc(doc(db, "tweets", id), {
-          photo: deleteField(),
-        });
-
-        const photoRef = ref(storage, `tweets/${user.uid}/${id}`);
-        await deleteObject(photoRef);
-      }
-
       // Firestore의 트윗 문서 업데이트
       await updateDoc(doc(db, "tweets", id), {
         message: newMessage,
@@ -175,7 +190,6 @@ export default function ModifyTweet({
 
       // 파일 상태를 초기화
       resetPhotoSubmit();
-      setDeletePhotoChecked(false);
 
       // 트윗이 수정되었음을 표시
       setTweetModified(true);
@@ -230,13 +244,12 @@ export default function ModifyTweet({
         newMessage={newMessage}
         handleNewMessage={handleNewMessage}
         isNewMessage={isNewMessage}
-        newFile={newFile}
         handleNewFile={handleNewFile}
         photo={photo}
-        deletePhotoChecked={deletePhotoChecked}
-        handleDeletePhotoChecked={handleDeletePhotoChecked}
+        imagePreviewUrl={imagePreviewUrl}
         resetMessageButton={resetMessageButton}
         resetPhotoButton={resetPhotoButton}
+        deletePhoto={deletePhoto}
         modifyTweet={modifyTweet}
         tweetModified={tweetModified}
         handleCloseModifyModal={handleCloseModifyModal}

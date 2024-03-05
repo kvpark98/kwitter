@@ -64,35 +64,42 @@ export default function CreateTweet({
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetCreated(false);
 
-    const { files } = event.currentTarget;
+    const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
     if (files && files.length === 1) {
-      const selectedFile = files[0];
+      // 파일이 존재하고 하나만 선택된 경우
+      const selectedFile = files[0]; // 첫 번째 선택된 파일
 
       if (selectedFile.size <= 1024 * 1024) {
-        const reader = new FileReader();
+        // 파일 크기가 1MB 이하인 경우
+        const reader = new FileReader(); // FileReader 객체를 생성
 
         reader.onload = () => {
-          const result = reader.result as string;
-          setImagePreviewUrl(result);
+          // 파일을 읽은 후
+          const result = reader.result as string; // 결과를 문자열로 변환
+          setImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
         };
-        reader.readAsDataURL(selectedFile);
+        reader.readAsDataURL(selectedFile); // 파일을 Data URL로 읽기
 
-        setFile(selectedFile);
+        setFile(selectedFile); // 선택된 파일을 상태로 설정
 
-        setError("");
+        setError(""); // 에러 메시지 초기화
       } else {
-        setFile(null);
-        setImagePreviewUrl("");
+        // 파일 크기가 1MB를 초과하는 경우
+        setFile(null); // 선택된 파일 상태를 null로 설정
+
+        setImagePreviewUrl(""); // 이미지 미리보기 URL을 초기화
 
         if (fileInputRef.current) {
-          fileInputRef.current.value = "";
+          // 파일 입력(input) 참조가 있는 경우
+          fileInputRef.current.value = ""; // 파일 값을 초기화
         }
 
-        setError("size-exhausted");
+        setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
 
         setTimeout(() => {
-          setError("");
+          // 5초 후
+          setError(""); // 에러 메시지 초기화
         }, 5000);
       }
     }

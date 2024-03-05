@@ -1,19 +1,19 @@
 import { Button } from "react-bootstrap";
 
-export interface ModifyPhotoDeleteProps {
-  deletePhoto: () => Promise<void>;
+export interface ModifyPhotoRemoveProps {
+  resetPhotoButton: () => void;
 }
 
-export default function ModifyPhotoDelete({
-  deletePhoto,
-}: ModifyPhotoDeleteProps) {
+export default function ModifyPhotoRemove({
+  resetPhotoButton,
+}: ModifyPhotoRemoveProps) {
   return (
     <Button
       type="button"
       variant="dark"
       className="d-flex align-items-center position-absolute rounded-circle top-0 end-0 p-2"
-      title="Delete"
-      onClick={deletePhoto}
+      title="Remove"
+      onClick={resetPhotoButton}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

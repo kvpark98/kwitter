@@ -22,9 +22,11 @@ export default function TweetBodyContent({
   handleShowDeleteModal,
 }: TweetBodyContentProps) {
   return (
-    <div>
+    <div className="w-100">
       <Card.Title className="d-flex justify-content-between mb-3">
-        <span className="fw-bold">{username}</span>
+        <span className="fw-bold">
+          {user?.uid === userId ? user?.displayName : username}
+        </span>
         {user?.uid === userId && (
           <TweetFooterDropdown
             handleShowModifyModal={handleShowModifyModal}

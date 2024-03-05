@@ -1,7 +1,7 @@
 import CreateButtonClose from "./create-button-close.tsx";
 import CreateButtonPhoto from "./create-button-photo.tsx";
 import CreateButtonReset from "./create-button-reset.tsx";
-import CreateButtonSubmit from "./create-button-submit.tsx.tsx";
+import CreateButtonSubmit from "./create-button-submit.tsx";
 
 export interface CreateButtonsProps {
   isLoading: boolean;

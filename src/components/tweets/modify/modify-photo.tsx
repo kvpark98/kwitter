@@ -1,51 +1,31 @@
-import { Form, InputGroup } from "react-bootstrap";
-import ModifyPhotoNew from "./modify-photo-new";
-import ModifyPhotoCurrent from "./modify-photo-current";
-import ModifyPhotoAdd from "./modify-photo-add";
+import ModifyPhotoDelete from "./modify-photo-delete";
+import ModifyPhotoRemove from "./modify-photo-remove";
 
 export interface ModifyPhotoProps {
-  newFileInputRef: React.RefObject<HTMLInputElement>;
-  newFile: File | null;
-  handleNewFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  photo?: string | undefined;
-  deletePhotoChecked: boolean;
-  handleDeletePhotoChecked: () => void;
+  photo: string | undefined;
+  imagePreviewUrl: string;
+  resetPhotoButton: () => void;
+  deletePhoto: () => Promise<void>;
 }
 
 export default function ModifyPhoto({
-  newFileInputRef,
-  newFile,
-  handleNewFile,
   photo,
-  deletePhotoChecked,
-  handleDeletePhotoChecked,
+  imagePreviewUrl,
+  resetPhotoButton,
+  deletePhoto,
 }: ModifyPhotoProps) {
   return (
-    <InputGroup.Text className="w-25 mb-3 p-0">
-      <Form.Label
-        htmlFor="newFile"
-        className="btn btn-outline-secondary w-100 h-100 border-0 m-0 p-0"
-      >
-        {newFile ? (
-          <ModifyPhotoNew />
-        ) : photo ? (
-          <ModifyPhotoCurrent
-            photo={photo}
-            deletePhotoChecked={deletePhotoChecked}
-            handleDeletePhotoChecked={handleDeletePhotoChecked}
-          />
-        ) : (
-          <ModifyPhotoAdd />
-        )}
-      </Form.Label>
-      <Form.Control
-        ref={newFileInputRef}
-        onChange={handleNewFile}
-        type="file"
-        id="newFile"
-        className="d-none"
-        accept="image/*"
+    <div className="position-relative">
+      <img
+        src={photo}
+        alt="Image Preview"
+        className="w-100 h-100 mb-4 rounded-4"
       />
-    </InputGroup.Text>
+      {imagePreviewUrl ? (
+        <ModifyPhotoRemove resetPhotoButton={resetPhotoButton} />
+      ) : (
+        photo && <ModifyPhotoDelete deletePhoto={deletePhoto} />
+      )}
+    </div>
   );
 }
