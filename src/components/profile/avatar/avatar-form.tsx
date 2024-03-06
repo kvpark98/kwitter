@@ -3,15 +3,15 @@ import Avatar from "./avatar";
 import NoAvatar from "./no-avatar";
 
 export interface AvatarFormProps {
-  avatar: string | null | undefined;
   fileInputRef: React.RefObject<HTMLInputElement>;
+  avatar: string | null | undefined;
   handleAvatar: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleDeleteAvatar: () => Promise<void>;
 }
 
 export default function AvatarForm({
-  avatar,
   fileInputRef,
+  avatar,
   handleAvatar,
   handleDeleteAvatar,
 }: AvatarFormProps) {

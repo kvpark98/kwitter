@@ -134,6 +134,7 @@ export default function ModifyTweet({
     // 기존 이미지 삭제
     await updateDoc(doc(db, "tweets", id), {
       photo: deleteField(),
+      createdAt: Date.now(),
     });
 
     const photoRef = ref(storage, `tweets/${user?.uid}/${id}`);
@@ -174,6 +175,7 @@ export default function ModifyTweet({
           // Firestore db의 문서를 업데이트하여 다운로드 URL을 추가
           await updateDoc(doc(db, "tweets", id), {
             photo: url,
+            username: user.displayName,
           });
         } else {
           // 파일 크기가 1MB를 초과하면 에러 발생
@@ -184,8 +186,9 @@ export default function ModifyTweet({
 
       // Firestore의 트윗 문서 업데이트
       await updateDoc(doc(db, "tweets", id), {
-        message: newMessage,
         createdAt: Date.now(),
+        message: newMessage,
+        username: user.displayName,
       });
 
       // 파일 상태를 초기화

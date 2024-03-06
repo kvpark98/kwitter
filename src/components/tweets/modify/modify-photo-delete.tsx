@@ -10,7 +10,7 @@ export default function ModifyPhotoDelete({
   return (
     <Button
       type="button"
-      variant="dark"
+      variant="danger"
       className="d-flex align-items-center position-absolute rounded-circle top-0 end-0 p-2"
       title="Delete"
       onClick={deletePhoto}
@@ -20,10 +20,10 @@ export default function ModifyPhotoDelete({
         width="16"
         height="16"
         fill="currentColor"
-        className="bi bi-x-lg"
+        className="bi bi-trash-fill"
         viewBox="0 0 16 16"
       >
-        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
       </svg>
     </Button>
   );

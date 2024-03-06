@@ -39,7 +39,7 @@ export default function Profile() {
   const [error, setError] = useState("");
 
   const handleAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    // 파일 정보를 가져온다.
+    // 파일 정보 가져오기
     const { files } = event.currentTarget;
 
     // 사용자가 없으면 함수 종료

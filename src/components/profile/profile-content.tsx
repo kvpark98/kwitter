@@ -41,8 +41,8 @@ export default function ProfileContent({
       />
       {error && <ProfileErrors error={error} />}
       <AvatarForm
-        avatar={avatar}
         fileInputRef={fileInputRef}
+        avatar={avatar}
         handleAvatar={handleAvatar}
         handleDeleteAvatar={handleDeleteAvatar}
       />
