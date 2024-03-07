@@ -2,7 +2,6 @@ import { auth, db, storage } from "../firebase";
 import { useEffect, useRef, useState } from "react";
 import {
   StorageError,
-  deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
@@ -37,6 +36,8 @@ export default function Profile() {
   const [tweets, setTweets] = useState<ITweet[]>([]);
 
   const [error, setError] = useState("");
+
+  const defaultImageURL = "/person-circle.svg";
 
   const handleAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     // 파일 정보 가져오기
@@ -114,23 +115,27 @@ export default function Profile() {
     }
 
     try {
-      // Avatar 초기화
-      setAvatar(null);
-
       // 파일 인풋 리셋
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
 
+      const defaultImageResponse = await fetch(defaultImageURL);
+
+      const defaultImageBlob = await defaultImageResponse.blob();
+
+      const locationRef = ref(storage, `avatars/${user?.uid}`);
+
+      const result = await uploadBytes(locationRef, defaultImageBlob);
+
+      const url = await getDownloadURL(result.ref);
+
+      setAvatar(url);
+
       // 사용자 프로필 업데이트
       await updateProfile(user!, {
-        photoURL: "",
+        photoURL: url,
       });
-
-      // Storage에서 사진 삭제
-      const photoRef = ref(storage, `avatars/${user?.uid}`);
-
-      await deleteObject(photoRef);
     } catch (error) {
       // 에러 처리
       if (error instanceof FirebaseError) {
@@ -210,7 +215,7 @@ export default function Profile() {
         collection(db, "tweets"),
         where("userId", "==", user?.uid),
         orderBy("createdAt", "desc"),
-        limit(25)
+        limit(30)
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록

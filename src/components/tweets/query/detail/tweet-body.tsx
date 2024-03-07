@@ -23,7 +23,11 @@ export default function TweetBody({
   handleShowDeleteModal,
 }: TweetBodyProps) {
   return (
-    <Card.Body className="d-flex">
+    <Card.Body
+      {...(user?.uid === userId
+        ? { className: "d-flex bg-primary-subtle" }
+        : { className: "d-flex" })}
+    >
       <TweetBodyProfile user={user} userId={userId} username={username} />
       <TweetBodyContent
         user={user}

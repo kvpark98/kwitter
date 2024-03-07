@@ -1,4 +1,4 @@
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import Avatar from "./avatar";
 import NoAvatar from "./no-avatar";
 
@@ -18,11 +18,15 @@ export default function AvatarForm({
   return (
     <div className="d-flex justify-content-center align-items-center mb-4">
       <div className="position-relative">
-        {Boolean(avatar) ? (
-          <Avatar avatar={avatar} handleDeleteAvatar={handleDeleteAvatar} />
-        ) : (
-          <NoAvatar />
-        )}
+        {Boolean(avatar) ? <Avatar avatar={avatar} /> : <NoAvatar />}
+        <Button
+          type="button"
+          variant="secondary"
+          className="w-100 mt-3"
+          onClick={handleDeleteAvatar}
+        >
+          Default Avatar
+        </Button>
       </div>
       <Form.Control
         ref={fileInputRef}

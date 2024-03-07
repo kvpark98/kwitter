@@ -25,10 +25,7 @@ export default function TweetCard({
   handleShowDeleteModal,
 }: TweetCardProps) {
   return (
-    <Card
-      {...(user?.uid === userId && { border: "success-subtle" })}
-      className="d-flex rounded-0 mb-2"
-    >
+    <Card className="d-flex rounded-0 mb-2">
       <TweetBody
         user={user}
         message={message}

@@ -4,12 +4,13 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useRef, useState } from "react";
-import { auth } from "../../firebase";
+import { auth, storage } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import Header from "../../components/header&footer/header/header";
 import Footer from "../../components/header&footer/footer/footer";
 import SignUpForm from "../../components/auth/sign-up/sign-up-form";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function SignUp() {
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +39,8 @@ export default function SignUp() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
+
+  const defaultImageURL = "/person-circle.svg";
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -292,8 +295,19 @@ export default function SignUp() {
 
       await sendEmailVerification(credentials.user, actionCodeSettings);
 
+      const defaultImageResponse = await fetch(defaultImageURL);
+
+      const defaultImageBlob = await defaultImageResponse.blob();
+
+      const locationRef = ref(storage, `avatars/${credentials.user.uid}`);
+
+      const result = await uploadBytes(locationRef, defaultImageBlob);
+
+      const url = await getDownloadURL(result.ref);
+
       await updateProfile(credentials.user, {
         displayName: name,
+        photoURL: url,
       });
 
       signOut();
