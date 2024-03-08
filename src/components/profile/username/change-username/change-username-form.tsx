@@ -1,7 +1,8 @@
 import { Alert, Form } from "react-bootstrap";
-import ChangeUsernameFooter from "./change-username-footer";
-import ChangeUsernameHeader from "./change-username-header";
-import ChangeUsernameBody from "./change-username-body";
+import ChangeUsernameName from "./change-username-name";
+import ChangeUsernameErrors from "../../../alert/error/auth/change-username/change-username-errors";
+import ChangeUsernameSuccess from "../../../alert/success/auth/change-username/change-username-success";
+import ChangeUsernameButtons from "./change-username-buttons";
 
 export interface ChangeUsernameFormProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
@@ -34,22 +35,21 @@ export default function ChangeUsernameForm({
 }: ChangeUsernameFormProps) {
   return (
     <Form className="w-100" onSubmit={changeName}>
-      <Alert variant="light" className="m-0">
-        <ChangeUsernameHeader />
-        <ChangeUsernameBody
+      <Alert variant="light" className="m-0 p-4">
+        {isUpdated && !error && <ChangeUsernameSuccess />}
+        {error && <ChangeUsernameErrors error={error} />}
+        <ChangeUsernameName
           nameInputRef={nameInputRef}
-          error={error}
           name={name}
           handleName={handleName}
           isName={isName}
           nameErrorMessage={nameErrorMessage}
           noSpace={noSpace}
-          reset={reset}
-          isUpdated={isUpdated}
         />
-        <ChangeUsernameFooter
+        <ChangeUsernameButtons
           isLoading={isLoading}
           isName={isName}
+          reset={reset}
           handleCloseModifyModal={handleCloseModifyModal}
         />
       </Alert>

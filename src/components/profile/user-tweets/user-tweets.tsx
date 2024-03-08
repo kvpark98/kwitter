@@ -6,7 +6,7 @@ export interface UserTweetsProps {
 
 export default function UserTweets({ tweets }: UserTweetsProps) {
   return (
-    <div>
+    <div className="pt-5">
       {tweets.map((tweet) => {
         return <Tweet key={tweet.id} {...tweet} />;
       })}

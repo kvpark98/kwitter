@@ -16,8 +16,11 @@ export default function AvatarForm({
   handleDeleteAvatar,
 }: AvatarFormProps) {
   return (
-    <div className="d-flex justify-content-center align-items-center mb-4">
-      <div className="position-relative">
+    <div
+      className="d-flex justify-content-center align-items-center mb-4 position-absolute top-100 translate-middle-y"
+      style={{ left: "5%" }}
+    >
+      <div>
         {Boolean(avatar) ? <Avatar avatar={avatar} /> : <NoAvatar />}
         <Button
           type="button"
