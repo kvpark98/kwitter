@@ -18,7 +18,7 @@ export default function ChangeUsernameName({
   noSpace,
 }: ChangeUsernameNameProps) {
   return (
-    <Form.Group>
+    <Form.Group className="pt-5">
       <Form.Label htmlFor="name">Username</Form.Label>
       <Form.Control
         ref={nameInputRef}
