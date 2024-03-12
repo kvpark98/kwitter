@@ -1,6 +1,6 @@
 import { Form } from "react-bootstrap";
 
-export interface ChangeUsernameNameProps {
+export interface ModifyProfileNameProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
   name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -9,14 +9,14 @@ export interface ChangeUsernameNameProps {
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export default function ChangeUsernameName({
+export default function ModifyProfileName({
   nameInputRef,
   name,
   handleName,
   isName,
   nameErrorMessage,
   noSpace,
-}: ChangeUsernameNameProps) {
+}: ModifyProfileNameProps) {
   return (
     <Form.Group className="pt-5">
       <Form.Label htmlFor="name">Username</Form.Label>

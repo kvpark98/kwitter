@@ -1,16 +1,16 @@
 import { Button } from "react-bootstrap";
 
-export interface ChangeUsernameResetProps {
-  reset: () => void;
+export interface ModifyProfileResetProps {
+  resetName: () => void;
 }
 
-export default function ChangeUsernameReset({
-  reset,
-}: ChangeUsernameResetProps) {
+export default function ModifyProfileReset({
+  resetName,
+}: ModifyProfileResetProps) {
   return (
     <Button
       type="button"
-      onClick={reset}
+      onClick={resetName}
       title="Reset"
       variant="outline-info"
       className="d-flex align-items-center border-0 rounded-circle"

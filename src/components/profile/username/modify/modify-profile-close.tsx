@@ -1,12 +1,12 @@
 import { Button } from "react-bootstrap";
 
-export interface ChangeUsernameCloseProps {
+export interface ModifyProfileCloseProps {
   handleCloseModifyModal: () => void;
 }
 
-export default function ChangeUsernameClose({
+export default function ModifyProfileClose({
   handleCloseModifyModal,
-}: ChangeUsernameCloseProps) {
+}: ModifyProfileCloseProps) {
   return (
     <Button
       type="button"

@@ -26,41 +26,237 @@ import { Container } from "react-bootstrap";
 export default function Profile() {
   const user = auth.currentUser;
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const defaultImageURL = "/person-circle.svg";
 
-  const [showModifyModal, setShowModifyModal] = useState(false);
-  const handleShowModifyModal = () => setShowModifyModal(true);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const backgroundInputRef = useRef<HTMLInputElement>(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [name, setName] = useState(user?.displayName);
+
+  const [isName, setIsName] = useState(true);
 
   const [avatar, setAvatar] = useState(user?.photoURL);
 
+  const [background, setBackground] = useState("");
+
+  const getBackground = async () => {
+    try {
+      const locationRef = ref(storage, `background/${user?.uid}`);
+      const result = await getDownloadURL(locationRef);
+      setBackground(result);
+    } catch (error) {
+      setBackground("/default-background.png");
+    }
+  };
+
+  getBackground();
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
+  const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
+
+  const [avatarImagePreviewUrl, setAvatarImagePreviewUrl] =
+    useState<string>("");
+
+  const [backgroundImagePreviewUrl, setBackgroundImagePreviewUrl] =
+    useState<string>("");
+
   const [tweets, setTweets] = useState<ITweet[]>([]);
+
+  const [isProfileModified, setIsProfileModified] = useState(false);
 
   const [error, setError] = useState("");
 
-  const defaultImageURL = "/person-circle.svg";
+  const [nameErrorMessage, setNameErrorMessage] = useState("");
 
-  const handleAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    // 파일 정보 가져오기
-    const { files } = event.currentTarget;
+  const [showModifyModal, setShowModifyModal] = useState(false);
+  const handleShowModifyModal = () => setShowModifyModal(true);
+  const handleCloseModifyModal = () => {
+    setShowModifyModal(false);
+    resetName();
+    resetAvatar();
+    resetBackground();
+  };
 
-    // 사용자가 없으면 함수 종료
-    if (!user) {
+  const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    const regName = /^[가-힣a-zA-Z]{2,20}$/;
+
+    setName(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      if (!regName.test(value)) {
+        setNameErrorMessage(
+          "Please enter at least 2 characters either in English or Korean."
+        );
+        setIsName(false);
+
+        nameInputRef.current?.classList.add("form-control-invalid");
+      } else {
+        setIsName(true);
+
+        nameInputRef.current?.classList.remove("form-control-invalid");
+      }
+    } else {
+      setNameErrorMessage("");
+      setIsName(false);
+
+      nameInputRef.current?.classList.remove("form-control-invalid");
+    }
+  };
+
+  const handleAvatarImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsProfileModified(false);
+
+    const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
+
+    if (files && files.length === 1) {
+      // 파일이 존재하고 하나만 선택된 경우
+      const selectedFile = files[0]; // 첫 번째 선택된 파일
+
+      if (selectedFile.size <= 1024 * 1024) {
+        // 파일 크기가 1MB 이하인 경우
+        const reader = new FileReader(); // FileReader 객체를 생성
+
+        reader.onload = () => {
+          // 파일을 읽은 후
+          const result = reader.result as string; // 결과를 문자열로 변환
+          setAvatarImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
+        };
+        reader.readAsDataURL(selectedFile); // 파일을 Data URL로 읽기
+
+        setAvatarFile(selectedFile); // 선택된 파일을 상태로 설정
+
+        setError(""); // 에러 메시지 초기화
+      } else {
+        // 파일 크기가 1MB를 초과하는 경우
+        setAvatarFile(null); // 선택된 파일 상태를 null로 설정
+
+        setAvatarImagePreviewUrl(""); // 이미지 미리보기 URL을 초기화
+
+        if (avatarInputRef.current) {
+          // 파일 입력(input) 참조가 있는 경우
+          avatarInputRef.current.value = ""; // 파일 값을 초기화
+        }
+
+        setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
+
+        setTimeout(() => {
+          // 5초 후
+          setError(""); // 에러 메시지 초기화
+        }, 5000);
+      }
+    }
+  };
+
+  const handleBackgroundImage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setIsProfileModified(false);
+
+    const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
+
+    if (files && files.length === 1) {
+      // 파일이 존재하고 하나만 선택된 경우
+      const selectedFile = files[0]; // 첫 번째 선택된 파일
+
+      if (selectedFile.size <= 1024 * 1024) {
+        // 파일 크기가 1MB 이하인 경우
+        const reader = new FileReader(); // FileReader 객체를 생성
+
+        reader.onload = () => {
+          // 파일을 읽은 후
+          const result = reader.result as string; // 결과를 문자열로 변환
+          setBackgroundImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
+        };
+        reader.readAsDataURL(selectedFile); // 파일을 Data URL로 읽기
+
+        setBackgroundFile(selectedFile); // 선택된 파일을 상태로 설정
+
+        setError(""); // 에러 메시지 초기화
+      } else {
+        // 파일 크기가 1MB를 초과하는 경우
+        setBackgroundFile(null); // 선택된 파일 상태를 null로 설정
+
+        setBackgroundImagePreviewUrl(""); // 이미지 미리보기 URL을 초기화
+
+        if (backgroundInputRef.current) {
+          // 파일 입력(input) 참조가 있는 경우
+          backgroundInputRef.current.value = ""; // 파일 값을 초기화
+        }
+
+        setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
+
+        setTimeout(() => {
+          // 5초 후
+          setError(""); // 에러 메시지 초기화
+        }, 5000);
+      }
+    }
+  };
+
+  const noSpace = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.code === "Space") {
+      event.preventDefault();
+    }
+  };
+
+  const resetName = () => {
+    setName(user?.displayName);
+
+    setIsName(true);
+
+    setNameErrorMessage("");
+
+    nameInputRef.current?.classList.remove("form-control-invalid");
+  };
+
+  const resetAvatar = () => {
+    setAvatarFile(null);
+    setAvatarImagePreviewUrl("");
+    if (avatarInputRef.current) {
+      avatarInputRef.current.value = "";
+    }
+    setError("");
+  };
+
+  const resetBackground = () => {
+    setBackgroundFile(null);
+    setBackgroundImagePreviewUrl("");
+    if (backgroundInputRef.current) {
+      backgroundInputRef.current.value = "";
+    }
+    setError("");
+  };
+
+  const modifyProfile = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isLoading || !isName) {
       return;
     }
 
-    // 에러 초기화
     setError("");
 
     try {
-      // 파일이 존재하고 하나일 때
-      if (files && files.length === 1) {
-        const file = files[0];
+      setIsLoading(true);
 
-        // 파일 크기가 1MB 이하인 경우
-        if (file.size <= 1024 * 1024) {
-          // Storage에 파일 업로드
+      if (avatarFile) {
+        // 새로운 파일의 크기가 1MB 이하인지 확인
+        if (avatarFile.size <= 1024 * 1024) {
+          // Firebase Storage에 업로드할 위치 참조 생성
           const locationRef = ref(storage, `avatars/${user?.uid}`);
-          const result = await uploadBytes(locationRef, file);
+
+          // 파일 업로드 및 결과 받아오기
+          const result = await uploadBytes(locationRef, avatarFile);
+
+          // 업로드된 파일의 다운로드 URL 가져오기
           const avatarUrl = await getDownloadURL(result.ref);
 
           // Avatar URL 설정
@@ -72,18 +268,62 @@ export default function Profile() {
           });
 
           // 파일 인풋 리셋
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
+          if (avatarInputRef.current) {
+            avatarInputRef.current.value = "";
           }
-        } else {
-          // 파일 크기 초과 에러
-          throw new Error("size-exhausted");
         }
       }
+
+      if (backgroundFile) {
+        // 새로운 파일의 크기가 1MB 이하인지 확인
+        if (backgroundFile.size <= 1024 * 1024) {
+          // Firebase Storage에 업로드할 위치 참조 생성
+          const locationRef = ref(storage, `background/${user?.uid}`);
+
+          // 파일 업로드 및 결과 받아오기
+          const result = await uploadBytes(locationRef, backgroundFile);
+
+          // 업로드된 파일의 다운로드 URL 가져오기
+          const backgroundUrl = await getDownloadURL(result.ref);
+
+          // Background URL 설정
+          setBackground(backgroundUrl);
+
+          // 파일 인풋 리셋
+          if (backgroundInputRef.current) {
+            backgroundInputRef.current.value = "";
+          }
+        }
+      }
+
+      await updateProfile(auth.currentUser!, {
+        displayName: name,
+      });
+
+      setIsProfileModified(true);
+
+      resetName();
+      resetAvatar();
+      resetBackground();
+
+      setTimeout(() => {
+        setIsProfileModified(false);
+      }, 5000);
     } catch (error) {
+      setIsProfileModified(false);
+
+      resetName();
+      resetAvatar();
+      resetBackground();
+
       // 파일 인풋 리셋
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+      if (avatarInputRef.current) {
+        avatarInputRef.current.value = "";
+      }
+
+      // 파일 인풋 리셋
+      if (backgroundInputRef.current) {
+        backgroundInputRef.current.value = "";
       }
 
       // 에러 종류에 따라 처리
@@ -101,10 +341,11 @@ export default function Profile() {
         console.log(error);
       }
 
-      // 5초 후 에러 초기화
       setTimeout(() => {
         setError("");
       }, 5000);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -116,8 +357,8 @@ export default function Profile() {
 
     try {
       // 파일 인풋 리셋
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+      if (avatarInputRef.current) {
+        avatarInputRef.current.value = "";
       }
 
       const defaultImageResponse = await fetch(defaultImageURL);
@@ -256,13 +497,30 @@ export default function Profile() {
       <div className="h-100 m-auto" style={{ maxWidth: "600px" }}>
         <ProfileContent
           user={user}
+          nameInputRef={nameInputRef}
+          avatarInputRef={avatarInputRef}
+          backgroundInputRef={backgroundInputRef}
+          isLoading={isLoading}
           error={error}
+          name={name}
+          handleName={handleName}
+          isName={isName}
+          nameErrorMessage={nameErrorMessage}
           avatar={avatar}
-          fileInputRef={fileInputRef}
+          avatarImagePreviewUrl={avatarImagePreviewUrl}
+          handleAvatarImage={handleAvatarImage}
+          background={background}
+          backgroundImagePreviewUrl={backgroundImagePreviewUrl}
+          handleBackgroundImage={handleBackgroundImage}
+          noSpace={noSpace}
+          resetName={resetName}
+          resetAvatar={resetAvatar}
+          resetBackground={resetBackground}
+          modifyProfile={modifyProfile}
+          isProfileModified={isProfileModified}
           showModifyModal={showModifyModal}
-          setShowModifyModal={setShowModifyModal}
           handleShowModifyModal={handleShowModifyModal}
-          handleAvatar={handleAvatar}
+          handleCloseModifyModal={handleCloseModifyModal}
           handleDeleteAvatar={handleDeleteAvatar}
           tweets={tweets}
         />

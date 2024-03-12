@@ -1,14 +1,14 @@
 import { Button } from "react-bootstrap";
 
-export interface ChangeUsernameSubmitProps {
+export interface ModifyProfileSubmitProps {
   isLoading: boolean;
   isName: boolean;
 }
 
-export default function ChangeUsernameSubmit({
+export default function ModifyProfileSubmit({
   isLoading,
   isName,
-}: ChangeUsernameSubmitProps) {
+}: ModifyProfileSubmitProps) {
   return (
     <Button
       type="submit"
