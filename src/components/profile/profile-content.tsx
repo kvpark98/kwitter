@@ -1,13 +1,12 @@
-import ProfileErrors from "../alert/error/profile/profile-errors";
 import ScrollProfile from "../scrolls/scrollProfile";
 import { User } from "firebase/auth";
 import { ITweet } from "../tweets/query/detail/tweet";
 import UserTweets from "./user-tweets/user-tweets";
-import AvatarForm from "./avatar/avatar-form";
 import { useNavigate } from "react-router-dom";
 import ProfileHeader from "./profile-header";
 import { Button } from "react-bootstrap";
 import ModifyProfile from "./username/modify/modify-profile";
+import AvatarImage from "./avatar/avatar-image";
 
 export interface ProfileContentProps {
   user: User | null;
@@ -36,6 +35,7 @@ export interface ProfileContentProps {
   handleShowModifyModal: () => void;
   handleCloseModifyModal: () => void;
   handleDeleteAvatar: () => Promise<void>;
+  handleDeleteBackground: () => Promise<void>;
   tweets: ITweet[];
 }
 
@@ -66,6 +66,7 @@ export default function ProfileContent({
   handleShowModifyModal,
   handleCloseModifyModal,
   handleDeleteAvatar,
+  handleDeleteBackground,
   tweets,
 }: ProfileContentProps) {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ export default function ProfileContent({
           className="img-fluid"
           style={{ width: "600px", height: "200px" }}
         />
-        <AvatarForm avatar={avatar} />
+        <AvatarImage avatar={avatar} />
       </div>
       <div className="d-flex justify-content-end">
         <Button
@@ -121,6 +122,8 @@ export default function ProfileContent({
         isProfileModified={isProfileModified}
         showModifyModal={showModifyModal}
         handleCloseModifyModal={handleCloseModifyModal}
+        handleDeleteAvatar={handleDeleteAvatar}
+        handleDeleteBackground={handleDeleteBackground}
       />
     </div>
   );

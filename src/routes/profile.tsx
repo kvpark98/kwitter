@@ -26,8 +26,6 @@ import { Container } from "react-bootstrap";
 export default function Profile() {
   const user = auth.currentUser;
 
-  const defaultImageURL = "/person-circle.svg";
-
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -44,9 +42,12 @@ export default function Profile() {
 
   const [background, setBackground] = useState("");
 
+  const defaultAvatarURL = "/person-circle.svg";
+  const defaultBackgroundURL = "/default-background.png";
+
   const getBackground = async () => {
     try {
-      const locationRef = ref(storage, `background/${user?.uid}`);
+      const locationRef = ref(storage, `backgrounds/${user?.uid}`);
       const result = await getDownloadURL(locationRef);
       setBackground(result);
     } catch (error) {
@@ -278,7 +279,7 @@ export default function Profile() {
         // 새로운 파일의 크기가 1MB 이하인지 확인
         if (backgroundFile.size <= 1024 * 1024) {
           // Firebase Storage에 업로드할 위치 참조 생성
-          const locationRef = ref(storage, `background/${user?.uid}`);
+          const locationRef = ref(storage, `backgrounds/${user?.uid}`);
 
           // 파일 업로드 및 결과 받아오기
           const result = await uploadBytes(locationRef, backgroundFile);
@@ -361,22 +362,74 @@ export default function Profile() {
         avatarInputRef.current.value = "";
       }
 
-      const defaultImageResponse = await fetch(defaultImageURL);
+      const defaultAvatarResponse = await fetch(defaultAvatarURL);
 
-      const defaultImageBlob = await defaultImageResponse.blob();
+      const defaultAvatarBlob = await defaultAvatarResponse.blob();
 
-      const locationRef = ref(storage, `avatars/${user?.uid}`);
+      const avatarLocationRef = ref(storage, `avatars/${user?.uid}`);
 
-      const result = await uploadBytes(locationRef, defaultImageBlob);
+      const avatarResult = await uploadBytes(
+        avatarLocationRef,
+        defaultAvatarBlob
+      );
 
-      const url = await getDownloadURL(result.ref);
+      const avatarUrl = await getDownloadURL(avatarResult.ref);
 
-      setAvatar(url);
+      setAvatar(avatarUrl);
 
       // 사용자 프로필 업데이트
       await updateProfile(user!, {
-        photoURL: url,
+        photoURL: avatarUrl,
       });
+    } catch (error) {
+      // 에러 처리
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+        console.log("FirebaseError", error.code);
+      } else if (error instanceof FirestoreError) {
+        setError(error.code);
+        console.log("FirestoreError", error.code);
+      } else if (error instanceof StorageError) {
+        setError(error.code);
+        console.log("StorageError", error.code);
+      } else {
+        setError("size-exhausted");
+        console.log(error);
+      }
+
+      // 5초 후 에러 초기화
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+    }
+  };
+
+  const handleDeleteBackground = async () => {
+    // Background가 없으면 함수 종료
+    if (!background) {
+      return;
+    }
+
+    try {
+      // 파일 인풋 리셋
+      if (backgroundInputRef.current) {
+        backgroundInputRef.current.value = "";
+      }
+
+      const defaultBackgroundResponse = await fetch(defaultBackgroundURL);
+
+      const defaultBackgroundBlob = await defaultBackgroundResponse.blob();
+
+      const backgroundLocationRef = ref(storage, `backgrounds/${user?.uid}`);
+
+      const backgroundResult = await uploadBytes(
+        backgroundLocationRef,
+        defaultBackgroundBlob
+      );
+
+      const backgroundUrl = await getDownloadURL(backgroundResult.ref);
+
+      setBackground(backgroundUrl);
     } catch (error) {
       // 에러 처리
       if (error instanceof FirebaseError) {
@@ -522,6 +575,7 @@ export default function Profile() {
           handleShowModifyModal={handleShowModifyModal}
           handleCloseModifyModal={handleCloseModifyModal}
           handleDeleteAvatar={handleDeleteAvatar}
+          handleDeleteBackground={handleDeleteBackground}
           tweets={tweets}
         />
       </div>

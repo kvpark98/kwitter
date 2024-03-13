@@ -10,7 +10,11 @@ export default function Avatar({ avatar }: AvatarProps) {
       className="rounded-circle overflow-hidden"
       style={{ width: "130px", height: "130px" }}
     >
-      <Card.Img src={avatar!} alt="Avatar Image" className="w-100 h-100" />
+      <Card.Img
+        src={avatar!}
+        alt="Avatar Image"
+        className="w-100 h-100 bg-light"
+      />
     </div>
   );
 }

@@ -25,6 +25,8 @@ export interface ModifyProfileProps {
   isProfileModified: boolean;
   showModifyModal: boolean;
   handleCloseModifyModal: () => void;
+  handleDeleteAvatar: () => Promise<void>;
+  handleDeleteBackground: () => Promise<void>;
 }
 
 export default function ModifyProfile({
@@ -51,6 +53,8 @@ export default function ModifyProfile({
   isProfileModified,
   showModifyModal,
   handleCloseModifyModal,
+  handleDeleteAvatar,
+  handleDeleteBackground,
 }: ModifyProfileProps) {
   return (
     <Modal
@@ -83,6 +87,8 @@ export default function ModifyProfile({
         modifyProfile={modifyProfile}
         isProfileModified={isProfileModified}
         handleCloseModifyModal={handleCloseModifyModal}
+        handleDeleteAvatar={handleDeleteAvatar}
+        handleDeleteBackground={handleDeleteBackground}
       />
     </Modal>
   );

@@ -1,10 +1,6 @@
-import { Form } from "react-bootstrap";
-
 export default function NoAvatar() {
   return (
-    <Form.Label
-      htmlFor="avatar"
-      title="Add Avatar"
+    <div
       className="d-flex justify-content-center align-items-center btn btn-light m-0 p-0 border-0 rounded-circle"
       style={{ width: "130px", height: "130px" }}
     >
@@ -20,6 +16,6 @@ export default function NoAvatar() {
           d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
         />
       </svg>
-    </Form.Label>
+    </div>
   );
 }

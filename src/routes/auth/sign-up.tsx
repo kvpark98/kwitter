@@ -40,7 +40,8 @@ export default function SignUp() {
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
 
-  const defaultImageURL = "/person-circle.svg";
+  const defaultAvatarURL = "/person-circle.svg";
+  const defaultBackgroundURL = "/default-background.png";
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -295,19 +296,41 @@ export default function SignUp() {
 
       await sendEmailVerification(credentials.user, actionCodeSettings);
 
-      const defaultImageResponse = await fetch(defaultImageURL);
+      const defaultAvatarResponse = await fetch(defaultAvatarURL);
 
-      const defaultImageBlob = await defaultImageResponse.blob();
+      const defaultAvatarBlob = await defaultAvatarResponse.blob();
 
-      const locationRef = ref(storage, `avatars/${credentials.user.uid}`);
+      const avatarLocationRef = ref(
+        storage,
+        `avatars/${credentials.user?.uid}`
+      );
 
-      const result = await uploadBytes(locationRef, defaultImageBlob);
+      const avatarResult = await uploadBytes(
+        avatarLocationRef,
+        defaultAvatarBlob
+      );
 
-      const url = await getDownloadURL(result.ref);
+      const avatarUrl = await getDownloadURL(avatarResult.ref);
+
+      const defaultBackgroundResponse = await fetch(defaultBackgroundURL);
+
+      const defaultBackgroundBlob = await defaultBackgroundResponse.blob();
+
+      const backgroundLocationRef = ref(
+        storage,
+        `backgrounds/${credentials.user?.uid}`
+      );
+
+      const backgroundResult = await uploadBytes(
+        backgroundLocationRef,
+        defaultBackgroundBlob
+      );
+
+      await getDownloadURL(backgroundResult.ref);
 
       await updateProfile(credentials.user, {
         displayName: name,
-        photoURL: url,
+        photoURL: avatarUrl,
       });
 
       signOut();

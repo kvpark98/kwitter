@@ -1,11 +1,11 @@
 import Avatar from "./avatar";
 import NoAvatar from "./no-avatar";
 
-export interface AvatarFormProps {
+export interface AvatarImageProps {
   avatar: string | null | undefined;
 }
 
-export default function AvatarForm({ avatar }: AvatarFormProps) {
+export default function AvatarImage({ avatar }: AvatarImageProps) {
   return (
     <div
       className="d-flex justify-content-center align-items-center mb-4 position-absolute top-100 translate-middle-y"
