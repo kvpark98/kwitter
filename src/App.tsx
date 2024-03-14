@@ -171,6 +171,12 @@ const GlobalStyles = createGlobalStyle`
     color: var(--bs-nav-pills-link-active-color);
     background-color: #212529;
   }
+  .translate-middle-add {
+    transform: translate(-120%, -50%) !important;
+  }
+  .translate-middle-remove {
+    transform: translate(20%, -50%) !important;
+  }
 `;
 
 function App() {
