@@ -1,10 +1,10 @@
 import { Card } from "react-bootstrap";
 
-export interface AvatarProps {
+export interface ProfileAvatarProps {
   avatar: string | null | undefined;
 }
 
-export default function Avatar({ avatar }: AvatarProps) {
+export default function ProfileAvatar({ avatar }: ProfileAvatarProps) {
   return (
     <div
       className="rounded-circle overflow-hidden"

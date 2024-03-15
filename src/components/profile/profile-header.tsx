@@ -1,6 +1,6 @@
 import { Navbar } from "react-bootstrap";
 import ProfileBack from "./profile-back";
-import UsernameTitle from "./username/profile-title";
+import UsernameTitle from "./profile-title";
 import { User } from "firebase/auth";
 import { ITweet } from "../tweets/query/detail/tweet";
 

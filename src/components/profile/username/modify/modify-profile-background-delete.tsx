@@ -1,24 +1,24 @@
 import { Button } from "react-bootstrap";
 
-export interface AvatarDeleteButtonProps {
-  handleDeleteAvatar: () => Promise<void>;
+export interface ModifyProfileBackgroundDeleteProps {
+  handleDeleteBackground: () => Promise<void>;
 }
 
-export default function AvatarDeleteButton({
-  handleDeleteAvatar,
-}: AvatarDeleteButtonProps) {
+export default function ModifyProfileBackgroundDelete({
+  handleDeleteBackground,
+}: ModifyProfileBackgroundDeleteProps) {
   return (
     <Button
       type="button"
+      title="Delete Background"
       variant="danger"
-      className="d-flex align-items-center position-absolute rounded-circle top-0 end-0 p-2"
-      title="Delete Avatar"
-      onClick={handleDeleteAvatar}
+      className="d-flex align-items-center position-absolute top-50 start-50 translate-middle-remove rounded-circle p-2"
+      onClick={handleDeleteBackground}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
+        width="22.4"
+        height="22.4"
         fill="currentColor"
         className="bi bi-trash-fill"
         viewBox="0 0 16 16"

@@ -1,8 +1,9 @@
-import { Alert, Button, Card, Form } from "react-bootstrap";
+import { Alert, Form } from "react-bootstrap";
 import ModifyProfileName from "./modify-profile-name";
 import ModifyProfileButtons from "./modify-profile-buttons";
 import ModifyProfileSuccess from "../../../alert/success/auth/modify-profile/modify-profile-success";
 import ModifyProfileErrors from "../../../alert/error/auth/modify-profile/modify-profile-errors";
+import ModifyProfileImages from "./modify-profile-images";
 
 export interface ModifyProfileFormProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
@@ -66,187 +67,20 @@ export default function ModifyProfileForm({
       >
         {isProfileModified && !error && <ModifyProfileSuccess />}
         {error && <ModifyProfileErrors error={error} />}
-        <Form.Group className="position-relative mb-5">
-          <div className="position-relative">
-            <Form.Label
-              htmlFor="background"
-              title="Add Background"
-              className="position-absolute top-50 start-50 translate-middle-add btn m-0 p-0 border-0 bg-light rounded-circle opacity-75"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="40"
-                height="40"
-                fill="currentColor"
-                className="bi bi-plus-circle-dotted"
-                viewBox="0 0 16 16"
-              >
-                <path d="M8 0q-.264 0-.523.017l.064.998a7 7 0 0 1 .918 0l.064-.998A8 8 0 0 0 8 0M6.44.152q-.52.104-1.012.27l.321.948q.43-.147.884-.237L6.44.153zm4.132.271a8 8 0 0 0-1.011-.27l-.194.98q.453.09.884.237zm1.873.925a8 8 0 0 0-.906-.524l-.443.896q.413.205.793.459zM4.46.824q-.471.233-.905.524l.556.83a7 7 0 0 1 .793-.458zM2.725 1.985q-.394.346-.74.74l.752.66q.303-.345.648-.648zm11.29.74a8 8 0 0 0-.74-.74l-.66.752q.346.303.648.648zm1.161 1.735a8 8 0 0 0-.524-.905l-.83.556q.254.38.458.793l.896-.443zM1.348 3.555q-.292.433-.524.906l.896.443q.205-.413.459-.793zM.423 5.428a8 8 0 0 0-.27 1.011l.98.194q.09-.453.237-.884zM15.848 6.44a8 8 0 0 0-.27-1.012l-.948.321q.147.43.237.884zM.017 7.477a8 8 0 0 0 0 1.046l.998-.064a7 7 0 0 1 0-.918zM16 8a8 8 0 0 0-.017-.523l-.998.064a7 7 0 0 1 0 .918l.998.064A8 8 0 0 0 16 8M.152 9.56q.104.52.27 1.012l.948-.321a7 7 0 0 1-.237-.884l-.98.194zm15.425 1.012q.168-.493.27-1.011l-.98-.194q-.09.453-.237.884zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a7 7 0 0 1-.458-.793zm13.828.905q.292-.434.524-.906l-.896-.443q-.205.413-.459.793zm-12.667.83q.346.394.74.74l.66-.752a7 7 0 0 1-.648-.648zm11.29.74q.394-.346.74-.74l-.752-.66q-.302.346-.648.648zm-1.735 1.161q.471-.233.905-.524l-.556-.83a7 7 0 0 1-.793.458zm-7.985-.524q.434.292.906.524l.443-.896a7 7 0 0 1-.793-.459zm1.873.925q.493.168 1.011.27l.194-.98a7 7 0 0 1-.884-.237zm4.132.271a8 8 0 0 0 1.012-.27l-.321-.948a7 7 0 0 1-.884.237l.194.98zm-2.083.135a8 8 0 0 0 1.046 0l-.064-.998a7 7 0 0 1-.918 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
-              </svg>
-            </Form.Label>
-            {backgroundImagePreviewUrl ? (
-              <Card.Img
-                src={backgroundImagePreviewUrl}
-                alt="Background Image"
-                className="img-fluid"
-                style={{ width: "600px", height: "200px" }}
-              />
-            ) : background ? (
-              <Card.Img
-                src={background}
-                alt="Background Image"
-                className="img-fluid"
-                style={{ width: "600px", height: "200px" }}
-              />
-            ) : (
-              <Card.Img
-                src="/default-background.png"
-                alt="Background Image"
-                className="img-fluid"
-                style={{ width: "600px", height: "200px" }}
-              />
-            )}
-            {backgroundImagePreviewUrl ? (
-              <Button
-                type="button"
-                title="Remove Background"
-                variant="secondary"
-                className="d-flex align-items-center position-absolute top-50 start-50 translate-middle-remove rounded-circle p-2"
-                onClick={resetBackground}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22.4"
-                  height="22.4"
-                  fill="currentColor"
-                  className="bi bi-x-lg"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                </svg>
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                title="Delete Background"
-                variant="danger"
-                className="d-flex align-items-center position-absolute top-50 start-50 translate-middle-remove rounded-circle p-2"
-                onClick={handleDeleteBackground}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22.4"
-                  height="22.4"
-                  fill="currentColor"
-                  className="bi bi-trash-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                </svg>
-              </Button>
-            )}
-            <Form.Control
-              ref={backgroundInputRef}
-              onChange={handleBackgroundImage}
-              id="background"
-              type="file"
-              accept="image/*"
-              className="d-none"
-            ></Form.Control>
-          </div>
-          <div
-            className="d-flex justify-content-center align-items-center position-absolute top-100 translate-middle-y"
-            style={{ left: "5%" }}
-          >
-            <div
-              className="position-relative rounded-circle overflow-hidden"
-              style={{ width: "120px", height: "120px" }}
-            >
-              <Form.Label
-                htmlFor="avatar"
-                title="Add Avatar"
-                className="position-absolute top-50 start-50 translate-middle btn m-0 p-0 border-0 bg-light rounded-circle opacity-75"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="40"
-                  height="40"
-                  fill="currentColor"
-                  className="bi bi-plus-circle-dotted"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M8 0q-.264 0-.523.017l.064.998a7 7 0 0 1 .918 0l.064-.998A8 8 0 0 0 8 0M6.44.152q-.52.104-1.012.27l.321.948q.43-.147.884-.237L6.44.153zm4.132.271a8 8 0 0 0-1.011-.27l-.194.98q.453.09.884.237zm1.873.925a8 8 0 0 0-.906-.524l-.443.896q.413.205.793.459zM4.46.824q-.471.233-.905.524l.556.83a7 7 0 0 1 .793-.458zM2.725 1.985q-.394.346-.74.74l.752.66q.303-.345.648-.648zm11.29.74a8 8 0 0 0-.74-.74l-.66.752q.346.303.648.648zm1.161 1.735a8 8 0 0 0-.524-.905l-.83.556q.254.38.458.793l.896-.443zM1.348 3.555q-.292.433-.524.906l.896.443q.205-.413.459-.793zM.423 5.428a8 8 0 0 0-.27 1.011l.98.194q.09-.453.237-.884zM15.848 6.44a8 8 0 0 0-.27-1.012l-.948.321q.147.43.237.884zM.017 7.477a8 8 0 0 0 0 1.046l.998-.064a7 7 0 0 1 0-.918zM16 8a8 8 0 0 0-.017-.523l-.998.064a7 7 0 0 1 0 .918l.998.064A8 8 0 0 0 16 8M.152 9.56q.104.52.27 1.012l.948-.321a7 7 0 0 1-.237-.884l-.98.194zm15.425 1.012q.168-.493.27-1.011l-.98-.194q-.09.453-.237.884zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a7 7 0 0 1-.458-.793zm13.828.905q.292-.434.524-.906l-.896-.443q-.205.413-.459.793zm-12.667.83q.346.394.74.74l.66-.752a7 7 0 0 1-.648-.648zm11.29.74q.394-.346.74-.74l-.752-.66q-.302.346-.648.648zm-1.735 1.161q.471-.233.905-.524l-.556-.83a7 7 0 0 1-.793.458zm-7.985-.524q.434.292.906.524l.443-.896a7 7 0 0 1-.793-.459zm1.873.925q.493.168 1.011.27l.194-.98a7 7 0 0 1-.884-.237zm4.132.271a8 8 0 0 0 1.012-.27l-.321-.948a7 7 0 0 1-.884.237l.194.98zm-2.083.135a8 8 0 0 0 1.046 0l-.064-.998a7 7 0 0 1-.918 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
-                </svg>
-              </Form.Label>
-              {avatarImagePreviewUrl ? (
-                <Card.Img
-                  src={avatarImagePreviewUrl}
-                  alt="Avatar Image"
-                  className="w-100 h-100"
-                />
-              ) : avatar ? (
-                <Card.Img
-                  src={avatar}
-                  alt="Avatar Image"
-                  className="w-100 h-100 bg-light"
-                />
-              ) : (
-                <Card.Img
-                  src="/person-circle.svg"
-                  alt="Avatar Image"
-                  className="w-100 h-100 bg-light"
-                />
-              )}
-            </div>
-            {avatarImagePreviewUrl ? (
-              <Button
-                type="button"
-                title="Remove Avatar"
-                variant="secondary"
-                className="d-flex align-items-center position-absolute top-0 end-0 rounded-circle p-2"
-                onClick={resetAvatar}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22.4"
-                  height="22.4"
-                  fill="currentColor"
-                  className="bi bi-x-lg"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                </svg>
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                title="Delete Avatar"
-                variant="danger"
-                className="d-flex align-items-center position-absolute top-0 end-0 rounded-circle p-2"
-                onClick={handleDeleteAvatar}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22.4"
-                  height="22.4"
-                  fill="currentColor"
-                  className="bi bi-trash-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                </svg>
-              </Button>
-            )}
-            <Form.Control
-              ref={avatarInputRef}
-              onChange={handleAvatarImage}
-              id="avatar"
-              type="file"
-              accept="image/*"
-              className="d-none"
-            ></Form.Control>
-          </div>
-        </Form.Group>
+        <ModifyProfileImages
+          avatarInputRef={avatarInputRef}
+          backgroundInputRef={backgroundInputRef}
+          avatar={avatar}
+          avatarImagePreviewUrl={avatarImagePreviewUrl}
+          handleAvatarImage={handleAvatarImage}
+          background={background}
+          backgroundImagePreviewUrl={backgroundImagePreviewUrl}
+          handleBackgroundImage={handleBackgroundImage}
+          resetAvatar={resetAvatar}
+          resetBackground={resetBackground}
+          handleDeleteAvatar={handleDeleteAvatar}
+          handleDeleteBackground={handleDeleteBackground}
+        />
         <ModifyProfileName
           nameInputRef={nameInputRef}
           name={name}

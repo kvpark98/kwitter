@@ -22,6 +22,7 @@ import ProfileContent from "../components/profile/profile-content";
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import SideBar from "../components/header&footer/side-bar/side-bar";
 import { Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const user = auth.currentUser;
@@ -82,6 +83,12 @@ export default function Profile() {
     resetName();
     resetAvatar();
     resetBackground();
+  };
+
+  const navigate = useNavigate();
+
+  const back = () => {
+    navigate(-1);
   };
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -577,6 +584,7 @@ export default function Profile() {
           handleDeleteAvatar={handleDeleteAvatar}
           handleDeleteBackground={handleDeleteBackground}
           tweets={tweets}
+          back={back}
         />
       </div>
     </Container>

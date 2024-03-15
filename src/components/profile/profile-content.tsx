@@ -2,11 +2,10 @@ import ScrollProfile from "../scrolls/scrollProfile";
 import { User } from "firebase/auth";
 import { ITweet } from "../tweets/query/detail/tweet";
 import UserTweets from "./user-tweets/user-tweets";
-import { useNavigate } from "react-router-dom";
 import ProfileHeader from "./profile-header";
-import { Button } from "react-bootstrap";
 import ModifyProfile from "./username/modify/modify-profile";
-import AvatarImage from "./avatar/avatar-image";
+import ProfileImages from "./profile-images";
+import ProfileEditButton from "./profile-edit-button";
 
 export interface ProfileContentProps {
   user: User | null;
@@ -37,6 +36,7 @@ export interface ProfileContentProps {
   handleDeleteAvatar: () => Promise<void>;
   handleDeleteBackground: () => Promise<void>;
   tweets: ITweet[];
+  back: () => void;
 }
 
 export default function ProfileContent({
@@ -68,34 +68,13 @@ export default function ProfileContent({
   handleDeleteAvatar,
   handleDeleteBackground,
   tweets,
+  back,
 }: ProfileContentProps) {
-  const navigate = useNavigate();
-
-  const back = () => {
-    navigate(-1);
-  };
   return (
     <div>
       <ProfileHeader user={user} tweets={tweets} back={back} />
-      <div className="position-relative mb-4">
-        <img
-          src={background}
-          alt="Background Image"
-          className="img-fluid"
-          style={{ width: "600px", height: "200px" }}
-        />
-        <AvatarImage avatar={avatar} />
-      </div>
-      <div className="d-flex justify-content-end">
-        <Button
-          type="button"
-          variant="dark"
-          className="rounded-pill"
-          onClick={handleShowModifyModal}
-        >
-          Edit Profile
-        </Button>
-      </div>
+      <ProfileImages avatar={avatar} background={background} />
+      <ProfileEditButton handleShowModifyModal={handleShowModifyModal} />
       {tweets.length !== 0 && <UserTweets tweets={tweets} />}
       <ScrollProfile />
       <ModifyProfile

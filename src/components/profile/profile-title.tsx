@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { ITweet } from "../../tweets/query/detail/tweet";
+import { ITweet } from "../tweets/query/detail/tweet";
 
 export interface ProfileTitleProps {
   user: User | null;

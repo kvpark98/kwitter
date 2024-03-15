@@ -1,4 +1,4 @@
-export default function NoAvatar() {
+export default function ProfileDefault() {
   return (
     <div
       className="d-flex justify-content-center align-items-center btn btn-light m-0 p-0 border-0 rounded-circle"
