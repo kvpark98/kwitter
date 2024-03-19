@@ -16,7 +16,7 @@ export default function ModifyButtonSubmit({
       className="fw-bold rounded-pill"
       {...(!isNewMessage ? { disabled: true } : { disabled: false })}
     >
-      {isLoading ? "Modifying..." : "Modify"}
+      {isLoading ? "Saving..." : "Save"}
     </Button>
   );
 }

@@ -1,4 +1,3 @@
-import ModifyButtonClose from "./modify-button-close.tsx";
 import ModifyButtonPhoto from "./modify-button-photo.tsx";
 import ModifyButtonReset from "./modify-button-reset.tsx";
 import ModifyButtonSubmit from "./modify-button-submit.tsx";
@@ -9,7 +8,6 @@ export interface ModifyButtonsProps {
   newFileInputRef: React.RefObject<HTMLInputElement>;
   handleNewFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetMessageButton: () => void;
-  handleCloseModifyModal: () => void;
 }
 
 export default function ModifyButtons({
@@ -18,7 +16,6 @@ export default function ModifyButtons({
   newFileInputRef,
   handleNewFile,
   resetMessageButton,
-  handleCloseModifyModal,
 }: ModifyButtonsProps) {
   return (
     <div className="d-flex justify-content-between">
@@ -30,7 +27,6 @@ export default function ModifyButtons({
         <ModifyButtonReset resetMessageButton={resetMessageButton} />
       </div>
       <div>
-        <ModifyButtonClose handleCloseModifyModal={handleCloseModifyModal} />
         <ModifyButtonSubmit isLoading={isLoading} isNewMessage={isNewMessage} />
       </div>
     </div>

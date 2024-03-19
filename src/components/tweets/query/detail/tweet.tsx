@@ -29,9 +29,9 @@ export default function Tweet({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [showModifyModal, setShowModifyModal] = useState(false);
-  const handleShowModifyModal = () => setShowModifyModal(true);
-  const handleCloseModifyModal = () => setShowModifyModal(false);
+  const [showTweetModifyModal, setShowTweetModifyModal] = useState(false);
+  const handleShowTweetModifyModal = () => setShowTweetModifyModal(true);
+  const handleCloseTweetModifyModal = () => setShowTweetModifyModal(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleShowDeleteModal = () => setShowDeleteModal(true);
@@ -92,16 +92,16 @@ export default function Tweet({
         photo={photo}
         userId={userId}
         username={username}
-        handleShowModifyModal={handleShowModifyModal}
+        handleShowTweetModifyModal={handleShowTweetModifyModal}
         handleShowDeleteModal={handleShowDeleteModal}
       />
-      {showModifyModal && (
+      {showTweetModifyModal && (
         <ModifyTweet
           id={id}
           message={message}
           photo={photo}
-          showModifyModal={showModifyModal}
-          handleCloseModifyModal={handleCloseModifyModal}
+          showTweetModifyModal={showTweetModifyModal}
+          handleCloseTweetModifyModal={handleCloseTweetModifyModal}
         />
       )}
       <TweetDeleteModal

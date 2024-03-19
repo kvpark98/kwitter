@@ -10,15 +10,15 @@ export default function ModifyPhotoRemove({
   return (
     <Button
       type="button"
-      variant="dark"
-      className="d-flex align-items-center position-absolute rounded-circle top-0 end-0 p-2"
+      variant="secondary"
+      className="d-flex align-items-center position-absolute rounded-circle top-50 start-50 translate-middle p-2"
       title="Remove"
       onClick={resetPhotoButton}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
+        width="22.4"
+        height="22.4"
         fill="currentColor"
         className="bi bi-x-lg"
         viewBox="0 0 16 16"

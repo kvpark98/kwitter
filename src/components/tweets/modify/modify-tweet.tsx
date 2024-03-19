@@ -16,21 +16,22 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import ModifyTweetForm from "./modify-tweet-form";
+import ModifyTweetHeader from "./modify-tweet-header";
 
 export interface ModifyTweetProps {
   id: string;
   message: string;
   photo?: string;
-  showModifyModal: boolean;
-  handleCloseModifyModal: () => void;
+  showTweetModifyModal: boolean;
+  handleCloseTweetModifyModal: () => void;
 }
 
 export default function ModifyTweet({
   id,
   message,
   photo,
-  showModifyModal,
-  handleCloseModifyModal,
+  showTweetModifyModal,
+  handleCloseTweetModifyModal,
 }: ModifyTweetProps) {
   const user = auth.currentUser;
 
@@ -234,12 +235,16 @@ export default function ModifyTweet({
 
   return (
     <Modal
-      show={showModifyModal}
-      onHide={handleCloseModifyModal}
+      show={showTweetModifyModal}
+      onHide={handleCloseTweetModifyModal}
       backdrop="static"
       keyboard={false}
+      className="border-0"
       centered
     >
+      <ModifyTweetHeader
+        handleCloseTweetModifyModal={handleCloseTweetModifyModal}
+      />
       <ModifyTweetForm
         isLoading={isLoading}
         error={error}
@@ -255,7 +260,6 @@ export default function ModifyTweet({
         deletePhoto={deletePhoto}
         modifyTweet={modifyTweet}
         tweetModified={tweetModified}
-        handleCloseModifyModal={handleCloseModifyModal}
       />
     </Modal>
   );

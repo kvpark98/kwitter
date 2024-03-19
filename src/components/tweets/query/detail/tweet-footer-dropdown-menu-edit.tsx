@@ -1,16 +1,16 @@
 import { Dropdown } from "react-bootstrap";
 
 export interface TweetFooterDropdownMenuEditProps {
-  handleShowModifyModal: () => void;
+  handleShowTweetModifyModal: () => void;
 }
 
 export default function TweetFooterDropdownMenuEdit({
-  handleShowModifyModal,
+  handleShowTweetModifyModal,
 }: TweetFooterDropdownMenuEditProps) {
   return (
     <Dropdown.Item
       className="btn d-flex align-items-center"
-      onClick={handleShowModifyModal}
+      onClick={handleShowTweetModifyModal}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

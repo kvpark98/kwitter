@@ -3,18 +3,18 @@ import TweetFooterDropdownMenuEdit from "./tweet-footer-dropdown-menu-edit";
 import TweetFooterDropdownMenuDelete from "./tweet-footer-dropdown-menu-delete";
 
 export interface TweetFooterDropdownMenuProps {
-  handleShowModifyModal: () => void;
+  handleShowTweetModifyModal: () => void;
   handleShowDeleteModal: () => void;
 }
 
 export default function TweetFooterDropdownMenu({
-  handleShowModifyModal,
+  handleShowTweetModifyModal,
   handleShowDeleteModal,
 }: TweetFooterDropdownMenuProps) {
   return (
     <Dropdown.Menu>
       <TweetFooterDropdownMenuEdit
-        handleShowModifyModal={handleShowModifyModal}
+        handleShowTweetModifyModal={handleShowTweetModifyModal}
       />
       <TweetFooterDropdownMenuDelete
         handleShowDeleteModal={handleShowDeleteModal}

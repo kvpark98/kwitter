@@ -15,12 +15,8 @@ export default function ModifyPhoto({
   deletePhoto,
 }: ModifyPhotoProps) {
   return (
-    <div className="position-relative">
-      <img
-        src={photo}
-        alt="Image Preview"
-        className="w-100 h-100 mb-4 rounded-4"
-      />
+    <div className="position-relative mb-4">
+      <img src={photo} alt="Image Preview" className="w-100 h-100 rounded-4" />
       {imagePreviewUrl ? (
         <ModifyPhotoRemove resetPhotoButton={resetPhotoButton} />
       ) : (

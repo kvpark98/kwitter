@@ -27,7 +27,6 @@ export interface ModifyProfileFormProps {
   resetBackground: () => void;
   modifyProfile: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   isProfileModified: boolean;
-  handleCloseModifyModal: () => void;
   handleDeleteAvatar: () => Promise<void>;
   handleDeleteBackground: () => Promise<void>;
 }
@@ -54,7 +53,6 @@ export default function ModifyProfileForm({
   resetBackground,
   modifyProfile,
   isProfileModified,
-  handleCloseModifyModal,
   handleDeleteAvatar,
   handleDeleteBackground,
 }: ModifyProfileFormProps) {
@@ -62,7 +60,7 @@ export default function ModifyProfileForm({
     <Form className="w-100" onSubmit={modifyProfile}>
       <Alert
         variant="light"
-        className="m-0 p-4 overflow-y-auto"
+        className="m-0 p-4 overflow-y-auto border-0"
         style={{ maxHeight: "600px" }}
       >
         {isProfileModified && !error && <ModifyProfileSuccess />}
@@ -93,7 +91,6 @@ export default function ModifyProfileForm({
           isLoading={isLoading}
           isName={isName}
           resetName={resetName}
-          handleCloseModifyModal={handleCloseModifyModal}
         />
       </Alert>
     </Form>

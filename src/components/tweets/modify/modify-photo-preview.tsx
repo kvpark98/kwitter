@@ -10,11 +10,11 @@ export default function ModifyPhotoPreview({
   resetPhotoButton,
 }: ModifyPhotoPreviewProps) {
   return (
-    <div className="position-relative">
+    <div className="position-relative mb-4">
       <img
         src={imagePreviewUrl}
         alt="Image Preview"
-        className="w-100 h-100 mb-4 rounded-4"
+        className="w-100 h-100 rounded-4"
       />
       <ModifyPhotoRemove resetPhotoButton={resetPhotoButton} />
     </div>

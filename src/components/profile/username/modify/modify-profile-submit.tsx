@@ -16,7 +16,7 @@ export default function ModifyProfileSubmit({
       className="fw-bold rounded-pill"
       {...(!isName ? { disabled: true } : { disabled: false })}
     >
-      {isLoading ? "Changing..." : "Change"}
+      {isLoading ? "Saving..." : "Save"}
     </Button>
   );
 }

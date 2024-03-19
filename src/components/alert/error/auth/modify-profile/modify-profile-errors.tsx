@@ -8,7 +8,7 @@ export default function ModifyProfileErrors({
   error,
 }: ModifyProfileErrorsProps) {
   return (
-    <Alert variant="danger" className="m-0 mb-3 w-100">
+    <Alert variant="danger" className="m-0 mb-4 w-100">
       <p>
         {/* Firebase Errors */}
         {error === "auth/invalid-display-name" &&

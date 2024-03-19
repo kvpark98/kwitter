@@ -1,5 +1,6 @@
 import { Modal } from "react-bootstrap";
 import ModifyProfileForm from "./modify-profile-form";
+import ModifyProfileHeader from "./modify-profile-header";
 
 export interface ModifyProfileProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
@@ -62,8 +63,10 @@ export default function ModifyProfile({
       onHide={handleCloseModifyModal}
       backdrop="static"
       keyboard={false}
+      className="border-0"
       centered
     >
+      <ModifyProfileHeader handleCloseModifyModal={handleCloseModifyModal} />
       <ModifyProfileForm
         nameInputRef={nameInputRef}
         avatarInputRef={avatarInputRef}
@@ -86,7 +89,6 @@ export default function ModifyProfile({
         resetBackground={resetBackground}
         modifyProfile={modifyProfile}
         isProfileModified={isProfileModified}
-        handleCloseModifyModal={handleCloseModifyModal}
         handleDeleteAvatar={handleDeleteAvatar}
         handleDeleteBackground={handleDeleteBackground}
       />

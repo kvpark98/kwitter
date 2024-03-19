@@ -20,7 +20,6 @@ export interface ModifyTweetFormProps {
   deletePhoto: () => Promise<void>;
   modifyTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   tweetModified: boolean;
-  handleCloseModifyModal: () => void;
 }
 
 export default function ModifyTweetForm({
@@ -38,13 +37,12 @@ export default function ModifyTweetForm({
   deletePhoto,
   modifyTweet,
   tweetModified,
-  handleCloseModifyModal,
 }: ModifyTweetFormProps) {
   return (
     <Form className="w-100" onSubmit={modifyTweet}>
       <Alert
         variant="light"
-        className="m-0 p-4 overflow-y-auto"
+        className="m-0 p-4 overflow-y-auto border-0"
         style={{ maxHeight: "600px" }}
       >
         {tweetModified && !error && <ModifyTweetSuccess />}
@@ -66,7 +64,6 @@ export default function ModifyTweetForm({
           newFileInputRef={newFileInputRef}
           handleNewFile={handleNewFile}
           resetMessageButton={resetMessageButton}
-          handleCloseModifyModal={handleCloseModifyModal}
         />
       </Alert>
     </Form>
