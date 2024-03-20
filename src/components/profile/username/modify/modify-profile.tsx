@@ -24,8 +24,8 @@ export interface ModifyProfileProps {
   resetBackground: () => void;
   modifyProfile: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   isProfileModified: boolean;
-  showModifyModal: boolean;
-  handleCloseModifyModal: () => void;
+  showModifyProfileModal: boolean;
+  handleCloseModifyProfileModal: () => void;
   handleDeleteAvatar: () => Promise<void>;
   handleDeleteBackground: () => Promise<void>;
 }
@@ -52,21 +52,23 @@ export default function ModifyProfile({
   resetBackground,
   modifyProfile,
   isProfileModified,
-  showModifyModal,
-  handleCloseModifyModal,
+  showModifyProfileModal,
+  handleCloseModifyProfileModal,
   handleDeleteAvatar,
   handleDeleteBackground,
 }: ModifyProfileProps) {
   return (
     <Modal
-      show={showModifyModal}
-      onHide={handleCloseModifyModal}
+      show={showModifyProfileModal}
+      onHide={handleCloseModifyProfileModal}
       backdrop="static"
       keyboard={false}
       className="border-0"
       centered
     >
-      <ModifyProfileHeader handleCloseModifyModal={handleCloseModifyModal} />
+      <ModifyProfileHeader
+        handleCloseModifyProfileModal={handleCloseModifyProfileModal}
+      />
       <ModifyProfileForm
         nameInputRef={nameInputRef}
         avatarInputRef={avatarInputRef}

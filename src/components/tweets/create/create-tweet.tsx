@@ -15,15 +15,16 @@ import {
 } from "firebase/storage";
 import CreateTweetForm from "./create-tweet-form";
 import { Modal } from "react-bootstrap";
+import CreateTweetHeader from "./create-tweet-header";
 
 export interface CreateTweetProps {
-  showCreateModal: boolean;
-  setShowCreateModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showCreateTweetModal: boolean;
+  setShowCreateTweetModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function CreateTweet({
-  showCreateModal,
-  setShowCreateModal,
+  showCreateTweetModal,
+  setShowCreateTweetModal,
 }: CreateTweetProps) {
   const user = auth.currentUser;
 
@@ -43,8 +44,8 @@ export default function CreateTweet({
 
   const [error, setError] = useState("");
 
-  const handleCloseCreateModal = () => {
-    setShowCreateModal(false);
+  const handleCloseCreateTweetModal = () => {
+    setShowCreateTweetModal(false);
     resetMessageButton();
     resetPhotoButton();
   };
@@ -221,12 +222,16 @@ export default function CreateTweet({
 
   return (
     <Modal
-      show={showCreateModal}
-      onHide={handleCloseCreateModal}
+      show={showCreateTweetModal}
+      onHide={handleCloseCreateTweetModal}
       backdrop="static"
       keyboard={false}
+      className="border-0"
       centered
     >
+      <CreateTweetHeader
+        handleCloseCreateTweetModal={handleCloseCreateTweetModal}
+      />
       <CreateTweetForm
         isLoading={isLoading}
         error={error}
@@ -240,7 +245,6 @@ export default function CreateTweet({
         resetPhotoButton={resetPhotoButton}
         createTweet={createTweet}
         tweetCreated={tweetCreated}
-        handleCloseCreateModal={handleCloseCreateModal}
       />
     </Modal>
   );

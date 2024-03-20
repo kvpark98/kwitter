@@ -6,7 +6,7 @@ export interface CreateTweetErrorsProps {
 
 export default function CreateTweetErrors({ error }: CreateTweetErrorsProps) {
   return (
-    <Alert variant="danger" className="m-0 mb-3 w-100">
+    <Alert variant="danger" className="m-0 mb-4 w-100">
       <p>
         {/* Firestore Errors */}
         {error === "cancelled" &&

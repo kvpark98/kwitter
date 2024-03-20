@@ -6,10 +6,10 @@ import SideBarLogo from "./side-bar-logo";
 import SideBarNav from "./side-bar-nav";
 
 export interface SideBarProps {
-  handleShowCreateModal?: () => void;
+  handleShowCreateTweetModal?: () => void;
 }
 
-export default function SideBar({ handleShowCreateModal }: SideBarProps) {
+export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
   const navigate = useNavigate();
 
   const [showSignOutModal, setShowSignOutModal] = useState(false);
@@ -30,7 +30,7 @@ export default function SideBar({ handleShowCreateModal }: SideBarProps) {
       <hr />
       <SideBarNav
         handleShowSignOutModal={handleShowSignOutModal}
-        handleShowCreateModal={handleShowCreateModal!}
+        handleShowCreateTweetModal={handleShowCreateTweetModal!}
       />
       <SignOutModal
         showSignOutModal={showSignOutModal}

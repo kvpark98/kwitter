@@ -1,4 +1,3 @@
-import CreateButtonClose from "./create-button-close.tsx";
 import CreateButtonPhoto from "./create-button-photo.tsx";
 import CreateButtonReset from "./create-button-reset.tsx";
 import CreateButtonSubmit from "./create-button-submit.tsx";
@@ -9,7 +8,6 @@ export interface CreateButtonsProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetMessageButton: () => void;
-  handleCloseCreateModal: () => void;
 }
 
 export default function CreateButtons({
@@ -18,7 +16,6 @@ export default function CreateButtons({
   fileInputRef,
   handleFile,
   resetMessageButton,
-  handleCloseCreateModal,
 }: CreateButtonsProps) {
   return (
     <div className="d-flex justify-content-between">
@@ -30,7 +27,6 @@ export default function CreateButtons({
         <CreateButtonReset resetMessageButton={resetMessageButton} />
       </div>
       <div>
-        <CreateButtonClose handleCloseCreateModal={handleCloseCreateModal} />
         <CreateButtonSubmit isLoading={isLoading} isMessage={isMessage} />
       </div>
     </div>

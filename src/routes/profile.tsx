@@ -76,10 +76,10 @@ export default function Profile() {
 
   const [nameErrorMessage, setNameErrorMessage] = useState("");
 
-  const [showModifyModal, setShowModifyModal] = useState(false);
-  const handleShowModifyModal = () => setShowModifyModal(true);
-  const handleCloseModifyModal = () => {
-    setShowModifyModal(false);
+  const [showModifyProfileModal, setShowModifyProfileModal] = useState(false);
+  const handleShowModifyProfileModal = () => setShowModifyProfileModal(true);
+  const handleCloseModifyProfileModal = () => {
+    setShowModifyProfileModal(false);
     resetName();
     resetAvatar();
     resetBackground();
@@ -578,9 +578,9 @@ export default function Profile() {
           resetBackground={resetBackground}
           modifyProfile={modifyProfile}
           isProfileModified={isProfileModified}
-          showModifyModal={showModifyModal}
-          handleShowModifyModal={handleShowModifyModal}
-          handleCloseModifyModal={handleCloseModifyModal}
+          showModifyProfileModal={showModifyProfileModal}
+          handleShowModifyProfileModal={handleShowModifyProfileModal}
+          handleCloseModifyProfileModal={handleCloseModifyProfileModal}
           handleDeleteAvatar={handleDeleteAvatar}
           handleDeleteBackground={handleDeleteBackground}
           tweets={tweets}

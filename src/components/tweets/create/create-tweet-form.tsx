@@ -18,7 +18,6 @@ export interface CreateTweetFormProps {
   resetPhotoButton: () => void;
   createTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   tweetCreated: boolean;
-  handleCloseCreateModal: () => void;
 }
 
 export default function CreateTweetForm({
@@ -34,13 +33,12 @@ export default function CreateTweetForm({
   resetPhotoButton,
   createTweet,
   tweetCreated,
-  handleCloseCreateModal,
 }: CreateTweetFormProps) {
   return (
     <Form className="w-100" onSubmit={createTweet}>
       <Alert
         variant="light"
-        className="m-0 p-4 overflow-y-auto"
+        className="m-0 p-4 overflow-y-auto border-0"
         style={{ maxHeight: "600px" }}
       >
         {tweetCreated && !error && <CreateTweetSuccess />}
@@ -60,7 +58,6 @@ export default function CreateTweetForm({
           fileInputRef={fileInputRef}
           handleFile={handleFile}
           resetMessageButton={resetMessageButton}
-          handleCloseCreateModal={handleCloseCreateModal}
         />
       </Alert>
     </Form>

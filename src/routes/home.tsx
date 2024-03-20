@@ -6,16 +6,16 @@ import { Container } from "react-bootstrap";
 import SideBar from "../components/header&footer/side-bar/side-bar";
 
 export default function Home() {
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const handleShowCreateModal = () => setShowCreateModal(true);
+  const [showCreateTweetModal, setShowCreateTweetModal] = useState(false);
+  const handleShowCreateTweetModal = () => setShowCreateTweetModal(true);
 
   return (
     <Container fluid className="h-100">
-      <SideBar handleShowCreateModal={handleShowCreateModal} />
+      <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
       <div className="h-100 m-auto" style={{ maxWidth: "600px" }}>
         <CreateTweet
-          showCreateModal={showCreateModal}
-          setShowCreateModal={setShowCreateModal}
+          showCreateTweetModal={showCreateTweetModal}
+          setShowCreateTweetModal={setShowCreateTweetModal}
         />
         <TweetList />
         <ScrollHome />

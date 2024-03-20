@@ -30,9 +30,9 @@ export interface ProfileContentProps {
   resetBackground: () => void;
   modifyProfile: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   isProfileModified: boolean;
-  showModifyModal: boolean;
-  handleShowModifyModal: () => void;
-  handleCloseModifyModal: () => void;
+  showModifyProfileModal: boolean;
+  handleShowModifyProfileModal: () => void;
+  handleCloseModifyProfileModal: () => void;
   handleDeleteAvatar: () => Promise<void>;
   handleDeleteBackground: () => Promise<void>;
   tweets: ITweet[];
@@ -62,9 +62,9 @@ export default function ProfileContent({
   resetBackground,
   modifyProfile,
   isProfileModified,
-  showModifyModal,
-  handleShowModifyModal,
-  handleCloseModifyModal,
+  showModifyProfileModal,
+  handleShowModifyProfileModal,
+  handleCloseModifyProfileModal,
   handleDeleteAvatar,
   handleDeleteBackground,
   tweets,
@@ -74,7 +74,9 @@ export default function ProfileContent({
     <div>
       <ProfileHeader user={user} tweets={tweets} back={back} />
       <ProfileImages avatar={avatar} background={background} />
-      <ProfileEditButton handleShowModifyModal={handleShowModifyModal} />
+      <ProfileEditButton
+        handleShowModifyProfileModal={handleShowModifyProfileModal}
+      />
       {tweets.length !== 0 && <UserTweets tweets={tweets} />}
       <ScrollProfile />
       <ModifyProfile
@@ -99,8 +101,8 @@ export default function ProfileContent({
         resetBackground={resetBackground}
         modifyProfile={modifyProfile}
         isProfileModified={isProfileModified}
-        showModifyModal={showModifyModal}
-        handleCloseModifyModal={handleCloseModifyModal}
+        showModifyProfileModal={showModifyProfileModal}
+        handleCloseModifyProfileModal={handleCloseModifyProfileModal}
         handleDeleteAvatar={handleDeleteAvatar}
         handleDeleteBackground={handleDeleteBackground}
       />

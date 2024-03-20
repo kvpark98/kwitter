@@ -1,12 +1,12 @@
 import { Button } from "react-bootstrap";
 
-export interface ModifyPhotoRemoveProps {
+export interface ModifyPhotoPreviewRemoveProps {
   resetPhotoButton: () => void;
 }
 
-export default function ModifyPhotoRemove({
+export default function ModifyPhotoPreviewRemove({
   resetPhotoButton,
-}: ModifyPhotoRemoveProps) {
+}: ModifyPhotoPreviewRemoveProps) {
   return (
     <Button
       type="button"

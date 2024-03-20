@@ -32,14 +32,7 @@ export default function ModifyMessagePhoto({
           resetPhotoButton={resetPhotoButton}
         />
       ) : (
-        photo && (
-          <ModifyPhoto
-            photo={photo}
-            imagePreviewUrl={imagePreviewUrl}
-            deletePhoto={deletePhoto}
-            resetPhotoButton={resetPhotoButton}
-          />
-        )
+        photo && <ModifyPhoto photo={photo} deletePhoto={deletePhoto} />
       )}
     </Form.Group>
   );

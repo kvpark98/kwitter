@@ -1,4 +1,4 @@
-import ModifyPhotoRemove from "./modify-photo-remove";
+import ModifyPhotoPreviewRemove from "./modify-photo-preview-remove";
 
 export interface ModifyPhotoPreviewProps {
   imagePreviewUrl: string;
@@ -16,7 +16,7 @@ export default function ModifyPhotoPreview({
         alt="Image Preview"
         className="w-100 h-100 rounded-4"
       />
-      <ModifyPhotoRemove resetPhotoButton={resetPhotoButton} />
+      <ModifyPhotoPreviewRemove resetPhotoButton={resetPhotoButton} />
     </div>
   );
 }
