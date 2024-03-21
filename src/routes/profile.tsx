@@ -1,5 +1,5 @@
 import { auth, db, storage } from "../firebase";
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import {
   StorageError,
   getDownloadURL,
@@ -21,11 +21,27 @@ import {
 import ProfileContent from "../components/profile/profile-content";
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import SideBar from "../components/header&footer/side-bar/side-bar";
-import { Container } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  CloseButton,
+  Container,
+  Modal,
+  Navbar,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Cropper from "react-easy-crop";
+
+// Area 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
+type Area = {
+  x: number;
+  y: number;
+};
 
 export default function Profile() {
   const user = auth.currentUser;
+
+  const navigate = useNavigate();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -33,30 +49,27 @@ export default function Profile() {
 
   const backgroundInputRef = useRef<HTMLInputElement>(null);
 
+  const defaultAvatarURL = "/person-circle.svg";
+  const defaultBackgroundURL = "/default-background.png";
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [name, setName] = useState(user?.displayName);
 
   const [isName, setIsName] = useState(true);
 
+  const [crop, setCrop] = useState<Area>({ x: 0, y: 0 }); // 이미지 자르는 위치
+
+  const [zoom, setZoom] = useState<number>(1); // 이미지 확대/축소
+
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+    x: number;
+    y: number;
+  } | null>(null); // 잘린 이미지 정보
+
   const [avatar, setAvatar] = useState(user?.photoURL);
 
   const [background, setBackground] = useState("");
-
-  const defaultAvatarURL = "/person-circle.svg";
-  const defaultBackgroundURL = "/default-background.png";
-
-  const getBackground = async () => {
-    try {
-      const locationRef = ref(storage, `backgrounds/${user?.uid}`);
-      const result = await getDownloadURL(locationRef);
-      setBackground(result);
-    } catch (error) {
-      setBackground("/default-background.png");
-    }
-  };
-
-  getBackground();
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
@@ -85,7 +98,34 @@ export default function Profile() {
     resetBackground();
   };
 
-  const navigate = useNavigate();
+  const [showCropModal, setShowCropModal] = useState(false);
+  const handleShowCropModal = () => setShowCropModal(true);
+  const handleCloseCropModal = () => {
+    setShowCropModal(false);
+    setShowModifyProfileModal(true);
+  };
+
+  const [isPostActive, setIsPostActive] = useState(true);
+
+  const postActive = () => {
+    setIsPostActive(true);
+  };
+
+  const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const getBackground = async () => {
+    try {
+      const locationRef = ref(storage, `backgrounds/${user?.uid}`);
+      const result = await getDownloadURL(locationRef);
+      setBackground(result);
+    } catch (error) {
+      setBackground("/default-background.png");
+    }
+  };
+
+  getBackground();
 
   const back = () => {
     navigate(-1);
@@ -136,6 +176,8 @@ export default function Profile() {
           // 파일을 읽은 후
           const result = reader.result as string; // 결과를 문자열로 변환
           setAvatarImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
+          setShowModifyProfileModal(false);
+          handleShowCropModal();
         };
         reader.readAsDataURL(selectedFile); // 파일을 Data URL로 읽기
 
@@ -583,10 +625,53 @@ export default function Profile() {
           handleCloseModifyProfileModal={handleCloseModifyProfileModal}
           handleDeleteAvatar={handleDeleteAvatar}
           handleDeleteBackground={handleDeleteBackground}
+          isPostActive={isPostActive}
+          postActive={postActive}
           tweets={tweets}
           back={back}
         />
       </div>
+      <Modal
+        show={showCropModal}
+        onHide={handleCloseCropModal}
+        backdrop="static"
+        keyboard={false}
+        className="border-0"
+        centered
+      >
+        <div
+          style={{ height: "500px" }}
+          className="bg-body-light d-flex flex-column"
+        >
+          <Navbar className="bg-body-light rounded-top border-bottom  flex-fill">
+            <Container>
+              <Navbar.Brand className="me-0 fw-bold">Edit Media</Navbar.Brand>
+              <CloseButton onClick={handleCloseCropModal} />
+            </Container>
+          </Navbar>
+          <Alert
+            variant="light"
+            className="m-0 p-4 overflow-y-auto border-0 rounded-0 h-100"
+          >
+            <Cropper
+              image={avatarImagePreviewUrl}
+              crop={crop}
+              zoom={zoom}
+              aspect={4 / 3}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+            />
+          </Alert>
+          <Navbar className="bg-body-light rounded-bottom flex-fill">
+            <Container className="d-flex justify-content-end h-100">
+              <Button type="button" variant="primary" className="rounded-pill">
+                Apply
+              </Button>
+            </Container>
+          </Navbar>
+        </div>
+      </Modal>
     </Container>
   );
 }

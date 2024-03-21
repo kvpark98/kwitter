@@ -6,6 +6,7 @@ import ProfileHeader from "./profile-header";
 import ModifyProfile from "./username/modify/modify-profile";
 import ProfileImages from "./profile-images";
 import ProfileEditButton from "./profile-edit-button";
+import ProfileNav from "./profile-nav";
 
 export interface ProfileContentProps {
   user: User | null;
@@ -35,6 +36,8 @@ export interface ProfileContentProps {
   handleCloseModifyProfileModal: () => void;
   handleDeleteAvatar: () => Promise<void>;
   handleDeleteBackground: () => Promise<void>;
+  isPostActive: boolean;
+  postActive: () => void;
   tweets: ITweet[];
   back: () => void;
 }
@@ -67,6 +70,8 @@ export default function ProfileContent({
   handleCloseModifyProfileModal,
   handleDeleteAvatar,
   handleDeleteBackground,
+  isPostActive,
+  postActive,
   tweets,
   back,
 }: ProfileContentProps) {
@@ -77,7 +82,8 @@ export default function ProfileContent({
       <ProfileEditButton
         handleShowModifyProfileModal={handleShowModifyProfileModal}
       />
-      {tweets.length !== 0 && <UserTweets tweets={tweets} />}
+      <ProfileNav postActive={postActive} />
+      {isPostActive && tweets.length !== 0 && <UserTweets tweets={tweets} />}
       <ScrollProfile />
       <ModifyProfile
         nameInputRef={nameInputRef}
