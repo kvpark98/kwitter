@@ -1,5 +1,5 @@
 import { auth, db, storage } from "../firebase";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   StorageError,
   getDownloadURL,
@@ -32,10 +32,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import Cropper from "react-easy-crop";
 
-// Area 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
-type Area = {
-  x: number;
-  y: number;
+// CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
+type CroppedAreaPixels = {
+  x: number; // 잘린 영역의 x 좌표
+  y: number; // 잘린 영역의 y 좌표
+  width: number; // 잘린 영역의 너비
+  height: number; // 잘린 영역의 높이
 };
 
 export default function Profile() {
@@ -57,15 +59,6 @@ export default function Profile() {
   const [name, setName] = useState(user?.displayName);
 
   const [isName, setIsName] = useState(true);
-
-  const [crop, setCrop] = useState<Area>({ x: 0, y: 0 }); // 이미지 자르는 위치
-
-  const [zoom, setZoom] = useState<number>(1); // 이미지 확대/축소
-
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
-    x: number;
-    y: number;
-  } | null>(null); // 잘린 이미지 정보
 
   const [avatar, setAvatar] = useState(user?.photoURL);
 
@@ -98,6 +91,13 @@ export default function Profile() {
     resetBackground();
   };
 
+  const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
+
+  const [zoom, setZoom] = useState(1); // 이미지 확대/축소
+
+  const [croppedAreaPixels, setCroppedAreaPixels] =
+    useState<CroppedAreaPixels | null>(null); // 잘린 이미지 정보
+
   const [showCropModal, setShowCropModal] = useState(false);
   const handleShowCropModal = () => setShowCropModal(true);
   const handleCloseCropModal = () => {
@@ -105,14 +105,77 @@ export default function Profile() {
     setShowModifyProfileModal(true);
   };
 
+  // 이미지 자르기가 완료되었을 때 호출되는 콜백 함수
+  const onCropComplete = (
+    croppedArea: CroppedAreaPixels, // 자른 영역의 정보
+    croppedAreaPixels: CroppedAreaPixels // 자른 영역의 픽셀 정보
+  ) => {
+    // 자른 영역의 픽셀 정보를 상태로 설정
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const handleSaveCroppedAvatar = () => {
+    // 잘린 이미지 정보와 파일이 존재하는지 확인
+    if (!croppedAreaPixels || !avatarFile) return;
+
+    // Canvas 엘리먼트 생성 및 그래픽 컨텍스트 가져오기
+    const canvas = document.createElement("canvas"); // canvas = 도화지
+    const ctx = canvas.getContext("2d"); // Context = 화가
+    if (!ctx) return;
+
+    // 이미지 객체 생성 및 소스 설정
+    const image = new Image(); // 새 이미지 객체를 생성
+    image.src = avatarImagePreviewUrl; // avatarImagePreviewUrl를 새 이미지 객체에 복사하여 붙여넣기
+
+    // 이미지 로드 (복붙) 완료 시 실행될 콜백 함수 정의
+    image.onload = () => {
+      // Canvas 크기 설정 (잘린 이미지와 같은 크기로 설정해야 원본 이미지와 동일한 크기로 표시됨)
+      canvas.width = croppedAreaPixels.width;
+      canvas.height = croppedAreaPixels.height;
+
+      // 이미지를 Canvas에 그리기
+      ctx.drawImage(
+        image, // 그릴 이미지
+        croppedAreaPixels.x, // 이미지에서 잘라내어 사용할 부분의 시작 x 좌표
+        croppedAreaPixels.y, // 이미지에서 잘라내어 사용할 부분의 시작 y 좌표
+        croppedAreaPixels.width, // 이미지에서 잘라내어 사용할 부분의 너비
+        croppedAreaPixels.height, // 이미지에서 잘라내어 사용할 부분의 높이
+        0, // Canvas에 그릴 영역의 시작 x 좌표 (고정)
+        0, // Canvas에 그릴 영역의 시작 y 좌표 (고정)
+        croppedAreaPixels.width, // Canvas에 그릴 영역의 너비 (잘린 이미지와 같은 크기)
+        croppedAreaPixels.height // Canvas에 그릴 영역의 높이 (잘린 이미지와 같은 크기)
+      );
+
+      // Canvas에 그린 이미지를 데이터 URL로 변환
+      const croppedImageDataURL = canvas.toDataURL("image/jpeg"); // 이미지 포맷(jpeg 형식)을 설정하는 것! (동일한 이미지에 대해 자르는 부분이 달라도 이미지의 내용이 변하지 않는다면 데이터 URL은 동일하게 유지)
+
+      setAvatarImagePreviewUrl(croppedImageDataURL); // 잘린 이미지 (복사본) 미리 보기 가능
+
+      // 데이터 URL을 Blob 객체로 변환
+      const byteCharacters = atob(croppedImageDataURL.split(",")[1]);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "image/jpeg" });
+
+      // Blob 객체를 File 객체로 변환 (Blob은 File 객체에 포함되는 개념)
+      const croppedFile = new File([blob], "cropped-avatar.jpeg", {
+        type: "image/jpeg",
+      });
+
+      // 잘린 이미지 파일 업데이트
+      setAvatarFile(croppedFile);
+
+      handleCloseCropModal();
+    };
+  };
+
   const [isPostActive, setIsPostActive] = useState(true);
 
   const postActive = () => {
     setIsPostActive(true);
-  };
-
-  const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels);
   };
 
   const getBackground = async () => {
@@ -170,14 +233,15 @@ export default function Profile() {
 
       if (selectedFile.size <= 1024 * 1024) {
         // 파일 크기가 1MB 이하인 경우
+        setShowModifyProfileModal(false);
+        handleShowCropModal();
+
         const reader = new FileReader(); // FileReader 객체를 생성
 
         reader.onload = () => {
           // 파일을 읽은 후
           const result = reader.result as string; // 결과를 문자열로 변환
           setAvatarImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
-          setShowModifyProfileModal(false);
-          handleShowCropModal();
         };
         reader.readAsDataURL(selectedFile); // 파일을 Data URL로 읽기
 
@@ -665,7 +729,12 @@ export default function Profile() {
           </Alert>
           <Navbar className="bg-body-light rounded-bottom flex-fill">
             <Container className="d-flex justify-content-end h-100">
-              <Button type="button" variant="primary" className="rounded-pill">
+              <Button
+                type="button"
+                variant="primary"
+                className="rounded-pill"
+                onClick={handleSaveCroppedAvatar}
+              >
                 Apply
               </Button>
             </Container>
