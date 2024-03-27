@@ -4,6 +4,7 @@ import ModifyProfileButtons from "./modify-profile-buttons";
 import ModifyProfileSuccess from "../../../alert/success/auth/modify-profile/modify-profile-success";
 import ModifyProfileErrors from "../../../alert/error/auth/modify-profile/modify-profile-errors";
 import ModifyProfileImages from "./modify-profile-images";
+import React from "react";
 
 export interface ModifyProfileFormProps {
   nameInputRef: React.RefObject<HTMLInputElement>;

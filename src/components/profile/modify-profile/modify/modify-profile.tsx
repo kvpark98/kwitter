@@ -1,6 +1,7 @@
 import { Modal } from "react-bootstrap";
 import ModifyProfileForm from "./modify-profile-form";
 import ModifyProfileHeader from "./modify-profile-header";
+import React from "react";
 
 export interface ModifyProfileProps {
   nameInputRef: React.RefObject<HTMLInputElement>;

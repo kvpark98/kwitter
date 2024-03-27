@@ -290,8 +290,8 @@ export default function Profile() {
 
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
+    // 파일이 존재하고 하나만 선택된 경우
     if (files && files.length === 1) {
-      // 파일이 존재하고 하나만 선택된 경우
       const selectedFile = files[0]; // 첫 번째 선택된 파일
 
       // 파일 크기가 1MB 이하인 경우
@@ -301,8 +301,8 @@ export default function Profile() {
 
         const reader = new FileReader(); // FileReader 객체를 생성
 
+        // 파일을 읽은 후
         reader.onload = () => {
-          // 파일을 읽은 후
           const result = reader.result as string; // 결과를 문자열로 변환
           setAvatarImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
         };
@@ -339,8 +339,8 @@ export default function Profile() {
 
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
+    // 파일이 존재하고 하나만 선택된 경우
     if (files && files.length === 1) {
-      // 파일이 존재하고 하나만 선택된 경우
       const selectedFile = files[0]; // 첫 번째 선택된 파일
 
       // 파일 크기가 1MB 이하인 경우
@@ -350,8 +350,8 @@ export default function Profile() {
 
         const reader = new FileReader(); // FileReader 객체를 생성
 
+        // 파일을 읽은 후
         reader.onload = () => {
-          // 파일을 읽은 후
           const result = reader.result as string; // 결과를 문자열로 변환
           setBackgroundImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
         };

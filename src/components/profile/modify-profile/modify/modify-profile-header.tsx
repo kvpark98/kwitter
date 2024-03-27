@@ -1,3 +1,4 @@
+import React from "react";
 import { CloseButton, Container, Navbar } from "react-bootstrap";
 
 export interface ModifyProfileHeaderProps {

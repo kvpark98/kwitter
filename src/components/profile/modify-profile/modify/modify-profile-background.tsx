@@ -2,6 +2,7 @@ import { Form } from "react-bootstrap";
 import ModifyProfileBackgroundPreview from "./modify-profile-background-preview";
 import ModifyProfileBackgroundAdd from "./modify-profile-background-add";
 import ModifyProfileBackgroundRemoveDelete from "./modify-profile-background-remove-delete";
+import React from "react";
 
 export interface ModifyProfileBackgroundProps {
   backgroundInputRef: React.RefObject<HTMLInputElement>;

@@ -7,6 +7,7 @@ export interface CreateMessagePhotoProps {
   handleMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   imagePreviewUrl: string;
   resetPhotoButton: () => void;
+  handleShowPhotoCropModal: () => void;
 }
 
 export default function CreateMessagePhoto({
@@ -14,6 +15,7 @@ export default function CreateMessagePhoto({
   handleMessage,
   imagePreviewUrl,
   resetPhotoButton,
+  handleShowPhotoCropModal,
 }: CreateMessagePhotoProps) {
   return (
     <Form.Group className="w-100">
@@ -22,6 +24,7 @@ export default function CreateMessagePhoto({
         <CreatePhotoPreview
           imagePreviewUrl={imagePreviewUrl}
           resetPhotoButton={resetPhotoButton}
+          handleShowPhotoCropModal={handleShowPhotoCropModal}
         />
       )}
     </Form.Group>

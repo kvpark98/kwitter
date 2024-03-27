@@ -1,3 +1,4 @@
+import React from "react";
 import ModifyProfileReset from "./modify-profile-reset";
 import ModifyProfileSubmit from "./modify-profile-submit";
 

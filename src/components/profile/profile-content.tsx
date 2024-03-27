@@ -3,7 +3,7 @@ import { User } from "firebase/auth";
 import { ITweet } from "../tweets/query/detail/tweet";
 import UserTweets from "./user-tweets/user-tweets";
 import ProfileHeader from "./profile-header";
-import ModifyProfile from "./username/modify/modify-profile";
+import ModifyProfile from "./modify-profile/modify/modify-profile";
 import ProfileImages from "./profile-images";
 import ProfileEditButton from "./profile-edit-button";
 import ProfileNav from "./profile-nav";
