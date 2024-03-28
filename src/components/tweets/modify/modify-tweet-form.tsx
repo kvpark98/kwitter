@@ -20,6 +20,7 @@ export interface ModifyTweetFormProps {
   deletePhoto: () => Promise<void>;
   modifyTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   tweetModified: boolean;
+  handleShowModifyPhotoCropModal: () => void;
 }
 
 export default function ModifyTweetForm({
@@ -37,6 +38,7 @@ export default function ModifyTweetForm({
   deletePhoto,
   modifyTweet,
   tweetModified,
+  handleShowModifyPhotoCropModal,
 }: ModifyTweetFormProps) {
   return (
     <Form className="w-100" onSubmit={modifyTweet}>
@@ -56,16 +58,17 @@ export default function ModifyTweetForm({
             imagePreviewUrl={imagePreviewUrl}
             resetPhotoButton={resetPhotoButton}
             deletePhoto={deletePhoto}
+            handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
           />
         </div>
-        <ModifyButtons
-          isLoading={isLoading}
-          isNewMessage={isNewMessage}
-          newFileInputRef={newFileInputRef}
-          handleNewFile={handleNewFile}
-          resetMessageButton={resetMessageButton}
-        />
       </Alert>
+      <ModifyButtons
+        isLoading={isLoading}
+        isNewMessage={isNewMessage}
+        newFileInputRef={newFileInputRef}
+        handleNewFile={handleNewFile}
+        resetMessageButton={resetMessageButton}
+      />
     </Form>
   );
 }

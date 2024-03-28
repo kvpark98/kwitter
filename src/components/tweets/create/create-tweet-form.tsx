@@ -18,7 +18,7 @@ export interface CreateTweetFormProps {
   resetPhotoButton: () => void;
   createTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   tweetCreated: boolean;
-  handleShowPhotoCropModal: () => void;
+  handleShowCreatePhotoCropModal: () => void;
 }
 
 export default function CreateTweetForm({
@@ -34,7 +34,7 @@ export default function CreateTweetForm({
   resetPhotoButton,
   createTweet,
   tweetCreated,
-  handleShowPhotoCropModal,
+  handleShowCreatePhotoCropModal,
 }: CreateTweetFormProps) {
   return (
     <Form className="w-100" onSubmit={createTweet}>
@@ -52,17 +52,17 @@ export default function CreateTweetForm({
             handleMessage={handleMessage}
             imagePreviewUrl={imagePreviewUrl}
             resetPhotoButton={resetPhotoButton}
-            handleShowPhotoCropModal={handleShowPhotoCropModal}
+            handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
           />
         </div>
-        <CreateButtons
-          isLoading={isLoading}
-          isMessage={isMessage}
-          fileInputRef={fileInputRef}
-          handleFile={handleFile}
-          resetMessageButton={resetMessageButton}
-        />
       </Alert>
+      <CreateButtons
+        isLoading={isLoading}
+        isMessage={isMessage}
+        fileInputRef={fileInputRef}
+        handleFile={handleFile}
+        resetMessageButton={resetMessageButton}
+      />
     </Form>
   );
 }

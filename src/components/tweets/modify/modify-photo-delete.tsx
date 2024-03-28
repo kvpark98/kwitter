@@ -11,7 +11,7 @@ export default function ModifyPhotoDelete({
     <Button
       type="button"
       variant="danger"
-      className="d-flex align-items-center position-absolute rounded-circle top-50 start-50 translate-middle p-2"
+      className="d-flex align-items-center position-absolute rounded-circle top-0 end-0 p-2"
       title="Delete"
       onClick={deletePhoto}
     >

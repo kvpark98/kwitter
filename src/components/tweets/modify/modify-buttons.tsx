@@ -1,3 +1,4 @@
+import { Container, Navbar } from "react-bootstrap";
 import ModifyButtonPhoto from "./modify-button-photo.tsx";
 import ModifyButtonReset from "./modify-button-reset.tsx";
 import ModifyButtonSubmit from "./modify-button-submit.tsx";
@@ -18,17 +19,24 @@ export default function ModifyButtons({
   resetMessageButton,
 }: ModifyButtonsProps) {
   return (
-    <div className="d-flex justify-content-between">
-      <div className="d-flex">
-        <ModifyButtonPhoto
-          newFileInputRef={newFileInputRef}
-          handleNewFile={handleNewFile}
-        />
-        <ModifyButtonReset resetMessageButton={resetMessageButton} />
-      </div>
-      <div>
-        <ModifyButtonSubmit isLoading={isLoading} isNewMessage={isNewMessage} />
-      </div>
-    </div>
+    <Navbar className="flex-fill rounded-bottom bg-body-light border-top">
+      <Container className="d-flex">
+        <div className="d-flex justify-content-between w-100">
+          <div className="d-flex">
+            <ModifyButtonPhoto
+              newFileInputRef={newFileInputRef}
+              handleNewFile={handleNewFile}
+            />
+            <ModifyButtonReset resetMessageButton={resetMessageButton} />
+          </div>
+          <div>
+            <ModifyButtonSubmit
+              isLoading={isLoading}
+              isNewMessage={isNewMessage}
+            />
+          </div>
+        </div>
+      </Container>
+    </Navbar>
   );
 }

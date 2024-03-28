@@ -16,7 +16,7 @@ export interface CreateTweetProps {
   resetPhotoButton: () => void;
   createTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   tweetCreated: boolean;
-  handleShowPhotoCropModal: () => void;
+  handleShowCreatePhotoCropModal: () => void;
   handleCloseCreateTweetModal: () => void;
 }
 
@@ -34,7 +34,7 @@ export default function CreateTweet({
   resetPhotoButton,
   createTweet,
   tweetCreated,
-  handleShowPhotoCropModal,
+  handleShowCreatePhotoCropModal,
   handleCloseCreateTweetModal,
 }: CreateTweetProps) {
   return (
@@ -62,7 +62,7 @@ export default function CreateTweet({
         resetPhotoButton={resetPhotoButton}
         createTweet={createTweet}
         tweetCreated={tweetCreated}
-        handleShowPhotoCropModal={handleShowPhotoCropModal}
+        handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
       />
     </Modal>
   );

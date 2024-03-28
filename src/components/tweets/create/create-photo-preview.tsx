@@ -13,7 +13,7 @@ export default function CreatePhotoPreview({
   handleShowPhotoCropModal,
 }: CreatePhotoPreviewProps) {
   return (
-    <div className="position-relative mb-4">
+    <div className="position-relative">
       <img
         src={imagePreviewUrl}
         alt="Image Preview"

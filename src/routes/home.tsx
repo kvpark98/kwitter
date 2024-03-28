@@ -4,7 +4,6 @@ import CreateTweet from "../components/tweets/create/create-tweet";
 import TweetList from "../components/tweets/query/list/tweet-list";
 import { Container } from "react-bootstrap";
 import SideBar from "../components/header&footer/side-bar/side-bar";
-import CropPhotoModal from "../components/tweets/create/crop-modal/crop-photo-modal";
 import { CroppedAreaPixels } from "./profile";
 import { auth, db, storage } from "../firebase";
 import {
@@ -20,6 +19,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { FirebaseError } from "firebase/app";
+import CreateCropPhotoModal from "../components/tweets/create/create-crop-modal/create-crop-photo-modal";
 
 export default function Home() {
   const user = auth.currentUser;
@@ -55,13 +55,14 @@ export default function Home() {
   const [croppedAreaPixels, setCroppedAreaPixels] =
     useState<CroppedAreaPixels | null>(null); // 잘린 이미지 정보
 
-  const [showPhotoCropModal, setShowPhotorCropModal] = useState(false);
-  const handleShowPhotoCropModal = () => {
+  const [showCreatePhotoCropModal, setShowCreatePhotorCropModal] =
+    useState(false);
+  const handleShowCreatePhotoCropModal = () => {
     setShowCreateTweetModal(false);
-    setShowPhotorCropModal(true);
+    setShowCreatePhotorCropModal(true);
   };
-  const handleClosePhotoCropModal = () => {
-    setShowPhotorCropModal(false);
+  const handleCloseCreatePhotoCropModal = () => {
+    setShowCreatePhotorCropModal(false);
     setShowCreateTweetModal(true);
   };
 
@@ -128,7 +129,7 @@ export default function Home() {
       // 잘린 이미지 파일 업데이트
       setFile(croppedFile);
 
-      setShowPhotorCropModal(false);
+      setShowCreatePhotorCropModal(false);
       setShowCreateTweetModal(true);
     };
   };
@@ -321,15 +322,15 @@ export default function Home() {
           resetPhotoButton={resetPhotoButton}
           createTweet={createTweet}
           tweetCreated={tweetCreated}
-          handleShowPhotoCropModal={handleShowPhotoCropModal}
+          handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
           handleCloseCreateTweetModal={handleCloseCreateTweetModal}
         />
         <TweetList />
         <ScrollHome />
       </div>
-      <CropPhotoModal
-        showPhotoCropModal={showPhotoCropModal}
-        handleClosePhotoCropModal={handleClosePhotoCropModal}
+      <CreateCropPhotoModal
+        showCreatePhotoCropModal={showCreatePhotoCropModal}
+        handleCloseCreatePhotoCropModal={handleCloseCreatePhotoCropModal}
         imagePreviewUrl={imagePreviewUrl}
         crop={crop}
         setCrop={setCrop}

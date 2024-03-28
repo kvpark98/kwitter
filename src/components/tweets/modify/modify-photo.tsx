@@ -7,7 +7,7 @@ export interface ModifyPhotoProps {
 
 export default function ModifyPhoto({ photo, deletePhoto }: ModifyPhotoProps) {
   return (
-    <div className="position-relative mb-4">
+    <div className="position-relative">
       <img src={photo} alt="Image Preview" className="w-100 h-100 rounded-4" />
       <ModifyPhotoDelete deletePhoto={deletePhoto} />
     </div>

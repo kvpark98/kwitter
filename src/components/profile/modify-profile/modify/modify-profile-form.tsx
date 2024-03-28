@@ -88,12 +88,12 @@ export default function ModifyProfileForm({
           nameErrorMessage={nameErrorMessage}
           noSpace={noSpace}
         />
-        <ModifyProfileButtons
-          isLoading={isLoading}
-          isName={isName}
-          resetName={resetName}
-        />
       </Alert>
+      <ModifyProfileButtons
+        isLoading={isLoading}
+        isName={isName}
+        resetName={resetName}
+      />
     </Form>
   );
 }

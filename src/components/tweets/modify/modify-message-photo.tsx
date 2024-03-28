@@ -10,6 +10,7 @@ export interface ModifyMessagePhotoProps {
   imagePreviewUrl: string;
   resetPhotoButton: () => void;
   deletePhoto: () => Promise<void>;
+  handleShowModifyPhotoCropModal: () => void;
 }
 
 export default function ModifyMessagePhoto({
@@ -19,6 +20,7 @@ export default function ModifyMessagePhoto({
   imagePreviewUrl,
   resetPhotoButton,
   deletePhoto,
+  handleShowModifyPhotoCropModal,
 }: ModifyMessagePhotoProps) {
   return (
     <Form.Group className="w-100">
@@ -30,6 +32,7 @@ export default function ModifyMessagePhoto({
         <ModifyPhotoPreview
           imagePreviewUrl={imagePreviewUrl}
           resetPhotoButton={resetPhotoButton}
+          handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
         />
       ) : (
         photo && <ModifyPhoto photo={photo} deletePhoto={deletePhoto} />

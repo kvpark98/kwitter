@@ -1,12 +1,12 @@
 import { Modal } from "react-bootstrap";
 import { CroppedAreaPixels } from "../../../../routes/profile";
-import CropAvatarHeader from "../../../profile/crop-modal/avatar/crop-avatar-header";
-import CropAvatarBody from "../../../profile/crop-modal/avatar/crop-avatar-body";
-import CropAvatarFooter from "../../../profile/crop-modal/avatar/crop-avatar-footer";
+import ModifyCropPhotoBody from "./modify-crop-photo-body";
+import ModifyCropPhotoHeader from "./modify-crop-photo-header";
+import ModifyCropPhotoFooter from "./modify-crop-photo-footer";
 
-export interface CropPhotoModalProps {
-  showPhotoCropModal: boolean;
-  handleClosePhotoCropModal: () => void;
+export interface ModifyCropPhotoModalProps {
+  showModifyPhotoCropModal: boolean;
+  handleCloseModifyPhotoCropModal: () => void;
   imagePreviewUrl: string;
   crop: {
     x: number;
@@ -27,9 +27,9 @@ export interface CropPhotoModalProps {
   handleSaveCroppedPhoto: () => void;
 }
 
-export default function CropPhotoModal({
-  showPhotoCropModal,
-  handleClosePhotoCropModal,
+export default function ModifyCropPhotoModal({
+  showModifyPhotoCropModal,
+  handleCloseModifyPhotoCropModal,
   imagePreviewUrl,
   crop,
   setCrop,
@@ -37,11 +37,11 @@ export default function CropPhotoModal({
   setZoom,
   onCropComplete,
   handleSaveCroppedPhoto,
-}: CropPhotoModalProps) {
+}: ModifyCropPhotoModalProps) {
   return (
     <Modal
-      show={showPhotoCropModal}
-      onHide={handleClosePhotoCropModal}
+      show={showModifyPhotoCropModal}
+      onHide={handleCloseModifyPhotoCropModal}
       backdrop="static"
       keyboard={false}
       className="border-0"
@@ -51,18 +51,20 @@ export default function CropPhotoModal({
         style={{ height: "500px" }}
         className="d-flex flex-column bg-body-light"
       >
-        <CropAvatarHeader
-          handleCloseAvatarCropModal={handleClosePhotoCropModal}
+        <ModifyCropPhotoHeader
+          handleCloseModifyPhotoCropModal={handleCloseModifyPhotoCropModal}
         />
-        <CropAvatarBody
-          avatarImagePreviewUrl={imagePreviewUrl}
+        <ModifyCropPhotoBody
+          imagePreviewUrl={imagePreviewUrl}
           crop={crop}
           setCrop={setCrop}
           zoom={zoom}
           setZoom={setZoom}
           onCropComplete={onCropComplete}
         />
-        <CropAvatarFooter handleSaveCroppedAvatar={handleSaveCroppedPhoto} />
+        <ModifyCropPhotoFooter
+          handleSaveCroppedPhoto={handleSaveCroppedPhoto}
+        />
       </div>
     </Modal>
   );
