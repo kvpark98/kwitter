@@ -3,19 +3,21 @@ import CreatePhotoPreviewRemove from "./create-photo-preview-remove";
 
 export interface CreatePhotoPreviewProps {
   imagePreviewUrl: string;
+  croppedImagePreviewUrl: string;
   resetPhotoButton: () => void;
   handleShowPhotoCropModal: () => void;
 }
 
 export default function CreatePhotoPreview({
   imagePreviewUrl,
+  croppedImagePreviewUrl,
   resetPhotoButton,
   handleShowPhotoCropModal,
 }: CreatePhotoPreviewProps) {
   return (
     <div className="position-relative">
       <img
-        src={imagePreviewUrl}
+        src={croppedImagePreviewUrl ? croppedImagePreviewUrl : imagePreviewUrl}
         alt="Image Preview"
         className="w-100 h-100 rounded-4"
       />

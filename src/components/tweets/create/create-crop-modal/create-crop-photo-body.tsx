@@ -20,6 +20,9 @@ export interface CreateCropPhotoBodyProps {
     croppedArea: CroppedAreaPixels,
     croppedAreaPixels: CroppedAreaPixels
   ) => void;
+  createRatio1x1: boolean;
+  createRatio4x3: boolean;
+  createRatio16x9: boolean;
 }
 
 export default function CreateCropPhotoBody({
@@ -29,6 +32,9 @@ export default function CreateCropPhotoBody({
   zoom,
   setZoom,
   onCropComplete,
+  createRatio1x1,
+  createRatio4x3,
+  createRatio16x9,
 }: CreateCropPhotoBodyProps) {
   return (
     <Alert
@@ -39,7 +45,9 @@ export default function CreateCropPhotoBody({
         image={imagePreviewUrl}
         crop={crop}
         zoom={zoom}
-        aspect={1 / 1}
+        {...(createRatio1x1 && { aspect: 1 / 1 })}
+        {...(createRatio4x3 && { aspect: 4 / 3 })}
+        {...(createRatio16x9 && { aspect: 16 / 9 })}
         onCropChange={setCrop}
         onZoomChange={setZoom}
         onCropComplete={onCropComplete}

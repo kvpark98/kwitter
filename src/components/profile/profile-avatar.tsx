@@ -8,7 +8,7 @@ export default function ProfileAvatar({ avatar }: ProfileAvatarProps) {
   return (
     <div
       className="rounded-circle overflow-hidden"
-      style={{ width: "130px", height: "130px" }}
+      style={{ width: "140px", height: "140px" }}
     >
       <Card.Img
         src={avatar!}

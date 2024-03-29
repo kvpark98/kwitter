@@ -38,6 +38,9 @@ export default function Home() {
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
 
+  const [croppedImagePreviewUrl, setCroppedImagePreviewUrl] =
+    useState<string>("");
+
   const [error, setError] = useState("");
 
   const [showCreateTweetModal, setShowCreateTweetModal] = useState(false);
@@ -46,6 +49,7 @@ export default function Home() {
     setShowCreateTweetModal(false);
     resetMessageButton();
     resetPhotoButton();
+    handleCreateRatio1x1();
   };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
@@ -55,15 +59,38 @@ export default function Home() {
   const [croppedAreaPixels, setCroppedAreaPixels] =
     useState<CroppedAreaPixels | null>(null); // 잘린 이미지 정보
 
-  const [showCreatePhotoCropModal, setShowCreatePhotorCropModal] =
+  const [showCreatePhotoCropModal, setShowCreatePhotoCropModal] =
     useState(false);
   const handleShowCreatePhotoCropModal = () => {
     setShowCreateTweetModal(false);
-    setShowCreatePhotorCropModal(true);
+    setShowCreatePhotoCropModal(true);
   };
   const handleCloseCreatePhotoCropModal = () => {
-    setShowCreatePhotorCropModal(false);
+    setShowCreatePhotoCropModal(false);
     setShowCreateTweetModal(true);
+    handleCreateRatio1x1();
+  };
+
+  const [createRatio1x1, setCreateRatio1x1] = useState(true);
+  const [createRatio4x3, setCreateRatio4x3] = useState(false);
+  const [createRatio16x9, setCreateRatio16x9] = useState(false);
+
+  const handleCreateRatio1x1 = () => {
+    setCreateRatio1x1(true);
+    setCreateRatio4x3(false);
+    setCreateRatio16x9(false);
+  };
+
+  const handleCreateRatio4x3 = () => {
+    setCreateRatio1x1(false);
+    setCreateRatio4x3(true);
+    setCreateRatio16x9(false);
+  };
+
+  const handleCreateRatio16x9 = () => {
+    setCreateRatio1x1(false);
+    setCreateRatio4x3(false);
+    setCreateRatio16x9(true);
   };
 
   // 이미지 자르기가 완료되었을 때 호출되는 콜백 함수
@@ -110,7 +137,7 @@ export default function Home() {
       // Canvas에 그린 이미지를 데이터 URL로 변환
       const croppedImageDataURL = canvas.toDataURL("image/jpeg"); // 이미지 포맷(jpeg 형식)을 설정하는 것! (동일한 이미지에 대해 자르는 부분이 달라도 이미지의 내용이 변하지 않는다면 데이터 URL은 동일하게 유지)
 
-      setImagePreviewUrl(croppedImageDataURL); // 잘린 이미지 (복사본) 미리 보기 가능
+      setCroppedImagePreviewUrl(croppedImageDataURL); // 잘린 이미지 (복사본) 미리 보기 가능
 
       // 데이터 URL을 Blob 객체로 변환
       const byteCharacters = atob(croppedImageDataURL.split(",")[1]);
@@ -122,14 +149,16 @@ export default function Home() {
       const blob = new Blob([byteArray], { type: "image/jpeg" });
 
       // Blob 객체를 File 객체로 변환 (Blob은 File 객체에 포함되는 개념)
-      const croppedFile = new File([blob], "cropped-avatar.jpeg", {
+      const croppedFile = new File([blob], "cropped-photo.jpeg", {
         type: "image/jpeg",
       });
 
       // 잘린 이미지 파일 업데이트
       setFile(croppedFile);
 
-      setShowCreatePhotorCropModal(false);
+      handleCreateRatio1x1();
+
+      setShowCreatePhotoCropModal(false);
       setShowCreateTweetModal(true);
     };
   };
@@ -148,6 +177,7 @@ export default function Home() {
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetCreated(false);
+    setCroppedImagePreviewUrl("");
 
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
@@ -318,6 +348,7 @@ export default function Home() {
           isMessage={isMessage}
           handleFile={handleFile}
           imagePreviewUrl={imagePreviewUrl}
+          croppedImagePreviewUrl={croppedImagePreviewUrl}
           resetMessageButton={resetMessageButton}
           resetPhotoButton={resetPhotoButton}
           createTweet={createTweet}
@@ -338,6 +369,12 @@ export default function Home() {
         setZoom={setZoom}
         onCropComplete={onCropComplete}
         handleSaveCroppedPhoto={handleSaveCroppedPhoto}
+        createRatio1x1={createRatio1x1}
+        createRatio4x3={createRatio4x3}
+        createRatio16x9={createRatio16x9}
+        handleCreateRatio1x1={handleCreateRatio1x1}
+        handleCreateRatio4x3={handleCreateRatio4x3}
+        handleCreateRatio16x9={handleCreateRatio16x9}
       />
     </Container>
   );

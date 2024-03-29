@@ -1,6 +1,7 @@
-import CreateTweetForm from "./create-tweet-form";
-import { Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import CreateTweetHeader from "./create-tweet-header";
+import CreateTweetFooter from "./create-tweet-footer";
+import CreateTweetBody from "./create-tweet-body";
 
 export interface CreateTweetProps {
   showCreateTweetModal: boolean;
@@ -12,6 +13,7 @@ export interface CreateTweetProps {
   isMessage: boolean;
   handleFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
   imagePreviewUrl: string;
+  croppedImagePreviewUrl: string;
   resetMessageButton: () => void;
   resetPhotoButton: () => void;
   createTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -30,6 +32,7 @@ export default function CreateTweet({
   isMessage,
   handleFile,
   imagePreviewUrl,
+  croppedImagePreviewUrl,
   resetMessageButton,
   resetPhotoButton,
   createTweet,
@@ -49,21 +52,26 @@ export default function CreateTweet({
       <CreateTweetHeader
         handleCloseCreateTweetModal={handleCloseCreateTweetModal}
       />
-      <CreateTweetForm
-        isLoading={isLoading}
-        error={error}
-        fileInputRef={fileInputRef}
-        message={message}
-        handleMessage={handleMessage}
-        isMessage={isMessage}
-        handleFile={handleFile}
-        imagePreviewUrl={imagePreviewUrl}
-        resetMessageButton={resetMessageButton}
-        resetPhotoButton={resetPhotoButton}
-        createTweet={createTweet}
-        tweetCreated={tweetCreated}
-        handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
-      />
+      <Form className="w-100" onSubmit={createTweet}>
+        <CreateTweetBody
+          error={error}
+          message={message}
+          handleMessage={handleMessage}
+          handleFile={handleFile}
+          imagePreviewUrl={imagePreviewUrl}
+          croppedImagePreviewUrl={croppedImagePreviewUrl}
+          resetPhotoButton={resetPhotoButton}
+          tweetCreated={tweetCreated}
+          handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
+        />
+        <CreateTweetFooter
+          isLoading={isLoading}
+          isMessage={isMessage}
+          fileInputRef={fileInputRef}
+          handleFile={handleFile}
+          resetMessageButton={resetMessageButton}
+        />
+      </Form>
     </Modal>
   );
 }

@@ -25,6 +25,12 @@ export interface CreateCropPhotoModalProps {
     croppedAreaPixels: CroppedAreaPixels
   ) => void;
   handleSaveCroppedPhoto: () => void;
+  createRatio1x1: boolean;
+  createRatio4x3: boolean;
+  createRatio16x9: boolean;
+  handleCreateRatio1x1: () => void;
+  handleCreateRatio4x3: () => void;
+  handleCreateRatio16x9: () => void;
 }
 
 export default function CreateCropPhotoModal({
@@ -37,6 +43,12 @@ export default function CreateCropPhotoModal({
   setZoom,
   onCropComplete,
   handleSaveCroppedPhoto,
+  createRatio1x1,
+  createRatio4x3,
+  createRatio16x9,
+  handleCreateRatio1x1,
+  handleCreateRatio4x3,
+  handleCreateRatio16x9,
 }: CreateCropPhotoModalProps) {
   return (
     <Modal
@@ -61,9 +73,18 @@ export default function CreateCropPhotoModal({
           zoom={zoom}
           setZoom={setZoom}
           onCropComplete={onCropComplete}
+          createRatio1x1={createRatio1x1}
+          createRatio4x3={createRatio4x3}
+          createRatio16x9={createRatio16x9}
         />
         <CreateCropPhotoFooter
           handleSaveCroppedPhoto={handleSaveCroppedPhoto}
+          createRatio1x1={createRatio1x1}
+          createRatio4x3={createRatio4x3}
+          createRatio16x9={createRatio16x9}
+          handleCreateRatio1x1={handleCreateRatio1x1}
+          handleCreateRatio4x3={handleCreateRatio4x3}
+          handleCreateRatio16x9={handleCreateRatio16x9}
         />
       </div>
     </Modal>

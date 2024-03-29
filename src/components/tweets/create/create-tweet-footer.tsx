@@ -3,7 +3,7 @@ import CreateButtonPhoto from "./create-button-photo.tsx";
 import CreateButtonReset from "./create-button-reset.tsx";
 import CreateButtonSubmit from "./create-button-submit.tsx";
 
-export interface CreateButtonsProps {
+export interface CreateTweetFooterProps {
   isLoading: boolean;
   isMessage: boolean;
   fileInputRef: React.RefObject<HTMLInputElement>;
@@ -11,13 +11,13 @@ export interface CreateButtonsProps {
   resetMessageButton: () => void;
 }
 
-export default function CreateButtons({
+export default function CreateTweetFooter({
   isLoading,
   isMessage,
   fileInputRef,
   handleFile,
   resetMessageButton,
-}: CreateButtonsProps) {
+}: CreateTweetFooterProps) {
   return (
     <Navbar className="flex-fill rounded-bottom bg-body-light border-top">
       <Container className="d-flex">
