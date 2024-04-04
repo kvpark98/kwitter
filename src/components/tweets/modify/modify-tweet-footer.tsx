@@ -3,7 +3,7 @@ import ModifyButtonPhoto from "./modify-button-photo.tsx";
 import ModifyButtonReset from "./modify-button-reset.tsx";
 import ModifyButtonSubmit from "./modify-button-submit.tsx";
 
-export interface ModifyButtonsProps {
+export interface ModifyTweetFooterProps {
   isLoading: boolean;
   isNewMessage: boolean;
   newFileInputRef: React.RefObject<HTMLInputElement>;
@@ -11,13 +11,13 @@ export interface ModifyButtonsProps {
   resetMessageButton: () => void;
 }
 
-export default function ModifyButtons({
+export default function ModifyTweetFooter({
   isLoading,
   isNewMessage,
   newFileInputRef,
   handleNewFile,
   resetMessageButton,
-}: ModifyButtonsProps) {
+}: ModifyTweetFooterProps) {
   return (
     <Navbar className="flex-fill rounded-bottom bg-body-light border-top">
       <Container className="d-flex">
@@ -29,12 +29,10 @@ export default function ModifyButtons({
             />
             <ModifyButtonReset resetMessageButton={resetMessageButton} />
           </div>
-          <div>
-            <ModifyButtonSubmit
-              isLoading={isLoading}
-              isNewMessage={isNewMessage}
-            />
-          </div>
+          <ModifyButtonSubmit
+            isLoading={isLoading}
+            isNewMessage={isNewMessage}
+          />
         </div>
       </Container>
     </Navbar>

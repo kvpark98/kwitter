@@ -3,7 +3,7 @@ import Cropper from "react-easy-crop";
 import { CroppedAreaPixels } from "../../../../routes/profile";
 
 export interface ModifyCropPhotoBodyProps {
-  imagePreviewUrl: string;
+  newImagePreviewUrl: string;
   crop: {
     x: number;
     y: number;
@@ -20,15 +20,21 @@ export interface ModifyCropPhotoBodyProps {
     croppedArea: CroppedAreaPixels,
     croppedAreaPixels: CroppedAreaPixels
   ) => void;
+  modifyRatio1x1: boolean;
+  modifyRatio4x3: boolean;
+  modifyRatio16x9: boolean;
 }
 
 export default function ModifyCropPhotoBody({
-  imagePreviewUrl,
+  newImagePreviewUrl,
   crop,
   setCrop,
   zoom,
   setZoom,
   onCropComplete,
+  modifyRatio1x1,
+  modifyRatio4x3,
+  modifyRatio16x9,
 }: ModifyCropPhotoBodyProps) {
   return (
     <Alert
@@ -36,10 +42,12 @@ export default function ModifyCropPhotoBody({
       className="rounded-0 overflow-y-auto border-0 h-100 m-0 p-4"
     >
       <Cropper
-        image={imagePreviewUrl}
+        image={newImagePreviewUrl}
         crop={crop}
         zoom={zoom}
-        aspect={1 / 1}
+        {...(modifyRatio1x1 && { aspect: 1 / 1 })}
+        {...(modifyRatio4x3 && { aspect: 4 / 3 })}
+        {...(modifyRatio16x9 && { aspect: 16 / 9 })}
         onCropChange={setCrop}
         onZoomChange={setZoom}
         onCropComplete={onCropComplete}

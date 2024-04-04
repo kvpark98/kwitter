@@ -53,17 +53,12 @@ export default function Tweet({
 
   const [tweetModified, setTweetModified] = useState(false);
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
+  const [newImagePreviewUrl, setNewImagePreviewUrl] = useState<string>("");
+
+  const [croppedNewImagePreviewUrl, setCroppedNewImagePreviewUrl] =
+    useState<string>("");
 
   const [error, setError] = useState("");
-
-  const [showTweetModifyModal, setShowTweetModifyModal] = useState(false);
-  const handleShowTweetModifyModal = () => setShowTweetModifyModal(true);
-  const handleCloseTweetModifyModal = () => {
-    setShowTweetModifyModal(false);
-    resetMessageButton();
-    resetPhotoButton();
-  };
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleShowDeleteModal = () => setShowDeleteModal(true);
@@ -75,6 +70,16 @@ export default function Tweet({
     setShowDeleteErrorsModal(true);
   };
   const handleCloseDeleteErrorsModal = () => setShowDeleteErrorsModal(false);
+
+  const [showTweetModifyModal, setShowTweetModifyModal] = useState(false);
+  const handleShowTweetModifyModal = () => setShowTweetModifyModal(true);
+  const handleCloseTweetModifyModal = () => {
+    setShowTweetModifyModal(false);
+    resetMessageButton();
+    resetPhotoButton();
+    handleModifyRatio1x1();
+    setZoom(1);
+  };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -92,6 +97,30 @@ export default function Tweet({
   const handleCloseModifyPhotoCropModal = () => {
     setShowModifyPhotorCropModal(false);
     setShowTweetModifyModal(true);
+    handleModifyRatio1x1();
+    setZoom(1);
+  };
+
+  const [modifyRatio1x1, setModifyRatio1x1] = useState(true);
+  const [modifyRatio4x3, setModifyRatio4x3] = useState(false);
+  const [modifyRatio16x9, setModifyRatio16x9] = useState(false);
+
+  const handleModifyRatio1x1 = () => {
+    setModifyRatio1x1(true);
+    setModifyRatio4x3(false);
+    setModifyRatio16x9(false);
+  };
+
+  const handleModifyRatio4x3 = () => {
+    setModifyRatio1x1(false);
+    setModifyRatio4x3(true);
+    setModifyRatio16x9(false);
+  };
+
+  const handleModifyRatio16x9 = () => {
+    setModifyRatio1x1(false);
+    setModifyRatio4x3(false);
+    setModifyRatio16x9(true);
   };
 
   // 이미지 자르기가 완료되었을 때 호출되는 콜백 함수
@@ -114,7 +143,7 @@ export default function Tweet({
 
     // 이미지 객체 생성 및 소스 설정
     const image = new Image(); // 새 이미지 객체를 생성
-    image.src = imagePreviewUrl; // imagePreviewUrl를 새 이미지 객체에 복사하여 붙여넣기
+    image.src = newImagePreviewUrl; // imagePreviewUrl를 새 이미지 객체에 복사하여 붙여넣기
 
     // 이미지 로드 (복붙) 완료 시 실행될 콜백 함수 정의
     image.onload = () => {
@@ -138,7 +167,7 @@ export default function Tweet({
       // Canvas에 그린 이미지를 데이터 URL로 변환
       const croppedImageDataURL = canvas.toDataURL("image/jpeg"); // 이미지 포맷(jpeg 형식)을 설정하는 것! (동일한 이미지에 대해 자르는 부분이 달라도 이미지의 내용이 변하지 않는다면 데이터 URL은 동일하게 유지)
 
-      setImagePreviewUrl(croppedImageDataURL); // 잘린 이미지 (복사본) 미리 보기 가능
+      setCroppedNewImagePreviewUrl(croppedImageDataURL); // 잘린 이미지 (복사본) 미리 보기 가능
 
       // 데이터 URL을 Blob 객체로 변환
       const byteCharacters = atob(croppedImageDataURL.split(",")[1]);
@@ -156,6 +185,9 @@ export default function Tweet({
 
       // 잘린 이미지 파일 업데이트
       setNewFile(croppedFile);
+
+      handleModifyRatio1x1();
+      setZoom(1);
 
       setShowModifyPhotorCropModal(false);
       setShowTweetModifyModal(true);
@@ -176,6 +208,7 @@ export default function Tweet({
 
   const handleNewFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTweetModified(false);
+    setCroppedNewImagePreviewUrl("");
 
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
@@ -190,7 +223,7 @@ export default function Tweet({
         reader.onload = () => {
           // 파일을 읽은 후
           const result = reader.result as string; // 결과를 문자열로 변환
-          setImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
+          setNewImagePreviewUrl(result); // 이미지 미리보기 URL을 설정
         };
         reader.readAsDataURL(selectedFile); // 파일을 Data URL로 읽기
 
@@ -201,7 +234,7 @@ export default function Tweet({
         // 파일 크기가 1MB를 초과하는 경우
         setNewFile(null); // 선택된 파일 상태를 null로 설정
 
-        setImagePreviewUrl(""); // 이미지 미리보기 URL을 초기화
+        setNewImagePreviewUrl(""); // 이미지 미리보기 URL을 초기화
 
         if (newFileInputRef.current) {
           // 파일 입력(input) 참조가 있는 경우
@@ -230,7 +263,7 @@ export default function Tweet({
 
   const resetPhotoSubmit = () => {
     setNewFile(null);
-    setImagePreviewUrl("");
+    setNewImagePreviewUrl("");
     if (newFileInputRef.current) {
       newFileInputRef.current.value = "";
     }
@@ -403,7 +436,8 @@ export default function Tweet({
           handleNewMessage={handleNewMessage}
           isNewMessage={isNewMessage}
           handleNewFile={handleNewFile}
-          imagePreviewUrl={imagePreviewUrl}
+          newImagePreviewUrl={newImagePreviewUrl}
+          croppedNewImagePreviewUrl={croppedNewImagePreviewUrl}
           resetMessageButton={resetMessageButton}
           resetPhotoButton={resetPhotoButton}
           deletePhoto={deletePhoto}
@@ -417,13 +451,19 @@ export default function Tweet({
       <ModifyCropPhotoModal
         showModifyPhotoCropModal={showModifyPhotoCropModal}
         handleCloseModifyPhotoCropModal={handleCloseModifyPhotoCropModal}
-        imagePreviewUrl={imagePreviewUrl}
+        newImagePreviewUrl={newImagePreviewUrl}
         crop={crop}
         setCrop={setCrop}
         zoom={zoom}
         setZoom={setZoom}
         onCropComplete={onCropComplete}
         handleSaveCroppedPhoto={handleSaveCroppedPhoto}
+        modifyRatio1x1={modifyRatio1x1}
+        modifyRatio4x3={modifyRatio4x3}
+        modifyRatio16x9={modifyRatio16x9}
+        handleModifyRatio1x1={handleModifyRatio1x1}
+        handleModifyRatio4x3={handleModifyRatio4x3}
+        handleModifyRatio16x9={handleModifyRatio16x9}
       />
       <TweetDeleteModal
         isLoading={isLoading}

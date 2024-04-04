@@ -41,9 +41,7 @@ export default function CreateCropPhotoFooter({
               handleCreateRatio16x9={handleCreateRatio16x9}
             />
           </div>
-          <div>
-            <CreateCropApply handleSaveCroppedPhoto={handleSaveCroppedPhoto} />
-          </div>
+          <CreateCropApply handleSaveCroppedPhoto={handleSaveCroppedPhoto} />
         </div>
       </Container>
     </Navbar>

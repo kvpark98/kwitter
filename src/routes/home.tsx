@@ -50,6 +50,7 @@ export default function Home() {
     resetMessageButton();
     resetPhotoButton();
     handleCreateRatio1x1();
+    setZoom(1);
   };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
@@ -69,6 +70,7 @@ export default function Home() {
     setShowCreatePhotoCropModal(false);
     setShowCreateTweetModal(true);
     handleCreateRatio1x1();
+    setZoom(1);
   };
 
   const [createRatio1x1, setCreateRatio1x1] = useState(true);
@@ -157,6 +159,7 @@ export default function Home() {
       setFile(croppedFile);
 
       handleCreateRatio1x1();
+      setZoom(1);
 
       setShowCreatePhotoCropModal(false);
       setShowCreateTweetModal(true);

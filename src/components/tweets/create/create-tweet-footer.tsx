@@ -29,9 +29,7 @@ export default function CreateTweetFooter({
             />
             <CreateButtonReset resetMessageButton={resetMessageButton} />
           </div>
-          <div>
-            <CreateButtonSubmit isLoading={isLoading} isMessage={isMessage} />
-          </div>
+          <CreateButtonSubmit isLoading={isLoading} isMessage={isMessage} />
         </div>
       </Container>
     </Navbar>

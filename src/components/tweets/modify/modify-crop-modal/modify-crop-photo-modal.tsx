@@ -7,7 +7,7 @@ import ModifyCropPhotoFooter from "./modify-crop-photo-footer";
 export interface ModifyCropPhotoModalProps {
   showModifyPhotoCropModal: boolean;
   handleCloseModifyPhotoCropModal: () => void;
-  imagePreviewUrl: string;
+  newImagePreviewUrl: string;
   crop: {
     x: number;
     y: number;
@@ -25,18 +25,30 @@ export interface ModifyCropPhotoModalProps {
     croppedAreaPixels: CroppedAreaPixels
   ) => void;
   handleSaveCroppedPhoto: () => void;
+  modifyRatio1x1: boolean;
+  modifyRatio4x3: boolean;
+  modifyRatio16x9: boolean;
+  handleModifyRatio1x1: () => void;
+  handleModifyRatio4x3: () => void;
+  handleModifyRatio16x9: () => void;
 }
 
 export default function ModifyCropPhotoModal({
   showModifyPhotoCropModal,
   handleCloseModifyPhotoCropModal,
-  imagePreviewUrl,
+  newImagePreviewUrl,
   crop,
   setCrop,
   zoom,
   setZoom,
   onCropComplete,
   handleSaveCroppedPhoto,
+  modifyRatio1x1,
+  modifyRatio4x3,
+  modifyRatio16x9,
+  handleModifyRatio1x1,
+  handleModifyRatio4x3,
+  handleModifyRatio16x9,
 }: ModifyCropPhotoModalProps) {
   return (
     <Modal
@@ -55,15 +67,24 @@ export default function ModifyCropPhotoModal({
           handleCloseModifyPhotoCropModal={handleCloseModifyPhotoCropModal}
         />
         <ModifyCropPhotoBody
-          imagePreviewUrl={imagePreviewUrl}
+          newImagePreviewUrl={newImagePreviewUrl}
           crop={crop}
           setCrop={setCrop}
           zoom={zoom}
           setZoom={setZoom}
           onCropComplete={onCropComplete}
+          modifyRatio1x1={modifyRatio1x1}
+          modifyRatio4x3={modifyRatio4x3}
+          modifyRatio16x9={modifyRatio16x9}
         />
         <ModifyCropPhotoFooter
           handleSaveCroppedPhoto={handleSaveCroppedPhoto}
+          modifyRatio1x1={modifyRatio1x1}
+          modifyRatio4x3={modifyRatio4x3}
+          modifyRatio16x9={modifyRatio16x9}
+          handleModifyRatio1x1={handleModifyRatio1x1}
+          handleModifyRatio4x3={handleModifyRatio4x3}
+          handleModifyRatio16x9={handleModifyRatio16x9}
         />
       </div>
     </Modal>

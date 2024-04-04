@@ -2,20 +2,26 @@ import ModifyPhotoPreviewEdit from "./modify-photo-preview-edit";
 import ModifyPhotoPreviewRemove from "./modify-photo-preview-remove";
 
 export interface ModifyPhotoPreviewProps {
-  imagePreviewUrl: string;
+  newImagePreviewUrl: string;
+  croppedNewImagePreviewUrl: string;
   resetPhotoButton: () => void;
   handleShowModifyPhotoCropModal: () => void;
 }
 
 export default function ModifyPhotoPreview({
-  imagePreviewUrl,
+  newImagePreviewUrl,
+  croppedNewImagePreviewUrl,
   resetPhotoButton,
   handleShowModifyPhotoCropModal,
 }: ModifyPhotoPreviewProps) {
   return (
     <div className="position-relative">
       <img
-        src={imagePreviewUrl}
+        src={
+          croppedNewImagePreviewUrl
+            ? croppedNewImagePreviewUrl
+            : newImagePreviewUrl
+        }
         alt="Image Preview"
         className="w-100 h-100 rounded-4"
       />

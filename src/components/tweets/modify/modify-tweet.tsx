@@ -1,6 +1,7 @@
-import { Modal } from "react-bootstrap";
-import ModifyTweetForm from "./modify-tweet-form";
+import { Form, Modal } from "react-bootstrap";
 import ModifyTweetHeader from "./modify-tweet-header";
+import ModifyTweetBody from "./modify-tweet-body";
+import ModifyTweetFooter from "./modify-tweet-footer";
 
 export interface ModifyTweetProps {
   isLoading: boolean;
@@ -11,7 +12,8 @@ export interface ModifyTweetProps {
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   isNewMessage: boolean;
   handleNewFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  imagePreviewUrl: string;
+  newImagePreviewUrl: string;
+  croppedNewImagePreviewUrl: string;
   resetMessageButton: () => void;
   resetPhotoButton: () => void;
   deletePhoto: () => Promise<void>;
@@ -31,7 +33,8 @@ export default function ModifyTweet({
   handleNewMessage,
   isNewMessage,
   handleNewFile,
-  imagePreviewUrl,
+  newImagePreviewUrl,
+  croppedNewImagePreviewUrl,
   resetMessageButton,
   resetPhotoButton,
   deletePhoto,
@@ -53,23 +56,27 @@ export default function ModifyTweet({
       <ModifyTweetHeader
         handleCloseTweetModifyModal={handleCloseTweetModifyModal}
       />
-      <ModifyTweetForm
-        isLoading={isLoading}
-        error={error}
-        newFileInputRef={newFileInputRef}
-        newMessage={newMessage}
-        handleNewMessage={handleNewMessage}
-        isNewMessage={isNewMessage}
-        handleNewFile={handleNewFile}
-        photo={photo}
-        imagePreviewUrl={imagePreviewUrl}
-        resetMessageButton={resetMessageButton}
-        resetPhotoButton={resetPhotoButton}
-        deletePhoto={deletePhoto}
-        modifyTweet={modifyTweet}
-        tweetModified={tweetModified}
-        handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
-      />
+      <Form className="w-100" onSubmit={modifyTweet}>
+        <ModifyTweetBody
+          error={error}
+          newMessage={newMessage}
+          handleNewMessage={handleNewMessage}
+          photo={photo}
+          newImagePreviewUrl={newImagePreviewUrl}
+          croppedNewImagePreviewUrl={croppedNewImagePreviewUrl}
+          resetPhotoButton={resetPhotoButton}
+          deletePhoto={deletePhoto}
+          tweetModified={tweetModified}
+          handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
+        />
+        <ModifyTweetFooter
+          isLoading={isLoading}
+          isNewMessage={isNewMessage}
+          newFileInputRef={newFileInputRef}
+          handleNewFile={handleNewFile}
+          resetMessageButton={resetMessageButton}
+        />
+      </Form>
     </Modal>
   );
 }

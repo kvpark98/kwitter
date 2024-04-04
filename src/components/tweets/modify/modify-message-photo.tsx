@@ -7,7 +7,8 @@ export interface ModifyMessagePhotoProps {
   newMessage: string;
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   photo: string | undefined;
-  imagePreviewUrl: string;
+  newImagePreviewUrl: string;
+  croppedNewImagePreviewUrl: string;
   resetPhotoButton: () => void;
   deletePhoto: () => Promise<void>;
   handleShowModifyPhotoCropModal: () => void;
@@ -17,7 +18,8 @@ export default function ModifyMessagePhoto({
   newMessage,
   handleNewMessage,
   photo,
-  imagePreviewUrl,
+  newImagePreviewUrl,
+  croppedNewImagePreviewUrl,
   resetPhotoButton,
   deletePhoto,
   handleShowModifyPhotoCropModal,
@@ -28,9 +30,10 @@ export default function ModifyMessagePhoto({
         newMessage={newMessage}
         handleNewMessage={handleNewMessage}
       />
-      {imagePreviewUrl ? (
+      {newImagePreviewUrl ? (
         <ModifyPhotoPreview
-          imagePreviewUrl={imagePreviewUrl}
+          newImagePreviewUrl={newImagePreviewUrl}
+          croppedNewImagePreviewUrl={croppedNewImagePreviewUrl}
           resetPhotoButton={resetPhotoButton}
           handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
         />
