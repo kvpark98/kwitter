@@ -27,10 +27,18 @@ export default function ResetPasswordCancelModal({
           </p>
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0 p-3">
-          <Button variant="outline-dark" onClick={handleCloseModal}>
+          <Button
+            variant="dark"
+            className="rounded-pill"
+            onClick={handleCloseModal}
+          >
             Close
           </Button>
-          <Button variant="outline-primary" onClick={navigateToHome}>
+          <Button
+            variant="primary"
+            className="rounded-pill"
+            onClick={navigateToHome}
+          >
             Proceed
           </Button>
         </Modal.Footer>

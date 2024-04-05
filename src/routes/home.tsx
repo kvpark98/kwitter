@@ -20,6 +20,8 @@ import {
 } from "firebase/storage";
 import { FirebaseError } from "firebase/app";
 import CreateCropPhotoModal from "../components/tweets/create/create-crop-modal/create-crop-photo-modal";
+import CreateTweetSuccess from "../components/modals/success/create-tweet-success";
+import CreateTweetErrors from "../components/modals/error/create-tweet-errors";
 
 export default function Home() {
   const user = auth.currentUser;
@@ -33,8 +35,6 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
 
   const [isMessage, setIsMessage] = useState(false);
-
-  const [tweetCreated, setTweetCreated] = useState(false);
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
 
@@ -51,6 +51,28 @@ export default function Home() {
     resetPhotoButton();
     handleCreateRatio1x1();
     setZoom(1);
+  };
+
+  const [showCreateTweetSuccessModal, setShowCreateTweetSuccessModal] =
+    useState(false);
+  const handleShowCreateTweetSuccessModal = () => {
+    handleCloseCreateTweetModal();
+    setShowCreateTweetSuccessModal(true);
+  };
+  const handleCloseCreateTweetSuccessModal = () => {
+    setShowCreateTweetSuccessModal(false);
+  };
+
+  const [showCreateTweetErrorsModal, setShowCreateTweetErrorsModal] =
+    useState(false);
+  const handleShowCreateTweetErrorsModal = () => {
+    setShowCreateTweetModal(false);
+    setShowCreateTweetErrorsModal(true);
+  };
+  const handleCloseCreateTweetErrorsModal = () => {
+    setShowCreateTweetErrorsModal(false);
+    setError("");
+    handleShowCreateTweetModal();
   };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
@@ -179,7 +201,6 @@ export default function Home() {
   };
 
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTweetCreated(false);
     setCroppedImagePreviewUrl("");
 
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
@@ -215,10 +236,7 @@ export default function Home() {
 
         setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
 
-        setTimeout(() => {
-          // 5초 후
-          setError(""); // 에러 메시지 초기화
-        }, 5000);
+        handleShowCreateTweetErrorsModal();
       }
     }
   };
@@ -230,7 +248,6 @@ export default function Home() {
 
   const resetMessageButton = () => {
     resetMessageSubmit();
-    setTweetCreated(false);
   };
 
   const resetPhotoSubmit = () => {
@@ -244,7 +261,6 @@ export default function Home() {
   const resetPhotoButton = () => {
     resetPhotoSubmit();
     setError("");
-    setTweetCreated(false);
   };
 
   const createTweet = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -297,17 +313,8 @@ export default function Home() {
 
       setImagePreviewUrl("");
 
-      // 트윗이 등록되었음을 표시
-      setTweetCreated(true);
-
-      // 트윗 등록 상태를 5초 후에 초기화
-      setTimeout(() => {
-        setTweetCreated(false);
-      }, 5000);
+      handleShowCreateTweetSuccessModal();
     } catch (error) {
-      // 에러 발생 시 트윗 등록 상태를 초기화
-      setTweetCreated(false);
-
       setImagePreviewUrl("");
 
       if (error instanceof FirebaseError) {
@@ -328,10 +335,7 @@ export default function Home() {
       resetMessageSubmit();
       resetPhotoSubmit();
 
-      // 에러 5초 후에 초기화
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      handleShowCreateTweetErrorsModal();
     } finally {
       setIsLoading(false);
     }
@@ -344,7 +348,6 @@ export default function Home() {
         <CreateTweet
           showCreateTweetModal={showCreateTweetModal}
           isLoading={isLoading}
-          error={error}
           fileInputRef={fileInputRef}
           message={message}
           handleMessage={handleMessage}
@@ -355,7 +358,6 @@ export default function Home() {
           resetMessageButton={resetMessageButton}
           resetPhotoButton={resetPhotoButton}
           createTweet={createTweet}
-          tweetCreated={tweetCreated}
           handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
           handleCloseCreateTweetModal={handleCloseCreateTweetModal}
         />
@@ -378,6 +380,15 @@ export default function Home() {
         handleCreateRatio1x1={handleCreateRatio1x1}
         handleCreateRatio4x3={handleCreateRatio4x3}
         handleCreateRatio16x9={handleCreateRatio16x9}
+      />
+      <CreateTweetSuccess
+        showCreateTweetSuccessModal={showCreateTweetSuccessModal}
+        handleCloseCreateTweetSuccessModal={handleCloseCreateTweetSuccessModal}
+      />
+      <CreateTweetErrors
+        error={error}
+        showCreateTweetErrorsModal={showCreateTweetErrorsModal}
+        handleCloseCreateTweetErrorsModal={handleCloseCreateTweetErrorsModal}
       />
     </Container>
   );

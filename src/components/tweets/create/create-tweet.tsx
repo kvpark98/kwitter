@@ -6,7 +6,6 @@ import CreateTweetBody from "./create-tweet-body";
 export interface CreateTweetProps {
   showCreateTweetModal: boolean;
   isLoading: boolean;
-  error: string;
   fileInputRef: React.RefObject<HTMLInputElement>;
   message: string;
   handleMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -17,7 +16,6 @@ export interface CreateTweetProps {
   resetMessageButton: () => void;
   resetPhotoButton: () => void;
   createTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  tweetCreated: boolean;
   handleShowCreatePhotoCropModal: () => void;
   handleCloseCreateTweetModal: () => void;
 }
@@ -25,7 +23,6 @@ export interface CreateTweetProps {
 export default function CreateTweet({
   showCreateTweetModal,
   isLoading,
-  error,
   fileInputRef,
   message,
   handleMessage,
@@ -36,7 +33,6 @@ export default function CreateTweet({
   resetMessageButton,
   resetPhotoButton,
   createTweet,
-  tweetCreated,
   handleShowCreatePhotoCropModal,
   handleCloseCreateTweetModal,
 }: CreateTweetProps) {
@@ -54,14 +50,12 @@ export default function CreateTweet({
       />
       <Form className="w-100" onSubmit={createTweet}>
         <CreateTweetBody
-          error={error}
           message={message}
           handleMessage={handleMessage}
           handleFile={handleFile}
           imagePreviewUrl={imagePreviewUrl}
           croppedImagePreviewUrl={croppedImagePreviewUrl}
           resetPhotoButton={resetPhotoButton}
-          tweetCreated={tweetCreated}
           handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
         />
         <CreateTweetFooter

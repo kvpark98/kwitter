@@ -26,10 +26,14 @@ export default function SignOutModal({
           </p>
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0 p-3">
-          <Button variant="outline-dark" onClick={handleCloseSignOutModal}>
+          <Button
+            variant="dark"
+            className="rounded-pill"
+            onClick={handleCloseSignOutModal}
+          >
             Cancel
           </Button>
-          <Button variant="outline-danger" onClick={signOut}>
+          <Button variant="danger" className="rounded-pill" onClick={signOut}>
             Sign Out
           </Button>
         </Modal.Footer>

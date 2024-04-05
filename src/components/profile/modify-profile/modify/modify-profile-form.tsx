@@ -1,8 +1,6 @@
 import { Alert, Form } from "react-bootstrap";
 import ModifyProfileName from "./modify-profile-name";
 import ModifyProfileButtons from "./modify-profile-buttons";
-import ModifyProfileSuccess from "../../../alert/success/auth/modify-profile/modify-profile-success";
-import ModifyProfileErrors from "../../../alert/error/auth/modify-profile/modify-profile-errors";
 import ModifyProfileImages from "./modify-profile-images";
 import React from "react";
 
@@ -11,7 +9,6 @@ export interface ModifyProfileFormProps {
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
-  error: string;
   name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isName: boolean;
@@ -27,7 +24,6 @@ export interface ModifyProfileFormProps {
   resetAvatar: () => void;
   resetBackground: () => void;
   modifyProfile: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  isProfileModified: boolean;
   handleDeleteAvatar: () => Promise<void>;
   handleDeleteBackground: () => Promise<void>;
 }
@@ -37,7 +33,6 @@ export default function ModifyProfileForm({
   avatarInputRef,
   backgroundInputRef,
   isLoading,
-  error,
   name,
   handleName,
   isName,
@@ -53,7 +48,6 @@ export default function ModifyProfileForm({
   resetAvatar,
   resetBackground,
   modifyProfile,
-  isProfileModified,
   handleDeleteAvatar,
   handleDeleteBackground,
 }: ModifyProfileFormProps) {
@@ -64,8 +58,6 @@ export default function ModifyProfileForm({
         className="m-0 p-4 overflow-y-auto border-0"
         style={{ maxHeight: "600px" }}
       >
-        {isProfileModified && !error && <ModifyProfileSuccess />}
-        {error && <ModifyProfileErrors error={error} />}
         <ModifyProfileImages
           avatarInputRef={avatarInputRef}
           backgroundInputRef={backgroundInputRef}

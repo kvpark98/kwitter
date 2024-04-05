@@ -1,17 +1,17 @@
 import { CloseButton, Container, Navbar } from "react-bootstrap";
 
 export interface ModifyTweetHeaderProps {
-  handleCloseTweetModifyModal: () => void;
+  handleCloseModifyTweetModal: () => void;
 }
 
 export default function ModifyTweetHeader({
-  handleCloseTweetModifyModal,
+  handleCloseModifyTweetModal,
 }: ModifyTweetHeaderProps) {
   return (
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
         <Navbar.Brand className="me-0 fw-bold">Edit Tweet</Navbar.Brand>
-        <CloseButton onClick={handleCloseTweetModifyModal} />
+        <CloseButton onClick={handleCloseModifyTweetModal} />
       </Container>
     </Navbar>
   );

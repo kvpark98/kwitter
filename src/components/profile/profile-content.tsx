@@ -14,7 +14,6 @@ export interface ProfileContentProps {
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
-  error: string;
   name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isName: boolean;
@@ -30,7 +29,6 @@ export interface ProfileContentProps {
   resetAvatar: () => void;
   resetBackground: () => void;
   modifyProfile: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  isProfileModified: boolean;
   showModifyProfileModal: boolean;
   handleShowModifyProfileModal: () => void;
   handleCloseModifyProfileModal: () => void;
@@ -48,7 +46,6 @@ export default function ProfileContent({
   avatarInputRef,
   backgroundInputRef,
   isLoading,
-  error,
   name,
   handleName,
   isName,
@@ -64,7 +61,6 @@ export default function ProfileContent({
   resetAvatar,
   resetBackground,
   modifyProfile,
-  isProfileModified,
   showModifyProfileModal,
   handleShowModifyProfileModal,
   handleCloseModifyProfileModal,
@@ -90,7 +86,6 @@ export default function ProfileContent({
         avatarInputRef={avatarInputRef}
         backgroundInputRef={backgroundInputRef}
         isLoading={isLoading}
-        error={error}
         name={name}
         handleName={handleName}
         isName={isName}
@@ -106,7 +101,6 @@ export default function ProfileContent({
         resetAvatar={resetAvatar}
         resetBackground={resetBackground}
         modifyProfile={modifyProfile}
-        isProfileModified={isProfileModified}
         showModifyProfileModal={showModifyProfileModal}
         handleCloseModifyProfileModal={handleCloseModifyProfileModal}
         handleDeleteAvatar={handleDeleteAvatar}

@@ -8,7 +8,7 @@ export interface TweetBodyContentProps {
   photo?: string | undefined;
   userId: string;
   username: string;
-  handleShowTweetModifyModal: () => void;
+  handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
 }
 
@@ -18,7 +18,7 @@ export default function handleShowTweetModifyModalTweetBodyContent({
   photo,
   userId,
   username,
-  handleShowTweetModifyModal,
+  handleShowModifyTweetModal,
   handleShowDeleteModal,
 }: TweetBodyContentProps) {
   return (
@@ -29,7 +29,7 @@ export default function handleShowTweetModifyModalTweetBodyContent({
         </span>
         {user?.uid === userId && (
           <TweetFooterDropdown
-            handleShowTweetModifyModal={handleShowTweetModifyModal}
+            handleShowModifyTweetModal={handleShowModifyTweetModal}
             handleShowDeleteModal={handleShowDeleteModal}
           />
         )}

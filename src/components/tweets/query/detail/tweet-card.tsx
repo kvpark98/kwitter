@@ -10,7 +10,7 @@ export interface TweetCardProps {
   photo?: string | undefined;
   userId: string;
   username: string;
-  handleShowTweetModifyModal: () => void;
+  handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
 }
 
@@ -21,7 +21,7 @@ export default function TweetCard({
   photo,
   userId,
   username,
-  handleShowTweetModifyModal,
+  handleShowModifyTweetModal,
   handleShowDeleteModal,
 }: TweetCardProps) {
   return (
@@ -32,7 +32,7 @@ export default function TweetCard({
         photo={photo}
         username={username}
         userId={userId}
-        handleShowTweetModifyModal={handleShowTweetModifyModal}
+        handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
       />
       <TweetFooter timeAgo={timeAgo} />

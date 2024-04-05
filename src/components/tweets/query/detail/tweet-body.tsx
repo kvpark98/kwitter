@@ -9,7 +9,7 @@ export interface TweetBodyProps {
   photo?: string | undefined;
   userId: string;
   username: string;
-  handleShowTweetModifyModal: () => void;
+  handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
 }
 
@@ -19,7 +19,7 @@ export default function TweetBody({
   photo,
   userId,
   username,
-  handleShowTweetModifyModal,
+  handleShowModifyTweetModal,
   handleShowDeleteModal,
 }: TweetBodyProps) {
   return (
@@ -35,7 +35,7 @@ export default function TweetBody({
         photo={photo}
         userId={userId}
         username={username}
-        handleShowTweetModifyModal={handleShowTweetModifyModal}
+        handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
       />
     </Card.Body>

@@ -8,7 +8,6 @@ export interface ModifyProfileProps {
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
-  error: string;
   name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isName: boolean;
@@ -24,7 +23,6 @@ export interface ModifyProfileProps {
   resetAvatar: () => void;
   resetBackground: () => void;
   modifyProfile: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  isProfileModified: boolean;
   showModifyProfileModal: boolean;
   handleCloseModifyProfileModal: () => void;
   handleDeleteAvatar: () => Promise<void>;
@@ -36,7 +34,6 @@ export default function ModifyProfile({
   avatarInputRef,
   backgroundInputRef,
   isLoading,
-  error,
   name,
   handleName,
   isName,
@@ -52,7 +49,6 @@ export default function ModifyProfile({
   resetAvatar,
   resetBackground,
   modifyProfile,
-  isProfileModified,
   showModifyProfileModal,
   handleCloseModifyProfileModal,
   handleDeleteAvatar,
@@ -75,7 +71,6 @@ export default function ModifyProfile({
         avatarInputRef={avatarInputRef}
         backgroundInputRef={backgroundInputRef}
         isLoading={isLoading}
-        error={error}
         name={name}
         handleName={handleName}
         isName={isName}
@@ -91,7 +86,6 @@ export default function ModifyProfile({
         resetAvatar={resetAvatar}
         resetBackground={resetBackground}
         modifyProfile={modifyProfile}
-        isProfileModified={isProfileModified}
         handleDeleteAvatar={handleDeleteAvatar}
         handleDeleteBackground={handleDeleteBackground}
       />

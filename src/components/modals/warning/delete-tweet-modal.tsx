@@ -1,7 +1,7 @@
 import { Alert, Button, Modal } from "react-bootstrap";
-import TweetDeleteErrorsModal from "../error/tweets/delete/tweet-delete-errors-modal";
+import DeleteTweetErrors from "../error/delete-tweet-errors";
 
-export interface TweetDeleteModalProps {
+export interface DeleteTweetModalProps {
   isLoading: boolean;
   error: string;
   showDeleteModal: boolean;
@@ -11,7 +11,7 @@ export interface TweetDeleteModalProps {
   handleCloseDeleteErrorsModal: () => void;
 }
 
-export default function TweetDeleteModal({
+export default function DeleteTweetModal({
   isLoading,
   error,
   showDeleteModal,
@@ -19,7 +19,7 @@ export default function TweetDeleteModal({
   deleteTweet,
   showDeleteErrorsModal,
   handleCloseDeleteErrorsModal,
-}: TweetDeleteModalProps) {
+}: DeleteTweetModalProps) {
   return (
     <div>
       <Modal
@@ -39,14 +39,16 @@ export default function TweetDeleteModal({
           <Modal.Footer className="border-0 pt-0 p-3">
             <Button
               type="button"
-              variant="outline-dark"
+              variant="dark"
+              className="rounded-pill"
               onClick={handleCloseDeleteModal}
             >
               Cancel
             </Button>
             <Button
               type="button"
-              variant="outline-danger"
+              variant="danger"
+              className="rounded-pill"
               onClick={deleteTweet}
             >
               {isLoading ? "Deleting..." : "Delete"}
@@ -55,7 +57,7 @@ export default function TweetDeleteModal({
         </Alert>
       </Modal>
       {error && (
-        <TweetDeleteErrorsModal
+        <DeleteTweetErrors
           error={error}
           showDeleteErrorsModal={showDeleteErrorsModal}
           handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}

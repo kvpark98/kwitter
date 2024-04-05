@@ -16,10 +16,12 @@ import {
 } from "firebase/storage";
 import { auth, db, storage } from "../../../../firebase";
 import ModifyTweet from "../../modify/modify-tweet";
-import TweetDeleteModal from "../../../modals/warning/tweet-delete-modal";
 import TweetCard from "./tweet-card";
 import ModifyCropPhotoModal from "../../modify/modify-crop-modal/modify-crop-photo-modal";
 import { CroppedAreaPixels } from "../../../../routes/profile";
+import ModifyTweetSuccess from "../../../modals/success/modify-tweet-success";
+import DeleteTweetModal from "../../../modals/warning/delete-tweet-modal";
+import ModifyTweetErrors from "../../../modals/error/modify-tweet-errors";
 
 export interface ITweet {
   id: string;
@@ -51,8 +53,6 @@ export default function Tweet({
 
   const [isNewMessage, setIsNewMessage] = useState(true);
 
-  const [tweetModified, setTweetModified] = useState(false);
-
   const [newImagePreviewUrl, setNewImagePreviewUrl] = useState<string>("");
 
   const [croppedNewImagePreviewUrl, setCroppedNewImagePreviewUrl] =
@@ -64,22 +64,44 @@ export default function Tweet({
   const handleShowDeleteModal = () => setShowDeleteModal(true);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
+  const [showModifyTweetModal, setShowModifyTweetModal] = useState(false);
+  const handleShowModifyTweetModal = () => setShowModifyTweetModal(true);
+  const handleCloseModifyTweetModal = () => {
+    setShowModifyTweetModal(false);
+    resetMessageButton();
+    resetPhotoButton();
+    handleModifyRatio1x1();
+    setZoom(1);
+  };
+
+  const [showModifyTweetSuccessModal, setShowModifyTweetSuccessModal] =
+    useState(false);
+  const handleShowModifyTweetSuccessModal = () => {
+    handleCloseModifyTweetModal();
+    setShowModifyTweetSuccessModal(true);
+  };
+  const handleCloseModifyTweetSuccessModal = () => {
+    setShowModifyTweetSuccessModal(false);
+  };
+
+  const [showModifyTweetErrorsModal, setShowModifyTweetErrorsModal] =
+    useState(false);
+  const handleShowModifyTweetErrorsModal = () => {
+    setShowModifyTweetModal(false);
+    setShowModifyTweetErrorsModal(true);
+  };
+  const handleCloseModifyTweetErrorsModal = () => {
+    setShowModifyTweetErrorsModal(false);
+    setError("");
+    handleShowModifyTweetModal();
+  };
+
   const [showDeleteErrorsModal, setShowDeleteErrorsModal] = useState(false);
   const handleShowDeleteErrorsModal = () => {
     handleCloseDeleteModal();
     setShowDeleteErrorsModal(true);
   };
   const handleCloseDeleteErrorsModal = () => setShowDeleteErrorsModal(false);
-
-  const [showTweetModifyModal, setShowTweetModifyModal] = useState(false);
-  const handleShowTweetModifyModal = () => setShowTweetModifyModal(true);
-  const handleCloseTweetModifyModal = () => {
-    setShowTweetModifyModal(false);
-    resetMessageButton();
-    resetPhotoButton();
-    handleModifyRatio1x1();
-    setZoom(1);
-  };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -91,12 +113,12 @@ export default function Tweet({
   const [showModifyPhotoCropModal, setShowModifyPhotorCropModal] =
     useState(false);
   const handleShowModifyPhotoCropModal = () => {
-    setShowTweetModifyModal(false);
+    setShowModifyTweetModal(false);
     setShowModifyPhotorCropModal(true);
   };
   const handleCloseModifyPhotoCropModal = () => {
     setShowModifyPhotorCropModal(false);
-    setShowTweetModifyModal(true);
+    setShowModifyTweetModal(true);
     handleModifyRatio1x1();
     setZoom(1);
   };
@@ -190,7 +212,7 @@ export default function Tweet({
       setZoom(1);
 
       setShowModifyPhotorCropModal(false);
-      setShowTweetModifyModal(true);
+      setShowModifyTweetModal(true);
     };
   };
 
@@ -207,7 +229,6 @@ export default function Tweet({
   };
 
   const handleNewFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTweetModified(false);
     setCroppedNewImagePreviewUrl("");
 
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
@@ -243,10 +264,7 @@ export default function Tweet({
 
         setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
 
-        setTimeout(() => {
-          // 5초 후
-          setError(""); // 에러 메시지 초기화
-        }, 5000);
+        handleShowModifyTweetErrorsModal();
       }
     }
   };
@@ -258,7 +276,6 @@ export default function Tweet({
 
   const resetMessageButton = () => {
     resetMessageSubmit();
-    setTweetModified(false);
   };
 
   const resetPhotoSubmit = () => {
@@ -272,7 +289,6 @@ export default function Tweet({
   const resetPhotoButton = () => {
     resetPhotoSubmit();
     setError("");
-    setTweetModified(false);
   };
 
   const deletePhoto = async () => {
@@ -339,17 +355,8 @@ export default function Tweet({
       // 파일 상태를 초기화
       resetPhotoSubmit();
 
-      // 트윗이 수정되었음을 표시
-      setTweetModified(true);
-
-      // 트윗 수정 상태를 5초 후에 초기화
-      setTimeout(() => {
-        setTweetModified(false);
-      }, 5000);
+      handleShowModifyTweetSuccessModal();
     } catch (error) {
-      // 에러 발생 시 트윗 수정 상태를 초기화
-      setTweetModified(false);
-
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("FirebaseError", error.code);
@@ -368,10 +375,7 @@ export default function Tweet({
       resetMessageSubmit();
       resetPhotoSubmit();
 
-      // 에러 5초 후에 초기화
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      handleShowModifyTweetErrorsModal();
     } finally {
       setIsLoading(false);
     }
@@ -423,13 +427,12 @@ export default function Tweet({
         photo={photo}
         userId={userId}
         username={username}
-        handleShowTweetModifyModal={handleShowTweetModifyModal}
+        handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
       />
-      {showTweetModifyModal && (
+      {showModifyTweetModal && (
         <ModifyTweet
           isLoading={isLoading}
-          error={error}
           photo={photo}
           newFileInputRef={newFileInputRef}
           newMessage={newMessage}
@@ -442,9 +445,8 @@ export default function Tweet({
           resetPhotoButton={resetPhotoButton}
           deletePhoto={deletePhoto}
           modifyTweet={modifyTweet}
-          tweetModified={tweetModified}
-          showTweetModifyModal={showTweetModifyModal}
-          handleCloseTweetModifyModal={handleCloseTweetModifyModal}
+          showModifyTweetModal={showModifyTweetModal}
+          handleCloseModifyTweetModal={handleCloseModifyTweetModal}
           handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
         />
       )}
@@ -465,7 +467,7 @@ export default function Tweet({
         handleModifyRatio4x3={handleModifyRatio4x3}
         handleModifyRatio16x9={handleModifyRatio16x9}
       />
-      <TweetDeleteModal
+      <DeleteTweetModal
         isLoading={isLoading}
         error={error}
         showDeleteModal={showDeleteModal}
@@ -473,6 +475,15 @@ export default function Tweet({
         deleteTweet={deleteTweet}
         showDeleteErrorsModal={showDeleteErrorsModal}
         handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}
+      />
+      <ModifyTweetSuccess
+        showModifyTweetSuccessModal={showModifyTweetSuccessModal}
+        handleCloseModifyTweetSuccessModal={handleCloseModifyTweetSuccessModal}
+      />
+      <ModifyTweetErrors
+        error={error}
+        showModifyTweetErrorsModal={showModifyTweetErrorsModal}
+        handleCloseModifyTweetErrorsModal={handleCloseModifyTweetErrorsModal}
       />
     </div>
   );

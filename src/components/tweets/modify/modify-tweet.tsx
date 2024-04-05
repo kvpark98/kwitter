@@ -5,7 +5,6 @@ import ModifyTweetFooter from "./modify-tweet-footer";
 
 export interface ModifyTweetProps {
   isLoading: boolean;
-  error: string;
   photo: string | undefined;
   newFileInputRef: React.RefObject<HTMLInputElement>;
   newMessage: string;
@@ -18,15 +17,13 @@ export interface ModifyTweetProps {
   resetPhotoButton: () => void;
   deletePhoto: () => Promise<void>;
   modifyTweet: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  tweetModified: boolean;
-  showTweetModifyModal: boolean;
-  handleCloseTweetModifyModal: () => void;
+  showModifyTweetModal: boolean;
+  handleCloseModifyTweetModal: () => void;
   handleShowModifyPhotoCropModal: () => void;
 }
 
 export default function ModifyTweet({
   isLoading,
-  error,
   photo,
   newFileInputRef,
   newMessage,
@@ -39,26 +36,24 @@ export default function ModifyTweet({
   resetPhotoButton,
   deletePhoto,
   modifyTweet,
-  tweetModified,
-  showTweetModifyModal,
-  handleCloseTweetModifyModal,
+  showModifyTweetModal,
+  handleCloseModifyTweetModal,
   handleShowModifyPhotoCropModal,
 }: ModifyTweetProps) {
   return (
     <Modal
-      show={showTweetModifyModal}
-      onHide={handleCloseTweetModifyModal}
+      show={showModifyTweetModal}
+      onHide={handleCloseModifyTweetModal}
       backdrop="static"
       keyboard={false}
       className="border-0"
       centered
     >
       <ModifyTweetHeader
-        handleCloseTweetModifyModal={handleCloseTweetModifyModal}
+        handleCloseModifyTweetModal={handleCloseModifyTweetModal}
       />
       <Form className="w-100" onSubmit={modifyTweet}>
         <ModifyTweetBody
-          error={error}
           newMessage={newMessage}
           handleNewMessage={handleNewMessage}
           photo={photo}
@@ -66,7 +61,6 @@ export default function ModifyTweet({
           croppedNewImagePreviewUrl={croppedNewImagePreviewUrl}
           resetPhotoButton={resetPhotoButton}
           deletePhoto={deletePhoto}
-          tweetModified={tweetModified}
           handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
         />
         <ModifyTweetFooter

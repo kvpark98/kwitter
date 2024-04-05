@@ -25,6 +25,8 @@ import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import CropAvatarModal from "../components/profile/crop-modal/avatar/crop-avatar-modal";
 import CropBackgroundModal from "../components/profile/crop-modal/background/crop-background-modal";
+import ModifyProfileSuccess from "../components/modals/success/modify-profile-success";
+import ModifyProfileErrors from "../components/modals/error/modify-profile-errors";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -70,8 +72,6 @@ export default function Profile() {
 
   const [tweets, setTweets] = useState<ITweet[]>([]);
 
-  const [isProfileModified, setIsProfileModified] = useState(false);
-
   const [error, setError] = useState("");
 
   const [nameErrorMessage, setNameErrorMessage] = useState("");
@@ -83,6 +83,29 @@ export default function Profile() {
     resetName();
     resetAvatar();
     resetBackground();
+    setZoom(1);
+  };
+
+  const [showModifyProfileSuccessModal, setShowModifyProfileSuccessModal] =
+    useState(false);
+  const handleShowModifyProfileSuccessModal = () => {
+    handleCloseModifyProfileModal();
+    setShowModifyProfileSuccessModal(true);
+  };
+  const handleCloseModifyProfileSuccessModal = () => {
+    setShowModifyProfileSuccessModal(false);
+  };
+
+  const [showModifyProfileErrorsModal, setShowModifyProfileErrorsModal] =
+    useState(false);
+  const handleShowModifyProfileErrorsModal = () => {
+    setShowModifyProfileModal(false);
+    setShowModifyProfileErrorsModal(true);
+  };
+  const handleCloseModifyProfileErrorsModal = () => {
+    setShowModifyProfileErrorsModal(false);
+    setError("");
+    handleShowModifyProfileModal();
   };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
@@ -98,6 +121,7 @@ export default function Profile() {
     setShowAvatarCropModal(false);
     setShowModifyProfileModal(true);
     resetAvatar();
+    setZoom(1);
   };
 
   const [showBackgroundCropModal, setShowBackgroundCropModal] = useState(false);
@@ -106,6 +130,7 @@ export default function Profile() {
     setShowBackgroundCropModal(false);
     setShowModifyProfileModal(true);
     resetBackground();
+    setZoom(1);
   };
 
   // 이미지 자르기가 완료되었을 때 호출되는 콜백 함수
@@ -171,6 +196,8 @@ export default function Profile() {
       // 잘린 이미지 파일 업데이트
       setAvatarFile(croppedFile);
 
+      setZoom(1);
+
       setShowAvatarCropModal(false);
       setShowModifyProfileModal(true);
     };
@@ -230,6 +257,8 @@ export default function Profile() {
       // 잘린 이미지 파일 업데이트
       setBackgroundFile(croppedFile);
 
+      setZoom(1);
+
       setShowBackgroundCropModal(false);
       setShowModifyProfileModal(true);
     };
@@ -286,8 +315,6 @@ export default function Profile() {
   };
 
   const handleAvatarImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsProfileModified(false);
-
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
     // 파일이 존재하고 하나만 선택된 경우
@@ -324,10 +351,7 @@ export default function Profile() {
 
         setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
 
-        setTimeout(() => {
-          // 5초 후
-          setError(""); // 에러 메시지 초기화
-        }, 5000);
+        handleShowModifyProfileErrorsModal();
       }
     }
   };
@@ -335,8 +359,6 @@ export default function Profile() {
   const handleBackgroundImage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setIsProfileModified(false);
-
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
     // 파일이 존재하고 하나만 선택된 경우
@@ -373,10 +395,7 @@ export default function Profile() {
 
         setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
 
-        setTimeout(() => {
-          // 5초 후
-          setError(""); // 에러 메시지 초기화
-        }, 5000);
+        handleShowModifyProfileErrorsModal();
       }
     }
   };
@@ -480,18 +499,12 @@ export default function Profile() {
         displayName: name,
       });
 
-      setIsProfileModified(true);
-
       resetName();
       resetAvatar();
       resetBackground();
 
-      setTimeout(() => {
-        setIsProfileModified(false);
-      }, 5000);
+      handleShowModifyProfileSuccessModal();
     } catch (error) {
-      setIsProfileModified(false);
-
       resetName();
       resetAvatar();
       resetBackground();
@@ -521,9 +534,7 @@ export default function Profile() {
         console.log(error);
       }
 
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      handleShowModifyProfileErrorsModal();
     } finally {
       setIsLoading(false);
     }
@@ -576,10 +587,7 @@ export default function Profile() {
         console.log(error);
       }
 
-      // 5초 후 에러 초기화
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      handleShowModifyProfileErrorsModal();
     }
   };
 
@@ -733,7 +741,6 @@ export default function Profile() {
           avatarInputRef={avatarInputRef}
           backgroundInputRef={backgroundInputRef}
           isLoading={isLoading}
-          error={error}
           name={name}
           handleName={handleName}
           isName={isName}
@@ -749,7 +756,6 @@ export default function Profile() {
           resetAvatar={resetAvatar}
           resetBackground={resetBackground}
           modifyProfile={modifyProfile}
-          isProfileModified={isProfileModified}
           showModifyProfileModal={showModifyProfileModal}
           handleShowModifyProfileModal={handleShowModifyProfileModal}
           handleCloseModifyProfileModal={handleCloseModifyProfileModal}
@@ -783,6 +789,21 @@ export default function Profile() {
         onCropComplete={onCropComplete}
         handleSaveCroppedBackground={handleSaveCroppedBackground}
       />
+      <ModifyProfileSuccess
+        showModifyProfileSuccessModal={showModifyProfileSuccessModal}
+        handleCloseModifyProfileSuccessModal={
+          handleCloseModifyProfileSuccessModal
+        }
+      />
+      {error && (
+        <ModifyProfileErrors
+          error={error}
+          showModifyProfileErrorsModal={showModifyProfileErrorsModal}
+          handleCloseModifyProfileErrorsModal={
+            handleCloseModifyProfileErrorsModal
+          }
+        />
+      )}
     </Container>
   );
 }
