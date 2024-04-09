@@ -7,6 +7,7 @@ export interface ModifyTweetProps {
   isLoading: boolean;
   photo: string | undefined;
   newFileInputRef: React.RefObject<HTMLInputElement>;
+  imageRef: React.RefObject<HTMLDivElement>;
   newMessage: string;
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   isNewMessage: boolean;
@@ -26,6 +27,7 @@ export default function ModifyTweet({
   isLoading,
   photo,
   newFileInputRef,
+  imageRef,
   newMessage,
   handleNewMessage,
   isNewMessage,
@@ -54,6 +56,7 @@ export default function ModifyTweet({
       />
       <Form className="w-100" onSubmit={modifyTweet}>
         <ModifyTweetBody
+          imageRef={imageRef}
           newMessage={newMessage}
           handleNewMessage={handleNewMessage}
           photo={photo}
