@@ -47,6 +47,18 @@ export default function Profile() {
 
   const backgroundInputRef = useRef<HTMLInputElement>(null);
 
+  const avatarImageRef = useRef<HTMLImageElement>(null);
+
+  const backgroundImageRef = useRef<HTMLImageElement>(null);
+
+  const [avatarDeleteButtonClicked, setAvatarDeleteButtonClicked] =
+    useState(false);
+
+  const [backgroundDeleteButtonClicked, setBackgroundDeleteButtonClicked] =
+    useState(false);
+
+  const [] = useState(false);
+
   const defaultAvatarURL = "/person-circle.svg";
   const defaultBackgroundURL = "/default-background.png";
 
@@ -740,6 +752,10 @@ export default function Profile() {
           nameInputRef={nameInputRef}
           avatarInputRef={avatarInputRef}
           backgroundInputRef={backgroundInputRef}
+          // avatarImageRef={avatarImageRef}
+          // backgroundImageRef={backgroundImageRef}
+          // avatarDeleteButtonClicked={avatarDeleteButtonClicked}
+          // backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
           isLoading={isLoading}
           name={name}
           handleName={handleName}
