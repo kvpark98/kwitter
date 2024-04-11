@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
 
 export interface ModifyProfileAvatarDeleteProps {
-  handleDeleteAvatar: () => Promise<void>;
+  handleDeleteAvatar: () => void;
 }
 
 export default function ModifyProfileAvatarDelete({

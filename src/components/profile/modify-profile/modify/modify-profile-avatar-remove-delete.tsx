@@ -4,7 +4,7 @@ import ModifyProfileAvatarRemove from "./modify-profile-avatar-remove";
 export interface ModifyProfileAvatarRemoveDeleteProps {
   avatarImagePreviewUrl: string;
   resetAvatar: () => void;
-  handleDeleteAvatar: () => Promise<void>;
+  handleDeleteAvatar: () => void;
 }
 
 export default function ModifyProfileAvatarRemoveDelete({

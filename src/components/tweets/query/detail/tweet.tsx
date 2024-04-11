@@ -402,8 +402,6 @@ export default function Tweet({
     }
   };
 
-  console.log(deleteButtonClicked);
-
   // 트윗 삭제 함수
   const deleteTweet = async () => {
     if (isLoading || user?.uid !== userId) {

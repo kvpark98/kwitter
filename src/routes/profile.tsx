@@ -89,13 +89,19 @@ export default function Profile() {
   const [nameErrorMessage, setNameErrorMessage] = useState("");
 
   const [showModifyProfileModal, setShowModifyProfileModal] = useState(false);
-  const handleShowModifyProfileModal = () => setShowModifyProfileModal(true);
+  const handleShowModifyProfileModal = () => {
+    setShowModifyProfileModal(true);
+    setAvatarDeleteButtonClicked(false);
+    setBackgroundDeleteButtonClicked(false);
+  };
   const handleCloseModifyProfileModal = () => {
     setShowModifyProfileModal(false);
     resetName();
     resetAvatar();
     resetBackground();
     setZoom(1);
+    setAvatarDeleteButtonClicked(false);
+    setBackgroundDeleteButtonClicked(false);
   };
 
   const [showModifyProfileSuccessModal, setShowModifyProfileSuccessModal] =
@@ -113,6 +119,8 @@ export default function Profile() {
   const handleShowModifyProfileErrorsModal = () => {
     setShowModifyProfileModal(false);
     setShowModifyProfileErrorsModal(true);
+    setAvatarDeleteButtonClicked(false);
+    setBackgroundDeleteButtonClicked(false);
   };
   const handleCloseModifyProfileErrorsModal = () => {
     setShowModifyProfileErrorsModal(false);
@@ -365,6 +373,7 @@ export default function Profile() {
 
         handleShowModifyProfileErrorsModal();
       }
+      setAvatarDeleteButtonClicked(false);
     }
   };
 
@@ -409,6 +418,7 @@ export default function Profile() {
 
         handleShowModifyProfileErrorsModal();
       }
+      setBackgroundDeleteButtonClicked(false);
     }
   };
 
@@ -444,6 +454,22 @@ export default function Profile() {
       backgroundInputRef.current.value = "";
     }
     setError("");
+  };
+
+  const handleDeleteAvatar = () => {
+    setAvatarDeleteButtonClicked(true);
+
+    if (avatarImageRef.current) {
+      avatarImageRef.current.src = defaultAvatarURL;
+    }
+  };
+
+  const handleDeleteBackground = () => {
+    setBackgroundDeleteButtonClicked(true);
+
+    if (backgroundImageRef.current) {
+      backgroundImageRef.current.src = defaultBackgroundURL;
+    }
   };
 
   const modifyProfile = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -507,6 +533,55 @@ export default function Profile() {
         }
       }
 
+      if (avatarDeleteButtonClicked) {
+        // 파일 인풋 리셋
+        if (avatarInputRef.current) {
+          avatarInputRef.current.value = "";
+        }
+
+        const defaultAvatarResponse = await fetch(defaultAvatarURL);
+
+        const defaultAvatarBlob = await defaultAvatarResponse.blob();
+
+        const avatarLocationRef = ref(storage, `avatars/${user?.uid}`);
+
+        const avatarResult = await uploadBytes(
+          avatarLocationRef,
+          defaultAvatarBlob
+        );
+
+        const avatarUrl = await getDownloadURL(avatarResult.ref);
+
+        setAvatar(avatarUrl);
+
+        // 사용자 프로필 업데이트
+        await updateProfile(user!, {
+          photoURL: avatarUrl,
+        });
+      }
+
+      if (backgroundDeleteButtonClicked) {
+        // 파일 인풋 리셋
+        if (backgroundInputRef.current) {
+          backgroundInputRef.current.value = "";
+        }
+
+        const defaultBackgroundResponse = await fetch(defaultBackgroundURL);
+
+        const defaultBackgroundBlob = await defaultBackgroundResponse.blob();
+
+        const backgroundLocationRef = ref(storage, `backgrounds/${user?.uid}`);
+
+        const backgroundResult = await uploadBytes(
+          backgroundLocationRef,
+          defaultBackgroundBlob
+        );
+
+        const backgroundUrl = await getDownloadURL(backgroundResult.ref);
+
+        setBackground(backgroundUrl);
+      }
+
       await updateProfile(auth.currentUser!, {
         displayName: name,
       });
@@ -514,6 +589,9 @@ export default function Profile() {
       resetName();
       resetAvatar();
       resetBackground();
+
+      setAvatarDeleteButtonClicked(false);
+      setBackgroundDeleteButtonClicked(false);
 
       handleShowModifyProfileSuccessModal();
     } catch (error) {
@@ -546,109 +624,12 @@ export default function Profile() {
         console.log(error);
       }
 
+      setAvatarDeleteButtonClicked(false);
+      setBackgroundDeleteButtonClicked(false);
+
       handleShowModifyProfileErrorsModal();
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleDeleteAvatar = async () => {
-    // Avatar가 없으면 함수 종료
-    if (!avatar) {
-      return;
-    }
-
-    try {
-      // 파일 인풋 리셋
-      if (avatarInputRef.current) {
-        avatarInputRef.current.value = "";
-      }
-
-      const defaultAvatarResponse = await fetch(defaultAvatarURL);
-
-      const defaultAvatarBlob = await defaultAvatarResponse.blob();
-
-      const avatarLocationRef = ref(storage, `avatars/${user?.uid}`);
-
-      const avatarResult = await uploadBytes(
-        avatarLocationRef,
-        defaultAvatarBlob
-      );
-
-      const avatarUrl = await getDownloadURL(avatarResult.ref);
-
-      setAvatar(avatarUrl);
-
-      // 사용자 프로필 업데이트
-      await updateProfile(user!, {
-        photoURL: avatarUrl,
-      });
-    } catch (error) {
-      // 에러 처리
-      if (error instanceof FirebaseError) {
-        setError(error.code);
-        console.log("FirebaseError", error.code);
-      } else if (error instanceof FirestoreError) {
-        setError(error.code);
-        console.log("FirestoreError", error.code);
-      } else if (error instanceof StorageError) {
-        setError(error.code);
-        console.log("StorageError", error.code);
-      } else {
-        setError("size-exhausted");
-        console.log(error);
-      }
-
-      handleShowModifyProfileErrorsModal();
-    }
-  };
-
-  const handleDeleteBackground = async () => {
-    // Background가 없으면 함수 종료
-    if (!background) {
-      return;
-    }
-
-    try {
-      // 파일 인풋 리셋
-      if (backgroundInputRef.current) {
-        backgroundInputRef.current.value = "";
-      }
-
-      const defaultBackgroundResponse = await fetch(defaultBackgroundURL);
-
-      const defaultBackgroundBlob = await defaultBackgroundResponse.blob();
-
-      const backgroundLocationRef = ref(storage, `backgrounds/${user?.uid}`);
-
-      const backgroundResult = await uploadBytes(
-        backgroundLocationRef,
-        defaultBackgroundBlob
-      );
-
-      const backgroundUrl = await getDownloadURL(backgroundResult.ref);
-
-      setBackground(backgroundUrl);
-    } catch (error) {
-      // 에러 처리
-      if (error instanceof FirebaseError) {
-        setError(error.code);
-        console.log("FirebaseError", error.code);
-      } else if (error instanceof FirestoreError) {
-        setError(error.code);
-        console.log("FirestoreError", error.code);
-      } else if (error instanceof StorageError) {
-        setError(error.code);
-        console.log("StorageError", error.code);
-      } else {
-        setError("size-exhausted");
-        console.log(error);
-      }
-
-      // 5초 후 에러 초기화
-      setTimeout(() => {
-        setError("");
-      }, 5000);
     }
   };
 
@@ -752,10 +733,8 @@ export default function Profile() {
           nameInputRef={nameInputRef}
           avatarInputRef={avatarInputRef}
           backgroundInputRef={backgroundInputRef}
-          // avatarImageRef={avatarImageRef}
-          // backgroundImageRef={backgroundImageRef}
-          // avatarDeleteButtonClicked={avatarDeleteButtonClicked}
-          // backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
+          avatarImageRef={avatarImageRef}
+          backgroundImageRef={backgroundImageRef}
           isLoading={isLoading}
           name={name}
           handleName={handleName}

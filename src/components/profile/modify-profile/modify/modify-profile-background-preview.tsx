@@ -1,38 +1,31 @@
 import { Card } from "react-bootstrap";
 
 export interface ModifyProfileBackgroundPreviewProps {
+  backgroundImageRef: React.RefObject<HTMLImageElement>;
   background: string;
   backgroundImagePreviewUrl: string;
 }
 
 export default function ModifyProfileBackgroundPreview({
+  backgroundImageRef,
   background,
   backgroundImagePreviewUrl,
 }: ModifyProfileBackgroundPreviewProps) {
   return (
     <div>
-      {backgroundImagePreviewUrl ? (
-        <Card.Img
-          src={backgroundImagePreviewUrl}
-          alt="Background Image"
-          className="img-fluid"
-          style={{ width: "100%", height: "200px" }}
-        />
-      ) : background ? (
-        <Card.Img
-          src={background}
-          alt="Background Image"
-          className="img-fluid"
-          style={{ width: "100%", height: "200px" }}
-        />
-      ) : (
-        <Card.Img
-          src="/default-background.png"
-          alt="Background Image"
-          className="img-fluid"
-          style={{ width: "100%", height: "200px" }}
-        />
-      )}
+      <Card.Img
+        ref={backgroundImageRef}
+        src={
+          backgroundImagePreviewUrl
+            ? backgroundImagePreviewUrl
+            : background
+            ? background
+            : "default-background.png"
+        }
+        alt="Background Image"
+        className="img-fluid"
+        style={{ width: "100%", height: "200px" }}
+      />
     </div>
   );
 }

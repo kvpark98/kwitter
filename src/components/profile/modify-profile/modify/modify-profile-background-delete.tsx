@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
 
 export interface ModifyProfileBackgroundDeleteProps {
-  handleDeleteBackground: () => Promise<void>;
+  handleDeleteBackground: () => void;
 }
 
 export default function ModifyProfileBackgroundDelete({

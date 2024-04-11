@@ -6,15 +6,17 @@ import React from "react";
 
 export interface ModifyProfileBackgroundProps {
   backgroundInputRef: React.RefObject<HTMLInputElement>;
+  backgroundImageRef: React.RefObject<HTMLImageElement>;
   background: string;
   backgroundImagePreviewUrl: string;
   handleBackgroundImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetBackground: () => void;
-  handleDeleteBackground: () => Promise<void>;
+  handleDeleteBackground: () => void;
 }
 
 export default function ModifyProfileBackground({
   backgroundInputRef,
+  backgroundImageRef,
   background,
   backgroundImagePreviewUrl,
   handleBackgroundImage,
@@ -24,6 +26,7 @@ export default function ModifyProfileBackground({
   return (
     <div className="position-relative">
       <ModifyProfileBackgroundPreview
+        backgroundImageRef={backgroundImageRef}
         background={background}
         backgroundImagePreviewUrl={backgroundImagePreviewUrl}
       />

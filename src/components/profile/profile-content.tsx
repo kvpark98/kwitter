@@ -13,6 +13,8 @@ export interface ProfileContentProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
+  avatarImageRef: React.RefObject<HTMLImageElement>;
+  backgroundImageRef: React.RefObject<HTMLImageElement>;
   isLoading: boolean;
   name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -32,8 +34,8 @@ export interface ProfileContentProps {
   showModifyProfileModal: boolean;
   handleShowModifyProfileModal: () => void;
   handleCloseModifyProfileModal: () => void;
-  handleDeleteAvatar: () => Promise<void>;
-  handleDeleteBackground: () => Promise<void>;
+  handleDeleteAvatar: () => void;
+  handleDeleteBackground: () => void;
   isPostActive: boolean;
   postActive: () => void;
   tweets: ITweet[];
@@ -45,6 +47,8 @@ export default function ProfileContent({
   nameInputRef,
   avatarInputRef,
   backgroundInputRef,
+  avatarImageRef,
+  backgroundImageRef,
   isLoading,
   name,
   handleName,
@@ -85,6 +89,8 @@ export default function ProfileContent({
         nameInputRef={nameInputRef}
         avatarInputRef={avatarInputRef}
         backgroundInputRef={backgroundInputRef}
+        avatarImageRef={avatarImageRef}
+        backgroundImageRef={backgroundImageRef}
         isLoading={isLoading}
         name={name}
         handleName={handleName}

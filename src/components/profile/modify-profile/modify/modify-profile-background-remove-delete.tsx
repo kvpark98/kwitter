@@ -4,7 +4,7 @@ import ModifyProfileBackgroundRemove from "./modify-profile-background-remove";
 export interface ModifyProfileBackgroundRemoveDeleteProps {
   backgroundImagePreviewUrl: string;
   resetBackground: () => void;
-  handleDeleteBackground: () => Promise<void>;
+  handleDeleteBackground: () => void;
 }
 
 export default function ModifyProfileBackgroundRemoveDelete({

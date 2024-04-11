@@ -7,6 +7,8 @@ export interface ModifyProfileProps {
   nameInputRef: React.RefObject<HTMLInputElement>;
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
+  avatarImageRef: React.RefObject<HTMLImageElement>;
+  backgroundImageRef: React.RefObject<HTMLImageElement>;
   isLoading: boolean;
   name: string | null | undefined;
   handleName: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -25,14 +27,16 @@ export interface ModifyProfileProps {
   modifyProfile: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   showModifyProfileModal: boolean;
   handleCloseModifyProfileModal: () => void;
-  handleDeleteAvatar: () => Promise<void>;
-  handleDeleteBackground: () => Promise<void>;
+  handleDeleteAvatar: () => void;
+  handleDeleteBackground: () => void;
 }
 
 export default function ModifyProfile({
   nameInputRef,
   avatarInputRef,
   backgroundInputRef,
+  avatarImageRef,
+  backgroundImageRef,
   isLoading,
   name,
   handleName,
@@ -70,6 +74,8 @@ export default function ModifyProfile({
         nameInputRef={nameInputRef}
         avatarInputRef={avatarInputRef}
         backgroundInputRef={backgroundInputRef}
+        avatarImageRef={avatarImageRef}
+        backgroundImageRef={backgroundImageRef}
         isLoading={isLoading}
         name={name}
         handleName={handleName}

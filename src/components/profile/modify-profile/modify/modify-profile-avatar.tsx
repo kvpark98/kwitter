@@ -5,15 +5,17 @@ import ModifyProfileAvatarRemoveDelete from "./modify-profile-avatar-remove-dele
 
 export interface ModifyProfileAvatarProps {
   avatarInputRef: React.RefObject<HTMLInputElement>;
+  avatarImageRef: React.RefObject<HTMLImageElement>;
   avatar: string | null | undefined;
   avatarImagePreviewUrl: string;
   handleAvatarImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetAvatar: () => void;
-  handleDeleteAvatar: () => Promise<void>;
+  handleDeleteAvatar: () => void;
 }
 
 export default function ModifyProfileAvatar({
   avatarInputRef,
+  avatarImageRef,
   avatar,
   avatarImagePreviewUrl,
   handleAvatarImage,
@@ -26,6 +28,7 @@ export default function ModifyProfileAvatar({
       style={{ left: "5%" }}
     >
       <ModifyProfileAvatarPreview
+        avatarImageRef={avatarImageRef}
         avatar={avatar}
         avatarImagePreviewUrl={avatarImagePreviewUrl}
       />
