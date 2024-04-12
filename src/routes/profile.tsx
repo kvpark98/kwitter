@@ -2,6 +2,7 @@ import { auth, db, storage } from "../firebase";
 import { useEffect, useRef, useState } from "react";
 import {
   StorageError,
+  deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
@@ -11,11 +12,16 @@ import { FirebaseError } from "firebase/app";
 import {
   FirestoreError,
   Unsubscribe,
+  addDoc,
   collection,
+  deleteDoc,
+  doc,
+  getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import ProfileContent from "../components/profile/profile-content";
@@ -27,6 +33,7 @@ import CropAvatarModal from "../components/profile/crop-modal/avatar/crop-avatar
 import CropBackgroundModal from "../components/profile/crop-modal/background/crop-background-modal";
 import ModifyProfileSuccess from "../components/modals/success/modify-profile-success";
 import ModifyProfileErrors from "../components/modals/error/modify-profile-errors";
+import ModifyProfile from "../components/profile/modify-profile/modify/modify-profile";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -38,6 +45,21 @@ export type CroppedAreaPixels = {
 
 export default function Profile() {
   const user = auth.currentUser;
+
+  const defaultAvatarURL = "/person-circle.svg";
+  const defaultBackgroundURL = "/default-background.png";
+
+  // const getBackground = async () => {
+  //   try {
+  //     const locationRef = ref(storage, `backgrounds/${user?.uid}`);
+  //     const result = await getDownloadURL(locationRef);
+  //     setBackground(result);
+  //   } catch (error) {
+  //     setBackground(defaultBackgroundURL);
+  //   }
+  // };
+
+  // getBackground();
 
   const navigate = useNavigate();
 
@@ -57,10 +79,9 @@ export default function Profile() {
   const [backgroundDeleteButtonClicked, setBackgroundDeleteButtonClicked] =
     useState(false);
 
-  const [] = useState(false);
+  const [isAvatarDelete, setIsAvatarDelete] = useState(false);
 
-  const defaultAvatarURL = "/person-circle.svg";
-  const defaultBackgroundURL = "/default-background.png";
+  const [isBackgroundDelete, setIsBackgroundDelete] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -70,7 +91,7 @@ export default function Profile() {
 
   const [avatar, setAvatar] = useState(user?.photoURL);
 
-  const [background, setBackground] = useState("");
+  const [background, setBackground] = useState(defaultBackgroundURL);
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
@@ -91,8 +112,8 @@ export default function Profile() {
   const [showModifyProfileModal, setShowModifyProfileModal] = useState(false);
   const handleShowModifyProfileModal = () => {
     setShowModifyProfileModal(true);
-    setAvatarDeleteButtonClicked(false);
-    setBackgroundDeleteButtonClicked(false);
+    setIsAvatarDelete(false);
+    setIsBackgroundDelete(false);
   };
   const handleCloseModifyProfileModal = () => {
     setShowModifyProfileModal(false);
@@ -100,6 +121,8 @@ export default function Profile() {
     resetAvatar();
     resetBackground();
     setZoom(1);
+    setIsAvatarDelete(false);
+    setIsBackgroundDelete(false);
     setAvatarDeleteButtonClicked(false);
     setBackgroundDeleteButtonClicked(false);
   };
@@ -119,8 +142,8 @@ export default function Profile() {
   const handleShowModifyProfileErrorsModal = () => {
     setShowModifyProfileModal(false);
     setShowModifyProfileErrorsModal(true);
-    setAvatarDeleteButtonClicked(false);
-    setBackgroundDeleteButtonClicked(false);
+    setIsAvatarDelete(false);
+    setIsBackgroundDelete(false);
   };
   const handleCloseModifyProfileErrorsModal = () => {
     setShowModifyProfileErrorsModal(false);
@@ -290,18 +313,6 @@ export default function Profile() {
     setIsPostActive(true);
   };
 
-  const getBackground = async () => {
-    try {
-      const locationRef = ref(storage, `backgrounds/${user?.uid}`);
-      const result = await getDownloadURL(locationRef);
-      setBackground(result);
-    } catch (error) {
-      setBackground("/default-background.png");
-    }
-  };
-
-  getBackground();
-
   const back = () => {
     navigate(-1);
   };
@@ -373,7 +384,7 @@ export default function Profile() {
 
         handleShowModifyProfileErrorsModal();
       }
-      setAvatarDeleteButtonClicked(false);
+      setIsAvatarDelete(false);
     }
   };
 
@@ -418,7 +429,7 @@ export default function Profile() {
 
         handleShowModifyProfileErrorsModal();
       }
-      setBackgroundDeleteButtonClicked(false);
+      setIsBackgroundDelete(false);
     }
   };
 
@@ -458,6 +469,7 @@ export default function Profile() {
 
   const handleDeleteAvatar = () => {
     setAvatarDeleteButtonClicked(true);
+    setIsAvatarDelete(true);
 
     if (avatarImageRef.current) {
       avatarImageRef.current.src = defaultAvatarURL;
@@ -466,11 +478,24 @@ export default function Profile() {
 
   const handleDeleteBackground = () => {
     setBackgroundDeleteButtonClicked(true);
+    setIsBackgroundDelete(true);
 
     if (backgroundImageRef.current) {
       backgroundImageRef.current.src = defaultBackgroundURL;
     }
   };
+
+  if (avatarDeleteButtonClicked && !avatarImagePreviewUrl) {
+    if (avatarImageRef.current) {
+      avatarImageRef.current.src = defaultAvatarURL;
+    }
+  }
+
+  if (backgroundDeleteButtonClicked && !backgroundImagePreviewUrl) {
+    if (backgroundImageRef.current) {
+      backgroundImageRef.current.src = defaultBackgroundURL;
+    }
+  }
 
   const modifyProfile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -511,6 +536,12 @@ export default function Profile() {
         }
       }
 
+      await addDoc(collection(db, "backgrounds"), {
+        createdAt: Date.now(),
+        username: user?.displayName || "Anonymous",
+        userId: user?.uid,
+      });
+
       if (backgroundFile) {
         // 새로운 파일의 크기가 1MB 이하인지 확인
         if (backgroundFile.size <= 1024 * 1024) {
@@ -530,10 +561,20 @@ export default function Profile() {
           if (backgroundInputRef.current) {
             backgroundInputRef.current.value = "";
           }
+
+          const backgroundQuery = query(
+            collection(db, "backgrounds"),
+            where("userId", "==", user?.uid)
+          );
+
+          const snapshot = await getDocs(backgroundQuery);
+          snapshot.forEach(async (doc) => {
+            await updateDoc(doc.ref, { background: backgroundUrl });
+          });
         }
       }
 
-      if (avatarDeleteButtonClicked) {
+      if (isAvatarDelete) {
         // 파일 인풋 리셋
         if (avatarInputRef.current) {
           avatarInputRef.current.value = "";
@@ -560,26 +601,26 @@ export default function Profile() {
         });
       }
 
-      if (backgroundDeleteButtonClicked) {
+      if (isBackgroundDelete) {
         // 파일 인풋 리셋
         if (backgroundInputRef.current) {
           backgroundInputRef.current.value = "";
         }
 
-        const defaultBackgroundResponse = await fetch(defaultBackgroundURL);
+        const locationRef = ref(storage, `backgrounds/${user?.uid}`);
+        await deleteObject(locationRef);
 
-        const defaultBackgroundBlob = await defaultBackgroundResponse.blob();
-
-        const backgroundLocationRef = ref(storage, `backgrounds/${user?.uid}`);
-
-        const backgroundResult = await uploadBytes(
-          backgroundLocationRef,
-          defaultBackgroundBlob
+        const backgroundQuery = query(
+          collection(db, "backgrounds"),
+          where("userId", "==", user?.uid)
         );
 
-        const backgroundUrl = await getDownloadURL(backgroundResult.ref);
+        const snapshot = await getDocs(backgroundQuery);
+        snapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
 
-        setBackground(backgroundUrl);
+        setBackground(defaultBackgroundURL);
       }
 
       await updateProfile(auth.currentUser!, {
@@ -589,6 +630,9 @@ export default function Profile() {
       resetName();
       resetAvatar();
       resetBackground();
+
+      setIsAvatarDelete(false);
+      setIsBackgroundDelete(false);
 
       setAvatarDeleteButtonClicked(false);
       setBackgroundDeleteButtonClicked(false);
@@ -623,6 +667,9 @@ export default function Profile() {
         setError("size-exhausted");
         console.log(error);
       }
+
+      setIsAvatarDelete(false);
+      setIsBackgroundDelete(false);
 
       setAvatarDeleteButtonClicked(false);
       setBackgroundDeleteButtonClicked(false);
@@ -693,7 +740,7 @@ export default function Profile() {
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
-      unsubscribe = await onSnapshot(tweetQuery, (snapshot) => {
+      unsubscribe = onSnapshot(tweetQuery, (snapshot) => {
         // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
@@ -724,44 +771,89 @@ export default function Profile() {
     };
   }, []);
 
+  // 컴포넌트가 마운트될 때 background 가져오기
+  useEffect(() => {
+    // Firestore 구독을 위한 변수 선언
+    let unsubscribe: Unsubscribe | null = null;
+
+    // 사용자의 background를 가져오는 함수 정의
+    const fetchUserBackground = async () => {
+      // Firestore 쿼리 생성
+      const backgroundQuery = query(
+        collection(db, "backgrounds"),
+        where("userId", "==", user?.uid)
+      );
+
+      // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
+      unsubscribe = onSnapshot(backgroundQuery, (snapshot) => {
+        if (!snapshot.empty) {
+          // 스냅샷이 비어있지 않은지 확인
+          // 첫 번째 문서만 추출
+          const firstDoc = snapshot.docs[0];
+
+          console.log(firstDoc.data());
+
+          // Firestore 문서에서 필요한 데이터 추출
+          const { background } = firstDoc.data();
+
+          // 상태 업데이트
+          setBackground(background);
+        }
+      });
+    };
+
+    // fetchUserBackground 함수 호출
+    fetchUserBackground();
+
+    // 컴포넌트가 언마운트될 때 Firestore 구독 해제
+    return () => {
+      unsubscribe && unsubscribe(); // 구독이 존재하면 해제
+    };
+  }, []);
+
+  console.log(background);
   return (
     <Container fluid className="h-100">
       <SideBar />
-      <div className="h-100 m-auto" style={{ maxWidth: "600px" }}>
-        <ProfileContent
-          user={user}
-          nameInputRef={nameInputRef}
-          avatarInputRef={avatarInputRef}
-          backgroundInputRef={backgroundInputRef}
-          avatarImageRef={avatarImageRef}
-          backgroundImageRef={backgroundImageRef}
-          isLoading={isLoading}
-          name={name}
-          handleName={handleName}
-          isName={isName}
-          nameErrorMessage={nameErrorMessage}
-          avatar={avatar}
-          avatarImagePreviewUrl={avatarImagePreviewUrl}
-          handleAvatarImage={handleAvatarImage}
-          background={background}
-          backgroundImagePreviewUrl={backgroundImagePreviewUrl}
-          handleBackgroundImage={handleBackgroundImage}
-          noSpace={noSpace}
-          resetName={resetName}
-          resetAvatar={resetAvatar}
-          resetBackground={resetBackground}
-          modifyProfile={modifyProfile}
-          showModifyProfileModal={showModifyProfileModal}
-          handleShowModifyProfileModal={handleShowModifyProfileModal}
-          handleCloseModifyProfileModal={handleCloseModifyProfileModal}
-          handleDeleteAvatar={handleDeleteAvatar}
-          handleDeleteBackground={handleDeleteBackground}
-          isPostActive={isPostActive}
-          postActive={postActive}
-          tweets={tweets}
-          back={back}
-        />
-      </div>
+      <ProfileContent
+        user={user}
+        avatar={avatar}
+        background={background}
+        handleShowModifyProfileModal={handleShowModifyProfileModal}
+        isPostActive={isPostActive}
+        postActive={postActive}
+        tweets={tweets}
+        back={back}
+      />
+      <ModifyProfile
+        nameInputRef={nameInputRef}
+        avatarInputRef={avatarInputRef}
+        backgroundInputRef={backgroundInputRef}
+        avatarImageRef={avatarImageRef}
+        backgroundImageRef={backgroundImageRef}
+        isLoading={isLoading}
+        name={name}
+        handleName={handleName}
+        isName={isName}
+        nameErrorMessage={nameErrorMessage}
+        avatar={avatar}
+        avatarImagePreviewUrl={avatarImagePreviewUrl}
+        handleAvatarImage={handleAvatarImage}
+        background={background}
+        backgroundImagePreviewUrl={backgroundImagePreviewUrl}
+        handleBackgroundImage={handleBackgroundImage}
+        avatarDeleteButtonClicked={avatarDeleteButtonClicked}
+        backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
+        noSpace={noSpace}
+        resetName={resetName}
+        resetAvatar={resetAvatar}
+        resetBackground={resetBackground}
+        modifyProfile={modifyProfile}
+        showModifyProfileModal={showModifyProfileModal}
+        handleCloseModifyProfileModal={handleCloseModifyProfileModal}
+        handleDeleteAvatar={handleDeleteAvatar}
+        handleDeleteBackground={handleDeleteBackground}
+      />
       <CropAvatarModal
         showAvatarCropModal={showAvatarCropModal}
         handleCloseAvatarCropModal={handleCloseAvatarCropModal}

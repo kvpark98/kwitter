@@ -9,6 +9,7 @@ export interface ModifyProfileAvatarProps {
   avatar: string | null | undefined;
   avatarImagePreviewUrl: string;
   handleAvatarImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  avatarDeleteButtonClicked: boolean;
   resetAvatar: () => void;
   handleDeleteAvatar: () => void;
 }
@@ -19,6 +20,7 @@ export default function ModifyProfileAvatar({
   avatar,
   avatarImagePreviewUrl,
   handleAvatarImage,
+  avatarDeleteButtonClicked,
   resetAvatar,
   handleDeleteAvatar,
 }: ModifyProfileAvatarProps) {
@@ -35,6 +37,7 @@ export default function ModifyProfileAvatar({
       <ModifyProfileAvatarAdd />
       <ModifyProfileAvatarRemoveDelete
         avatarImagePreviewUrl={avatarImagePreviewUrl}
+        avatarDeleteButtonClicked={avatarDeleteButtonClicked}
         resetAvatar={resetAvatar}
         handleDeleteAvatar={handleDeleteAvatar}
       />

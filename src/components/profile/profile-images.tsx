@@ -1,3 +1,4 @@
+import { Card } from "react-bootstrap";
 import ProfileAvatarImage from "./profile-avatar-image";
 
 export interface ProfileImagesProps {
@@ -11,8 +12,8 @@ export default function ProfileImages({
 }: ProfileImagesProps) {
   return (
     <div className="position-relative mb-4">
-      <img
-        src={background}
+      <Card.Img
+        src={background ? background : "/default-background.png"}
         alt="Background Image"
         className="img-fluid"
         style={{ width: "600px", height: "270px" }}

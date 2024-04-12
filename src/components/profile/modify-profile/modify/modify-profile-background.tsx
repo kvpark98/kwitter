@@ -10,6 +10,7 @@ export interface ModifyProfileBackgroundProps {
   background: string;
   backgroundImagePreviewUrl: string;
   handleBackgroundImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  backgroundDeleteButtonClicked: boolean;
   resetBackground: () => void;
   handleDeleteBackground: () => void;
 }
@@ -20,6 +21,7 @@ export default function ModifyProfileBackground({
   background,
   backgroundImagePreviewUrl,
   handleBackgroundImage,
+  backgroundDeleteButtonClicked,
   resetBackground,
   handleDeleteBackground,
 }: ModifyProfileBackgroundProps) {
@@ -33,6 +35,7 @@ export default function ModifyProfileBackground({
       <ModifyProfileBackgroundAdd />
       <ModifyProfileBackgroundRemoveDelete
         backgroundImagePreviewUrl={backgroundImagePreviewUrl}
+        backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
         resetBackground={resetBackground}
         handleDeleteBackground={handleDeleteBackground}
       />

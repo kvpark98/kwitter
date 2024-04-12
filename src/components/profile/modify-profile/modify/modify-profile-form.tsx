@@ -21,6 +21,8 @@ export interface ModifyProfileFormProps {
   background: string;
   backgroundImagePreviewUrl: string;
   handleBackgroundImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  avatarDeleteButtonClicked: boolean;
+  backgroundDeleteButtonClicked: boolean;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   resetName: () => void;
   resetAvatar: () => void;
@@ -47,6 +49,8 @@ export default function ModifyProfileForm({
   background,
   backgroundImagePreviewUrl,
   handleBackgroundImage,
+  avatarDeleteButtonClicked,
+  backgroundDeleteButtonClicked,
   noSpace,
   resetName,
   resetAvatar,
@@ -73,6 +77,8 @@ export default function ModifyProfileForm({
           background={background}
           backgroundImagePreviewUrl={backgroundImagePreviewUrl}
           handleBackgroundImage={handleBackgroundImage}
+          avatarDeleteButtonClicked={avatarDeleteButtonClicked}
+          backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
           resetAvatar={resetAvatar}
           resetBackground={resetBackground}
           handleDeleteAvatar={handleDeleteAvatar}

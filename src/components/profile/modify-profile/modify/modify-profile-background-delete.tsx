@@ -12,7 +12,7 @@ export default function ModifyProfileBackgroundDelete({
       type="button"
       title="Delete Background"
       variant="danger"
-      className="d-flex align-items-center position-absolute top-50 start-50 translate-middle-remove rounded-circle p-2"
+      className="d-flex align-items-center position-absolute top-0 end-0 rounded-circle p-2"
       onClick={handleDeleteBackground}
     >
       <svg

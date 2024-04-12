@@ -13,6 +13,8 @@ export interface ModifyProfileImagesProps {
   background: string;
   backgroundImagePreviewUrl: string;
   handleBackgroundImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  avatarDeleteButtonClicked: boolean;
+  backgroundDeleteButtonClicked: boolean;
   resetAvatar: () => void;
   resetBackground: () => void;
   handleDeleteAvatar: () => void;
@@ -30,6 +32,8 @@ export default function ModifyProfileImages({
   background,
   backgroundImagePreviewUrl,
   handleBackgroundImage,
+  avatarDeleteButtonClicked,
+  backgroundDeleteButtonClicked,
   resetAvatar,
   resetBackground,
   handleDeleteAvatar,
@@ -43,6 +47,7 @@ export default function ModifyProfileImages({
         background={background}
         backgroundImagePreviewUrl={backgroundImagePreviewUrl}
         handleBackgroundImage={handleBackgroundImage}
+        backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
         resetBackground={resetBackground}
         handleDeleteBackground={handleDeleteBackground}
       />
@@ -52,6 +57,7 @@ export default function ModifyProfileImages({
         avatar={avatar}
         avatarImagePreviewUrl={avatarImagePreviewUrl}
         handleAvatarImage={handleAvatarImage}
+        avatarDeleteButtonClicked={avatarDeleteButtonClicked}
         resetAvatar={resetAvatar}
         handleDeleteAvatar={handleDeleteAvatar}
       />

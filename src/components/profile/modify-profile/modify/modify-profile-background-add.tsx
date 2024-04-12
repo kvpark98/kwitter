@@ -5,7 +5,7 @@ export default function ModifyProfileBackgroundAdd() {
     <Form.Label
       htmlFor="background"
       title="Add Background"
-      className="btn position-absolute top-50 start-50 translate-middle-add m-0 p-0 border-0 bg-light rounded-circle opacity-75"
+      className="btn position-absolute top-50 start-50 translate-middle m-0 p-0 border-0 bg-light rounded-circle opacity-75"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

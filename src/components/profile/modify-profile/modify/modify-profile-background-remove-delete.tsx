@@ -3,12 +3,14 @@ import ModifyProfileBackgroundRemove from "./modify-profile-background-remove";
 
 export interface ModifyProfileBackgroundRemoveDeleteProps {
   backgroundImagePreviewUrl: string;
+  backgroundDeleteButtonClicked: boolean;
   resetBackground: () => void;
   handleDeleteBackground: () => void;
 }
 
 export default function ModifyProfileBackgroundRemoveDelete({
   backgroundImagePreviewUrl,
+  backgroundDeleteButtonClicked,
   resetBackground,
   handleDeleteBackground,
 }: ModifyProfileBackgroundRemoveDeleteProps) {
@@ -17,9 +19,11 @@ export default function ModifyProfileBackgroundRemoveDelete({
       {backgroundImagePreviewUrl ? (
         <ModifyProfileBackgroundRemove resetBackground={resetBackground} />
       ) : (
-        <ModifyProfileBackgroundDelete
-          handleDeleteBackground={handleDeleteBackground}
-        />
+        !backgroundDeleteButtonClicked && (
+          <ModifyProfileBackgroundDelete
+            handleDeleteBackground={handleDeleteBackground}
+          />
+        )
       )}
     </div>
   );
