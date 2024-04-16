@@ -3,6 +3,8 @@ import ModifyProfileBackground from "./modify-profile-background";
 import ModifyProfileAvatar from "./modify-profile-avatar";
 
 export interface ModifyProfileImagesProps {
+  defaultAvatarURL: "/person-circle.svg";
+  defaultBackgroundURL: "/default-background.png";
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
   avatarImageRef: React.RefObject<HTMLImageElement>;
@@ -22,6 +24,8 @@ export interface ModifyProfileImagesProps {
 }
 
 export default function ModifyProfileImages({
+  defaultAvatarURL,
+  defaultBackgroundURL,
   avatarInputRef,
   backgroundInputRef,
   avatarImageRef,
@@ -42,6 +46,7 @@ export default function ModifyProfileImages({
   return (
     <Form.Group className="position-relative mb-5">
       <ModifyProfileBackground
+        defaultBackgroundURL={defaultBackgroundURL}
         backgroundInputRef={backgroundInputRef}
         backgroundImageRef={backgroundImageRef}
         background={background}
@@ -52,6 +57,7 @@ export default function ModifyProfileImages({
         handleDeleteBackground={handleDeleteBackground}
       />
       <ModifyProfileAvatar
+        defaultAvatarURL={defaultAvatarURL}
         avatarInputRef={avatarInputRef}
         avatarImageRef={avatarImageRef}
         avatar={avatar}

@@ -4,6 +4,8 @@ import ModifyProfileHeader from "./modify-profile-header";
 import React from "react";
 
 export interface ModifyProfileProps {
+  defaultAvatarURL: "/person-circle.svg";
+  defaultBackgroundURL: "/default-background.png";
   nameInputRef: React.RefObject<HTMLInputElement>;
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
@@ -34,6 +36,8 @@ export interface ModifyProfileProps {
 }
 
 export default function ModifyProfile({
+  defaultAvatarURL,
+  defaultBackgroundURL,
   nameInputRef,
   avatarInputRef,
   backgroundInputRef,
@@ -75,6 +79,8 @@ export default function ModifyProfile({
         handleCloseModifyProfileModal={handleCloseModifyProfileModal}
       />
       <ModifyProfileForm
+        defaultAvatarURL={defaultAvatarURL}
+        defaultBackgroundURL={defaultBackgroundURL}
         nameInputRef={nameInputRef}
         avatarInputRef={avatarInputRef}
         backgroundInputRef={backgroundInputRef}

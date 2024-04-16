@@ -5,6 +5,8 @@ import ModifyProfileImages from "./modify-profile-images";
 import React from "react";
 
 export interface ModifyProfileFormProps {
+  defaultAvatarURL: "/person-circle.svg";
+  defaultBackgroundURL: "/default-background.png";
   nameInputRef: React.RefObject<HTMLInputElement>;
   avatarInputRef: React.RefObject<HTMLInputElement>;
   backgroundInputRef: React.RefObject<HTMLInputElement>;
@@ -33,6 +35,8 @@ export interface ModifyProfileFormProps {
 }
 
 export default function ModifyProfileForm({
+  defaultAvatarURL,
+  defaultBackgroundURL,
   nameInputRef,
   avatarInputRef,
   backgroundInputRef,
@@ -67,6 +71,8 @@ export default function ModifyProfileForm({
         style={{ maxHeight: "600px" }}
       >
         <ModifyProfileImages
+          defaultAvatarURL={defaultAvatarURL}
+          defaultBackgroundURL={defaultBackgroundURL}
           avatarInputRef={avatarInputRef}
           backgroundInputRef={backgroundInputRef}
           avatarImageRef={avatarImageRef}

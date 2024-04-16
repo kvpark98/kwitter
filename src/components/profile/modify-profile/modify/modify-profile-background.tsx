@@ -5,6 +5,7 @@ import ModifyProfileBackgroundRemoveDelete from "./modify-profile-background-rem
 import React from "react";
 
 export interface ModifyProfileBackgroundProps {
+  defaultBackgroundURL: "/default-background.png";
   backgroundInputRef: React.RefObject<HTMLInputElement>;
   backgroundImageRef: React.RefObject<HTMLImageElement>;
   background: string;
@@ -16,6 +17,7 @@ export interface ModifyProfileBackgroundProps {
 }
 
 export default function ModifyProfileBackground({
+  defaultBackgroundURL,
   backgroundInputRef,
   backgroundImageRef,
   background,
@@ -31,9 +33,12 @@ export default function ModifyProfileBackground({
         backgroundImageRef={backgroundImageRef}
         background={background}
         backgroundImagePreviewUrl={backgroundImagePreviewUrl}
+        backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
       />
       <ModifyProfileBackgroundAdd />
       <ModifyProfileBackgroundRemoveDelete
+        defaultBackgroundURL={defaultBackgroundURL}
+        background={background}
         backgroundImagePreviewUrl={backgroundImagePreviewUrl}
         backgroundDeleteButtonClicked={backgroundDeleteButtonClicked}
         resetBackground={resetBackground}

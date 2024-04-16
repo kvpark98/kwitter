@@ -2,6 +2,8 @@ import ModifyProfileAvatarDelete from "./modify-profile-avatar-delete";
 import ModifyProfileAvatarRemove from "./modify-profile-avatar-remove";
 
 export interface ModifyProfileAvatarRemoveDeleteProps {
+  defaultAvatarURL: "/person-circle.svg";
+  avatar: string | null | undefined;
   avatarImagePreviewUrl: string;
   avatarDeleteButtonClicked: boolean;
   resetAvatar: () => void;
@@ -9,6 +11,8 @@ export interface ModifyProfileAvatarRemoveDeleteProps {
 }
 
 export default function ModifyProfileAvatarRemoveDelete({
+  defaultAvatarURL,
+  avatar,
   avatarImagePreviewUrl,
   avatarDeleteButtonClicked,
   resetAvatar,
@@ -19,6 +23,8 @@ export default function ModifyProfileAvatarRemoveDelete({
       {avatarImagePreviewUrl ? (
         <ModifyProfileAvatarRemove resetAvatar={resetAvatar} />
       ) : (
+        avatar &&
+        avatar !== defaultAvatarURL &&
         !avatarDeleteButtonClicked && (
           <ModifyProfileAvatarDelete handleDeleteAvatar={handleDeleteAvatar} />
         )

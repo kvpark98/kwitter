@@ -4,6 +4,7 @@ import ModifyProfileAvatarPreview from "./modify-profile-avatar-preview";
 import ModifyProfileAvatarRemoveDelete from "./modify-profile-avatar-remove-delete";
 
 export interface ModifyProfileAvatarProps {
+  defaultAvatarURL: "/person-circle.svg";
   avatarInputRef: React.RefObject<HTMLInputElement>;
   avatarImageRef: React.RefObject<HTMLImageElement>;
   avatar: string | null | undefined;
@@ -15,6 +16,7 @@ export interface ModifyProfileAvatarProps {
 }
 
 export default function ModifyProfileAvatar({
+  defaultAvatarURL,
   avatarInputRef,
   avatarImageRef,
   avatar,
@@ -33,9 +35,12 @@ export default function ModifyProfileAvatar({
         avatarImageRef={avatarImageRef}
         avatar={avatar}
         avatarImagePreviewUrl={avatarImagePreviewUrl}
+        avatarDeleteButtonClicked={avatarDeleteButtonClicked}
       />
       <ModifyProfileAvatarAdd />
       <ModifyProfileAvatarRemoveDelete
+        defaultAvatarURL={defaultAvatarURL}
+        avatar={avatar}
         avatarImagePreviewUrl={avatarImagePreviewUrl}
         avatarDeleteButtonClicked={avatarDeleteButtonClicked}
         resetAvatar={resetAvatar}

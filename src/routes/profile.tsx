@@ -15,7 +15,6 @@ import {
   addDoc,
   collection,
   deleteDoc,
-  doc,
   getDocs,
   limit,
   onSnapshot,
@@ -485,18 +484,6 @@ export default function Profile() {
     }
   };
 
-  if (avatarDeleteButtonClicked && !avatarImagePreviewUrl) {
-    if (avatarImageRef.current) {
-      avatarImageRef.current.src = defaultAvatarURL;
-    }
-  }
-
-  if (backgroundDeleteButtonClicked && !backgroundImagePreviewUrl) {
-    if (backgroundImageRef.current) {
-      backgroundImageRef.current.src = defaultBackgroundURL;
-    }
-  }
-
   const modifyProfile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -508,6 +495,17 @@ export default function Profile() {
 
     try {
       setIsLoading(true);
+
+      const avatarCollection = collection(db, "avatars");
+      const avatarQuerySnapshot = await getDocs(avatarCollection);
+
+      if (avatarQuerySnapshot.empty) {
+        await addDoc(collection(db, "avatars"), {
+          createdAt: Date.now(),
+          username: user?.displayName || "Anonymous",
+          userId: user?.uid,
+        });
+      }
 
       if (avatarFile) {
         // 새로운 파일의 크기가 1MB 이하인지 확인
@@ -524,23 +522,38 @@ export default function Profile() {
           // Avatar URL 설정
           setAvatar(avatarUrl);
 
+          // 파일 인풋 리셋
+          if (avatarInputRef.current) {
+            avatarInputRef.current.value = "";
+          }
+
           // 사용자 프로필 업데이트
           await updateProfile(user!, {
             photoURL: avatarUrl,
           });
 
-          // 파일 인풋 리셋
-          if (avatarInputRef.current) {
-            avatarInputRef.current.value = "";
-          }
+          const avatarQuery = query(
+            collection(db, "avatars"),
+            where("userId", "==", user?.uid)
+          );
+
+          const snapshot = await getDocs(avatarQuery);
+          snapshot.forEach(async (doc) => {
+            await updateDoc(doc.ref, { avatar: avatarUrl });
+          });
         }
       }
 
-      await addDoc(collection(db, "backgrounds"), {
-        createdAt: Date.now(),
-        username: user?.displayName || "Anonymous",
-        userId: user?.uid,
-      });
+      const backgroundCollection = collection(db, "backgrounds");
+      const backgroundQuerySnapshot = await getDocs(backgroundCollection);
+
+      if (backgroundQuerySnapshot.empty) {
+        await addDoc(collection(db, "backgrounds"), {
+          createdAt: Date.now(),
+          username: user?.displayName || "Anonymous",
+          userId: user?.uid,
+        });
+      }
 
       if (backgroundFile) {
         // 새로운 파일의 크기가 1MB 이하인지 확인
@@ -580,24 +593,24 @@ export default function Profile() {
           avatarInputRef.current.value = "";
         }
 
-        const defaultAvatarResponse = await fetch(defaultAvatarURL);
+        const locationRef = ref(storage, `avatars/${user?.uid}`);
+        await deleteObject(locationRef);
 
-        const defaultAvatarBlob = await defaultAvatarResponse.blob();
-
-        const avatarLocationRef = ref(storage, `avatars/${user?.uid}`);
-
-        const avatarResult = await uploadBytes(
-          avatarLocationRef,
-          defaultAvatarBlob
+        const avatarQuery = query(
+          collection(db, "avatars"),
+          where("userId", "==", user?.uid)
         );
 
-        const avatarUrl = await getDownloadURL(avatarResult.ref);
+        const snapshot = await getDocs(avatarQuery);
+        snapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
 
-        setAvatar(avatarUrl);
+        setAvatar(defaultAvatarURL);
 
         // 사용자 프로필 업데이트
         await updateProfile(user!, {
-          photoURL: avatarUrl,
+          photoURL: defaultAvatarURL,
         });
       }
 
@@ -791,8 +804,6 @@ export default function Profile() {
           // 첫 번째 문서만 추출
           const firstDoc = snapshot.docs[0];
 
-          console.log(firstDoc.data());
-
           // Firestore 문서에서 필요한 데이터 추출
           const { background } = firstDoc.data();
 
@@ -811,7 +822,6 @@ export default function Profile() {
     };
   }, []);
 
-  console.log(background);
   return (
     <Container fluid className="h-100">
       <SideBar />
@@ -826,6 +836,8 @@ export default function Profile() {
         back={back}
       />
       <ModifyProfile
+        defaultAvatarURL={defaultAvatarURL}
+        defaultBackgroundURL={defaultBackgroundURL}
         nameInputRef={nameInputRef}
         avatarInputRef={avatarInputRef}
         backgroundInputRef={backgroundInputRef}

@@ -4,12 +4,14 @@ export interface ModifyProfileAvatarPreviewProps {
   avatarImageRef: React.RefObject<HTMLImageElement>;
   avatar: string | null | undefined;
   avatarImagePreviewUrl: string;
+  avatarDeleteButtonClicked: boolean;
 }
 
 export default function ModifyProfileAvatarPreview({
   avatarImageRef,
   avatar,
   avatarImagePreviewUrl,
+  avatarDeleteButtonClicked,
 }: ModifyProfileAvatarPreviewProps) {
   return (
     <div
@@ -21,7 +23,7 @@ export default function ModifyProfileAvatarPreview({
         src={
           avatarImagePreviewUrl
             ? avatarImagePreviewUrl
-            : avatar
+            : avatar && !avatarDeleteButtonClicked
             ? avatar
             : "/person-circle.svg"
         }
