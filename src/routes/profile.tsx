@@ -48,18 +48,6 @@ export default function Profile() {
   const defaultAvatarURL = "/person-circle.svg";
   const defaultBackgroundURL = "/default-background.png";
 
-  // const getBackground = async () => {
-  //   try {
-  //     const locationRef = ref(storage, `backgrounds/${user?.uid}`);
-  //     const result = await getDownloadURL(locationRef);
-  //     setBackground(result);
-  //   } catch (error) {
-  //     setBackground(defaultBackgroundURL);
-  //   }
-  // };
-
-  // getBackground();
-
   const navigate = useNavigate();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -499,7 +487,7 @@ export default function Profile() {
       const avatarCollection = collection(db, "avatars");
       const avatarQuerySnapshot = await getDocs(avatarCollection);
 
-      if (avatarQuerySnapshot.empty) {
+      if (avatarQuerySnapshot.empty && avatarImagePreviewUrl) {
         await addDoc(collection(db, "avatars"), {
           createdAt: Date.now(),
           username: user?.displayName || "Anonymous",
@@ -547,7 +535,7 @@ export default function Profile() {
       const backgroundCollection = collection(db, "backgrounds");
       const backgroundQuerySnapshot = await getDocs(backgroundCollection);
 
-      if (backgroundQuerySnapshot.empty) {
+      if (backgroundQuerySnapshot.empty && backgroundImagePreviewUrl) {
         await addDoc(collection(db, "backgrounds"), {
           createdAt: Date.now(),
           username: user?.displayName || "Anonymous",
@@ -587,7 +575,7 @@ export default function Profile() {
         }
       }
 
-      if (isAvatarDelete) {
+      if (avatarDeleteButtonClicked && !avatarImagePreviewUrl) {
         // 파일 인풋 리셋
         if (avatarInputRef.current) {
           avatarInputRef.current.value = "";
@@ -614,7 +602,7 @@ export default function Profile() {
         });
       }
 
-      if (isBackgroundDelete) {
+      if (backgroundDeleteButtonClicked && !backgroundImagePreviewUrl) {
         // 파일 인풋 리셋
         if (backgroundInputRef.current) {
           backgroundInputRef.current.value = "";
