@@ -3,26 +3,26 @@ import ModifyTweetProfile from "./modify-tweet-profile";
 import ModifyMessagePhoto from "./modify-message-photo";
 
 export interface ModifyTweetBodyProps {
-  imageRef: React.RefObject<HTMLDivElement>;
   newMessage: string;
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   photo: string | undefined;
   newImagePreviewUrl: string;
   croppedNewImagePreviewUrl: string;
   resetPhotoButton: () => void;
-  deletePhoto: () => Promise<void>;
+  photoDeleteButtonClicked: boolean;
+  handleDeletePhoto: () => Promise<void>;
   handleShowModifyPhotoCropModal: () => void;
 }
 
 export default function ModifyTweetBody({
-  imageRef,
   newMessage,
   handleNewMessage,
   photo,
   newImagePreviewUrl,
   croppedNewImagePreviewUrl,
   resetPhotoButton,
-  deletePhoto,
+  photoDeleteButtonClicked,
+  handleDeletePhoto,
   handleShowModifyPhotoCropModal,
 }: ModifyTweetBodyProps) {
   return (
@@ -34,14 +34,14 @@ export default function ModifyTweetBody({
       <div className="d-flex w-100">
         <ModifyTweetProfile />
         <ModifyMessagePhoto
-          imageRef={imageRef}
           newMessage={newMessage}
           handleNewMessage={handleNewMessage}
           photo={photo}
           newImagePreviewUrl={newImagePreviewUrl}
           croppedNewImagePreviewUrl={croppedNewImagePreviewUrl}
           resetPhotoButton={resetPhotoButton}
-          deletePhoto={deletePhoto}
+          photoDeleteButtonClicked={photoDeleteButtonClicked}
+          handleDeletePhoto={handleDeletePhoto}
           handleShowModifyPhotoCropModal={handleShowModifyPhotoCropModal}
         />
       </div>

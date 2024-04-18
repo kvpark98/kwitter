@@ -5,6 +5,7 @@ import TweetBodyContent from "./tweet-body-content";
 
 export interface TweetBodyProps {
   user: User | null;
+  avatar: string;
   message: string;
   photo?: string | undefined;
   userId: string;
@@ -15,6 +16,7 @@ export interface TweetBodyProps {
 
 export default function TweetBody({
   user,
+  avatar,
   message,
   photo,
   userId,
@@ -28,7 +30,12 @@ export default function TweetBody({
         ? { className: "d-flex bg-primary-subtle" }
         : { className: "d-flex" })}
     >
-      <TweetBodyProfile user={user} userId={userId} username={username} />
+      <TweetBodyProfile
+        user={user}
+        avatar={avatar}
+        userId={userId}
+        username={username}
+      />
       <TweetBodyContent
         user={user}
         message={message}

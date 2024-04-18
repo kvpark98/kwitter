@@ -2,10 +2,14 @@ import { useRef, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import {
   FirestoreError,
+  collection,
   deleteDoc,
   deleteField,
   doc,
+  getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import {
   StorageError,
@@ -43,13 +47,29 @@ export default function Tweet({
 }: ITweet) {
   const user = auth.currentUser;
 
+  const [avatar, setAvatar] = useState("");
+
+  const getAvatar = async () => {
+    const avatarQuery = query(
+      collection(db, "avatars"),
+      where("userId", "==", userId)
+    );
+
+    const snapshot = await getDocs(avatarQuery);
+    snapshot.forEach(async (doc) => {
+      const data = doc.data();
+      setAvatar(data.avatar);
+    });
+  };
+
+  getAvatar();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const newFileInputRef = useRef<HTMLInputElement>(null);
 
-  const imageRef = useRef<HTMLDivElement>(null);
-
-  const [deleteButtonClicked, setDeleteButtonClicked] = useState(false);
+  const [photoDeleteButtonClicked, setPhotoDeleteButtonClicked] =
+    useState(false);
 
   const [newMessage, setNewMessage] = useState(message);
 
@@ -71,7 +91,6 @@ export default function Tweet({
   const [showModifyTweetModal, setShowModifyTweetModal] = useState(false);
   const handleShowModifyTweetModal = () => {
     setShowModifyTweetModal(true);
-    setDeleteButtonClicked(false);
   };
   const handleCloseModifyTweetModal = () => {
     setShowModifyTweetModal(false);
@@ -79,7 +98,7 @@ export default function Tweet({
     resetPhotoButton();
     handleModifyRatio1x1();
     setZoom(1);
-    setDeleteButtonClicked(false);
+    setPhotoDeleteButtonClicked(false);
   };
 
   const [showModifyTweetSuccessModal, setShowModifyTweetSuccessModal] =
@@ -97,7 +116,6 @@ export default function Tweet({
   const handleShowModifyTweetErrorsModal = () => {
     setShowModifyTweetModal(false);
     setShowModifyTweetErrorsModal(true);
-    setDeleteButtonClicked(false);
   };
   const handleCloseModifyTweetErrorsModal = () => {
     setShowModifyTweetErrorsModal(false);
@@ -119,14 +137,14 @@ export default function Tweet({
   const [croppedAreaPixels, setCroppedAreaPixels] =
     useState<CroppedAreaPixels | null>(null); // 잘린 이미지 정보
 
-  const [showModifyPhotoCropModal, setShowModifyPhotorCropModal] =
+  const [showModifyPhotoCropModal, setShowModifyPhotoCropModal] =
     useState(false);
   const handleShowModifyPhotoCropModal = () => {
     setShowModifyTweetModal(false);
-    setShowModifyPhotorCropModal(true);
+    setShowModifyPhotoCropModal(true);
   };
   const handleCloseModifyPhotoCropModal = () => {
-    setShowModifyPhotorCropModal(false);
+    setShowModifyPhotoCropModal(false);
     setShowModifyTweetModal(true);
     handleModifyRatio1x1();
     setZoom(1);
@@ -220,7 +238,7 @@ export default function Tweet({
       handleModifyRatio1x1();
       setZoom(1);
 
-      setShowModifyPhotorCropModal(false);
+      setShowModifyPhotoCropModal(false);
       setShowModifyTweetModal(true);
     };
   };
@@ -239,7 +257,6 @@ export default function Tweet({
 
   const handleNewFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCroppedNewImagePreviewUrl("");
-    setDeleteButtonClicked(false);
 
     const { files } = event.currentTarget; // 이벤트에서 파일 목록을 가져오기
 
@@ -301,11 +318,8 @@ export default function Tweet({
     setError("");
   };
 
-  const deletePhoto = async () => {
-    setDeleteButtonClicked(true);
-    if (imageRef.current) {
-      imageRef.current.classList.add("d-none");
-    }
+  const handleDeletePhoto = async () => {
+    setPhotoDeleteButtonClicked(true);
   };
 
   const modifyTweet = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -351,15 +365,18 @@ export default function Tweet({
         }
       }
 
-      if (deleteButtonClicked) {
-        // 기존 이미지 삭제
-        await updateDoc(doc(db, "tweets", id), {
-          photo: deleteField(),
-          createdAt: Date.now(),
-        });
+      if (photoDeleteButtonClicked && !newImagePreviewUrl) {
+        if (newFileInputRef.current) {
+          newFileInputRef.current.value = "";
+        }
 
-        const photoRef = ref(storage, `tweets/${user?.uid}/${id}`);
-        await deleteObject(photoRef);
+        const locationRef = ref(storage, `tweets/${user?.uid}/${id}`);
+        await deleteObject(locationRef);
+
+        await updateDoc(doc(db, "tweets", id), {
+          createdAt: Date.now(),
+          photo: deleteField(),
+        });
       }
 
       // Firestore의 트윗 문서 업데이트
@@ -372,7 +389,7 @@ export default function Tweet({
       // 파일 상태를 초기화
       resetPhotoSubmit();
 
-      setDeleteButtonClicked(false);
+      setPhotoDeleteButtonClicked(false);
 
       handleShowModifyTweetSuccessModal();
     } catch (error) {
@@ -394,7 +411,7 @@ export default function Tweet({
       resetMessageSubmit();
       resetPhotoSubmit();
 
-      setDeleteButtonClicked(false);
+      setPhotoDeleteButtonClicked(false);
 
       handleShowModifyTweetErrorsModal();
     } finally {
@@ -443,6 +460,7 @@ export default function Tweet({
     <div className="w-100">
       <TweetCard
         user={user}
+        avatar={avatar}
         timeAgo={timeAgo}
         message={message}
         photo={photo}
@@ -456,7 +474,6 @@ export default function Tweet({
           isLoading={isLoading}
           photo={photo}
           newFileInputRef={newFileInputRef}
-          imageRef={imageRef}
           newMessage={newMessage}
           handleNewMessage={handleNewMessage}
           isNewMessage={isNewMessage}
@@ -465,7 +482,8 @@ export default function Tweet({
           croppedNewImagePreviewUrl={croppedNewImagePreviewUrl}
           resetMessageButton={resetMessageButton}
           resetPhotoButton={resetPhotoButton}
-          deletePhoto={deletePhoto}
+          photoDeleteButtonClicked={photoDeleteButtonClicked}
+          handleDeletePhoto={handleDeletePhoto}
           modifyTweet={modifyTweet}
           showModifyTweetModal={showModifyTweetModal}
           handleCloseModifyTweetModal={handleCloseModifyTweetModal}

@@ -5,6 +5,7 @@ import { User } from "firebase/auth";
 
 export interface TweetCardProps {
   user: User | null;
+  avatar: string;
   timeAgo: string | undefined;
   message: string;
   photo?: string | undefined;
@@ -16,6 +17,7 @@ export interface TweetCardProps {
 
 export default function TweetCard({
   user,
+  avatar,
   timeAgo,
   message,
   photo,
@@ -28,6 +30,7 @@ export default function TweetCard({
     <Card className="d-flex rounded-0 mb-2">
       <TweetBody
         user={user}
+        avatar={avatar}
         message={message}
         photo={photo}
         username={username}

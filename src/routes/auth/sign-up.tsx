@@ -4,13 +4,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useRef, useState } from "react";
-import { auth, storage } from "../../firebase";
+import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import Header from "../../components/header&footer/header/header";
 import Footer from "../../components/header&footer/footer/footer";
 import SignUpForm from "../../components/auth/sign-up/sign-up-form";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function SignUp() {
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -39,9 +38,6 @@ export default function SignUp() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
-
-  const defaultAvatarURL = "/person-circle.svg";
-  const defaultBackgroundURL = "/default-background.png";
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -296,41 +292,8 @@ export default function SignUp() {
 
       await sendEmailVerification(credentials.user, actionCodeSettings);
 
-      const defaultAvatarResponse = await fetch(defaultAvatarURL);
-
-      const defaultAvatarBlob = await defaultAvatarResponse.blob();
-
-      const avatarLocationRef = ref(
-        storage,
-        `avatars/${credentials.user?.uid}`
-      );
-
-      const avatarResult = await uploadBytes(
-        avatarLocationRef,
-        defaultAvatarBlob
-      );
-
-      const avatarUrl = await getDownloadURL(avatarResult.ref);
-
-      const defaultBackgroundResponse = await fetch(defaultBackgroundURL);
-
-      const defaultBackgroundBlob = await defaultBackgroundResponse.blob();
-
-      const backgroundLocationRef = ref(
-        storage,
-        `backgrounds/${credentials.user?.uid}`
-      );
-
-      const backgroundResult = await uploadBytes(
-        backgroundLocationRef,
-        defaultBackgroundBlob
-      );
-
-      await getDownloadURL(backgroundResult.ref);
-
       await updateProfile(credentials.user, {
         displayName: name,
-        photoURL: avatarUrl,
       });
 
       signOut();

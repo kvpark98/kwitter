@@ -3,12 +3,14 @@ import { User } from "firebase/auth";
 
 export interface TweetBodyProfileProps {
   user: User | null;
+  avatar: string;
   userId: string;
   username: string;
 }
 
 export default function TweetBodyProfile({
   user,
+  avatar,
   userId,
   username,
 }: TweetBodyProfileProps) {
@@ -28,7 +30,7 @@ export default function TweetBodyProfile({
         </Link>
       ) : (
         <img
-          src={user?.photoURL!}
+          src={avatar}
           width="40"
           height="40"
           className="rounded-circle bg-light"

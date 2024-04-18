@@ -1,20 +1,26 @@
 import ModifyPhotoDelete from "./modify-photo-delete";
 
 export interface ModifyPhotoProps {
-  imageRef: React.RefObject<HTMLDivElement>;
   photo: string | undefined;
-  deletePhoto: () => Promise<void>;
+  photoDeleteButtonClicked: boolean;
+  handleDeletePhoto: () => Promise<void>;
 }
 
 export default function ModifyPhoto({
-  imageRef,
   photo,
-  deletePhoto,
+  photoDeleteButtonClicked,
+  handleDeletePhoto,
 }: ModifyPhotoProps) {
   return (
-    <div ref={imageRef} className="position-relative">
+    <div
+      className={
+        photoDeleteButtonClicked
+          ? "position-relative d-none"
+          : "position-relative"
+      }
+    >
       <img src={photo} alt="Image Preview" className="w-100 h-100 rounded-4" />
-      <ModifyPhotoDelete deletePhoto={deletePhoto} />
+      <ModifyPhotoDelete handleDeletePhoto={handleDeletePhoto} />
     </div>
   );
 }

@@ -66,10 +66,6 @@ export default function Profile() {
   const [backgroundDeleteButtonClicked, setBackgroundDeleteButtonClicked] =
     useState(false);
 
-  const [isAvatarDelete, setIsAvatarDelete] = useState(false);
-
-  const [isBackgroundDelete, setIsBackgroundDelete] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [name, setName] = useState(user?.displayName);
@@ -99,8 +95,6 @@ export default function Profile() {
   const [showModifyProfileModal, setShowModifyProfileModal] = useState(false);
   const handleShowModifyProfileModal = () => {
     setShowModifyProfileModal(true);
-    setIsAvatarDelete(false);
-    setIsBackgroundDelete(false);
   };
   const handleCloseModifyProfileModal = () => {
     setShowModifyProfileModal(false);
@@ -108,8 +102,6 @@ export default function Profile() {
     resetAvatar();
     resetBackground();
     setZoom(1);
-    setIsAvatarDelete(false);
-    setIsBackgroundDelete(false);
     setAvatarDeleteButtonClicked(false);
     setBackgroundDeleteButtonClicked(false);
   };
@@ -129,8 +121,6 @@ export default function Profile() {
   const handleShowModifyProfileErrorsModal = () => {
     setShowModifyProfileModal(false);
     setShowModifyProfileErrorsModal(true);
-    setIsAvatarDelete(false);
-    setIsBackgroundDelete(false);
   };
   const handleCloseModifyProfileErrorsModal = () => {
     setShowModifyProfileErrorsModal(false);
@@ -371,7 +361,6 @@ export default function Profile() {
 
         handleShowModifyProfileErrorsModal();
       }
-      setIsAvatarDelete(false);
     }
   };
 
@@ -416,7 +405,6 @@ export default function Profile() {
 
         handleShowModifyProfileErrorsModal();
       }
-      setIsBackgroundDelete(false);
     }
   };
 
@@ -456,7 +444,6 @@ export default function Profile() {
 
   const handleDeleteAvatar = () => {
     setAvatarDeleteButtonClicked(true);
-    setIsAvatarDelete(true);
 
     if (avatarImageRef.current) {
       avatarImageRef.current.src = defaultAvatarURL;
@@ -465,7 +452,6 @@ export default function Profile() {
 
   const handleDeleteBackground = () => {
     setBackgroundDeleteButtonClicked(true);
-    setIsBackgroundDelete(true);
 
     if (backgroundImageRef.current) {
       backgroundImageRef.current.src = defaultBackgroundURL;
@@ -484,10 +470,7 @@ export default function Profile() {
     try {
       setIsLoading(true);
 
-      const avatarCollection = collection(db, "avatars");
-      const avatarQuerySnapshot = await getDocs(avatarCollection);
-
-      if (avatarQuerySnapshot.empty && avatarImagePreviewUrl) {
+      if (avatarImagePreviewUrl) {
         await addDoc(collection(db, "avatars"), {
           createdAt: Date.now(),
           username: user?.displayName || "Anonymous",
@@ -532,10 +515,7 @@ export default function Profile() {
         }
       }
 
-      const backgroundCollection = collection(db, "backgrounds");
-      const backgroundQuerySnapshot = await getDocs(backgroundCollection);
-
-      if (backgroundQuerySnapshot.empty && backgroundImagePreviewUrl) {
+      if (backgroundImagePreviewUrl) {
         await addDoc(collection(db, "backgrounds"), {
           createdAt: Date.now(),
           username: user?.displayName || "Anonymous",
@@ -576,7 +556,6 @@ export default function Profile() {
       }
 
       if (avatarDeleteButtonClicked && !avatarImagePreviewUrl) {
-        // 파일 인풋 리셋
         if (avatarInputRef.current) {
           avatarInputRef.current.value = "";
         }
@@ -603,7 +582,6 @@ export default function Profile() {
       }
 
       if (backgroundDeleteButtonClicked && !backgroundImagePreviewUrl) {
-        // 파일 인풋 리셋
         if (backgroundInputRef.current) {
           backgroundInputRef.current.value = "";
         }
@@ -631,9 +609,6 @@ export default function Profile() {
       resetName();
       resetAvatar();
       resetBackground();
-
-      setIsAvatarDelete(false);
-      setIsBackgroundDelete(false);
 
       setAvatarDeleteButtonClicked(false);
       setBackgroundDeleteButtonClicked(false);
@@ -668,9 +643,6 @@ export default function Profile() {
         setError("size-exhausted");
         console.log(error);
       }
-
-      setIsAvatarDelete(false);
-      setIsBackgroundDelete(false);
 
       setAvatarDeleteButtonClicked(false);
       setBackgroundDeleteButtonClicked(false);

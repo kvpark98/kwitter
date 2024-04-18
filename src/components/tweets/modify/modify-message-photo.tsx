@@ -4,26 +4,26 @@ import ModifyPhoto from "./modify-photo";
 import ModifyPhotoPreview from "./modify-photo-preview";
 
 export interface ModifyMessagePhotoProps {
-  imageRef: React.RefObject<HTMLDivElement>;
   newMessage: string;
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   photo: string | undefined;
   newImagePreviewUrl: string;
   croppedNewImagePreviewUrl: string;
   resetPhotoButton: () => void;
-  deletePhoto: () => Promise<void>;
+  photoDeleteButtonClicked: boolean;
+  handleDeletePhoto: () => Promise<void>;
   handleShowModifyPhotoCropModal: () => void;
 }
 
 export default function ModifyMessagePhoto({
-  imageRef,
   newMessage,
   handleNewMessage,
   photo,
   newImagePreviewUrl,
   croppedNewImagePreviewUrl,
   resetPhotoButton,
-  deletePhoto,
+  photoDeleteButtonClicked,
+  handleDeletePhoto,
   handleShowModifyPhotoCropModal,
 }: ModifyMessagePhotoProps) {
   return (
@@ -42,9 +42,9 @@ export default function ModifyMessagePhoto({
       ) : (
         photo && (
           <ModifyPhoto
-            imageRef={imageRef}
             photo={photo}
-            deletePhoto={deletePhoto}
+            photoDeleteButtonClicked={photoDeleteButtonClicked}
+            handleDeletePhoto={handleDeletePhoto}
           />
         )
       )}
