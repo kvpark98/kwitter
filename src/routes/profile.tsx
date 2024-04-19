@@ -33,6 +33,7 @@ import CropBackgroundModal from "../components/profile/crop-modal/background/cro
 import ModifyProfileSuccess from "../components/modals/success/modify-profile-success";
 import ModifyProfileErrors from "../components/modals/error/modify-profile-errors";
 import ModifyProfile from "../components/profile/modify-profile/modify/modify-profile";
+import ModifyProfileDiscardModal from "../components/profile/discard-modal/modify-profile-discard-modal";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -97,6 +98,27 @@ export default function Profile() {
     setShowModifyProfileModal(true);
   };
   const handleCloseModifyProfileModal = () => {
+    if (
+      avatarImagePreviewUrl ||
+      backgroundImagePreviewUrl ||
+      avatarDeleteButtonClicked ||
+      backgroundDeleteButtonClicked ||
+      user?.displayName !== nameInputRef.current?.value
+    ) {
+      handleShowModifyProfileDiscardModal();
+    } else {
+      setShowModifyProfileModal(false);
+      resetName();
+      resetAvatar();
+      resetBackground();
+      setZoom(1);
+      setAvatarDeleteButtonClicked(false);
+      setBackgroundDeleteButtonClicked(false);
+      setShowModifyProfileDiscardModal(false);
+    }
+  };
+
+  const handleCloseModifyProfileDiscardBothModal = () => {
     setShowModifyProfileModal(false);
     resetName();
     resetAvatar();
@@ -104,12 +126,22 @@ export default function Profile() {
     setZoom(1);
     setAvatarDeleteButtonClicked(false);
     setBackgroundDeleteButtonClicked(false);
+    setShowModifyProfileDiscardModal(false);
+  };
+
+  const [showModifyProfileDiscardModal, setShowModifyProfileDiscardModal] =
+    useState(false);
+  const handleShowModifyProfileDiscardModal = () => {
+    setShowModifyProfileDiscardModal(true);
+  };
+  const handleCloseModifyProfileDiscardModal = () => {
+    setShowModifyProfileDiscardModal(false);
   };
 
   const [showModifyProfileSuccessModal, setShowModifyProfileSuccessModal] =
     useState(false);
   const handleShowModifyProfileSuccessModal = () => {
-    handleCloseModifyProfileModal();
+    handleCloseModifyProfileDiscardBothModal();
     setShowModifyProfileSuccessModal(true);
   };
   const handleCloseModifyProfileSuccessModal = () => {
@@ -470,7 +502,7 @@ export default function Profile() {
     try {
       setIsLoading(true);
 
-      if (avatarImagePreviewUrl) {
+      if (avatar === defaultAvatarURL && avatarImagePreviewUrl) {
         await addDoc(collection(db, "avatars"), {
           createdAt: Date.now(),
           username: user?.displayName || "Anonymous",
@@ -515,7 +547,7 @@ export default function Profile() {
         }
       }
 
-      if (backgroundImagePreviewUrl) {
+      if (background === defaultBackgroundURL && backgroundImagePreviewUrl) {
         await addDoc(collection(db, "backgrounds"), {
           createdAt: Date.now(),
           username: user?.displayName || "Anonymous",
@@ -847,6 +879,15 @@ export default function Profile() {
         setZoom={setZoom}
         onCropComplete={onCropComplete}
         handleSaveCroppedBackground={handleSaveCroppedBackground}
+      />
+      <ModifyProfileDiscardModal
+        showModifyProfileDiscardModal={showModifyProfileDiscardModal}
+        handleCloseModifyProfileDiscardModal={
+          handleCloseModifyProfileDiscardModal
+        }
+        handleCloseModifyProfileDiscardBothModal={
+          handleCloseModifyProfileDiscardBothModal
+        }
       />
       <ModifyProfileSuccess
         showModifyProfileSuccessModal={showModifyProfileSuccessModal}
