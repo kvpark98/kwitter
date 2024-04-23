@@ -22,6 +22,7 @@ import { FirebaseError } from "firebase/app";
 import CreateCropPhotoModal from "../components/tweets/create/create-crop-modal/create-crop-photo-modal";
 import CreateTweetSuccess from "../components/modals/success/create-tweet-success";
 import CreateTweetErrors from "../components/modals/error/create-tweet-errors";
+import CreateTweetDiscardModal from "../components/tweets/create/create-tweet-discard-modal/create-tweet-discard-modal";
 
 export default function Home() {
   const user = auth.currentUser;
@@ -46,17 +47,40 @@ export default function Home() {
   const [showCreateTweetModal, setShowCreateTweetModal] = useState(false);
   const handleShowCreateTweetModal = () => setShowCreateTweetModal(true);
   const handleCloseCreateTweetModal = () => {
+    if (imagePreviewUrl || message) {
+      handleShowCreateTweetDiscardModal();
+    } else {
+      setShowCreateTweetModal(false);
+      resetMessageButton();
+      resetPhotoButton();
+      handleCreateRatio1x1();
+      setZoom(1);
+      setShowCreateTweetDiscardModal(false);
+    }
+  };
+
+  const handleCloseCreateTweetDiscardBothModal = () => {
     setShowCreateTweetModal(false);
     resetMessageButton();
     resetPhotoButton();
     handleCreateRatio1x1();
     setZoom(1);
+    setShowCreateTweetDiscardModal(false);
+  };
+
+  const [showCreateTweetDiscardModal, setShowCreateTweetDiscardModal] =
+    useState(false);
+  const handleShowCreateTweetDiscardModal = () => {
+    setShowCreateTweetDiscardModal(true);
+  };
+  const handleCloseCreateTweetDiscardModal = () => {
+    setShowCreateTweetDiscardModal(false);
   };
 
   const [showCreateTweetSuccessModal, setShowCreateTweetSuccessModal] =
     useState(false);
   const handleShowCreateTweetSuccessModal = () => {
-    handleCloseCreateTweetModal();
+    handleCloseCreateTweetDiscardBothModal();
     setShowCreateTweetSuccessModal(true);
   };
   const handleCloseCreateTweetSuccessModal = () => {
@@ -380,6 +404,13 @@ export default function Home() {
         handleCreateRatio1x1={handleCreateRatio1x1}
         handleCreateRatio4x3={handleCreateRatio4x3}
         handleCreateRatio16x9={handleCreateRatio16x9}
+      />
+      <CreateTweetDiscardModal
+        showCreateTweetDiscardModal={showCreateTweetDiscardModal}
+        handleCloseCreateTweetDiscardModal={handleCloseCreateTweetDiscardModal}
+        handleCloseCreateTweetDiscardBothModal={
+          handleCloseCreateTweetDiscardBothModal
+        }
       />
       <CreateTweetSuccess
         showCreateTweetSuccessModal={showCreateTweetSuccessModal}

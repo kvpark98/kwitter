@@ -26,6 +26,7 @@ import { CroppedAreaPixels } from "../../../../routes/profile";
 import ModifyTweetSuccess from "../../../modals/success/modify-tweet-success";
 import DeleteTweetModal from "../../../modals/warning/delete-tweet-modal";
 import ModifyTweetErrors from "../../../modals/error/modify-tweet-errors";
+import ModifyTweetDiscardModal from "../../modify/modify-tweet-discard-modal/modify-tweet-discard-modal";
 
 export interface ITweet {
   id: string;
@@ -93,18 +94,46 @@ export default function Tweet({
     setShowModifyTweetModal(true);
   };
   const handleCloseModifyTweetModal = () => {
+    if (
+      newImagePreviewUrl ||
+      photoDeleteButtonClicked ||
+      newMessage !== message
+    ) {
+      handleShowModifyTweetDiscardModal();
+    } else {
+      setShowModifyTweetModal(false);
+      resetMessageButton();
+      resetPhotoButton();
+      handleModifyRatio1x1();
+      setZoom(1);
+      setPhotoDeleteButtonClicked(false);
+      setShowModifyTweetDiscardModal(false);
+    }
+  };
+
+  const handleCloseModifyTweetDiscardBothModal = () => {
     setShowModifyTweetModal(false);
     resetMessageButton();
     resetPhotoButton();
     handleModifyRatio1x1();
     setZoom(1);
     setPhotoDeleteButtonClicked(false);
+    setShowModifyTweetDiscardModal(false);
+  };
+
+  const [showModifyTweetDiscardModal, setShowModifyTweetDiscardModal] =
+    useState(false);
+  const handleShowModifyTweetDiscardModal = () => {
+    setShowModifyTweetDiscardModal(true);
+  };
+  const handleCloseModifyTweetDiscardModal = () => {
+    setShowModifyTweetDiscardModal(false);
   };
 
   const [showModifyTweetSuccessModal, setShowModifyTweetSuccessModal] =
     useState(false);
   const handleShowModifyTweetSuccessModal = () => {
-    handleCloseModifyTweetModal();
+    handleCloseModifyTweetDiscardBothModal();
     setShowModifyTweetSuccessModal(true);
   };
   const handleCloseModifyTweetSuccessModal = () => {
@@ -515,6 +544,13 @@ export default function Tweet({
         deleteTweet={deleteTweet}
         showDeleteErrorsModal={showDeleteErrorsModal}
         handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}
+      />
+      <ModifyTweetDiscardModal
+        showModifyTweetDiscardModal={showModifyTweetDiscardModal}
+        handleCloseModifyTweetDiscardModal={handleCloseModifyTweetDiscardModal}
+        handleCloseModifyTweetDiscardBothModal={
+          handleCloseModifyTweetDiscardBothModal
+        }
       />
       <ModifyTweetSuccess
         showModifyTweetSuccessModal={showModifyTweetSuccessModal}
