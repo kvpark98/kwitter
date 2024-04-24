@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { db } from "../../../../firebase";
 import Tweet, { ITweet } from "../detail/tweet";
+import NoTweet from "../../no-tweet";
 
 export default function TweetList() {
   const [tweets, setTweets] = useState<ITweet[]>([]);
@@ -103,13 +104,13 @@ export default function TweetList() {
     };
   }, []);
 
-  return (
-    tweets.length !== 0 && (
-      <div>
-        {tweets.map((tweet) => {
-          return <Tweet key={tweet.id} {...tweet} />;
-        })}
-      </div>
-    )
+  return tweets.length !== 0 ? (
+    <div>
+      {tweets.map((tweet) => {
+        return <Tweet key={tweet.id} {...tweet} />;
+      })}
+    </div>
+  ) : (
+    <NoTweet />
   );
 }

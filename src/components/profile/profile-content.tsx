@@ -6,6 +6,7 @@ import ProfileHeader from "./profile-header";
 import ProfileImages from "./profile-images";
 import ProfileEditButton from "./profile-edit-button";
 import ProfileNav from "./profile-nav";
+import NoTweet from "../tweets/no-tweet";
 
 export interface ProfileContentProps {
   user: User | null;
@@ -38,6 +39,7 @@ export default function ProfileContent({
       />
       <ProfileNav postActive={postActive} />
       {isPostActive && tweets.length !== 0 && <UserTweets tweets={tweets} />}
+      {tweets.length === 0 && <NoTweet />}
       <ScrollProfile />
     </div>
   );
