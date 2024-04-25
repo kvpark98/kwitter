@@ -16,7 +16,8 @@ export default function ChangePasswordButton({
   return (
     <Button
       type="submit"
-      className="mt-2 fw-bold"
+      variant="primary"
+      className="fw-bold rounded-pill"
       {...(!isCurrentPassword || !isNewPassword || !isNewPasswordConfirm
         ? { disabled: true }
         : { disabled: false })}
