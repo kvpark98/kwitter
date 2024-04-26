@@ -1,11 +1,22 @@
+import { ListGroup } from "react-bootstrap";
 import AccountChangePassword from "./account-change-password";
 import AccountDeleteAccount from "./account-delete-account";
 
-export default function AccountContent() {
+export interface AccountContentProps {
+  handleShowChangePasswordModal: () => void;
+}
+
+export default function AccountContent({
+  handleShowChangePasswordModal,
+}: AccountContentProps) {
   return (
-    <div className="mt-5">
-      <AccountChangePassword />
-      <AccountDeleteAccount />
-    </div>
+    <ListGroup className="mt-5">
+      <AccountChangePassword
+        handleShowChangePasswordModal={handleShowChangePasswordModal}
+      />
+      <AccountDeleteAccount
+        handleShowChangePasswordModal={handleShowChangePasswordModal}
+      />
+    </ListGroup>
   );
 }

@@ -7,13 +7,13 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import { Button, Container, Modal } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import ScrollProfile from "../../components/scrolls/scrollProfile";
 import AccountTitle from "../../components/account/account-title";
 import AccountContent from "../../components/account/account-content";
 import SideBar from "../../components/header&footer/side-bar/side-bar";
-import ChangePasswordForm from "../../components/account/change-password/change-password-form";
-import ChangePasswordHeader from "../../components/account/change-password/change-password-header";
+import ChangePasswordErrors from "../../components/modals/error/change-password-errors";
+import ChangePassword from "../../components/account/change-password/change-password";
 
 export default function Account() {
   const newPasswordInputRef = useRef<HTMLInputElement>(null);
@@ -43,6 +43,19 @@ export default function Account() {
   };
   const handleCloseChangePasswordModal = () => {
     setShowChangePasswordModal(false);
+    reset();
+  };
+
+  const [showChangePasswordErrorsModal, setShowChangePasswordErrorsModal] =
+    useState(false);
+  const handleShowChangePasswordErrorsModal = () => {
+    setShowChangePasswordModal(false);
+    setShowChangePasswordErrorsModal(true);
+  };
+  const handleCloseChangePasswordErrorsModal = () => {
+    setShowChangePasswordErrorsModal(false);
+    setError("");
+    handleShowChangePasswordModal();
   };
 
   const signOut = () => {
@@ -213,7 +226,7 @@ export default function Account() {
     }
   };
 
-  const goBack = () => {
+  const back = () => {
     navigate(-1);
   };
 
@@ -314,9 +327,7 @@ export default function Account() {
         );
       }
 
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      handleShowChangePasswordErrorsModal();
     } finally {
       setIsLoading(false);
     }
@@ -325,44 +336,41 @@ export default function Account() {
     <Container fluid className="h-100">
       <SideBar />
       <div className="h-100 m-auto" style={{ maxWidth: "800px" }}>
-        <AccountTitle />
+        <AccountTitle back={back} />
         <hr />
-        <Button onClick={handleShowChangePasswordModal}>Button</Button>
-        <AccountContent />
+        <AccountContent
+          handleShowChangePasswordModal={handleShowChangePasswordModal}
+        />
         <ScrollProfile />
       </div>
-      <Modal
-        show={showChangePasswordModal}
-        onHide={handleCloseChangePasswordModal}
-        backdrop="static"
-        keyboard={false}
-        className="border-0"
-        centered
-      >
-        <ChangePasswordHeader
-          handleCloseChangePasswordModal={handleCloseChangePasswordModal}
-        />
-        <ChangePasswordForm
-          newPasswordInputRef={newPasswordInputRef}
-          newPasswordConfirmInputRef={newPasswordConfirmInputRef}
-          isLoading={isLoading}
-          error={error}
-          currentPassword={currentPassword}
-          handleCurrentPassword={handleCurrentPassword}
-          isCurrentPassword={isCurrentPassword}
-          newPassword={newPassword}
-          handleNewPassword={handleNewPassword}
-          isNewPassword={isNewPassword}
-          newPasswordErrorMessage={newPasswordErrorMessage}
-          newPasswordConfirm={newPasswordConfirm}
-          handleNewPasswordConfirm={handleNewPasswordConfirm}
-          isNewPasswordConfirm={isNewPasswordConfirm}
-          newPasswordConfirmErrorMessage={newPasswordConfirmErrorMessage}
-          noSpace={noSpace}
-          reset={reset}
-          changePassword={changePassword}
-        />
-      </Modal>
+      <ChangePassword
+        showChangePasswordModal={showChangePasswordModal}
+        handleCloseChangePasswordModal={handleCloseChangePasswordModal}
+        newPasswordInputRef={newPasswordInputRef}
+        newPasswordConfirmInputRef={newPasswordConfirmInputRef}
+        isLoading={isLoading}
+        currentPassword={currentPassword}
+        handleCurrentPassword={handleCurrentPassword}
+        isCurrentPassword={isCurrentPassword}
+        newPassword={newPassword}
+        handleNewPassword={handleNewPassword}
+        isNewPassword={isNewPassword}
+        newPasswordErrorMessage={newPasswordErrorMessage}
+        newPasswordConfirm={newPasswordConfirm}
+        handleNewPasswordConfirm={handleNewPasswordConfirm}
+        isNewPasswordConfirm={isNewPasswordConfirm}
+        newPasswordConfirmErrorMessage={newPasswordConfirmErrorMessage}
+        noSpace={noSpace}
+        reset={reset}
+        changePassword={changePassword}
+      />
+      <ChangePasswordErrors
+        error={error}
+        showChangePasswordErrorsModal={showChangePasswordErrorsModal}
+        handleCloseChangePasswordErrorsModal={
+          handleCloseChangePasswordErrorsModal
+        }
+      />
     </Container>
   );
 }
