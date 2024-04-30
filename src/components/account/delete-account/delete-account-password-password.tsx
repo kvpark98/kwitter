@@ -1,14 +1,14 @@
 import { Form } from "react-bootstrap";
 
 export interface DeleteAccountPasswordPasswordProps {
-  password: string;
-  handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  deletePassword: string;
+  handleDeletePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export default function DeleteAccountPasswordPassword({
-  password,
-  handlePassword,
+  deletePassword,
+  handleDeletePassword,
   noSpace,
 }: DeleteAccountPasswordPasswordProps) {
   return (
@@ -18,11 +18,11 @@ export default function DeleteAccountPasswordPassword({
       </Form.Label>
       <Form.Control
         className="border-none mt-1 mb-1"
-        onChange={handlePassword}
+        onChange={handleDeletePassword}
         onKeyDown={noSpace}
         id="password"
         name="password"
-        value={password}
+        value={deletePassword}
         type="password"
         autoComplete="new-password"
         maxLength={20}

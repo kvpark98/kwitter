@@ -16,7 +16,7 @@ import SendSignInLink from "./routes/auth/send-sign-in-link";
 import SignInWithEmail from "./routes/auth/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
 import ProtectedRouteResetPassword from "./components/protected-routes/protected-route-reset-password";
-import DeleteAccount from "./routes/auth/delete-account";
+import DeleteAccount from "./components/account/delete-account/delete-account";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 import Profile from "./routes/profile";
 import Account from "./routes/account/account";

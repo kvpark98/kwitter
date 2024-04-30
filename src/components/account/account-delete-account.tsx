@@ -1,18 +1,18 @@
 import { Alert, Button, ListGroup } from "react-bootstrap";
 
 export interface AccountDeleteAccountProps {
-  handleShowChangePasswordModal: () => void;
+  handleShowDeleteAccountModal: () => void;
 }
 
 export default function AccountDeleteAccount({
-  handleShowChangePasswordModal,
+  handleShowDeleteAccountModal,
 }: AccountDeleteAccountProps) {
   return (
     <ListGroup.Item className="p-0">
       <Button
         variant="danger"
         className="w-100 p-0"
-        onClick={handleShowChangePasswordModal}
+        onClick={handleShowDeleteAccountModal}
       >
         <Alert variant="danger" className="d-flex border-0 m-0 p-3">
           <div className="d-flex w-100">

@@ -4,10 +4,12 @@ import AccountDeleteAccount from "./account-delete-account";
 
 export interface AccountContentProps {
   handleShowChangePasswordModal: () => void;
+  handleShowDeleteAccountModal: () => void;
 }
 
 export default function AccountContent({
   handleShowChangePasswordModal,
+  handleShowDeleteAccountModal,
 }: AccountContentProps) {
   return (
     <ListGroup className="mt-5">
@@ -15,7 +17,7 @@ export default function AccountContent({
         handleShowChangePasswordModal={handleShowChangePasswordModal}
       />
       <AccountDeleteAccount
-        handleShowChangePasswordModal={handleShowChangePasswordModal}
+        handleShowDeleteAccountModal={handleShowDeleteAccountModal}
       />
     </ListGroup>
   );

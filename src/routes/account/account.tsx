@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
   EmailAuthProvider,
+  deleteUser,
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
@@ -14,6 +15,7 @@ import AccountContent from "../../components/account/account-content";
 import SideBar from "../../components/header&footer/side-bar/side-bar";
 import ChangePasswordErrors from "../../components/modals/error/change-password-errors";
 import ChangePassword from "../../components/account/change-password/change-password";
+import DeleteAccount from "../../components/account/delete-account/delete-account";
 
 export default function Account() {
   const newPasswordInputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +32,20 @@ export default function Account() {
   const [isCurrentPassword, setIsCurrentPassword] = useState(false);
   const [isNewPassword, setIsNewPassword] = useState(false);
   const [isNewPasswordConfirm, setIsNewPasswordConfirm] = useState(false);
+
+  const [dataRemovalChecked, setDataRemovalChecked] = useState(false);
+
+  const [contentRetentionChecked, setContentRetentionChecked] = useState(false);
+
+  const [rejoiningChecked, setRejoiningChecked] = useState(false);
+
+  const [considerationChecked, setConsiderationChecked] = useState(false);
+
+  const [allChecked, setAllChecked] = useState(false);
+
+  const [deletePassword, setDeletePassword] = useState("");
+
+  const [isDeletePassword, setIsDeletePassword] = useState(false);
 
   const [error, setError] = useState("");
 
@@ -56,6 +72,15 @@ export default function Account() {
     setShowChangePasswordErrorsModal(false);
     setError("");
     handleShowChangePasswordModal();
+  };
+
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const handleShowDeleteAccountModal = () => {
+    setShowDeleteAccountModal(true);
+  };
+  const handleCloseDeleteAccountModal = () => {
+    setShowDeleteAccountModal(false);
+    reset();
   };
 
   const signOut = () => {
@@ -220,6 +245,18 @@ export default function Account() {
     }
   };
 
+  const handleDeletePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    setDeletePassword(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      setIsDeletePassword(true);
+    } else {
+      setIsDeletePassword(false);
+    }
+  };
+
   const noSpace = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === "Space") {
       event.preventDefault();
@@ -251,9 +288,73 @@ export default function Account() {
     newPasswordConfirmInputRef.current?.classList.remove("form-control-valid");
   };
 
+  const resetDeletePassword = () => {
+    setDeletePassword("");
+
+    setIsDeletePassword(false);
+  };
+
   useEffect(() => {
     window.localStorage.removeItem("error");
   }, []);
+
+  useEffect(() => {
+    if (
+      !dataRemovalChecked ||
+      !contentRetentionChecked ||
+      !rejoiningChecked ||
+      !considerationChecked
+    ) {
+      setAllChecked(false);
+    }
+  }, [
+    dataRemovalChecked,
+    contentRetentionChecked,
+    rejoiningChecked,
+    considerationChecked,
+  ]);
+
+  const agreeDataRemoval = () => {
+    setDataRemovalChecked((current) => !current);
+    resetDeletePassword();
+  };
+
+  const agreeContentRetention = () => {
+    setContentRetentionChecked((current) => !current);
+    resetDeletePassword();
+  };
+
+  const agreeRejoining = () => {
+    setRejoiningChecked((current) => !current);
+    resetDeletePassword();
+  };
+
+  const agreeConsideration = () => {
+    setConsiderationChecked((current) => !current);
+    resetDeletePassword();
+  };
+
+  const agreeAll = () => {
+    if (!allChecked) {
+      setAllChecked(true);
+
+      if (
+        !dataRemovalChecked ||
+        !contentRetentionChecked ||
+        !rejoiningChecked ||
+        !considerationChecked
+      ) {
+        setDataRemovalChecked(true);
+        setContentRetentionChecked(true);
+        setRejoiningChecked(true);
+        setConsiderationChecked(true);
+
+        resetDeletePassword();
+      }
+    } else {
+      setAllChecked(false);
+    }
+  };
 
   const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -332,6 +433,56 @@ export default function Account() {
       setIsLoading(false);
     }
   };
+
+  const deleteAccount = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (
+      isLoading ||
+      !isDeletePassword ||
+      !dataRemovalChecked ||
+      !contentRetentionChecked ||
+      !rejoiningChecked ||
+      !considerationChecked
+    ) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      setIsLoading(true);
+
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser?.email!,
+        deletePassword
+      );
+
+      await reauthenticateWithCredential(auth.currentUser!, credential);
+
+      await deleteUser(auth.currentUser!);
+
+      window.localStorage.setItem("accountDeleted", "true");
+
+      signOut();
+    } catch (error) {
+      window.localStorage.removeItem("accountDeleted");
+
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+        console.log("FirebaseError", error.code);
+      }
+
+      resetDeletePassword();
+
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Container fluid className="h-100">
       <SideBar />
@@ -340,6 +491,7 @@ export default function Account() {
         <hr />
         <AccountContent
           handleShowChangePasswordModal={handleShowChangePasswordModal}
+          handleShowDeleteAccountModal={handleShowDeleteAccountModal}
         />
         <ScrollProfile />
       </div>
@@ -370,6 +522,27 @@ export default function Account() {
         handleCloseChangePasswordErrorsModal={
           handleCloseChangePasswordErrorsModal
         }
+      />
+      <DeleteAccount
+        showDeleteAccountModal={showDeleteAccountModal}
+        handleCloseDeleteAccountModal={handleCloseDeleteAccountModal}
+        isLoading={isLoading}
+        deletePassword={deletePassword}
+        handleDeletePassword={handleDeletePassword}
+        isDeletePassword={isDeletePassword}
+        noSpace={noSpace}
+        resetDeletePassword={resetDeletePassword}
+        dataRemovalChecked={dataRemovalChecked}
+        agreeDataRemoval={agreeDataRemoval}
+        contentRetentionChecked={contentRetentionChecked}
+        agreeContentRetention={agreeContentRetention}
+        rejoiningChecked={rejoiningChecked}
+        agreeRejoining={agreeRejoining}
+        considerationChecked={considerationChecked}
+        agreeConsideration={agreeConsideration}
+        allChecked={allChecked}
+        agreeAll={agreeAll}
+        deleteAccount={deleteAccount}
       />
     </Container>
   );

@@ -2,15 +2,15 @@ import { Button } from "react-bootstrap";
 import { Switcher } from "../../styles/auth-components";
 
 export interface DeleteAccountAgreeSwitcherProps {
-  goBack: () => void;
+  back: () => void;
 }
 
 export default function DeleteAccountAgreeSwitcher({
-  goBack,
+  back,
 }: DeleteAccountAgreeSwitcherProps) {
   return (
     <Switcher className="d-flex justify-content-end">
-      <Button onClick={goBack} type="button" variant="outline-success">
+      <Button onClick={back} type="button" variant="outline-success">
         Back
       </Button>
     </Switcher>
