@@ -80,7 +80,12 @@ export default function Account() {
   };
   const handleCloseDeleteAccountModal = () => {
     setShowDeleteAccountModal(false);
-    reset();
+    resetDeletePassword();
+    setDataRemovalChecked(false);
+    setContentRetentionChecked(false);
+    setRejoiningChecked(false);
+    setConsiderationChecked(false);
+    setAllChecked(false);
   };
 
   const signOut = () => {
