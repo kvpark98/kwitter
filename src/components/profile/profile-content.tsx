@@ -31,7 +31,7 @@ export default function ProfileContent({
   back,
 }: ProfileContentProps) {
   return (
-    <div className="h-100 m-auto" style={{ maxWidth: "600px" }}>
+    <div className="h-100" style={{ width: "600px" }}>
       <ProfileHeader user={user} tweets={tweets} back={back} />
       <ProfileImages avatar={avatar} background={background} />
       <ProfileEditButton

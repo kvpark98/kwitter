@@ -16,8 +16,11 @@ import SideBar from "../../components/header&footer/side-bar/side-bar";
 import ChangePasswordErrors from "../../components/modals/error/change-password-errors";
 import ChangePassword from "../../components/account/change-password/change-password";
 import DeleteAccount from "../../components/account/delete-account/delete-account";
+import DeleteAccountErrors from "../../components/modals/error/delete-account-errors";
 
 export default function Account() {
+  const user = auth.currentUser;
+
   const newPasswordInputRef = useRef<HTMLInputElement>(null);
   const newPasswordConfirmInputRef = useRef<HTMLInputElement>(null);
 
@@ -86,6 +89,18 @@ export default function Account() {
     setRejoiningChecked(false);
     setConsiderationChecked(false);
     setAllChecked(false);
+  };
+
+  const [showDeleteAccountErrorsModal, setShowDeleteAccountErrorsModal] =
+    useState(false);
+  const handleShowDeleteAccountErrorsModal = () => {
+    setShowDeleteAccountModal(false);
+    setShowDeleteAccountErrorsModal(true);
+  };
+  const handleCloseDeleteAccountErrorsModal = () => {
+    setShowDeleteAccountErrorsModal(false);
+    setError("");
+    handleShowDeleteAccountModal();
   };
 
   const signOut = () => {
@@ -459,13 +474,13 @@ export default function Account() {
       setIsLoading(true);
 
       const credential = EmailAuthProvider.credential(
-        auth.currentUser?.email!,
+        user?.email!,
         deletePassword
       );
 
-      await reauthenticateWithCredential(auth.currentUser!, credential);
+      await reauthenticateWithCredential(user!, credential);
 
-      await deleteUser(auth.currentUser!);
+      await deleteUser(user!);
 
       window.localStorage.setItem("accountDeleted", "true");
 
@@ -480,20 +495,17 @@ export default function Account() {
 
       resetDeletePassword();
 
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      handleShowDeleteAccountErrorsModal();
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Container fluid className="h-100">
+    <Container fluid className="d-flex justify-content-center h-100">
       <SideBar />
-      <div className="h-100 m-auto" style={{ maxWidth: "800px" }}>
+      <div className="h-100" style={{ width: "600px" }}>
         <AccountTitle back={back} />
-        <hr />
         <AccountContent
           handleShowChangePasswordModal={handleShowChangePasswordModal}
           handleShowDeleteAccountModal={handleShowDeleteAccountModal}
@@ -548,6 +560,13 @@ export default function Account() {
         allChecked={allChecked}
         agreeAll={agreeAll}
         deleteAccount={deleteAccount}
+      />
+      <DeleteAccountErrors
+        error={error}
+        showDeleteAccountErrorsModal={showDeleteAccountErrorsModal}
+        handleCloseDeleteAccountErrorsModal={
+          handleCloseDeleteAccountErrorsModal
+        }
       />
     </Container>
   );

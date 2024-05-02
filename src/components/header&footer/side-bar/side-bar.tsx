@@ -4,10 +4,20 @@ import { auth } from "../../../firebase";
 import { useState } from "react";
 import SideBarLogo from "./side-bar-logo";
 import SideBarNav from "./side-bar-nav";
+import styled from "@emotion/styled";
 
 export interface SideBarProps {
   handleShowCreateTweetModal?: () => void;
 }
+
+// 미디어 쿼리를 사용하여 스타일 정의
+const StyledDiv = styled.div`
+  @media screen and (max-width: 1270px) {
+    display: block;
+    width: 100px;
+    position: absolute;
+  }
+`;
 
 export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
   const navigate = useNavigate();
@@ -22,10 +32,7 @@ export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
   };
 
   return (
-    <div
-      className="d-flex flex-column flex-shrink-0 p-3 text-bg-light h-100"
-      style={{ width: "280px", position: "fixed" }}
-    >
+    <div className="d-flex flex-column me-5 h-100">
       <SideBarLogo />
       <hr />
       <SideBarNav

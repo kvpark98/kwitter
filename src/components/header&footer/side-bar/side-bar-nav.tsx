@@ -15,7 +15,7 @@ export default function SideBarNav({
   handleShowCreateTweetModal,
 }: SideBarNavProps) {
   return (
-    <Nav className="nav-pills flex-column gap-3 fs-5">
+    <Nav className="nav-pills flex-column gap-2 fs-5">
       <SideBarNavHome />
       <SideBarNavProfile />
       <SideBarNavAccount />

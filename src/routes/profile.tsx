@@ -815,7 +815,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <Container fluid className="h-100">
+    <Container fluid className="d-flex justify-content-center h-100">
       <SideBar />
       <ProfileContent
         user={user}

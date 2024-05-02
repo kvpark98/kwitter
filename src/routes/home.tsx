@@ -366,28 +366,28 @@ export default function Home() {
   };
 
   return (
-    <Container fluid className="h-100">
+    <Container fluid className="d-flex justify-content-center h-100">
       <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
-      <div className="h-100 m-auto" style={{ maxWidth: "600px" }}>
-        <CreateTweet
-          showCreateTweetModal={showCreateTweetModal}
-          isLoading={isLoading}
-          fileInputRef={fileInputRef}
-          message={message}
-          handleMessage={handleMessage}
-          isMessage={isMessage}
-          handleFile={handleFile}
-          imagePreviewUrl={imagePreviewUrl}
-          croppedImagePreviewUrl={croppedImagePreviewUrl}
-          resetMessageButton={resetMessageButton}
-          resetPhotoButton={resetPhotoButton}
-          createTweet={createTweet}
-          handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
-          handleCloseCreateTweetModal={handleCloseCreateTweetModal}
-        />
+      <div className="h-100" style={{ width: "600px" }}>
         <TweetList />
         <ScrollHome />
       </div>
+      <CreateTweet
+        showCreateTweetModal={showCreateTweetModal}
+        isLoading={isLoading}
+        fileInputRef={fileInputRef}
+        message={message}
+        handleMessage={handleMessage}
+        isMessage={isMessage}
+        handleFile={handleFile}
+        imagePreviewUrl={imagePreviewUrl}
+        croppedImagePreviewUrl={croppedImagePreviewUrl}
+        resetMessageButton={resetMessageButton}
+        resetPhotoButton={resetPhotoButton}
+        createTweet={createTweet}
+        handleShowCreatePhotoCropModal={handleShowCreatePhotoCropModal}
+        handleCloseCreateTweetModal={handleCloseCreateTweetModal}
+      />
       <CreateCropPhotoModal
         showCreatePhotoCropModal={showCreatePhotoCropModal}
         handleCloseCreatePhotoCropModal={handleCloseCreatePhotoCropModal}

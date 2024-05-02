@@ -34,8 +34,7 @@ export default function AccountDeleteAccount({
             <div>
               <div className="fs-3 text-start">Delete Account</div>
               <div className="text-start">
-                After account deletion, there is no turning back. Please proceed
-                with certainty.
+                After account deletion, there is no turning back.
               </div>
             </div>
           </div>
