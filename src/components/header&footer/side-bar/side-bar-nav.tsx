@@ -19,12 +19,12 @@ export default function SideBarNav({
       <SideBarNavHome />
       <SideBarNavProfile />
       <SideBarNavAccount />
+      <SideBarNavSignOut handleShowSignOutModal={handleShowSignOutModal} />
       {window.location.href === "http://127.0.0.1:5173/" && (
         <SideBarNavPost
           handleShowCreateTweetModal={handleShowCreateTweetModal}
         />
       )}
-      <SideBarNavSignOut handleShowSignOutModal={handleShowSignOutModal} />
     </Nav>
   );
 }

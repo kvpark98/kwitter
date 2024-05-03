@@ -27,7 +27,7 @@ export default function TweetCard({
   handleShowDeleteModal,
 }: TweetCardProps) {
   return (
-    <Card className="d-flex rounded-0 mb-2">
+    <Card className="d-flex rounded-0 border border-0 border-bottom">
       <TweetBody
         user={user}
         avatar={avatar}

@@ -10,13 +10,13 @@ import {
 import { auth } from "../../firebase";
 import { Container } from "react-bootstrap";
 import ScrollProfile from "../../components/scrolls/scrollProfile";
-import AccountTitle from "../../components/account/account-title";
 import AccountContent from "../../components/account/account-content";
 import SideBar from "../../components/header&footer/side-bar/side-bar";
 import ChangePasswordErrors from "../../components/modals/error/change-password-errors";
 import ChangePassword from "../../components/account/change-password/change-password";
 import DeleteAccount from "../../components/account/delete-account/delete-account";
 import DeleteAccountErrors from "../../components/modals/error/delete-account-errors";
+import AccountHeader from "../../components/account/account-header";
 
 export default function Account() {
   const user = auth.currentUser;
@@ -502,10 +502,13 @@ export default function Account() {
   };
 
   return (
-    <Container fluid className="d-flex justify-content-center h-100">
+    <Container fluid className="d-flex justify-content-center h-100 p-0">
       <SideBar />
-      <div className="h-100" style={{ width: "600px" }}>
-        <AccountTitle back={back} />
+      <div
+        className="overflow-y-auto h-100 bg-light border-end"
+        style={{ width: "600px", maxHeight: "800px" }}
+      >
+        <AccountHeader back={back} />
         <AccountContent
           handleShowChangePasswordModal={handleShowChangePasswordModal}
           handleShowDeleteAccountModal={handleShowDeleteAccountModal}

@@ -8,7 +8,7 @@ export default function ProfileEditButton({
   handleShowModifyProfileModal,
 }: ProfileEditButtonProps) {
   return (
-    <div className="d-flex justify-content-end">
+    <div className="d-flex justify-content-end me-2">
       <Button
         type="button"
         variant="dark"

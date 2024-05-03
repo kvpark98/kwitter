@@ -16,7 +16,7 @@ export default function ProfileImages({
         src={background ? background : "/default-background.png"}
         alt="Background Image"
         className="img-fluid"
-        style={{ width: "600px", height: "260px" }}
+        style={{ width: "600px", height: "230px" }}
       />
       <ProfileAvatarImage avatar={avatar} />
     </div>

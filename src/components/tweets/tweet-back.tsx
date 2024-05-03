@@ -1,10 +1,10 @@
 import { Button } from "react-bootstrap";
 
-export interface AccountBackProps {
+export interface TweetBackProps {
   back: () => void;
 }
 
-export default function AccountBack({ back }: AccountBackProps) {
+export default function TweetBack({ back }: TweetBackProps) {
   return (
     <Button
       type="button"

@@ -32,7 +32,7 @@ export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
   };
 
   return (
-    <div className="d-flex flex-column me-5 h-100">
+    <div className="d-flex flex-column px-3 pt-3 border bg-light">
       <SideBarLogo />
       <hr />
       <SideBarNav

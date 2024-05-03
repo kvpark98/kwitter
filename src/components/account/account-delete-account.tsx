@@ -8,13 +8,13 @@ export default function AccountDeleteAccount({
   handleShowDeleteAccountModal,
 }: AccountDeleteAccountProps) {
   return (
-    <ListGroup.Item className="p-0">
+    <ListGroup.Item className="p-0 rounded-0">
       <Button
         variant="danger"
-        className="w-100 p-0"
+        className="w-100 p-0 rounded-0 border-0"
         onClick={handleShowDeleteAccountModal}
       >
-        <Alert variant="danger" className="d-flex border-0 m-0 p-3">
+        <Alert variant="danger" className="d-flex border-0 m-0 p-3 rounded-0">
           <div className="d-flex w-100">
             <div className="d-flex align-items-center me-4">
               <svg

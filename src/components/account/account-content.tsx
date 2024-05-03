@@ -12,7 +12,7 @@ export default function AccountContent({
   handleShowDeleteAccountModal,
 }: AccountContentProps) {
   return (
-    <ListGroup className="mt-5">
+    <ListGroup>
       <AccountChangePassword
         handleShowChangePasswordModal={handleShowChangePasswordModal}
       />

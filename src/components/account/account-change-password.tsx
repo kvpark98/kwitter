@@ -8,13 +8,13 @@ export default function AccountChangePassword({
   handleShowChangePasswordModal,
 }: AccountChangePasswordProps) {
   return (
-    <ListGroup.Item className="p-0">
+    <ListGroup.Item className="p-0 rounded-0">
       <Button
         variant="light"
-        className="w-100 p-0"
+        className="w-100 p-0 rounded-0 border-0"
         onClick={handleShowChangePasswordModal}
       >
-        <Alert variant="light" className="d-flex border-0 m-0 p-3">
+        <Alert variant="light" className="d-flex border-0 m-0 p-3 rounded-0">
           <div className="d-flex w-100">
             <div className="d-flex align-items-center me-4">
               <svg

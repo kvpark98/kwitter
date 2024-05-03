@@ -16,7 +16,6 @@ import SendSignInLink from "./routes/auth/send-sign-in-link";
 import SignInWithEmail from "./routes/auth/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
 import ProtectedRouteResetPassword from "./components/protected-routes/protected-route-reset-password";
-import DeleteAccount from "./components/account/delete-account/delete-account";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 import Profile from "./routes/profile";
 import Account from "./routes/account/account";
@@ -41,10 +40,6 @@ const router = createBrowserRouter([
       {
         path: "/account",
         element: <Account />,
-      },
-      {
-        path: "/account/delete-account",
-        element: <DeleteAccount />,
       },
     ],
   },
@@ -98,6 +93,7 @@ const GlobalStyles = createGlobalStyle`
   }
   html,
   body {
+      background-color:  #E6E6FA;
       margin: 0;
       padding: 0;
       height: 100%;
@@ -164,7 +160,7 @@ const GlobalStyles = createGlobalStyle`
   }
   .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     color: var(--bs-nav-pills-link-active-color);
-    background-color: #212529;
+    background-color: #055160;
   }
   .translate-middle-add {
     transform: translate(-120%, -50%) !important;

@@ -10,7 +10,7 @@ export default function ProfileBack({ back }: ProfileBackProps) {
       type="button"
       onClick={back}
       title="Back"
-      variant="outline-secondary"
+      variant="outline-light"
       className="d-flex align-items-center border-0 rounded-circle p-2 mx-2"
     >
       <svg

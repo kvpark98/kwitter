@@ -23,9 +23,13 @@ import CreateCropPhotoModal from "../components/tweets/create/create-crop-modal/
 import CreateTweetSuccess from "../components/modals/success/create-tweet-success";
 import CreateTweetErrors from "../components/modals/error/create-tweet-errors";
 import CreateTweetDiscardModal from "../components/tweets/create/create-tweet-discard-modal/create-tweet-discard-modal";
+import { useNavigate } from "react-router-dom";
+import TweetHeader from "../components/tweets/tweet-header";
 
 export default function Home() {
   const user = auth.currentUser;
+
+  const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -287,6 +291,10 @@ export default function Home() {
     setError("");
   };
 
+  const back = () => {
+    navigate(-1);
+  };
+
   const createTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -366,9 +374,13 @@ export default function Home() {
   };
 
   return (
-    <Container fluid className="d-flex justify-content-center h-100">
+    <Container fluid className="d-flex justify-content-center h-100 p-0">
       <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
-      <div className="h-100" style={{ width: "600px" }}>
+      <div
+        className="overflow-y-auto h-100 bg-light border-end"
+        style={{ width: "600px", maxHeight: "800px" }}
+      >
+        <TweetHeader back={back} />
         <TweetList />
         <ScrollHome />
       </div>
