@@ -8,7 +8,7 @@ export interface AccountHeaderProps {
 
 export default function AccountHeader({ back }: AccountHeaderProps) {
   return (
-    <Navbar bg="dark" className="d-flex align-items-center">
+    <Navbar bg="dark" className="d-flex align-items-center" sticky="top">
       <AccountBack back={back} />
       <AccountTitle />
     </Navbar>

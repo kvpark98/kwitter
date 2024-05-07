@@ -16,7 +16,7 @@ export default function ProfileHeader({
   back,
 }: ProfileHeaderProps) {
   return (
-    <Navbar bg="dark" className="d-flex align-items-center">
+    <Navbar bg="dark" className="d-flex align-items-center" sticky="top">
       <ProfileBack back={back} />
       <ProfileTitle user={user} tweets={tweets} />
     </Navbar>

@@ -7,8 +7,6 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import Header from "../../components/header&footer/header/header";
-import Footer from "../../components/header&footer/footer/footer";
 import SignInForm from "../../components/auth/sign-in/sign-in-form";
 
 export default function SignIn() {
@@ -181,7 +179,6 @@ export default function SignIn() {
 
   return (
     <div className="h-100">
-      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <SignInForm
           emailInputRef={emailInputRef}
@@ -203,7 +200,6 @@ export default function SignIn() {
           reset={reset}
           signIn={signIn}
         />
-        <Footer />
       </div>
     </div>
   );

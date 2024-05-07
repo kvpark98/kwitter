@@ -25,7 +25,6 @@ import {
 } from "firebase/firestore";
 import ProfileContent from "../components/profile/profile-content";
 import { ITweet } from "../components/tweets/query/detail/tweet";
-import SideBar from "../components/header&footer/side-bar/side-bar";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import CropAvatarModal from "../components/profile/crop-modal/avatar/crop-avatar-modal";
@@ -34,6 +33,7 @@ import ModifyProfileSuccess from "../components/modals/success/modify-profile-su
 import ModifyProfileErrors from "../components/modals/error/modify-profile-errors";
 import ModifyProfile from "../components/profile/modify-profile/modify/modify-profile";
 import ModifyProfileDiscardModal from "../components/profile/discard-modal/modify-profile-discard-modal";
+import SideBar from "../components/sidebar/side-bar";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {

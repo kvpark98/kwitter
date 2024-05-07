@@ -33,7 +33,7 @@ export default function ProfileContent({
   return (
     <div
       className="overflow-y-auto h-100 bg-light border-end"
-      style={{ width: "600px", maxHeight: "800px" }}
+      style={{ width: "600px" }}
     >
       <ProfileHeader user={user} tweets={tweets} back={back} />
       <ProfileImages avatar={avatar} background={background} />

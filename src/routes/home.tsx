@@ -1,15 +1,18 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ScrollHome from "../components/scrolls/scrollHome";
 import CreateTweet from "../components/tweets/create/create-tweet";
 import TweetList from "../components/tweets/query/list/tweet-list";
 import { Container } from "react-bootstrap";
-import SideBar from "../components/header&footer/side-bar/side-bar";
 import { CroppedAreaPixels } from "./profile";
 import { auth, db, storage } from "../firebase";
 import {
   FirestoreError,
+  Unsubscribe,
   addDoc,
   collection,
+  onSnapshot,
+  orderBy,
+  query,
   updateDoc,
 } from "firebase/firestore";
 import {
@@ -25,9 +28,13 @@ import CreateTweetErrors from "../components/modals/error/create-tweet-errors";
 import CreateTweetDiscardModal from "../components/tweets/create/create-tweet-discard-modal/create-tweet-discard-modal";
 import { useNavigate } from "react-router-dom";
 import TweetHeader from "../components/tweets/tweet-header";
+import SideBar from "../components/sidebar/side-bar";
+import { ITweet } from "../components/tweets/query/detail/tweet";
 
 export default function Home() {
   const user = auth.currentUser;
+
+  const [tweets, setTweets] = useState<ITweet[]>([]);
 
   const navigate = useNavigate();
 
@@ -216,6 +223,95 @@ export default function Home() {
     };
   };
 
+  // tweet 생성일을 시간 경과 표시 형식으로 변환하는 함수
+  const formatTimeAgo = (createdAt: string) => {
+    const now = new Date();
+    const createdDate = new Date(createdAt);
+
+    const diffInMilliseconds = now.getTime() - createdDate.getTime();
+    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays > 0) {
+      if (diffInDays >= 2) {
+        return `${diffInDays} days ago`;
+      } else {
+        return `${diffInDays} day ago`;
+      }
+    } else if (diffInHours > 0) {
+      if (diffInHours >= 2) {
+        return `${diffInHours} hours ago`;
+      } else {
+        return `${diffInHours} hour ago`;
+      }
+    } else if (diffInMinutes > 0) {
+      if (diffInMinutes >= 2) {
+        return `${diffInMinutes} minutes ago`;
+      } else {
+        return `${diffInMinutes} minute ago`;
+      }
+    } else if (diffInSeconds > 0) {
+      if (diffInSeconds >= 2) {
+        return `${diffInSeconds} seconds ago`;
+      } else {
+        return `${diffInSeconds} second ago`;
+      }
+    } else if (diffInMilliseconds > 0) {
+      if (diffInMilliseconds >= 2) {
+        return `${diffInMilliseconds} milliseconds ago`;
+      } else {
+        return `${diffInMilliseconds} millisecond ago`;
+      }
+    }
+  };
+
+  // 컴포넌트가 마운트될 때 tweet 가져오기
+  useEffect(() => {
+    // Firestore 구독을 위한 변수
+    let unsubscribe: Unsubscribe | null = null;
+
+    // 사용자의 tweet을 가져오는 함수
+    const fetchTweets = async () => {
+      // Firestore 쿼리 생성
+      const tweetQuery = query(
+        collection(db, "tweets"),
+        orderBy("createdAt", "desc")
+      );
+
+      // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
+      unsubscribe = await onSnapshot(tweetQuery, (snapshot) => {
+        // 스냅샷을 tweet 배열로 변환
+        const tweets = snapshot.docs.map((doc) => {
+          // Firestore 문서에서 필요한 데이터 추출
+          const { createdAt, message, photo, userId, username } = doc.data();
+
+          // 새로운 tweet 객체 생성
+          return {
+            id: doc.id,
+            timeAgo: formatTimeAgo(createdAt),
+            createdAt,
+            message,
+            photo,
+            userId,
+            username,
+          };
+        });
+        // 상태 업데이트
+        setTweets(tweets);
+      });
+    };
+
+    // fetchTweets 함수 호출
+    fetchTweets();
+
+    // 컴포넌트가 언마운트되면 Firestore 구독 해제
+    return () => {
+      unsubscribe && unsubscribe(); // 구독이 존재하면 해제
+    };
+  }, []);
+
   const handleMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.currentTarget.value;
 
@@ -378,10 +474,10 @@ export default function Home() {
       <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
       <div
         className="overflow-y-auto h-100 bg-light border-end"
-        style={{ width: "600px", maxHeight: "800px" }}
+        style={{ width: "600px" }}
       >
-        <TweetHeader back={back} />
-        <TweetList />
+        <TweetHeader tweets={tweets} back={back} />
+        <TweetList tweets={tweets} />
         <ScrollHome />
       </div>
       <CreateTweet

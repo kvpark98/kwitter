@@ -1,21 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import SignOutModal from "../../modals/warning/sign-out-modal";
-import { auth } from "../../../firebase";
 import { useState } from "react";
 import SideBarLogo from "./side-bar-logo";
 import SideBarNav from "./side-bar-nav";
 import styled from "@emotion/styled";
+import SignOutModal from "../modals/warning/sign-out-modal";
+import { auth } from "../../firebase";
 
 export interface SideBarProps {
   handleShowCreateTweetModal?: () => void;
 }
 
 // 미디어 쿼리를 사용하여 스타일 정의
-const StyledDiv = styled.div`
-  @media screen and (max-width: 1270px) {
-    display: block;
-    width: 100px;
-    position: absolute;
+const StyledSidebar = styled.div`
+  @media screen and (max-width: 700px) {
+    padding: 10px 10px 0 10px !important;
+  }
+  @media screen and (max-width: 600px) {
+    padding: 7px 7px 0 7px !important;
   }
 `;
 
@@ -32,7 +33,7 @@ export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
   };
 
   return (
-    <div className="d-flex flex-column px-3 pt-3 border bg-light">
+    <StyledSidebar className="d-flex flex-column px-3 pt-3 border bg-light">
       <SideBarLogo />
       <hr />
       <SideBarNav
@@ -44,6 +45,6 @@ export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
         handleCloseSignOutModal={handleCloseSignOutModal}
         signOut={signOut}
       />
-    </div>
+    </StyledSidebar>
   );
 }

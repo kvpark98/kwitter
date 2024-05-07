@@ -7,8 +7,6 @@ import { useRef, useState } from "react";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
-import Header from "../../components/header&footer/header/header";
-import Footer from "../../components/header&footer/footer/footer";
 import SignUpForm from "../../components/auth/sign-up/sign-up-form";
 
 export default function SignUp() {
@@ -315,7 +313,6 @@ export default function SignUp() {
 
   return (
     <div className="h-100">
-      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <SignUpForm
           isLoading={isLoading}
@@ -344,7 +341,6 @@ export default function SignUp() {
           reset={reset}
           signUp={signUp}
         />
-        <Footer />
       </div>
     </div>
   );

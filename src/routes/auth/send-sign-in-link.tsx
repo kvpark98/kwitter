@@ -5,8 +5,6 @@ import {
   sendSignInLinkToEmail,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import Header from "../../components/header&footer/header/header";
-import Footer from "../../components/header&footer/footer/footer";
 import SendSignInLinkForm from "../../components/auth/send-sign-in-link/send-sign-in-link-form";
 
 export default function SendSignInLink() {
@@ -131,7 +129,6 @@ export default function SendSignInLink() {
 
   return (
     <div className="h-100">
-      <Header avatar={auth.currentUser?.photoURL} />
       <div className="wrap">
         <SendSignInLinkForm
           emailInputRef={emailInputRef}
@@ -146,7 +143,6 @@ export default function SendSignInLink() {
           sendSignInLink={sendSignInLink}
           isPasswordResetLinkSent={isPasswordResetLinkSent}
         />
-        <Footer />
       </div>
     </div>
   );

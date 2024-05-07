@@ -11,12 +11,12 @@ import { auth } from "../../firebase";
 import { Container } from "react-bootstrap";
 import ScrollProfile from "../../components/scrolls/scrollProfile";
 import AccountContent from "../../components/account/account-content";
-import SideBar from "../../components/header&footer/side-bar/side-bar";
 import ChangePasswordErrors from "../../components/modals/error/change-password-errors";
 import ChangePassword from "../../components/account/change-password/change-password";
 import DeleteAccount from "../../components/account/delete-account/delete-account";
 import DeleteAccountErrors from "../../components/modals/error/delete-account-errors";
 import AccountHeader from "../../components/account/account-header";
+import SideBar from "../../components/sidebar/side-bar";
 
 export default function Account() {
   const user = auth.currentUser;
@@ -506,7 +506,7 @@ export default function Account() {
       <SideBar />
       <div
         className="overflow-y-auto h-100 bg-light border-end"
-        style={{ width: "600px", maxHeight: "800px" }}
+        style={{ width: "600px" }}
       >
         <AccountHeader back={back} />
         <AccountContent

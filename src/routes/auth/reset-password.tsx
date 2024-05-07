@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import { updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
-import Footer from "../../components/header&footer/footer/footer";
 import ResetPasswordForm from "../../components/auth/reset-password/reset-password-form";
 
 export default function ResetPassword() {
@@ -264,7 +263,6 @@ export default function ResetPassword() {
           handleCloseModal={handleCloseModal}
           navigateToHome={navigateToHome}
         />
-        <Footer />
       </div>
     </div>
   );

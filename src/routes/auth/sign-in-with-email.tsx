@@ -7,7 +7,6 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../components/header&footer/footer/footer";
 import SignInWithEmailForm from "../../components/auth/sign-in-with-email/sign-in-with-email-form";
 
 export default function SignInWithEmail() {
@@ -149,7 +148,6 @@ export default function SignInWithEmail() {
           reset={reset}
           signInWithEmail={signInWithEmail}
         />
-        <Footer />
       </div>
     </div>
   );
