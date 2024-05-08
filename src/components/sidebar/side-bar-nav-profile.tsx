@@ -1,28 +1,56 @@
-import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import styled from "@emotion/styled";
+
+// 미디어 쿼리를 사용하여 스타일 정의
+const StyledProfile = styled.div`
+  @media screen and (min-width: 700px) {
+    width: 52px !important;
+    height: 52px !important;
+    padding: 16px !important;
+  }
+  @media screen and (max-width: 700px) {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 14px !important;
+  }
+  @media screen and (max-width: 600px) {
+    width: 46px !important;
+    height: 46px !important;
+    padding: 13px !important;
+  }
+`;
 
 export default function SideBarNavProfile() {
   return (
-    <Nav.Item>
+    <StyledProfile
+      {...(window.location.href.includes("profile")
+        ? {
+            className:
+              "active nav-link rounded-circle d-flex justify-content-center align-items-center",
+          }
+        : {
+            className:
+              "nav-link rounded-circle d-flex justify-content-center align-items-center",
+          })}
+    >
       <Link
         to="/profile"
         title="Profile"
         {...(window.location.href.includes("profile")
           ? {
-              className:
-                "active nav-link rounded-circle d-flex justify-content-center align-items-center text-white p-3",
+              className: "text-white",
             }
           : {
-              className:
-                "nav-link rounded-circle d-flex justify-content-center align-items-center text-dark p-3",
+              className: "text-dark",
             })}
+        style={{ width: "20px", height: "20px" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
           height="20"
           fill="currentColor"
-          className="bi bi-person-circle"
+          className="d-flex justify-content-center align-items-center bi bi-person-circle"
           viewBox="0 0 16 16"
         >
           <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -32,6 +60,6 @@ export default function SideBarNavProfile() {
           />
         </svg>
       </Link>
-    </Nav.Item>
+    </StyledProfile>
   );
 }

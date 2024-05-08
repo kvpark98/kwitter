@@ -1,4 +1,23 @@
-import { Button } from "react-bootstrap";
+import styled from "@emotion/styled";
+
+// 미디어 쿼리를 사용하여 스타일 정의
+const StyledSignOut = styled.div`
+  @media screen and (min-width: 700px) {
+    width: 52px !important;
+    height: 52px !important;
+    padding: 16px !important;
+  }
+  @media screen and (max-width: 700px) {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 14px !important;
+  }
+  @media screen and (max-width: 600px) {
+    width: 46px !important;
+    height: 46px !important;
+    padding: 13px !important;
+  }
+`;
 
 export interface SideBarNavSignOutProps {
   handleShowSignOutModal: () => void;
@@ -8,12 +27,9 @@ export default function SideBarNavSignOut({
   handleShowSignOutModal,
 }: SideBarNavSignOutProps) {
   return (
-    <Button
-      type="button"
-      variant="danger"
+    <StyledSignOut
       title="Sign out"
-      className="d-flex justify-content-center align-items-center rounded-circle fs-5 fw-bold p-3 border-0"
-      style={{ height: "52px" }}
+      className="btn btn-danger rounded-circle d-flex justify-content-center align-items-center border-0"
       onClick={handleShowSignOutModal}
     >
       <svg
@@ -21,7 +37,7 @@ export default function SideBarNavSignOut({
         width="20"
         height="20"
         fill="currentColor"
-        className="bi bi-box-arrow-left"
+        className="d-flex justify-content-center align-items-center bi bi-box-arrow-left"
         viewBox="0 0 16 16"
       >
         <path
@@ -33,6 +49,6 @@ export default function SideBarNavSignOut({
           d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"
         />
       </svg>
-    </Button>
+    </StyledSignOut>
   );
 }
