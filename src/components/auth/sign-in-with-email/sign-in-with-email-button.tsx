@@ -12,7 +12,7 @@ export default function SignInWithEmailButton({
   return (
     <Button
       type="submit"
-      className="mt-2 fw-bold"
+      className="mt-2 fw-bold rounded-pill"
       {...(!isEmail ? { disabled: true } : { disabled: false })}
     >
       {isLoading ? "Signing in..." : "One-time Sign-in"}

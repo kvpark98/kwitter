@@ -505,8 +505,8 @@ export default function Account() {
     <Container fluid className="d-flex justify-content-center h-100 p-0">
       <SideBar />
       <div
-        className="overflow-y-auto h-100 bg-light border-end"
-        style={{ width: "600px" }}
+        className="overflow-y-auto bg-light h-100"
+        style={{ width: "630px" }}
       >
         <AccountHeader back={back} />
         <AccountContent

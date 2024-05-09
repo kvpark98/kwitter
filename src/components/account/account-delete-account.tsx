@@ -8,7 +8,7 @@ export default function AccountDeleteAccount({
   handleShowDeleteAccountModal,
 }: AccountDeleteAccountProps) {
   return (
-    <ListGroup.Item className="p-0 rounded-0">
+    <ListGroup.Item className="p-0 rounded-0 border-0">
       <Button
         variant="danger"
         className="w-100 p-0 rounded-0 border-0"

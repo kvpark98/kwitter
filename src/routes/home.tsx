@@ -473,8 +473,8 @@ export default function Home() {
     <Container fluid className="d-flex justify-content-center h-100 p-0">
       <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
       <div
-        className="overflow-y-auto h-100 bg-light border-end"
-        style={{ width: "600px" }}
+        className="overflow-y-auto bg-light h-100"
+        style={{ width: "630px" }}
       >
         <TweetHeader tweets={tweets} back={back} />
         <TweetList tweets={tweets} />

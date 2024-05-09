@@ -8,7 +8,7 @@ export default function AccountChangePassword({
   handleShowChangePasswordModal,
 }: AccountChangePasswordProps) {
   return (
-    <ListGroup.Item className="p-0 rounded-0">
+    <ListGroup.Item className="p-0 rounded-0 border-0">
       <Button
         variant="light"
         className="w-100 p-0 rounded-0 border-0"

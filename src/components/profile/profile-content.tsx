@@ -31,10 +31,7 @@ export default function ProfileContent({
   back,
 }: ProfileContentProps) {
   return (
-    <div
-      className="overflow-y-auto h-100 bg-light border-end"
-      style={{ width: "600px" }}
-    >
+    <div className="overflow-y-auto h-100 bg-light" style={{ width: "630px" }}>
       <ProfileHeader user={user} tweets={tweets} back={back} />
       <ProfileImages avatar={avatar} background={background} />
       <ProfileEditButton

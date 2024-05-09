@@ -13,7 +13,7 @@ const StyledAccount = styled.div`
     height: 48px !important;
     padding: 14px !important;
   }
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 500px) {
     width: 46px !important;
     height: 46px !important;
     padding: 13px !important;

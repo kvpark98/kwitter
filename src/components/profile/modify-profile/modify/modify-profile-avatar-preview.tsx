@@ -1,4 +1,5 @@
 import { Card } from "react-bootstrap";
+import styled from "@emotion/styled";
 
 export interface ModifyProfileAvatarPreviewProps {
   avatarImageRef: React.RefObject<HTMLImageElement>;
@@ -7,6 +8,22 @@ export interface ModifyProfileAvatarPreviewProps {
   avatarDeleteButtonClicked: boolean;
 }
 
+// 미디어 쿼리를 사용하여 스타일 정의
+const StyledModifyAvatar = styled.div`
+  @media screen and (min-width: 700px) {
+    width: 120px !important;
+    height: 120px !important;
+  }
+  @media screen and (max-width: 700px) {
+    width: 110px !important;
+    height: 110px !important;
+  }
+  @media screen and (max-width: 500px) {
+    width: 100px !important;
+    height: 100px !important;
+  }
+`;
+
 export default function ModifyProfileAvatarPreview({
   avatarImageRef,
   avatar,
@@ -14,10 +31,7 @@ export default function ModifyProfileAvatarPreview({
   avatarDeleteButtonClicked,
 }: ModifyProfileAvatarPreviewProps) {
   return (
-    <div
-      className="position-relative rounded-circle overflow-hidden"
-      style={{ width: "120px", height: "120px" }}
-    >
+    <StyledModifyAvatar className="position-relative rounded-circle overflow-hidden">
       <Card.Img
         ref={avatarImageRef}
         src={
@@ -30,6 +44,6 @@ export default function ModifyProfileAvatarPreview({
         alt="Avatar Image"
         className="w-100 h-100 bg-light"
       />
-    </div>
+    </StyledModifyAvatar>
   );
 }

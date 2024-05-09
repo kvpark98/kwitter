@@ -14,7 +14,7 @@ export default function SignInButton({
   return (
     <Button
       type="submit"
-      className="fw-bold"
+      className="fw-bold rounded-pill"
       {...(!isEmail || !isPassword ? { disabled: true } : { disabled: false })}
     >
       {isLoading ? "Signing In..." : "Sign In"}

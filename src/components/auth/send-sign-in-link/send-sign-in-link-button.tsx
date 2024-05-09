@@ -12,7 +12,7 @@ export default function SendSignInLinkButton({
   return (
     <Button
       type="submit"
-      className="mt-2 fw-bold"
+      className="mt-2 fw-bold rounded-pill"
       {...(!isEmail ? { disabled: true } : { disabled: false })}
     >
       {isLoading ? "Sending..." : "Send Link"}

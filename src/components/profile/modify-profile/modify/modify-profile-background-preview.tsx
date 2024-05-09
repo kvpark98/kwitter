@@ -1,4 +1,5 @@
 import { Card } from "react-bootstrap";
+import styled from "@emotion/styled";
 
 export interface ModifyProfileBackgroundPreviewProps {
   backgroundImageRef: React.RefObject<HTMLImageElement>;
@@ -7,6 +8,19 @@ export interface ModifyProfileBackgroundPreviewProps {
   backgroundDeleteButtonClicked: boolean;
 }
 
+// 미디어 쿼리를 사용하여 스타일 정의
+const StyledModifyBackground = styled.div`
+  @media screen and (min-width: 700px) {
+    height: 210px !important;
+  }
+  @media screen and (max-width: 700px) {
+    height: 200px !important;
+  }
+  @media screen and (max-width: 500px) {
+    height: 190px !important;
+  }
+`;
+
 export default function ModifyProfileBackgroundPreview({
   backgroundImageRef,
   background,
@@ -14,7 +28,7 @@ export default function ModifyProfileBackgroundPreview({
   backgroundDeleteButtonClicked,
 }: ModifyProfileBackgroundPreviewProps) {
   return (
-    <div>
+    <StyledModifyBackground>
       <Card.Img
         ref={backgroundImageRef}
         src={
@@ -25,9 +39,8 @@ export default function ModifyProfileBackgroundPreview({
             : "default-background.png"
         }
         alt="Background Image"
-        className="img-fluid rounded-4"
-        style={{ width: "100%", height: "200px" }}
+        className="img-fluid rounded-4 w-100 h-100"
       />
-    </div>
+    </StyledModifyBackground>
   );
 }

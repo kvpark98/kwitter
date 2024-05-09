@@ -14,12 +14,15 @@ export interface SideBarProps {
 const StyledSidebar = styled.div`
   @media screen and (min-width: 700px) {
     padding: 6px 12px 0 12px !important;
+    min-width: 76px !important;
   }
   @media screen and (max-width: 700px) {
     padding: 6px 9px 0 9px !important;
+    min-width: 66px !important;
   }
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 500px) {
     padding: 6px 6px 0 6px !important;
+    min-width: 58px !important;
   }
 `;
 
@@ -36,7 +39,7 @@ export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
   };
 
   return (
-    <StyledSidebar className="d-flex flex-column border bg-light">
+    <StyledSidebar className="overflow-y-auto d-flex flex-column border-end bg-light">
       <SideBarLogo />
       <hr />
       <SideBarNav

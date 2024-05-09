@@ -18,7 +18,7 @@ export default function SignUpButton({
   return (
     <Button
       type="submit"
-      className="mt-2 fw-bold"
+      className="mt-2 fw-bold rounded-pill"
       {...(!isName || !isEmail || !isPassword || !isPasswordConfirm
         ? { disabled: true }
         : { disabled: false })}
