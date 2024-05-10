@@ -7,7 +7,7 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import { Container } from "react-bootstrap";
 import ScrollProfile from "../../components/scrolls/scrollProfile";
 import AccountContent from "../../components/account/account-content";
@@ -17,6 +17,16 @@ import DeleteAccount from "../../components/account/delete-account/delete-accoun
 import DeleteAccountErrors from "../../components/modals/error/delete-account-errors";
 import AccountHeader from "../../components/account/account-header";
 import SideBar from "../../components/sidebar/side-bar";
+import { StorageError, deleteObject, ref } from "firebase/storage";
+import {
+  FirestoreError,
+  collection,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { ITweet } from "../../components/tweets/query/detail/tweet";
 
 export default function Account() {
   const user = auth.currentUser;
@@ -25,6 +35,66 @@ export default function Account() {
   const newPasswordConfirmInputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
+
+  const [tweets, setTweets] = useState<ITweet[]>([]);
+  const [avatar, setAvatar] = useState("");
+  const [background, setBackground] = useState("");
+
+  useEffect(() => {
+    const getTweets = async () => {
+      const tweetQuery = query(
+        collection(db, "tweets"),
+        where("userId", "==", user?.uid)
+      );
+
+      const tweetSnapshot = await getDocs(tweetQuery);
+      const tweets = tweetSnapshot.docs.map((doc) => {
+        const { createdAt, message, photo, userId, username } = doc.data();
+
+        return {
+          id: doc.id,
+          createdAt,
+          message,
+          photo,
+          userId,
+          username,
+        };
+      });
+      setTweets(tweets);
+    };
+
+    getTweets();
+
+    const getAvatar = async () => {
+      const avatarQuery = query(
+        collection(db, "avatars"),
+        where("userId", "==", user?.uid)
+      );
+
+      const avatarSnapshot = await getDocs(avatarQuery);
+      avatarSnapshot.forEach(async (doc) => {
+        const data = doc.data();
+        setAvatar(data.avatar);
+      });
+    };
+
+    getAvatar();
+
+    const getBackground = async () => {
+      const backgroundQuery = query(
+        collection(db, "backgrounds"),
+        where("userId", "==", user?.uid)
+      );
+
+      const backgroundSnapshot = await getDocs(backgroundQuery);
+      backgroundSnapshot.forEach(async (doc) => {
+        const data = doc.data();
+        setBackground(data.background);
+      });
+    };
+
+    getBackground();
+  }, []);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -480,6 +550,55 @@ export default function Account() {
 
       await reauthenticateWithCredential(user!, credential);
 
+      if (avatar) {
+        const avatarRef = ref(storage, `avatars/${user?.uid}`);
+        await deleteObject(avatarRef);
+
+        const avatarQuery = query(
+          collection(db, "avatars"),
+          where("userId", "==", user?.uid)
+        );
+
+        const avatarSnapshot = await getDocs(avatarQuery);
+        avatarSnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+      }
+
+      if (background) {
+        const backgroundRef = ref(storage, `backgrounds/${user?.uid}`);
+        await deleteObject(backgroundRef);
+
+        const backgroundQuery = query(
+          collection(db, "backgrounds"),
+          where("userId", "==", user?.uid)
+        );
+
+        const backgroundSnapshot = await getDocs(backgroundQuery);
+        backgroundSnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+      }
+
+      if (tweets.length !== 0) {
+        tweets.forEach(async (tweet) => {
+          if (tweet.photo) {
+            const tweetRef = ref(storage, `tweets/${user?.uid}/${tweet.id}`);
+            await deleteObject(tweetRef);
+          }
+        });
+
+        const tweetQuery = query(
+          collection(db, "tweets"),
+          where("userId", "==", user?.uid)
+        );
+
+        const tweetSnapshot = await getDocs(tweetQuery);
+        tweetSnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+      }
+
       await deleteUser(user!);
 
       window.localStorage.setItem("accountDeleted", "true");
@@ -491,6 +610,15 @@ export default function Account() {
       if (error instanceof FirebaseError) {
         setError(error.code);
         console.log("FirebaseError", error.code);
+      } else if (error instanceof FirestoreError) {
+        setError(error.code);
+        console.log("FirestoreError", error.code);
+      } else if (error instanceof StorageError) {
+        setError(error.code);
+        console.log("StorageError", error.code);
+      } else {
+        setError("size-exhausted");
+        console.log(error);
       }
 
       resetDeletePassword();

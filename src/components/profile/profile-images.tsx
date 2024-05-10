@@ -26,7 +26,7 @@ export default function ProfileImages({
   return (
     <div className="position-relative mb-4">
       <StyledBackground
-        src={background ? background : "/default-background.png"}
+        src={background ?? "/default-background.png"}
         alt="Background Image"
         className="img-fluid"
         style={{ width: "100%" }}

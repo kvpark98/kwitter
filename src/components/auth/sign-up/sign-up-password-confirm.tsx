@@ -24,7 +24,7 @@ export default function SignUpPasswordConfirm({
       <Form.Label htmlFor="passwordConfirm">Password Confirm</Form.Label>
       <Form.Control
         ref={passwordConfirmInputRef}
-        className="border-none mt-1 mb-1"
+        className="border-none mt-1 mb-1 rounded-4"
         onChange={handlePasswordConfirm}
         onKeyDown={noSpace}
         id="passwordConfirm"

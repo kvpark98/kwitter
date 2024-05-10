@@ -15,7 +15,7 @@ export default function ChangePasswordCurrentPassword({
     <Form.Group>
       <Form.Label htmlFor="currentPassword">Current Password</Form.Label>
       <Form.Control
-        className="border-none mt-1 mb-1"
+        className="border-none mt-1 mb-1 rounded-4"
         onChange={handleCurrentPassword}
         onKeyDown={noSpace}
         id="currentPassword"

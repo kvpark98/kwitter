@@ -73,7 +73,7 @@ export default function Profile() {
 
   const [isName, setIsName] = useState(true);
 
-  const [avatar, setAvatar] = useState(user?.photoURL);
+  const [avatar, setAvatar] = useState(user?.photoURL || defaultAvatarURL);
 
   const [background, setBackground] = useState(defaultBackgroundURL);
 

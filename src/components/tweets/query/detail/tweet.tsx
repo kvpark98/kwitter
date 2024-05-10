@@ -30,7 +30,7 @@ import ModifyTweetDiscardModal from "../../modify/modify-tweet-discard-modal/mod
 
 export interface ITweet {
   id: string;
-  timeAgo: string | undefined;
+  timeAgo?: string | undefined;
   createdAt: string;
   message: string;
   photo?: string;

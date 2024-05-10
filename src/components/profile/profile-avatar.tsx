@@ -25,7 +25,7 @@ export default function ProfileAvatar({ avatar }: ProfileAvatarProps) {
   return (
     <StyledAvatar className="rounded-circle overflow-hidden">
       <Card.Img
-        src={avatar!}
+        src={avatar ?? "/person-circle.svg"}
         alt="Avatar Image"
         className="w-100 h-100 bg-light"
       />

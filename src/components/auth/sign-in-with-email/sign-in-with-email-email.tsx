@@ -24,7 +24,7 @@ export default function SignInWithEmailEmail({
       </Form.Label>
       <Form.Control
         ref={emailInputRef}
-        className="border-none mt-1 mb-1"
+        className="border-none mt-1 mb-1 rounded-4"
         onChange={handleEmail}
         onKeyDown={noSpace}
         id="email"

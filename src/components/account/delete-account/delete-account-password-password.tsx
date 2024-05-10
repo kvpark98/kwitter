@@ -17,7 +17,7 @@ export default function DeleteAccountPasswordPassword({
         Kindly input your password for a secure account withdrawal.
       </Form.Label>
       <Form.Control
-        className="border-none mt-1 mb-1"
+        className="border-none mt-1 mb-1 rounded-4"
         onChange={handleDeletePassword}
         onKeyDown={noSpace}
         id="password"

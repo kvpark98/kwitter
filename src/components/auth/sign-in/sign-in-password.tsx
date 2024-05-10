@@ -21,7 +21,7 @@ export default function SignInPassword({
         </Link>
       </div>
       <Form.Control
-        className="border-none mt-1 mb-1"
+        className="border-none mt-1 mb-1 rounded-4"
         onChange={handlePassword}
         onKeyDown={noSpace}
         id="password"

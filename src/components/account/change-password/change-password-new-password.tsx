@@ -22,7 +22,7 @@ export default function ChangePasswordNewPassword({
       <Form.Label htmlFor="newPassword">New Password</Form.Label>
       <Form.Control
         ref={newPasswordInputRef}
-        className="border-none mt-1 mb-1"
+        className="border-none mt-1 mb-1 rounded-4"
         onChange={handleNewPassword}
         onKeyDown={noSpace}
         id="newPassword"
