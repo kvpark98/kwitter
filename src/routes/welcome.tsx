@@ -21,13 +21,13 @@ const StyledWelcome = styled.div`
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledLogoDiv = styled.div`
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: 900px) {
     display: flex !important;
     flex: 1 1 auto !important;
     justify-content: center !important;
     align-items: center !important;
   }
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: flex !important;
     flex: 1 1 auto !important;
     justify-content: center !important;
@@ -38,13 +38,13 @@ const StyledLogoDiv = styled.div`
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledLogoSvg = styled.svg`
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: 900px) {
     width: 300px !important;
     height: 300px !important;
   }
-  @media screen and (max-width: 700px) {
-    width: 100px !important;
-    height: 100px !important;
+  @media screen and (max-width: 900px) {
+    width: 130px !important;
+    height: 130px !important;
   }
   @media screen and (max-width: 500px) {
     width: 80px !important;
@@ -54,10 +54,10 @@ const StyledLogoSvg = styled.svg`
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledTitle = styled.div`
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: 900px) {
     font-size: 3rem !important;
   }
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     font-size: 2.5rem !important;
   }
   @media screen and (max-width: 500px) {
@@ -67,11 +67,11 @@ const StyledTitle = styled.div`
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledP = styled.p`
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: 900px) {
     font-size: 1.6rem !important;
     margin-bottom: 16px !important;
   }
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
@@ -89,7 +89,7 @@ const StyledP = styled.p`
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledButton = styled.div`
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
