@@ -19,72 +19,7 @@ import ProtectedRouteResetPassword from "./components/protected-routes/protected
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 import Profile from "./routes/profile";
 import Account from "./routes/account/account";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
-    ),
-    children: [
-      {
-        path: "",
-        element: <Home />,
-      },
-      {
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        path: "/account",
-        element: <Account />,
-      },
-    ],
-  },
-  {
-    path: "/sign-in",
-    element: (
-      <ProtectedRouteSignIn>
-        <SignIn />
-      </ProtectedRouteSignIn>
-    ),
-  },
-  {
-    path: "/sign-up",
-    element: (
-      <ProtectedRouteSignIn>
-        <SignUp />
-      </ProtectedRouteSignIn>
-    ),
-  },
-  {
-    path: "/send-sign-in-link",
-    element: (
-      <ProtectedRouteSignIn>
-        <SendSignInLink />
-      </ProtectedRouteSignIn>
-    ),
-  },
-  {
-    path: "/sign-in-with-email",
-    element: (
-      <ProtectedRouteSignInWithEmail>
-        <SignInWithEmail />
-      </ProtectedRouteSignInWithEmail>
-    ),
-  },
-
-  {
-    path: "/reset-password",
-    element: (
-      <ProtectedRouteResetPassword>
-        <ResetPassword />
-      </ProtectedRouteResetPassword>
-    ),
-  },
-]);
+import Welcome from "./routes/welcome";
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -169,6 +104,80 @@ const GlobalStyles = createGlobalStyle`
     transform: translate(20%, -50%) !important;
   }
 `;
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "",
+        element: <Home />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/account",
+        element: <Account />,
+      },
+    ],
+  },
+  {
+    path: "/welcome",
+    element: (
+      <ProtectedRouteSignIn>
+        <Welcome />
+      </ProtectedRouteSignIn>
+    ),
+  },
+  {
+    path: "/sign-in",
+    element: (
+      <ProtectedRouteSignIn>
+        <SignIn />
+      </ProtectedRouteSignIn>
+    ),
+  },
+  {
+    path: "/sign-up",
+    element: (
+      <ProtectedRouteSignIn>
+        <SignUp />
+      </ProtectedRouteSignIn>
+    ),
+  },
+  {
+    path: "/send-sign-in-link",
+    element: (
+      <ProtectedRouteSignIn>
+        <SendSignInLink />
+      </ProtectedRouteSignIn>
+    ),
+  },
+  {
+    path: "/sign-in-with-email",
+    element: (
+      <ProtectedRouteSignInWithEmail>
+        <SignInWithEmail />
+      </ProtectedRouteSignInWithEmail>
+    ),
+  },
+
+  {
+    path: "/reset-password",
+    element: (
+      <ProtectedRouteResetPassword>
+        <ResetPassword />
+      </ProtectedRouteResetPassword>
+    ),
+  },
+]);
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);

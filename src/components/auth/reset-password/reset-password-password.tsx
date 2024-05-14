@@ -22,7 +22,7 @@ export default function ResetPasswordPassword({
       <Form.Label htmlFor="password">New Password</Form.Label>
       <Form.Control
         ref={passwordInputRef}
-        className="border-none mt-1 mb-1 rounded-4"
+        className="border-none mt-1 mb-1 rounded-pill"
         onChange={handlePassword}
         onKeyDown={noSpace}
         id="password"

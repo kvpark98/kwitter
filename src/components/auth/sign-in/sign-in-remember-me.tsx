@@ -14,7 +14,7 @@ export default function SignInRememberMe({
         type="checkbox"
         id="remember-me"
         label="Remember Me"
-        className="m-0 rounded-4"
+        className="m-0"
       />
     </div>
   );

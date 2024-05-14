@@ -26,7 +26,7 @@ export default function ChangePasswordNewPasswordConfirm({
       <Form.Label htmlFor="newPasswordConfirm">New Password Confirm</Form.Label>
       <Form.Control
         ref={newPasswordConfirmInputRef}
-        className="border-none mt-1 mb-1 rounded-4"
+        className="border-none mt-1 mb-1 rounded-pill"
         onChange={handleNewPasswordConfirm}
         onKeyDown={noSpace}
         id="newPasswordConfirm"

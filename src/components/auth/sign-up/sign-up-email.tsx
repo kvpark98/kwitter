@@ -22,7 +22,7 @@ export default function SignUpEmail({
       <Form.Label htmlFor="email">Email Address</Form.Label>
       <Form.Control
         ref={emailInputRef}
-        className="border-none mt-1 mb-1 rounded-4"
+        className="border-none mt-1 mb-1 rounded-pill"
         onChange={handleEmail}
         onKeyDown={noSpace}
         id="email"

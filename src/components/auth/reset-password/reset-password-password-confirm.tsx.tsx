@@ -24,7 +24,7 @@ export default function ResetPasswordPasswordConfirm({
       <Form.Label htmlFor="passwordConfirm">New Password Confirm</Form.Label>
       <Form.Control
         ref={passwordConfirmInputRef}
-        className="border-none mt-1 mb-1 rounded-4"
+        className="border-none mt-1 mb-1 rounded-pill"
         onChange={handlePasswordConfirm}
         onKeyDown={noSpace}
         id="passwordConfirm"

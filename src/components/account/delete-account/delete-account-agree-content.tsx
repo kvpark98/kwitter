@@ -24,10 +24,8 @@ export default function DeleteAccountAgreeContent({
           Content Retention
         </Form.Label>
         <p>
-          Posts and comments you've shared on the bulletin board service will
-          remain even after your account is withdrawn. If you have specific
-          content you wish to delete, please do so before initiating the
-          withdrawal process.
+          Please be aware that upon withdrawing your membership, all posted
+          content, including comments, will be permanently deleted.
         </p>
       </div>
     </div>

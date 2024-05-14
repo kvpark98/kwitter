@@ -23,7 +23,7 @@ export default function ModifyProfileName({
       <Form.Label htmlFor="name">Username</Form.Label>
       <Form.Control
         ref={nameInputRef}
-        className="border-none mt-1 mb-1 rounded-4"
+        className="border-none mt-1 mb-1 rounded-pill"
         onChange={handleName}
         onKeyDown={noSpace}
         id="name"
