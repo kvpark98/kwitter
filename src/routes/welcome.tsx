@@ -2,12 +2,12 @@ import styled from "@emotion/styled";
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledWelcome = styled.div`
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: 900px) {
     display: flex !important;
     height: 100% !important;
     overflow-y: auto !important;
   }
-  @media screen and (max-width: 700px) {
+  @media screen and (max-width: 900px) {
     display: block !important;
     height: 100% !important;
     overflow-y: auto !important;
