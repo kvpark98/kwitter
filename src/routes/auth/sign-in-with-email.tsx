@@ -59,7 +59,7 @@ export default function SignInWithEmail() {
 
   const signOut = () => {
     auth.signOut();
-    navigate("/sign-in");
+    navigate("/welcome");
   };
 
   const reset = () => {

@@ -226,7 +226,7 @@ export default function SignUp() {
 
   const signOut = () => {
     auth.signOut();
-    navigate("/sign-in");
+    navigate("/welcome");
   };
 
   const reset = () => {
@@ -257,7 +257,7 @@ export default function SignUp() {
   };
 
   const actionCodeSettings = {
-    url: "http://127.0.0.1:5173/sign-in",
+    url: "http://127.0.0.1:5173/welcome",
     handleCodeInApp: true,
   };
 

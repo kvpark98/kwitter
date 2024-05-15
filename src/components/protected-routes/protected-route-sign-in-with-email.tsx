@@ -17,13 +17,13 @@ export default function ProtectedRouteSignInWithEmail({
         return <Navigate to="/" />;
       }
     } else {
-      return <Navigate to="/sign-in" />;
+      return <Navigate to="/welcome" />;
     }
   } else {
     if (isSignInWithEmailLink(auth, window.location.href)) {
       return children;
     } else {
-      return <Navigate to="/sign-in" />;
+      return <Navigate to="/welcome" />;
     }
   }
 }

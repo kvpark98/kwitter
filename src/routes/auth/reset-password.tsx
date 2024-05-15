@@ -31,7 +31,7 @@ export default function ResetPassword() {
 
   const signOut = () => {
     auth.signOut();
-    navigate("/sign-in");
+    navigate("/welcome");
   };
 
   const navigateToHome = () => {

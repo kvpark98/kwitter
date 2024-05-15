@@ -175,7 +175,7 @@ export default function Account() {
 
   const signOut = () => {
     auth.signOut();
-    navigate("/sign-in");
+    navigate("/welcome");
   };
 
   const handleCurrentPassword = (

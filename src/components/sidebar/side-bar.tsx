@@ -35,7 +35,7 @@ export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
 
   const signOut = () => {
     auth.signOut();
-    navigate("/sign-in");
+    navigate("/welcome");
   };
 
   return (

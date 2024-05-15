@@ -16,9 +16,9 @@ export default function ProtectedRoute({
         return children;
       }
     } else {
-      return <Navigate to="/sign-in" />;
+      return <Navigate to="/welcome" />;
     }
   } else {
-    return <Navigate to="/sign-in" />;
+    return <Navigate to="/welcome" />;
   }
 }
