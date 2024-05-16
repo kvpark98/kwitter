@@ -12,11 +12,11 @@ export interface SignInProps {
   isEmail: boolean;
   emailErrorMessage: string;
   password: string;
-  handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSignInPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
   handleRememberMe: () => void;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-  reset: () => void;
+  resetSignIn: () => void;
   signIn: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
@@ -30,11 +30,11 @@ export default function SignIn({
   isEmail,
   emailErrorMessage,
   password,
-  handlePassword,
+  handleSignInPassword,
   isPassword,
   handleRememberMe,
   noSpace,
-  reset,
+  resetSignIn,
   signIn,
 }: SignInProps) {
   return (
@@ -55,11 +55,11 @@ export default function SignIn({
         isEmail={isEmail}
         emailErrorMessage={emailErrorMessage}
         password={password}
-        handlePassword={handlePassword}
+        handleSignInPassword={handleSignInPassword}
         isPassword={isPassword}
         handleRememberMe={handleRememberMe}
         noSpace={noSpace}
-        reset={reset}
+        resetSignIn={resetSignIn}
         signIn={signIn}
       />
     </Modal>

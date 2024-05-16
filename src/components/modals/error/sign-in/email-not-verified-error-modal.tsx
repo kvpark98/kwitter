@@ -30,7 +30,7 @@ export default function EmailNotVerifiedErrorModal({
             className="rounded-pill"
             onClick={handleCloseEmailNotVerifiedErrorModal}
           >
-            Close
+            Back
           </Button>
         </Modal.Footer>
       </Alert>

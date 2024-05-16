@@ -3,7 +3,9 @@ import { Form } from "react-bootstrap";
 export interface SignUpPasswordConfirmProps {
   passwordConfirmInputRef: React.RefObject<HTMLInputElement>;
   passwordConfirm: string;
-  handlePasswordConfirm: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSignUpPasswordConfirm: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
   isPassword: boolean;
   isPasswordConfirm: boolean;
   passwordConfirmErrorMessage: string;
@@ -13,7 +15,7 @@ export interface SignUpPasswordConfirmProps {
 export default function SignUpPasswordConfirm({
   passwordConfirmInputRef,
   passwordConfirm,
-  handlePasswordConfirm,
+  handleSignUpPasswordConfirm,
   isPassword,
   isPasswordConfirm,
   passwordConfirmErrorMessage,
@@ -25,7 +27,7 @@ export default function SignUpPasswordConfirm({
       <Form.Control
         ref={passwordConfirmInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
-        onChange={handlePasswordConfirm}
+        onChange={handleSignUpPasswordConfirm}
         onKeyDown={noSpace}
         id="passwordConfirm"
         name="passwordConfirm"

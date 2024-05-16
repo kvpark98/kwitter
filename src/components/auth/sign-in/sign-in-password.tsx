@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 export interface SignInPasswordProps {
   password: string;
-  handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSignInPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export default function SignInPassword({
   password,
-  handlePassword,
+  handleSignInPassword,
   noSpace,
 }: SignInPasswordProps) {
   return (
@@ -22,7 +22,7 @@ export default function SignInPassword({
       </div>
       <Form.Control
         className="border-none mt-1 mb-1 rounded-pill"
-        onChange={handlePassword}
+        onChange={handleSignInPassword}
         onKeyDown={noSpace}
         id="password"
         name="password"

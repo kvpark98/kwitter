@@ -5,7 +5,10 @@ import { FirebaseError } from "firebase/app";
 import {
   browserLocalPersistence,
   browserSessionPersistence,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase";
 import SignIn from "../components/auth/sign-in/sign-in";
@@ -14,6 +17,8 @@ import PasswordChangeSuccessModal from "../components/modals/success/sign-in/pas
 import EmailVerificationNeededWarningModal from "../components/modals/warning/sign-in/email-verification-needed-warning-modal";
 import EmailNotVerifiedErrorModal from "../components/modals/error/sign-in/email-not-verified-error-modal";
 import SignInErrorModal from "../components/modals/error/sign-in/sign-in-error-modal";
+import SignUp from "../components/auth/sign-up/sign-up";
+import SignUpErrorModal from "../components/modals/error/sign-up/sign-up-error-modal";
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledWelcome = styled.div`
@@ -117,23 +122,26 @@ const StyledButton = styled.div`
 `;
 
 export default function Welcome() {
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmInputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
+  const [isName, setIsName] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
 
   const [isRememberMe, setIsRememberMe] = useState(false);
-
-  const [isVerificationNeeded, setIsVerificationNeeded] = useState(
-    window.localStorage.getItem("verificationNeeded") || ""
-  );
 
   const [isPasswordChanged, setIsPasswordChanged] = useState(
     window.localStorage.getItem("PasswordChanged") || ""
@@ -143,19 +151,21 @@ export default function Welcome() {
     window.localStorage.getItem("accountDeleted") || ""
   );
 
-  const [showEmailNotVerified, setShowEmailNotVerified] = useState(false);
-
   const [error, setError] = useState(
     window.localStorage.getItem("error") || ""
   );
 
+  const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
+    useState("");
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const handleShowSignInModal = () => setShowSignInModal(true);
   const handleCloseSignInModal = () => {
     setShowSignInModal(false);
-    reset();
+    resetSignIn();
   };
 
   const [showAccountDeleteSuccessModal, setShowAccountDeleteSuccessModal] =
@@ -176,16 +186,18 @@ export default function Welcome() {
     showEmailVerificationNeededWarningModal,
     setShowEmailVerificationNeededWarningModal,
   ] = useState(false);
-  const handleShowEmailVerificationNeededWarningModal = () =>
+  const handleShowEmailVerificationNeededWarningModal = () => {
+    handleCloseSignUpModal();
     setShowEmailVerificationNeededWarningModal(true);
+  };
   const handleCloseEmailVerificationNeededWarningModal = () =>
     setShowEmailVerificationNeededWarningModal(false);
 
   const [showEmailNotVerifiedErrorModal, setShowEmailNotVerifiedErrorModal] =
     useState(false);
   const handleShowEmailNotVerifiedErrorModal = () => {
-    setShowEmailNotVerifiedErrorModal(true);
     setShowSignInModal(false);
+    setShowEmailNotVerifiedErrorModal(true);
   };
   const handleCloseEmailNotVerifiedErrorModal = () => {
     setShowEmailNotVerifiedErrorModal(false);
@@ -194,37 +206,71 @@ export default function Welcome() {
 
   const [showSignInErrorModal, setShowSignInErrorModal] = useState(false);
   const handleShowSignInErrorModal = () => {
-    setShowSignInErrorModal(true);
     setShowSignInModal(false);
+    setShowSignInErrorModal(true);
   };
   const handleCloseSignInErrorModal = () => {
     setShowSignInErrorModal(false);
     setShowSignInModal(true);
   };
 
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const handleShowSignUpModal = () => setShowSignUpModal(true);
+  const handleCloseSignUpModal = () => {
+    setShowSignUpModal(false);
+    resetSignUp();
+  };
+
+  const [showSignUpErrorModal, setShowSignUpErrorModal] = useState(false);
+  const handleShowSignUpErrorModal = () => {
+    setShowSignUpModal(false);
+    setShowSignUpErrorModal(true);
+  };
+  const handleCloseSignUpErrorModal = () => {
+    setShowSignUpErrorModal(false);
+    setShowSignUpModal(true);
+  };
+
   useEffect(() => {
+    window.localStorage.removeItem("PasswordChanged");
+    window.localStorage.removeItem("accountDeleted");
+    window.localStorage.removeItem("error");
+
     if (accountDeleted && !error) {
       handleShowAccountDeleteSuccessModal();
     }
     if (isPasswordChanged && !error) {
       handleShowPassordChangeSuccessModal();
     }
-    if (isVerificationNeeded && !error) {
-      handleShowEmailVerificationNeededWarningModal();
+  }, [accountDeleted, isPasswordChanged]);
+
+  const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    const regName = /^[가-힣a-zA-Z]{2,20}$/;
+
+    setName(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      if (!regName.test(value)) {
+        setNameErrorMessage(
+          "Please enter at least 2 characters either in English or Korean."
+        );
+        setIsName(false);
+
+        nameInputRef.current?.classList.add("form-control-invalid");
+      } else {
+        setIsName(true);
+
+        nameInputRef.current?.classList.remove("form-control-invalid");
+      }
+    } else {
+      setNameErrorMessage("");
+      setIsName(false);
+
+      nameInputRef.current?.classList.remove("form-control-invalid");
     }
-    if (showEmailNotVerified && !error) {
-      handleShowEmailNotVerifiedErrorModal();
-    }
-    if (error) {
-      handleShowSignInErrorModal();
-    }
-  }, [
-    accountDeleted,
-    isPasswordChanged,
-    isVerificationNeeded,
-    showEmailNotVerified,
-    error,
-  ]);
+  };
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -253,7 +299,7 @@ export default function Welcome() {
     }
   };
 
-  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSignInPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     setPassword(value.replace(/\s/gi, ""));
@@ -262,6 +308,132 @@ export default function Welcome() {
       setIsPassword(true);
     } else {
       setIsPassword(false);
+    }
+  };
+
+  const handleSignUpPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    const regPassword =
+      /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]).{8,}$/;
+
+    setPassword(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      if (!regPassword.test(value)) {
+        setPasswordErrorMessage(
+          "Please enter at least 8 characters including numbers, English, and special characters."
+        );
+
+        setIsPassword(false);
+        setIsPasswordConfirm(false);
+
+        passwordInputRef.current?.classList.add("form-control-invalid");
+        passwordInputRef.current?.classList.remove("form-control-valid");
+
+        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
+        if (passwordConfirm) {
+          setPasswordConfirmErrorMessage(
+            "Please make your password valid first."
+          );
+
+          passwordConfirmInputRef.current?.classList.add(
+            "form-control-invalid"
+          );
+        } else {
+          setPasswordConfirmErrorMessage("");
+
+          passwordConfirmInputRef.current?.classList.remove(
+            "form-control-invalid"
+          );
+        }
+      } else {
+        setIsPassword(true);
+
+        passwordInputRef.current?.classList.remove("form-control-invalid");
+        passwordInputRef.current?.classList.add("form-control-valid");
+        if (passwordConfirm) {
+          if (value !== passwordConfirm) {
+            setPasswordConfirmErrorMessage("The password does not match.");
+            setIsPasswordConfirm(false);
+
+            passwordConfirmInputRef.current?.classList.add(
+              "form-control-invalid"
+            );
+            passwordConfirmInputRef.current?.classList.remove(
+              "form-control-valid"
+            );
+          } else {
+            setPasswordConfirmErrorMessage("");
+            setIsPasswordConfirm(true);
+
+            passwordConfirmInputRef.current?.classList.remove(
+              "form-control-invalid"
+            );
+            passwordConfirmInputRef.current?.classList.add(
+              "form-control-valid"
+            );
+          }
+        } else {
+          setPasswordConfirmErrorMessage("");
+          setIsPasswordConfirm(false);
+
+          passwordConfirmInputRef.current?.classList.remove(
+            "form-control-invalid"
+          );
+        }
+      }
+    } else {
+      setPasswordErrorMessage("");
+      setIsPassword(false);
+      setIsPasswordConfirm(false);
+
+      passwordInputRef.current?.classList.remove("form-control-invalid");
+      passwordInputRef.current?.classList.remove("form-control-valid");
+
+      passwordConfirmInputRef.current?.classList.remove("form-control-valid");
+      if (passwordConfirm) {
+        setPasswordConfirmErrorMessage("Please enter your password first.");
+
+        passwordConfirmInputRef.current?.classList.add("form-control-invalid");
+      } else {
+        setPasswordConfirmErrorMessage("");
+
+        passwordConfirmInputRef.current?.classList.remove(
+          "form-control-invalid"
+        );
+      }
+    }
+  };
+
+  const handleSignUpPasswordConfirm = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+
+    setPasswordConfirm(value.replace(/\s/gi, ""));
+
+    if (value !== "") {
+      if (value !== password) {
+        setPasswordConfirmErrorMessage("The password does not match.");
+        setIsPasswordConfirm(false);
+
+        passwordConfirmInputRef.current?.classList.add("form-control-invalid");
+        passwordConfirmInputRef.current?.classList.remove("form-control-valid");
+      } else {
+        setIsPasswordConfirm(true);
+
+        passwordConfirmInputRef.current?.classList.remove(
+          "form-control-invalid"
+        );
+        passwordConfirmInputRef.current?.classList.add("form-control-valid");
+      }
+    } else {
+      setPasswordConfirmErrorMessage("");
+      setIsPasswordConfirm(false);
+
+      passwordConfirmInputRef.current?.classList.remove("form-control-invalid");
+      passwordConfirmInputRef.current?.classList.remove("form-control-valid");
     }
   };
 
@@ -280,7 +452,7 @@ export default function Welcome() {
     navigate("/welcome");
   };
 
-  const reset = () => {
+  const resetSignIn = () => {
     setEmail("");
     setPassword("");
 
@@ -292,19 +464,37 @@ export default function Welcome() {
     emailInputRef.current?.classList.remove("form-control-invalid");
   };
 
-  useEffect(() => {
-    window.localStorage.removeItem("verificationNeeded");
-    window.localStorage.removeItem("PasswordChanged");
-    window.localStorage.removeItem("accountDeleted");
-    window.localStorage.removeItem("error");
+  const resetSignUp = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+    setPasswordConfirm("");
 
-    setTimeout(() => {
-      setIsVerificationNeeded("");
-      setIsPasswordChanged("");
-      setAccountDeleted("");
-      setError("");
-    }, 5000);
-  }, []);
+    setIsName(false);
+    setIsEmail(false);
+    setIsPassword(false);
+    setIsPasswordConfirm(false);
+
+    setNameErrorMessage("");
+    setEmailErrorMessage("");
+    setPasswordErrorMessage("");
+    setPasswordConfirmErrorMessage("");
+
+    nameInputRef.current?.classList.remove("form-control-invalid");
+
+    emailInputRef.current?.classList.remove("form-control-invalid");
+
+    passwordInputRef.current?.classList.remove("form-control-invalid");
+    passwordInputRef.current?.classList.remove("form-control-valid");
+
+    passwordConfirmInputRef.current?.classList.remove("form-control-invalid");
+    passwordConfirmInputRef.current?.classList.remove("form-control-valid");
+  };
+
+  const actionCodeSettings = {
+    url: "http://127.0.0.1:5173/welcome",
+    handleCodeInApp: true,
+  };
 
   const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -327,19 +517,12 @@ export default function Welcome() {
       await signInWithEmailAndPassword(auth, email, password);
 
       if (auth.currentUser?.emailVerified === true) {
-        setShowEmailNotVerified(false);
         navigate("/");
       } else {
-        setShowEmailNotVerified(true);
-
+        handleShowEmailNotVerifiedErrorModal();
         signOut();
-
-        setTimeout(() => {
-          setShowEmailNotVerified(false);
-        }, 5000);
       }
     } catch (error) {
-      setIsVerificationNeeded("");
       setIsPasswordChanged("");
       setAccountDeleted("");
 
@@ -348,16 +531,61 @@ export default function Welcome() {
         console.log("FirebaseError", error.code);
       }
 
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      handleShowSignInErrorModal();
     } finally {
       setIsLoading(false);
     }
   };
 
-  console.log("user", auth.currentUser);
-  console.log("emailVerified", auth.currentUser?.emailVerified);
+  const signUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (
+      isLoading ||
+      !isName ||
+      !isEmail ||
+      !isPassword ||
+      !isPasswordConfirm ||
+      password !== passwordConfirm
+    ) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      setIsLoading(true);
+
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      window.localStorage.setItem("verificationNeeded", "true");
+
+      await sendEmailVerification(credentials.user, actionCodeSettings);
+
+      handleShowEmailVerificationNeededWarningModal();
+
+      await updateProfile(credentials.user, {
+        displayName: name,
+      });
+
+      signOut();
+    } catch (error) {
+      window.localStorage.removeItem("verificationNeeded");
+
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+        console.log("FirebaseError", error.code);
+      }
+
+      handleShowSignUpErrorModal();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <StyledWelcome>
@@ -380,7 +608,10 @@ export default function Welcome() {
           </StyledTitle>
           <div>
             <StyledP>New to Kwitter?</StyledP>
-            <StyledButton className="btn btn-primary rounded-pill">
+            <StyledButton
+              onClick={handleShowSignUpModal}
+              className="btn btn-primary rounded-pill"
+            >
               Create an account
             </StyledButton>
           </div>
@@ -406,11 +637,11 @@ export default function Welcome() {
         isEmail={isEmail}
         emailErrorMessage={emailErrorMessage}
         password={password}
-        handlePassword={handlePassword}
+        handleSignInPassword={handleSignInPassword}
         isPassword={isPassword}
         handleRememberMe={handleRememberMe}
         noSpace={noSpace}
-        reset={reset}
+        resetSignIn={resetSignIn}
         signIn={signIn}
       />
       <AccountDeleteSuccessModal
@@ -443,6 +674,39 @@ export default function Welcome() {
         error={error}
         showSignInErrorModal={showSignInErrorModal}
         handleCloseSignInErrorModal={handleCloseSignInErrorModal}
+      />
+      <SignUp
+        showSignUpModal={showSignUpModal}
+        handleCloseSignUpModal={handleCloseSignUpModal}
+        isLoading={isLoading}
+        nameInputRef={nameInputRef}
+        name={name}
+        handleName={handleName}
+        isName={isName}
+        nameErrorMessage={nameErrorMessage}
+        emailInputRef={emailInputRef}
+        email={email}
+        handleEmail={handleEmail}
+        isEmail={isEmail}
+        emailErrorMessage={emailErrorMessage}
+        passwordInputRef={passwordInputRef}
+        password={password}
+        handleSignUpPassword={handleSignUpPassword}
+        isPassword={isPassword}
+        passwordErrorMessage={passwordErrorMessage}
+        passwordConfirmInputRef={passwordConfirmInputRef}
+        passwordConfirm={passwordConfirm}
+        handleSignUpPasswordConfirm={handleSignUpPasswordConfirm}
+        isPasswordConfirm={isPasswordConfirm}
+        passwordConfirmErrorMessage={passwordConfirmErrorMessage}
+        noSpace={noSpace}
+        resetSignUp={resetSignUp}
+        signUp={signUp}
+      />
+      <SignUpErrorModal
+        error={error}
+        showSignUpErrorModal={showSignUpErrorModal}
+        handleCloseSignUpErrorModal={handleCloseSignUpErrorModal}
       />
     </StyledWelcome>
   );

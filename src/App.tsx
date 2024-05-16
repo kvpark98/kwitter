@@ -3,7 +3,6 @@ import { RouterProvider } from "react-router-dom";
 import Layout from "./components/styles/layout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./routes/home";
-import SignUp from "./routes/auth/sign-up";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import { useEffect, useState } from "react";
@@ -132,14 +131,6 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRouteSignIn>
         <Welcome />
-      </ProtectedRouteSignIn>
-    ),
-  },
-  {
-    path: "/sign-up",
-    element: (
-      <ProtectedRouteSignIn>
-        <SignUp />
       </ProtectedRouteSignIn>
     ),
   },

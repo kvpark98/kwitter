@@ -1,29 +1,35 @@
 import { Container, Navbar } from "react-bootstrap";
-import SignInReset from "./sign-in-reset";
-import SignInSubmit from "./sign-in-submit";
+import SignUpReset from "./sign-up-reset";
+import SignUpSubmit from "./sign-up-submit";
 
-export interface SignInFooterProps {
+export interface SignUpFooterProps {
   isLoading: boolean;
+  isName: boolean;
   isEmail: boolean;
   isPassword: boolean;
-  resetSignIn: () => void;
+  isPasswordConfirm: boolean;
+  resetSignUp: () => void;
 }
 
-export default function SignInFooter({
+export default function SignUpFooter({
   isLoading,
+  isName,
   isEmail,
   isPassword,
-  resetSignIn,
-}: SignInFooterProps) {
+  isPasswordConfirm,
+  resetSignUp,
+}: SignUpFooterProps) {
   return (
     <Navbar className="flex-fill rounded-bottom bg-body-light border-top">
       <Container className="d-flex">
         <div className="d-flex justify-content-between w-100">
-          <SignInReset resetSignIn={resetSignIn} />
-          <SignInSubmit
+          <SignUpReset resetSignUp={resetSignUp} />
+          <SignUpSubmit
             isLoading={isLoading}
+            isName={isName}
             isEmail={isEmail}
             isPassword={isPassword}
+            isPasswordConfirm={isPasswordConfirm}
           />
         </div>
       </Container>

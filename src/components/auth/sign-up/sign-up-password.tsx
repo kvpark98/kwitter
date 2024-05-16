@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 export interface SignUpPasswordProps {
   passwordInputRef: React.RefObject<HTMLInputElement>;
   password: string;
-  handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSignUpPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
   passwordErrorMessage: string;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -12,7 +12,7 @@ export interface SignUpPasswordProps {
 export default function SignUpPassword({
   passwordInputRef,
   password,
-  handlePassword,
+  handleSignUpPassword,
   isPassword,
   passwordErrorMessage,
   noSpace,
@@ -23,7 +23,7 @@ export default function SignUpPassword({
       <Form.Control
         ref={passwordInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
-        onChange={handlePassword}
+        onChange={handleSignUpPassword}
         onKeyDown={noSpace}
         id="password"
         name="password"

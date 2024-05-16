@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 
-export interface SignUpButtonProps {
+export interface SignUpSubmitProps {
   isLoading: boolean;
   isName: boolean;
   isEmail: boolean;
@@ -8,22 +8,23 @@ export interface SignUpButtonProps {
   isPasswordConfirm: boolean;
 }
 
-export default function SignUpButton({
+export default function SignUpSubmit({
   isLoading,
   isName,
   isEmail,
   isPassword,
   isPasswordConfirm,
-}: SignUpButtonProps) {
+}: SignUpSubmitProps) {
   return (
     <Button
       type="submit"
-      className="mt-2 fw-bold rounded-pill"
+      variant="primary"
+      className="fw-bold rounded-pill"
       {...(!isName || !isEmail || !isPassword || !isPasswordConfirm
         ? { disabled: true }
         : { disabled: false })}
     >
-      {isLoading ? "Signing Up..." : "Sign Up"}
+      {isLoading ? "Signing up..." : "Sign up"}
     </Button>
   );
 }

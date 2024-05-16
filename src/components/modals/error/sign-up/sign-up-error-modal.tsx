@@ -1,20 +1,20 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface SignInErrorModalProps {
+export interface SignUpErrorModalProps {
   error: string;
-  showSignInErrorModal: boolean;
-  handleCloseSignInErrorModal: () => void;
+  showSignUpErrorModal: boolean;
+  handleCloseSignUpErrorModal: () => void;
 }
 
-export default function SignInErrorModal({
+export default function SignUpErrorModal({
   error,
-  showSignInErrorModal,
-  handleCloseSignInErrorModal,
-}: SignInErrorModalProps) {
+  showSignUpErrorModal,
+  handleCloseSignUpErrorModal,
+}: SignUpErrorModalProps) {
   return (
     <Modal
-      show={showSignInErrorModal}
-      onHide={handleCloseSignInErrorModal}
+      show={showSignUpErrorModal}
+      onHide={handleCloseSignUpErrorModal}
       backdrop="static"
       keyboard={false}
     >
@@ -22,20 +22,18 @@ export default function SignInErrorModal({
         <Modal.Body>
           <Alert.Heading className="mb-3">Error</Alert.Heading>
           <p>
-            {(error === "auth/invalid-credential" ||
-              error === "auth/wrong-password" ||
-              error === "auth/user-not-found") &&
+            {error === "auth/invalid-credential" &&
               "The email or password entered is incorrect."}
-            {error === "auth/user-disabled" &&
-              "The user associated with the provided email has been disabled."}
-            {error === "auth/expired-action-code" &&
-              "The email link has expired. Please request a new link and ensure you use it within the specified time limit."}
-            {error === "auth/invalid-action-code" &&
-              "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
+            {error === "auth/user-not-found" &&
+              "No user exists for the provided email."}
+            {error === "auth/email-already-in-use" &&
+              "This email is already in use."}
             {error === "auth/account-exists-with-different-credential" &&
               "The email is either invalid or already in use."}
-            {error === "auth/requires-recent-login" &&
-              "Security concern. For this action, recent sign-in is required. Please sign in again."}
+            {error === "auth/invalid-email" &&
+              "The provided email address is not valid."}
+            {error === "auth/user-disabled" &&
+              "The user associated with the provided email has been disabled."}
             {error === "auth/too-many-requests" &&
               "Excessive attempts. Please retry after a brief delay."}
             {error === "auth/network-request-failed" &&
@@ -56,7 +54,7 @@ export default function SignInErrorModal({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseSignInErrorModal}
+            onClick={handleCloseSignUpErrorModal}
           >
             Back
           </Button>

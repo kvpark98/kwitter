@@ -1,14 +1,14 @@
 import { Button } from "react-bootstrap";
 
-export interface SignInResetProps {
-  resetSignIn: () => void;
+export interface SignUpResetProps {
+  resetSignUp: () => void;
 }
 
-export default function SignInReset({ resetSignIn }: SignInResetProps) {
+export default function SignUpReset({ resetSignUp }: SignUpResetProps) {
   return (
     <Button
       type="button"
-      onClick={resetSignIn}
+      onClick={resetSignUp}
       title="Reset"
       variant="outline-info"
       className="d-flex align-items-center border-0 rounded-circle"
