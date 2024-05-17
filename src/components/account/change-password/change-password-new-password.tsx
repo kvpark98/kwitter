@@ -29,8 +29,8 @@ export default function ChangePasswordNewPassword({
         name="newPassword"
         value={newPassword}
         type="password"
-        autoComplete="new-password"
         maxLength={20}
+        autoComplete="password"
       />
       {!isNewPassword && newPasswordErrorMessage && (
         <div className="mt-2 text-danger">{newPasswordErrorMessage}</div>

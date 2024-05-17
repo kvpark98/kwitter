@@ -33,8 +33,8 @@ export default function ChangePasswordNewPasswordConfirm({
         name="newPasswordConfirm"
         value={newPasswordConfirm}
         type="password"
-        autoComplete="new-password"
         maxLength={20}
+        autoComplete="password"
         {...(!isNewPassword ? { disabled: true } : { disabled: false })}
       />
       {!isNewPasswordConfirm && newPasswordConfirmErrorMessage && (

@@ -29,8 +29,8 @@ export default function SignUpPassword({
         name="password"
         value={password}
         type="password"
-        autoComplete="new-password"
         maxLength={20}
+        autoComplete="password"
       />
       {!isPassword && passwordErrorMessage && (
         <div className="mt-2 text-danger">{passwordErrorMessage}</div>

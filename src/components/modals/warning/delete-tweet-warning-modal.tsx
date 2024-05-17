@@ -1,7 +1,7 @@
 import { Alert, Button, Modal } from "react-bootstrap";
-import DeleteTweetErrors from "../error/delete-tweet-errors";
+import DeleteTweetErrorModal from "../error/delete-tweet-error-modal";
 
-export interface DeleteTweetModalProps {
+export interface DeleteTweetWarningModalProps {
   isLoading: boolean;
   error: string;
   showDeleteModal: boolean;
@@ -11,7 +11,7 @@ export interface DeleteTweetModalProps {
   handleCloseDeleteErrorsModal: () => void;
 }
 
-export default function DeleteTweetModal({
+export default function DeleteTweetWarningModal({
   isLoading,
   error,
   showDeleteModal,
@@ -19,7 +19,7 @@ export default function DeleteTweetModal({
   deleteTweet,
   showDeleteErrorsModal,
   handleCloseDeleteErrorsModal,
-}: DeleteTweetModalProps) {
+}: DeleteTweetWarningModalProps) {
   return (
     <div>
       <Modal
@@ -30,7 +30,7 @@ export default function DeleteTweetModal({
       >
         <Alert variant="warning" className="m-0 p-0">
           <Modal.Body>
-            <Alert.Heading className="mb-3">Are You Sure?</Alert.Heading>
+            <Alert.Heading className="mb-3">Alert</Alert.Heading>
             <p>
               Are you sure you want to delete this tweet? This action cannot be
               undone.
@@ -57,7 +57,7 @@ export default function DeleteTweetModal({
         </Alert>
       </Modal>
       {error && (
-        <DeleteTweetErrors
+        <DeleteTweetErrorModal
           error={error}
           showDeleteErrorsModal={showDeleteErrorsModal}
           handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}

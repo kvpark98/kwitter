@@ -3,8 +3,8 @@ import { useState } from "react";
 import SideBarLogo from "./side-bar-logo";
 import SideBarNav from "./side-bar-nav";
 import styled from "@emotion/styled";
-import SignOutModal from "../modals/warning/sign-out-modal";
 import { auth } from "../../firebase";
+import SignOutWarningModal from "../modals/warning/sign-out-warning-modal";
 
 export interface SideBarProps {
   handleShowCreateTweetModal?: () => void;
@@ -46,7 +46,7 @@ export default function SideBar({ handleShowCreateTweetModal }: SideBarProps) {
         handleShowSignOutModal={handleShowSignOutModal}
         handleShowCreateTweetModal={handleShowCreateTweetModal!}
       />
-      <SignOutModal
+      <SignOutWarningModal
         showSignOutModal={showSignOutModal}
         handleCloseSignOutModal={handleCloseSignOutModal}
         signOut={signOut}

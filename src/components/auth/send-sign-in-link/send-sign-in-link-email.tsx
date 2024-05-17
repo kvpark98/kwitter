@@ -1,7 +1,7 @@
 import { Form } from "react-bootstrap";
 
 export interface SendSignInLinkEmailProps {
-  emailInputRef: React.RefObject<HTMLInputElement>;
+  signInLinkEmailInputRef: React.RefObject<HTMLInputElement>;
   email: string;
   handleEmail: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isEmail: boolean;
@@ -10,7 +10,7 @@ export interface SendSignInLinkEmailProps {
 }
 
 export default function SendSignInLinkEmail({
-  emailInputRef,
+  signInLinkEmailInputRef,
   email,
   handleEmail,
   isEmail,
@@ -19,20 +19,21 @@ export default function SendSignInLinkEmail({
 }: SendSignInLinkEmailProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="email">
+      <Form.Label htmlFor="signInLinkEmail">
         Provide your registered email address, and we'll send you a link for
         signing in.
       </Form.Label>
       <Form.Control
-        ref={emailInputRef}
+        ref={signInLinkEmailInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
         onChange={handleEmail}
         onKeyDown={noSpace}
-        id="email"
+        id="signInLinkEmail"
         name="email"
         value={email}
         type="text"
         maxLength={50}
+        autoComplete="email"
       />
       {!isEmail && emailErrorMessage && (
         <div className="mt-2 text-danger">{emailErrorMessage}</div>

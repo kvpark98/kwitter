@@ -1,12 +1,12 @@
 import { Button } from "react-bootstrap";
 
-export interface DeleteAccountResetButtonProps {
+export interface DeleteAccountResetProps {
   resetDeletePassword: () => void;
 }
 
-export default function DeleteAccountResetButton({
+export default function DeleteAccountReset({
   resetDeletePassword,
-}: DeleteAccountResetButtonProps) {
+}: DeleteAccountResetProps) {
   return (
     <Button
       type="button"

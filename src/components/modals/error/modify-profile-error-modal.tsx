@@ -1,20 +1,20 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface CreateTweetErrorsProps {
+export interface ModifyProfileErrorModalProps {
   error: string;
-  showCreateTweetErrorsModal: boolean;
-  handleCloseCreateTweetErrorsModal: () => void;
+  showModifyProfileErrorsModal: boolean;
+  handleCloseModifyProfileErrorsModal: () => void;
 }
 
-export default function CreateTweetErrors({
+export default function ModifyProfileErrorModal({
   error,
-  showCreateTweetErrorsModal,
-  handleCloseCreateTweetErrorsModal,
-}: CreateTweetErrorsProps) {
+  showModifyProfileErrorsModal,
+  handleCloseModifyProfileErrorsModal,
+}: ModifyProfileErrorModalProps) {
   return (
     <Modal
-      show={showCreateTweetErrorsModal}
-      onHide={handleCloseCreateTweetErrorsModal}
+      show={showModifyProfileErrorsModal}
+      onHide={handleCloseModifyProfileErrorsModal}
       backdrop="static"
       keyboard={false}
     >
@@ -115,7 +115,7 @@ export default function CreateTweetErrors({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseCreateTweetErrorsModal}
+            onClick={handleCloseModifyProfileErrorsModal}
           >
             Back
           </Button>

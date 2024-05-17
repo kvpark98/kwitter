@@ -2,11 +2,11 @@ import { Alert, Form } from "react-bootstrap";
 import ResetPasswordErrors from "../../alert/error/auth/reset-password/reset-password-errors";
 import SignInWithEmailSuccess from "../../alert/success/auth/reset-password/sign-in-with-email-success";
 import { Wrapper } from "../../styles/auth-components";
-import ResetPasswordCancelModal from "../../modals/warning/reset-password-cancel-modal";
 import ResetPasswordSwitcher from "./reset-password-switcher";
 import ResetPasswordButton from "./reset-password-button";
 import ResetPasswordPassword from "./reset-password-password";
 import ResetPasswordPasswordConfirm from "./reset-password-password-confirm.tsx";
+import ResetPasswordWarningModal from "../../modals/warning/reset-password-warning-modal.tsx";
 
 export interface ResetPasswordFormProps {
   passwordInputRef: React.RefObject<HTMLInputElement>;
@@ -88,7 +88,7 @@ export default function ResetPasswordForm({
           handleShowModal={handleShowModal}
         />
       </Alert>
-      <ResetPasswordCancelModal
+      <ResetPasswordWarningModal
         showModal={showModal}
         handleCloseModal={handleCloseModal}
         navigateToHome={navigateToHome}

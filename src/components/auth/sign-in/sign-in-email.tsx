@@ -30,6 +30,7 @@ export default function SignInEmail({
         value={email}
         type="text"
         maxLength={50}
+        autoComplete="email"
       />
       {!isEmail && emailErrorMessage && (
         <div className="mt-2 text-danger">{emailErrorMessage}</div>

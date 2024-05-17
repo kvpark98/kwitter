@@ -23,13 +23,13 @@ import {
 } from "firebase/storage";
 import { FirebaseError } from "firebase/app";
 import CreateCropPhotoModal from "../components/tweets/create/create-crop-modal/create-crop-photo-modal";
-import CreateTweetSuccess from "../components/modals/success/create-tweet-success";
-import CreateTweetErrors from "../components/modals/error/create-tweet-errors";
 import CreateTweetDiscardModal from "../components/tweets/create/create-tweet-discard-modal/create-tweet-discard-modal";
 import { useNavigate } from "react-router-dom";
 import TweetHeader from "../components/tweets/tweet-header";
 import SideBar from "../components/sidebar/side-bar";
 import { ITweet } from "../components/tweets/query/detail/tweet";
+import CreateTweetErrorModal from "../components/modals/error/create-tweet-error-modal";
+import CreateTweetSuccessModal from "../components/modals/success/create-tweet-success-modal";
 
 export default function Home() {
   const user = auth.currentUser;
@@ -447,16 +447,12 @@ export default function Home() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
       } else if (error instanceof FirestoreError) {
         setError(error.code);
-        console.log("FirestoreError", error.code);
       } else if (error instanceof StorageError) {
         setError(error.code);
-        console.log("StorageError", error.code);
       } else {
         setError("size-exhausted");
-        console.log(error);
       }
 
       // 메시지 및 파일 상태를 초기화
@@ -520,11 +516,11 @@ export default function Home() {
           handleCloseCreateTweetDiscardBothModal
         }
       />
-      <CreateTweetSuccess
+      <CreateTweetSuccessModal
         showCreateTweetSuccessModal={showCreateTweetSuccessModal}
         handleCloseCreateTweetSuccessModal={handleCloseCreateTweetSuccessModal}
       />
-      <CreateTweetErrors
+      <CreateTweetErrorModal
         error={error}
         showCreateTweetErrorsModal={showCreateTweetErrorsModal}
         handleCloseCreateTweetErrorsModal={handleCloseCreateTweetErrorsModal}

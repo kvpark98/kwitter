@@ -17,6 +17,7 @@ export default function CreateTweetDiscardModal({
       onHide={handleCloseCreateTweetDiscardModal}
       backdrop="static"
       keyboard={false}
+      className="border-0"
       size="sm"
       centered
     >

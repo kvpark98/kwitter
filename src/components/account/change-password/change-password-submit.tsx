@@ -1,18 +1,18 @@
 import { Button } from "react-bootstrap";
 
-export interface ChangePasswordButtonProps {
+export interface ChangePasswordSubmitProps {
   isLoading: boolean;
   isCurrentPassword: boolean;
   isNewPassword: boolean;
   isNewPasswordConfirm: boolean;
 }
 
-export default function ChangePasswordButton({
+export default function ChangePasswordSubmit({
   isLoading,
   isCurrentPassword,
   isNewPassword,
   isNewPasswordConfirm,
-}: ChangePasswordButtonProps) {
+}: ChangePasswordSubmitProps) {
   return (
     <Button
       type="submit"

@@ -1,14 +1,14 @@
 import { Button } from "react-bootstrap";
 
-export interface DeleteAccountPasswordButtonProps {
+export interface DeleteAccountPasswordSubmitProps {
   isLoading: boolean;
   isDeletePassword: boolean;
 }
 
-export default function DeleteAccountPasswordButton({
+export default function DeleteAccountPasswordSubmit({
   isLoading,
   isDeletePassword,
-}: DeleteAccountPasswordButtonProps) {
+}: DeleteAccountPasswordSubmitProps) {
   return (
     <Button
       type="submit"

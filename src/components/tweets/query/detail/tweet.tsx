@@ -23,10 +23,10 @@ import ModifyTweet from "../../modify/modify-tweet";
 import TweetCard from "./tweet-card";
 import ModifyCropPhotoModal from "../../modify/modify-crop-modal/modify-crop-photo-modal";
 import { CroppedAreaPixels } from "../../../../routes/profile";
-import ModifyTweetSuccess from "../../../modals/success/modify-tweet-success";
-import DeleteTweetModal from "../../../modals/warning/delete-tweet-modal";
-import ModifyTweetErrors from "../../../modals/error/modify-tweet-errors";
 import ModifyTweetDiscardModal from "../../modify/modify-tweet-discard-modal/modify-tweet-discard-modal";
+import ModifyTweetErrorModal from "../../../modals/error/modify-tweet-error-modal";
+import ModifyTweetSuccessModal from "../../../modals/success/modify-tweet-success-modal";
+import DeleteTweetWarningModal from "../../../modals/warning/delete-tweet-warning-modal";
 
 export interface ITweet {
   id: string;
@@ -536,7 +536,7 @@ export default function Tweet({
         handleModifyRatio4x3={handleModifyRatio4x3}
         handleModifyRatio16x9={handleModifyRatio16x9}
       />
-      <DeleteTweetModal
+      <DeleteTweetWarningModal
         isLoading={isLoading}
         error={error}
         showDeleteModal={showDeleteModal}
@@ -552,11 +552,11 @@ export default function Tweet({
           handleCloseModifyTweetDiscardBothModal
         }
       />
-      <ModifyTweetSuccess
+      <ModifyTweetSuccessModal
         showModifyTweetSuccessModal={showModifyTweetSuccessModal}
         handleCloseModifyTweetSuccessModal={handleCloseModifyTweetSuccessModal}
       />
-      <ModifyTweetErrors
+      <ModifyTweetErrorModal
         error={error}
         showModifyTweetErrorsModal={showModifyTweetErrorsModal}
         handleCloseModifyTweetErrorsModal={handleCloseModifyTweetErrorsModal}

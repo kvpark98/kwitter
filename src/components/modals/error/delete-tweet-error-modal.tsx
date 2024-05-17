@@ -1,20 +1,20 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface ModifyTweetErrorsProps {
+export interface DeleteTweetErrorModalProps {
   error: string;
-  showModifyTweetErrorsModal: boolean;
-  handleCloseModifyTweetErrorsModal: () => void;
+  showDeleteErrorsModal: boolean;
+  handleCloseDeleteErrorsModal: () => void;
 }
 
-export default function ModifyTweetErrors({
+export default function DeleteTweetErrorModal({
   error,
-  showModifyTweetErrorsModal,
-  handleCloseModifyTweetErrorsModal,
-}: ModifyTweetErrorsProps) {
+  showDeleteErrorsModal,
+  handleCloseDeleteErrorsModal,
+}: DeleteTweetErrorModalProps) {
   return (
     <Modal
-      show={showModifyTweetErrorsModal}
-      onHide={handleCloseModifyTweetErrorsModal}
+      show={showDeleteErrorsModal}
+      onHide={handleCloseDeleteErrorsModal}
       backdrop="static"
       keyboard={false}
     >
@@ -34,7 +34,7 @@ export default function ModifyTweetErrors({
             {error === "failed_precondition" &&
               "The operation failed due to a precondition. Please ensure all requirements are met."}
             {error === "internal" &&
-              "An internal error occurred. Please try again later or contact support."}
+              "An internal error occurred. Please try sagain later or contact support."}
             {error === "invalid_argument" &&
               "Invalid argument provided. Please check the input and try again."}
             {error === "not_found" &&
@@ -115,9 +115,9 @@ export default function ModifyTweetErrors({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseModifyTweetErrorsModal}
+            onClick={handleCloseDeleteErrorsModal}
           >
-            Back
+            Close
           </Button>
         </Modal.Footer>
       </Alert>

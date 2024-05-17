@@ -1,16 +1,16 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface SignOutModalProps {
+export interface SignOutWarningModalProps {
   showSignOutModal: boolean;
   handleCloseSignOutModal: () => void;
   signOut: () => void;
 }
 
-export default function SignOutModal({
+export default function SignOutWarningModal({
   showSignOutModal,
   handleCloseSignOutModal,
   signOut,
-}: SignOutModalProps) {
+}: SignOutWarningModalProps) {
   return (
     <Modal
       show={showSignOutModal}
@@ -20,7 +20,7 @@ export default function SignOutModal({
     >
       <Alert variant="warning" className="m-0 p-0">
         <Modal.Body>
-          <Alert.Heading className="mb-3">Are You Sure?</Alert.Heading>
+          <Alert.Heading className="mb-3">Alert</Alert.Heading>
           <p>
             Signing out will end your current session. Do you want to proceed?
           </p>
@@ -34,7 +34,7 @@ export default function SignOutModal({
             Cancel
           </Button>
           <Button variant="danger" className="rounded-pill" onClick={signOut}>
-            Sign Out
+            Sign out
           </Button>
         </Modal.Footer>
       </Alert>

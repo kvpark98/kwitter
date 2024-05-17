@@ -22,8 +22,8 @@ export default function ChangePasswordCurrentPassword({
         name="currentPassword"
         value={currentPassword}
         type="password"
-        autoComplete="new-password"
         maxLength={20}
+        autoComplete="password"
       />
     </Form.Group>
   );

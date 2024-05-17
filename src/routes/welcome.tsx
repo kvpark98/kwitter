@@ -6,7 +6,9 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
   createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
   sendEmailVerification,
+  sendSignInLinkToEmail,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
@@ -19,9 +21,12 @@ import EmailNotVerifiedErrorModal from "../components/modals/error/sign-in/email
 import SignInErrorModal from "../components/modals/error/sign-in/sign-in-error-modal";
 import SignUp from "../components/auth/sign-up/sign-up";
 import SignUpErrorModal from "../components/modals/error/sign-up/sign-up-error-modal";
+import SendSignInLink from "../components/auth/send-sign-in-link/send-sign-in-link";
+import SignInLinkWarningModal from "../components/modals/warning/send-sign-in-link/sign-in-link-warning-modal";
+import SendSignInLinkErrorModal from "../components/modals/error/send-sign-in-link/send-sign-in-link-error-modal";
 
 // 미디어 쿼리를 사용하여 스타일 정의
-const StyledWelcome = styled.div`
+export const StyledWelcome = styled.div`
   @media screen and (min-width: 900px) {
     display: flex !important;
     height: 100% !important;
@@ -42,7 +47,7 @@ const StyledWelcome = styled.div`
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
-const StyledLogoDiv = styled.div`
+export const StyledLogoDiv = styled.div`
   @media screen and (min-width: 900px) {
     display: flex !important;
     flex: 1 1 auto !important;
@@ -59,7 +64,7 @@ const StyledLogoDiv = styled.div`
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
-const StyledLogoSvg = styled.svg`
+export const StyledLogoSvg = styled.svg`
   @media screen and (min-width: 900px) {
     width: 300px !important;
     height: 300px !important;
@@ -75,7 +80,7 @@ const StyledLogoSvg = styled.svg`
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
-const StyledTitle = styled.div`
+export const StyledTitle = styled.div`
   @media screen and (min-width: 900px) {
     text-align: center;
     font-size: 3rem !important;
@@ -91,7 +96,7 @@ const StyledTitle = styled.div`
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
-const StyledP = styled.p`
+export const StyledP = styled.p`
   @media screen and (min-width: 900px) {
     font-size: 1.6rem !important;
     margin-bottom: 16px !important;
@@ -113,7 +118,7 @@ const StyledP = styled.p`
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
-const StyledButton = styled.div`
+export const StyledButton = styled.div`
   @media screen and (max-width: 900px) {
     display: flex !important;
     justify-content: center !important;
@@ -124,6 +129,7 @@ const StyledButton = styled.div`
 export default function Welcome() {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const signInLinkEmailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const passwordConfirmInputRef = useRef<HTMLInputElement>(null);
 
@@ -162,7 +168,9 @@ export default function Welcome() {
     useState("");
 
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const handleShowSignInModal = () => setShowSignInModal(true);
+  const handleShowSignInModal = () => {
+    setShowSignInModal(true);
+  };
   const handleCloseSignInModal = () => {
     setShowSignInModal(false);
     resetSignIn();
@@ -231,6 +239,38 @@ export default function Welcome() {
     setShowSignUpModal(true);
   };
 
+  const [showSendSignInLinkModal, setShowSendSignInLinkModal] = useState(false);
+  const handleShowSendSignInLinkModal = () => {
+    handleCloseSignInModal();
+    setShowSendSignInLinkModal(true);
+  };
+  const handleCloseSendSignInLinkModal = () => {
+    setShowSendSignInLinkModal(false);
+    resetSendSignInLink();
+    handleShowSignInModal();
+  };
+
+  const [showSignInLinkWarningModal, setShowSignInLinkWarningModal] =
+    useState(false);
+  const handleShowSignInLinkWarningModal = () => {
+    setShowSendSignInLinkModal(false);
+    resetSendSignInLink();
+    setShowSignInLinkWarningModal(true);
+  };
+  const handleCloseSignInLinkWarningModal = () =>
+    setShowSignInLinkWarningModal(false);
+
+  const [showSendSignInLinkErrorModal, setShowSendSignInLinkErrorModal] =
+    useState(false);
+  const handleShowSendSignInLinkErrorModal = () => {
+    setShowSendSignInLinkModal(false);
+    setShowSendSignInLinkErrorModal(true);
+  };
+  const handleCloseSendSignInLinkErrorModal = () => {
+    setShowSendSignInLinkErrorModal(false);
+    setShowSendSignInLinkModal(true);
+  };
+
   useEffect(() => {
     window.localStorage.removeItem("PasswordChanged");
     window.localStorage.removeItem("accountDeleted");
@@ -285,17 +325,35 @@ export default function Welcome() {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
 
-        emailInputRef.current?.classList.add("form-control-invalid");
+        if (showSendSignInLinkModal) {
+          signInLinkEmailInputRef.current?.classList.add(
+            "form-control-invalid"
+          );
+        } else {
+          emailInputRef.current?.classList.add("form-control-invalid");
+        }
       } else {
         setIsEmail(true);
 
-        emailInputRef.current?.classList.remove("form-control-invalid");
+        if (showSendSignInLinkModal) {
+          signInLinkEmailInputRef.current?.classList.remove(
+            "form-control-invalid"
+          );
+        } else {
+          emailInputRef.current?.classList.remove("form-control-invalid");
+        }
       }
     } else {
       setEmailErrorMessage("");
       setIsEmail(false);
 
-      emailInputRef.current?.classList.remove("form-control-invalid");
+      if (showSendSignInLinkModal) {
+        signInLinkEmailInputRef.current?.classList.remove(
+          "form-control-invalid"
+        );
+      } else {
+        emailInputRef.current?.classList.remove("form-control-invalid");
+      }
     }
   };
 
@@ -491,9 +549,33 @@ export default function Welcome() {
     passwordConfirmInputRef.current?.classList.remove("form-control-valid");
   };
 
+  const resetSendSignInLink = () => {
+    setEmail("");
+
+    setIsEmail(false);
+
+    setEmailErrorMessage("");
+
+    signInLinkEmailInputRef.current?.classList.remove("form-control-invalid");
+  };
+
   const actionCodeSettings = {
     url: "http://127.0.0.1:5173/welcome",
     handleCodeInApp: true,
+  };
+
+  const actionCodeSettingsSendSignInLink = {
+    url: "http://127.0.0.1:5173/sign-in-with-email",
+    handleCodeInApp: true,
+  };
+
+  const checkIfEmailExists = async (email: string) => {
+    try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      return signInMethods;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -528,7 +610,6 @@ export default function Welcome() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
       }
 
       handleShowSignInErrorModal();
@@ -578,10 +659,46 @@ export default function Welcome() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
       }
 
       handleShowSignUpErrorModal();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendSignInLink = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isLoading || !isEmail) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      setIsLoading(true);
+
+      const signInMethods = await checkIfEmailExists(email);
+
+      if (signInMethods.length > 0) {
+        await sendSignInLinkToEmail(
+          auth,
+          email,
+          actionCodeSettingsSendSignInLink
+        );
+        handleShowSignInLinkWarningModal();
+      } else {
+        throw new Error("auth/no-email");
+      }
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+      } else {
+        setError("auth/no-email");
+      }
+
+      handleShowSendSignInLinkErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -643,6 +760,7 @@ export default function Welcome() {
         noSpace={noSpace}
         resetSignIn={resetSignIn}
         signIn={signIn}
+        handleShowSendSignInLinkModal={handleShowSendSignInLinkModal}
       />
       <AccountDeleteSuccessModal
         showAccountDeleteSuccessModal={showAccountDeleteSuccessModal}
@@ -707,6 +825,30 @@ export default function Welcome() {
         error={error}
         showSignUpErrorModal={showSignUpErrorModal}
         handleCloseSignUpErrorModal={handleCloseSignUpErrorModal}
+      />
+      <SendSignInLink
+        signInLinkEmailInputRef={signInLinkEmailInputRef}
+        showSendSignInLinkModal={showSendSignInLinkModal}
+        handleCloseSendSignInLinkModal={handleCloseSendSignInLinkModal}
+        isLoading={isLoading}
+        email={email}
+        handleEmail={handleEmail}
+        isEmail={isEmail}
+        emailErrorMessage={emailErrorMessage}
+        noSpace={noSpace}
+        resetSendSignInLink={resetSendSignInLink}
+        sendSignInLink={sendSignInLink}
+      />
+      <SignInLinkWarningModal
+        showSignInLinkWarningModal={showSignInLinkWarningModal}
+        handleCloseSignInLinkWarningModal={handleCloseSignInLinkWarningModal}
+      />
+      <SendSignInLinkErrorModal
+        showSendSignInLinkErrorModal={showSendSignInLinkErrorModal}
+        handleCloseSendSignInLinkErrorModal={
+          handleCloseSendSignInLinkErrorModal
+        }
+        error={error}
       />
     </StyledWelcome>
   );

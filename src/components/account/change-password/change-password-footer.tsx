@@ -1,6 +1,6 @@
 import { Container, Navbar } from "react-bootstrap";
-import ChangePasswordButton from "./change-password-button";
 import ChangePasswordReset from "./change-password-reset";
+import ChangePasswordSubmit from "./change-password-submit";
 
 export interface ChangePasswordFooterProps {
   isLoading: boolean;
@@ -22,7 +22,7 @@ export default function ChangePasswordFooter({
       <Container className="d-flex">
         <div className="d-flex justify-content-between w-100">
           <ChangePasswordReset reset={reset} />
-          <ChangePasswordButton
+          <ChangePasswordSubmit
             isLoading={isLoading}
             isCurrentPassword={isCurrentPassword}
             isNewPassword={isNewPassword}

@@ -1,14 +1,14 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface ModifyTweetSuccessProps {
+export interface ModifyTweetSuccessModalProps {
   showModifyTweetSuccessModal: boolean;
   handleCloseModifyTweetSuccessModal: () => void;
 }
 
-export default function ModifyTweetSuccess({
+export default function ModifyTweetSuccessModal({
   showModifyTweetSuccessModal,
   handleCloseModifyTweetSuccessModal,
-}: ModifyTweetSuccessProps) {
+}: ModifyTweetSuccessModalProps) {
   return (
     <Modal
       show={showModifyTweetSuccessModal}

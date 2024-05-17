@@ -1,24 +1,29 @@
-import { Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Button, Form } from "react-bootstrap";
 
 export interface SignInPasswordProps {
   password: string;
   handleSignInPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleShowSendSignInLinkModal: () => void;
 }
 
 export default function SignInPassword({
   password,
   handleSignInPassword,
   noSpace,
+  handleShowSendSignInLinkModal,
 }: SignInPasswordProps) {
   return (
     <Form.Group>
       <div className="d-flex justify-content-between align-items-center">
         <Form.Label htmlFor="password">Password</Form.Label>
-        <Link to="/send-sign-in-link" className="p-0 mb-2 text-decoration-none">
+        <Button
+          variant="link"
+          onClick={handleShowSendSignInLinkModal}
+          className="p-0 mb-2 text-decoration-none"
+        >
           Forgot Password?
-        </Link>
+        </Button>
       </div>
       <Form.Control
         className="border-none mt-1 mb-1 rounded-pill"
@@ -28,8 +33,8 @@ export default function SignInPassword({
         name="password"
         value={password}
         type="password"
-        autoComplete="new-password"
         maxLength={20}
+        autoComplete="password"
       />
     </Form.Group>
   );

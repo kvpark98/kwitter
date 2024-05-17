@@ -30,6 +30,7 @@ export default function SignUpName({
         value={name}
         type="text"
         maxLength={20}
+        autoComplete="name"
       />
       {!isName && nameErrorMessage && (
         <div className="mt-2 text-danger">{nameErrorMessage}</div>

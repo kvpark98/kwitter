@@ -18,7 +18,7 @@ export default function EmailVerificationNeededWarningModal({
     >
       <Alert variant="warning" className="m-0 p-0">
         <Modal.Body>
-          <Alert.Heading className="mb-3">Verification Needed</Alert.Heading>
+          <Alert.Heading className="mb-3">Alert</Alert.Heading>
           <p>
             Kindly navigate to your email and click on the provided link for
             verification.

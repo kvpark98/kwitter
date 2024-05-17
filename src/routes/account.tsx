@@ -7,16 +7,14 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import { auth, db, storage } from "../../firebase";
+import { auth, db, storage } from "../firebase";
 import { Container } from "react-bootstrap";
-import ScrollProfile from "../../components/scrolls/scrollProfile";
-import AccountContent from "../../components/account/account-content";
-import ChangePasswordErrors from "../../components/modals/error/change-password-errors";
-import ChangePassword from "../../components/account/change-password/change-password";
-import DeleteAccount from "../../components/account/delete-account/delete-account";
-import DeleteAccountErrors from "../../components/modals/error/delete-account-errors";
-import AccountHeader from "../../components/account/account-header";
-import SideBar from "../../components/sidebar/side-bar";
+import ScrollProfile from "../components/scrolls/scrollProfile";
+import AccountContent from "../components/account/account-content";
+import ChangePassword from "../components/account/change-password/change-password";
+import DeleteAccount from "../components/account/delete-account/delete-account";
+import AccountHeader from "../components/account/account-header";
+import SideBar from "../components/sidebar/side-bar";
 import { StorageError, deleteObject, ref } from "firebase/storage";
 import {
   FirestoreError,
@@ -26,7 +24,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { ITweet } from "../../components/tweets/query/detail/tweet";
+import { ITweet } from "../components/tweets/query/detail/tweet";
+import ChangePasswordErrorModal from "../components/modals/error/change-password-error-modal";
+import DeleteAccountErrorModal from "../components/modals/error/delete-account-error-modal";
 
 export default function Account() {
   const user = auth.currentUser;
@@ -385,10 +385,6 @@ export default function Account() {
   };
 
   useEffect(() => {
-    window.localStorage.removeItem("error");
-  }, []);
-
-  useEffect(() => {
     if (
       !dataRemovalChecked ||
       !contentRetentionChecked ||
@@ -485,7 +481,6 @@ export default function Account() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
 
         if (
           error.code === "auth/invalid-login-credentials" ||
@@ -609,16 +604,12 @@ export default function Account() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
       } else if (error instanceof FirestoreError) {
         setError(error.code);
-        console.log("FirestoreError", error.code);
       } else if (error instanceof StorageError) {
         setError(error.code);
-        console.log("StorageError", error.code);
       } else {
         setError("size-exhausted");
-        console.log(error);
       }
 
       resetDeletePassword();
@@ -664,7 +655,7 @@ export default function Account() {
         reset={reset}
         changePassword={changePassword}
       />
-      <ChangePasswordErrors
+      <ChangePasswordErrorModal
         error={error}
         showChangePasswordErrorsModal={showChangePasswordErrorsModal}
         handleCloseChangePasswordErrorsModal={
@@ -692,7 +683,7 @@ export default function Account() {
         agreeAll={agreeAll}
         deleteAccount={deleteAccount}
       />
-      <DeleteAccountErrors
+      <DeleteAccountErrorModal
         error={error}
         showDeleteAccountErrorsModal={showDeleteAccountErrorsModal}
         handleCloseDeleteAccountErrorsModal={

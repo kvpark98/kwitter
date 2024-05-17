@@ -1,21 +1,22 @@
 import { Button } from "react-bootstrap";
 
-export interface SendSignInLinkButtonProps {
+export interface SendSignInLinkSubmitProps {
   isLoading: boolean;
   isEmail: boolean;
 }
 
-export default function SendSignInLinkButton({
+export default function SendSignInLinkSubmit({
   isLoading,
   isEmail,
-}: SendSignInLinkButtonProps) {
+}: SendSignInLinkSubmitProps) {
   return (
     <Button
       type="submit"
-      className="mt-2 fw-bold rounded-pill"
+      variant="primary"
+      className="fw-bold rounded-pill"
       {...(!isEmail ? { disabled: true } : { disabled: false })}
     >
-      {isLoading ? "Sending..." : "Send Link"}
+      {isLoading ? "Sending..." : "Send Sign-in Link"}
     </Button>
   );
 }

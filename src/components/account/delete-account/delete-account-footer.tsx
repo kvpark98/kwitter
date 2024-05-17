@@ -1,6 +1,6 @@
 import { Container, Navbar } from "react-bootstrap";
-import DeleteAccountPasswordButton from "./delete-account-password-button";
-import DeleteAccountResetButton from "./delete-account-reset-button";
+import DeleteAccountPasswordSubmit from "./delete-account-password-submit";
+import DeleteAccountReset from "./delete-account-reset";
 
 export interface DeleteAccountFooterProps {
   isLoading: boolean;
@@ -17,8 +17,8 @@ export default function DeleteAccountFooter({
     <Navbar className="flex-fill rounded-bottom bg-body-light border-top">
       <Container className="d-flex">
         <div className="d-flex justify-content-between w-100">
-          <DeleteAccountResetButton resetDeletePassword={resetDeletePassword} />
-          <DeleteAccountPasswordButton
+          <DeleteAccountReset resetDeletePassword={resetDeletePassword} />
+          <DeleteAccountPasswordSubmit
             isLoading={isLoading}
             isDeletePassword={isDeletePassword}
           />

@@ -24,8 +24,8 @@ export default function DeleteAccountPasswordPassword({
         name="password"
         value={deletePassword}
         type="password"
-        autoComplete="new-password"
         maxLength={20}
+        autoComplete="password"
       />
     </Form.Group>
   );

@@ -17,6 +17,7 @@ export default function ModifyProfileDiscardModal({
       onHide={handleCloseModifyProfileDiscardModal}
       backdrop="static"
       keyboard={false}
+      className="border-0"
       size="sm"
       centered
     >

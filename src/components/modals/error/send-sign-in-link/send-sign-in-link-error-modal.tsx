@@ -1,20 +1,20 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface ChangePasswordErrorsProps {
+export interface SendSignInLinkErrorModalProps {
+  showSendSignInLinkErrorModal: boolean;
+  handleCloseSendSignInLinkErrorModal: () => void;
   error: string;
-  showChangePasswordErrorsModal: boolean;
-  handleCloseChangePasswordErrorsModal: () => void;
 }
 
-export default function ChangePasswordErrors({
+export default function SendSignInLinkErrorModal({
+  showSendSignInLinkErrorModal,
+  handleCloseSendSignInLinkErrorModal,
   error,
-  showChangePasswordErrorsModal,
-  handleCloseChangePasswordErrorsModal,
-}: ChangePasswordErrorsProps) {
+}: SendSignInLinkErrorModalProps) {
   return (
     <Modal
-      show={showChangePasswordErrorsModal}
-      onHide={handleCloseChangePasswordErrorsModal}
+      show={showSendSignInLinkErrorModal}
+      onHide={handleCloseSendSignInLinkErrorModal}
       backdrop="static"
       keyboard={false}
     >
@@ -22,15 +22,13 @@ export default function ChangePasswordErrors({
         <Modal.Body>
           <Alert.Heading className="mb-3">Error</Alert.Heading>
           <p>
-            {(error === "auth/wrong-password" ||
-              error === "auth/invalid-credential") &&
-              "Your current password is incorrect."}
-            {error === "auth/same-password" &&
-              "Your new password is the same as your current password."}
-            {error === "auth/user-not-found" &&
-              "User not found. Please verify your account and try again."}
+            {error === "auth/no-email" && "This email is not registered."}
+            {error === "auth/invalid-action-code" &&
+              "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
             {error === "auth/user-disabled" &&
-              "Account disabled. Please contact support to re-enable your account."}
+              "The user associated with the provided email has been disabled."}
+            {error === "auth/user-not-found" &&
+              "No user exists for the provided email."}
             {error === "auth/requires-recent-login" &&
               "Security concern. For this action, recent sign-in is required. Please sign in again."}
             {error === "auth/too-many-requests" &&
@@ -53,7 +51,7 @@ export default function ChangePasswordErrors({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseChangePasswordErrorsModal}
+            onClick={handleCloseSendSignInLinkErrorModal}
           >
             Back
           </Button>

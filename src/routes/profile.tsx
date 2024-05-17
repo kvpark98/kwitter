@@ -29,11 +29,11 @@ import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import CropAvatarModal from "../components/profile/crop-modal/avatar/crop-avatar-modal";
 import CropBackgroundModal from "../components/profile/crop-modal/background/crop-background-modal";
-import ModifyProfileSuccess from "../components/modals/success/modify-profile-success";
-import ModifyProfileErrors from "../components/modals/error/modify-profile-errors";
 import ModifyProfile from "../components/profile/modify-profile/modify/modify-profile";
 import ModifyProfileDiscardModal from "../components/profile/discard-modal/modify-profile-discard-modal";
 import SideBar from "../components/sidebar/side-bar";
+import ModifyProfileErrorModal from "../components/modals/error/modify-profile-error-modal";
+import ModifyProfileSuccessModal from "../components/modals/success/modify-profile-success-modal";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -664,16 +664,12 @@ export default function Profile() {
       // 에러 종류에 따라 처리
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
       } else if (error instanceof FirestoreError) {
         setError(error.code);
-        console.log("FirestoreError", error.code);
       } else if (error instanceof StorageError) {
         setError(error.code);
-        console.log("StorageError", error.code);
       } else {
         setError("size-exhausted");
-        console.log(error);
       }
 
       setAvatarDeleteButtonClicked(false);
@@ -740,8 +736,7 @@ export default function Profile() {
       const tweetQuery = query(
         collection(db, "tweets"),
         where("userId", "==", user?.uid),
-        orderBy("createdAt", "desc"),
-        limit(30)
+        orderBy("createdAt", "desc")
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
@@ -889,14 +884,14 @@ export default function Profile() {
           handleCloseModifyProfileDiscardBothModal
         }
       />
-      <ModifyProfileSuccess
+      <ModifyProfileSuccessModal
         showModifyProfileSuccessModal={showModifyProfileSuccessModal}
         handleCloseModifyProfileSuccessModal={
           handleCloseModifyProfileSuccessModal
         }
       />
       {error && (
-        <ModifyProfileErrors
+        <ModifyProfileErrorModal
           error={error}
           showModifyProfileErrorsModal={showModifyProfileErrorsModal}
           handleCloseModifyProfileErrorsModal={

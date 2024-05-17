@@ -18,6 +18,7 @@ export interface SignInProps {
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   resetSignIn: () => void;
   signIn: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  handleShowSendSignInLinkModal: () => void;
 }
 
 export default function SignIn({
@@ -36,6 +37,7 @@ export default function SignIn({
   noSpace,
   resetSignIn,
   signIn,
+  handleShowSendSignInLinkModal,
 }: SignInProps) {
   return (
     <Modal
@@ -61,6 +63,7 @@ export default function SignIn({
         noSpace={noSpace}
         resetSignIn={resetSignIn}
         signIn={signIn}
+        handleShowSendSignInLinkModal={handleShowSendSignInLinkModal}
       />
     </Modal>
   );

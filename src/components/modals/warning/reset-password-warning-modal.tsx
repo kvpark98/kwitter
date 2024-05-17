@@ -1,16 +1,16 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface ResetPasswordCancelModalProps {
+export interface ResetPasswordWarningModalProps {
   showModal: boolean;
   handleCloseModal: () => void;
   navigateToHome: () => void;
 }
 
-export default function ResetPasswordCancelModal({
+export default function ResetPasswordWarningModal({
   showModal,
   handleCloseModal,
   navigateToHome,
-}: ResetPasswordCancelModalProps) {
+}: ResetPasswordWarningModalProps) {
   return (
     <Modal
       show={showModal}

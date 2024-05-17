@@ -1,14 +1,14 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
-export interface ModifyProfileSuccessProps {
+export interface ModifyProfileSuccessModalProps {
   showModifyProfileSuccessModal: boolean;
   handleCloseModifyProfileSuccessModal: () => void;
 }
 
-export default function ModifyProfileSuccess({
+export default function ModifyProfileSuccessModal({
   showModifyProfileSuccessModal,
   handleCloseModifyProfileSuccessModal,
-}: ModifyProfileSuccessProps) {
+}: ModifyProfileSuccessModalProps) {
   return (
     <Modal
       show={showModifyProfileSuccessModal}

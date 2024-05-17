@@ -10,13 +10,12 @@ import Loading from "./components/loading/loading";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-routes/protected-route";
 import ResetPassword from "./routes/auth/reset-password";
-import SendSignInLink from "./routes/auth/send-sign-in-link";
 import SignInWithEmail from "./routes/auth/sign-in-with-email";
 import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
 import ProtectedRouteResetPassword from "./components/protected-routes/protected-route-reset-password";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 import Profile from "./routes/profile";
-import Account from "./routes/account/account";
+import Account from "./routes/account";
 import Welcome from "./routes/welcome";
 
 const GlobalStyles = createGlobalStyle`
@@ -131,14 +130,6 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRouteSignIn>
         <Welcome />
-      </ProtectedRouteSignIn>
-    ),
-  },
-  {
-    path: "/send-sign-in-link",
-    element: (
-      <ProtectedRouteSignIn>
-        <SendSignInLink />
       </ProtectedRouteSignIn>
     ),
   },
