@@ -8,6 +8,8 @@ import {
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import SignInWithEmailForm from "../../components/auth/sign-in-with-email/sign-in-with-email-form";
+import { Modal } from "react-bootstrap";
+import SignInWithEmailHeader from "../../components/auth/sign-in-with-email/sign-in-with-email-header";
 
 export default function SignInWithEmail() {
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -23,6 +25,19 @@ export default function SignInWithEmail() {
   const [error, setError] = useState("");
 
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+
+  const [showSignInWithEmailModal, setShowSignInWithEmailModal] =
+    useState(false);
+  const handleShowSignInWithEmailModal = () => {
+    setShowSignInWithEmailModal(true);
+  };
+  const handleCloseSignInWithEmailModal = () => {
+    setShowSignInWithEmailModal(false);
+  };
+
+  useEffect(() => {
+    handleShowSignInWithEmailModal();
+  }, []);
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -71,10 +86,6 @@ export default function SignInWithEmail() {
 
     emailInputRef.current?.classList.remove("form-control-invalid");
   };
-
-  useEffect(() => {
-    window.localStorage.removeItem("error");
-  }, []);
 
   const signInWithEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -134,21 +145,26 @@ export default function SignInWithEmail() {
   );
 
   return (
-    <div className="h-100">
-      <div className="wrap">
-        <SignInWithEmailForm
-          emailInputRef={emailInputRef}
-          isLoading={isLoading}
-          error={error}
-          email={email}
-          handleEmail={handleEmail}
-          isEmail={isEmail}
-          emailErrorMessage={emailErrorMessage}
-          noSpace={noSpace}
-          reset={reset}
-          signInWithEmail={signInWithEmail}
-        />
-      </div>
-    </div>
+    <Modal
+      show={showSignInWithEmailModal}
+      onHide={handleCloseSignInWithEmailModal}
+      backdrop="static"
+      keyboard={false}
+      className="border-0"
+      centered
+    >
+      <SignInWithEmailHeader />
+      <SignInWithEmailForm
+        emailInputRef={emailInputRef}
+        isLoading={isLoading}
+        email={email}
+        handleEmail={handleEmail}
+        isEmail={isEmail}
+        emailErrorMessage={emailErrorMessage}
+        noSpace={noSpace}
+        reset={reset}
+        signInWithEmail={signInWithEmail}
+      />
+    </Modal>
   );
 }

@@ -20,7 +20,8 @@ export default function SignInWithEmailEmail({
   return (
     <Form.Group>
       <Form.Label htmlFor="email">
-        Please provide the email address to which the initial link was sent.
+        Your email link has been successfully validated. Please provide the
+        email address to which the initial link was sent.
       </Form.Label>
       <Form.Control
         ref={emailInputRef}
