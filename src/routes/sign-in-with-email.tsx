@@ -5,11 +5,12 @@ import {
   isSignInWithEmailLink,
   signInWithEmailLink,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import SignInWithEmailForm from "../../components/auth/sign-in-with-email/sign-in-with-email-form";
+import SignInWithEmailForm from "../components/auth/sign-in-with-email/sign-in-with-email-form";
 import { Modal } from "react-bootstrap";
-import SignInWithEmailHeader from "../../components/auth/sign-in-with-email/sign-in-with-email-header";
+import SignInWithEmailHeader from "../components/auth/sign-in-with-email/sign-in-with-email-header";
+import SignInWithEmailErrorModal from "../components/modals/error/sign-in-with-email/sign-in-with-email-error-modal";
 
 export default function SignInWithEmail() {
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +34,17 @@ export default function SignInWithEmail() {
   };
   const handleCloseSignInWithEmailModal = () => {
     setShowSignInWithEmailModal(false);
+  };
+
+  const [showSignInWithEmailErrorModal, setShowSignInWithEmailErrorModal] =
+    useState(false);
+  const handleShowSignInWithEmailErrorModal = () => {
+    handleCloseSignInWithEmailModal();
+    setShowSignInWithEmailErrorModal(true);
+  };
+  const handleCloseSignInWithEmailErrorModal = () => {
+    setShowSignInWithEmailErrorModal(false);
+    handleShowSignInWithEmailModal();
   };
 
   useEffect(() => {
@@ -115,7 +127,6 @@ export default function SignInWithEmail() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
 
         window.localStorage.setItem("error", error.code);
 
@@ -126,12 +137,10 @@ export default function SignInWithEmail() {
           error.code !== "auth/too-many-requests"
         ) {
           signOut();
+        } else {
+          handleShowSignInWithEmailErrorModal();
         }
       }
-
-      setTimeout(() => {
-        setError("");
-      }, 5000);
     } finally {
       setIsLoading(false);
     }
@@ -145,26 +154,35 @@ export default function SignInWithEmail() {
   );
 
   return (
-    <Modal
-      show={showSignInWithEmailModal}
-      onHide={handleCloseSignInWithEmailModal}
-      backdrop="static"
-      keyboard={false}
-      className="border-0"
-      centered
-    >
-      <SignInWithEmailHeader />
-      <SignInWithEmailForm
-        emailInputRef={emailInputRef}
-        isLoading={isLoading}
-        email={email}
-        handleEmail={handleEmail}
-        isEmail={isEmail}
-        emailErrorMessage={emailErrorMessage}
-        noSpace={noSpace}
-        reset={reset}
-        signInWithEmail={signInWithEmail}
+    <div>
+      <Modal
+        show={showSignInWithEmailModal}
+        onHide={handleCloseSignInWithEmailModal}
+        backdrop="static"
+        keyboard={false}
+        className="border-0"
+        centered
+      >
+        <SignInWithEmailHeader />
+        <SignInWithEmailForm
+          emailInputRef={emailInputRef}
+          isLoading={isLoading}
+          email={email}
+          handleEmail={handleEmail}
+          isEmail={isEmail}
+          emailErrorMessage={emailErrorMessage}
+          noSpace={noSpace}
+          reset={reset}
+          signInWithEmail={signInWithEmail}
+        />
+      </Modal>
+      <SignInWithEmailErrorModal
+        showSignInWithEmailErrorModal={showSignInWithEmailErrorModal}
+        handleCloseSignInWithEmailErrorModal={
+          handleCloseSignInWithEmailErrorModal
+        }
+        error={error}
       />
-    </Modal>
+    </div>
   );
 }

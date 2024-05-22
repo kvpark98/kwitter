@@ -26,7 +26,6 @@ export default function SignInWithEmailForm({
   signInWithEmail,
 }: SignInWithEmailFormProps) {
   return (
-    // {error && <SignInWithEmailErrors error={error} />}
     <Form onSubmit={signInWithEmail}>
       <Alert
         variant="light"

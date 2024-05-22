@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import { updatePassword } from "firebase/auth";
-import { auth } from "../../firebase";
-import ResetPasswordForm from "../../components/auth/reset-password/reset-password-form";
+import { auth } from "../firebase";
+import ResetPasswordForm from "../components/auth/reset-password/reset-password-form";
 
 export default function ResetPassword() {
   const passwordInputRef = useRef<HTMLInputElement>(null);
