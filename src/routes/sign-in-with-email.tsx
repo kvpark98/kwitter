@@ -146,13 +146,6 @@ export default function SignInWithEmail() {
     }
   };
 
-  console.log("user", auth.currentUser);
-  console.log("emailVerified", auth.currentUser?.emailVerified);
-  console.log(
-    "isSignInWithEmailLink",
-    isSignInWithEmailLink(auth, window.location.href)
-  );
-
   return (
     <div>
       <Modal

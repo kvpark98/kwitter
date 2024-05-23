@@ -16,7 +16,6 @@ import {
   collection,
   deleteDoc,
   getDocs,
-  limit,
   onSnapshot,
   orderBy,
   query,

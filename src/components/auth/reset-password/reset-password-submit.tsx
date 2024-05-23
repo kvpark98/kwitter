@@ -1,20 +1,21 @@
 import { Button } from "react-bootstrap";
 
-export interface ResetPasswordButtonProps {
+export interface ResetPasswordSubmitProps {
   isLoading: boolean;
   isPassword: boolean;
   isPasswordConfirm: boolean;
 }
 
-export default function ResetPasswordButton({
+export default function ResetPasswordSubmit({
   isLoading,
   isPassword,
   isPasswordConfirm,
-}: ResetPasswordButtonProps) {
+}: ResetPasswordSubmitProps) {
   return (
     <Button
       type="submit"
-      className="mt-2 fw-bold rounded-pill"
+      variant="primary"
+      className="fw-bold rounded-pill"
       {...(!isPassword || !isPasswordConfirm
         ? { disabled: true }
         : { disabled: false })}

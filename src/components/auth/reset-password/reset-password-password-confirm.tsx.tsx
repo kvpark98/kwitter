@@ -31,8 +31,8 @@ export default function ResetPasswordPasswordConfirm({
         name="passwordConfirm"
         value={passwordConfirm}
         type="password"
-        autoComplete="new-password"
         maxLength={20}
+        autoComplete="password"
         {...(!isPassword ? { disabled: true } : { disabled: false })}
       />
       {!isPasswordConfirm && passwordConfirmErrorMessage && (

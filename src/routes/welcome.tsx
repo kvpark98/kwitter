@@ -59,7 +59,7 @@ export const StyledLogoDiv = styled.div`
     flex: 1 1 auto !important;
     justify-content: center !important;
     align-items: center !important;
-    margin: 30px 0 !important;
+    margin: 50px 0 !important;
   }
 `;
 
@@ -272,16 +272,16 @@ export default function Welcome() {
   };
 
   useEffect(() => {
-    window.localStorage.removeItem("PasswordChanged");
-    window.localStorage.removeItem("accountDeleted");
-    window.localStorage.removeItem("error");
-
-    if (accountDeleted && !error) {
-      handleShowAccountDeleteSuccessModal();
-    }
     if (isPasswordChanged && !error) {
       handleShowPassordChangeSuccessModal();
     }
+    if (accountDeleted && !error) {
+      handleShowAccountDeleteSuccessModal();
+    }
+    window.localStorage.removeItem("verificationNeeded");
+    window.localStorage.removeItem("PasswordChanged");
+    window.localStorage.removeItem("accountDeleted");
+    window.localStorage.removeItem("error");
   }, [accountDeleted, isPasswordChanged]);
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {

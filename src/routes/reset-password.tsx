@@ -4,6 +4,9 @@ import { FirebaseError } from "firebase/app";
 import { updatePassword } from "firebase/auth";
 import { auth } from "../firebase";
 import ResetPasswordForm from "../components/auth/reset-password/reset-password-form";
+import { Modal } from "react-bootstrap";
+import ResetPasswordHeader from "../components/auth/reset-password/reset-password-header";
+import ResetPasswordErrorModal from "../components/modals/error/reset-password/reset-password-error-modal";
 
 export default function ResetPassword() {
   const passwordInputRef = useRef<HTMLInputElement>(null);
@@ -25,18 +28,28 @@ export default function ResetPassword() {
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
 
-  const [showModal, setShowModal] = useState(false);
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const handleShowResetPasswordModal = () => setShowResetPasswordModal(true);
+  const handleCloseResetPasswordModal = () => setShowResetPasswordModal(false);
+
+  const [showResetPasswordErrorModal, setShowResetPasswordErrorModal] =
+    useState(false);
+  const handleShowResetPasswordErrorModal = () => {
+    handleCloseResetPasswordModal();
+    setShowResetPasswordErrorModal(true);
+  };
+  const handleCloseResetPasswordErrorModal = () => {
+    setShowResetPasswordErrorModal(false);
+    handleShowResetPasswordModal();
+  };
+
+  useEffect(() => {
+    handleShowResetPasswordModal();
+  }, []);
 
   const signOut = () => {
     auth.signOut();
     navigate("/welcome");
-  };
-
-  const navigateToHome = () => {
-    window.sessionStorage.removeItem("isSignedInWithEmail");
-    navigate("/");
   };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,10 +200,6 @@ export default function ResetPassword() {
     passwordConfirmInputRef.current?.classList.remove("form-control-valid");
   };
 
-  useEffect(() => {
-    window.localStorage.removeItem("error");
-  }, []);
-
   const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -220,33 +229,35 @@ export default function ResetPassword() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
 
         window.localStorage.setItem("error", error.code);
 
         if (error.code === "auth/requires-recent-login") {
           signOut();
+        } else {
+          handleShowResetPasswordErrorModal();
         }
       }
-
-      reset();
-
-      setTimeout(() => {
-        setError("");
-      }, 5000);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="h-100">
-      <div className="wrap">
+    <div>
+      <Modal
+        show={showResetPasswordModal}
+        onHide={handleCloseResetPasswordModal}
+        backdrop="static"
+        keyboard={false}
+        className="border-0"
+        centered
+      >
+        <ResetPasswordHeader />
         <ResetPasswordForm
           passwordInputRef={passwordInputRef}
           passwordConfirmInputRef={passwordConfirmInputRef}
           isLoading={isLoading}
-          error={error}
           password={password}
           handlePassword={handlePassword}
           isPassword={isPassword}
@@ -258,12 +269,13 @@ export default function ResetPassword() {
           noSpace={noSpace}
           reset={reset}
           resetPassword={resetPassword}
-          showModal={showModal}
-          handleShowModal={handleShowModal}
-          handleCloseModal={handleCloseModal}
-          navigateToHome={navigateToHome}
         />
-      </div>
+      </Modal>
+      <ResetPasswordErrorModal
+        error={error}
+        showResetPasswordErrorModal={showResetPasswordErrorModal}
+        handleCloseResetPasswordErrorModal={handleCloseResetPasswordErrorModal}
+      />
     </div>
   );
 }
