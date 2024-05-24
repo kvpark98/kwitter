@@ -219,6 +219,7 @@ export default function ResetPassword() {
 
       await updatePassword(auth.currentUser!, password);
 
+      window.localStorage.removeItem("error");
       window.sessionStorage.removeItem("isSignedInWithEmail");
 
       window.localStorage.setItem("PasswordChanged", "true");

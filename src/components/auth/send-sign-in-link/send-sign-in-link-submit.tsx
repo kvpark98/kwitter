@@ -16,7 +16,7 @@ export default function SendSignInLinkSubmit({
       className="fw-bold rounded-pill"
       {...(!isEmail ? { disabled: true } : { disabled: false })}
     >
-      {isLoading ? "Sending..." : "Send Sign-in Link"}
+      {isLoading ? "Sending..." : "Send sign-in link"}
     </Button>
   );
 }

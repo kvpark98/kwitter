@@ -117,6 +117,7 @@ export default function SignInWithEmail() {
         await signInWithEmailLink(auth, email, window.location.href);
 
         window.sessionStorage.setItem("isSignedInWithEmail", "Do not delete");
+        window.localStorage.removeItem("error");
 
         navigate("/reset-password");
       } else {

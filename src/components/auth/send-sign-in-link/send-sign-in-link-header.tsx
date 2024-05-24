@@ -10,7 +10,7 @@ export default function SendSignInLinkHeader({
   return (
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
-        <Navbar.Brand className="me-0 fw-bold">Send Sign-in Link</Navbar.Brand>
+        <Navbar.Brand className="me-0 fw-bold">Send sign-in link</Navbar.Brand>
         <CloseButton onClick={handleCloseSendSignInLinkModal} />
       </Container>
     </Navbar>
