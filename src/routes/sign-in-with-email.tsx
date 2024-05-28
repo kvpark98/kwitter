@@ -5,12 +5,13 @@ import {
   isSignInWithEmailLink,
   signInWithEmailLink,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import SignInWithEmailForm from "../components/auth/sign-in-with-email/sign-in-with-email-form";
 import { Modal } from "react-bootstrap";
 import SignInWithEmailHeader from "../components/auth/sign-in-with-email/sign-in-with-email-header";
 import SignInWithEmailErrorModal from "../components/modals/error/sign-in-with-email/sign-in-with-email-error-modal";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function SignInWithEmail() {
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -114,12 +115,25 @@ export default function SignInWithEmail() {
       auth.setPersistence(browserSessionPersistence);
 
       if (isSignInWithEmailLink(auth, window.location.href)) {
-        await signInWithEmailLink(auth, email, window.location.href);
+        const userCredential = await signInWithEmailLink(
+          auth,
+          email,
+          window.location.href
+        );
 
-        window.sessionStorage.setItem("isSignedInWithEmail", "Do not delete");
+        const user = userCredential.user;
+
+        // Firestore에 로그인 방식 기록 (문서가 없으면 생성, 있으면 업데이트)
+        const userDocRef = doc(db, "users", user.uid);
+        await setDoc(
+          userDocRef,
+          { signInMethod: "emailLink" },
+          { merge: true }
+        );
+
         window.localStorage.removeItem("error");
 
-        navigate("/reset-password");
+        navigate("/");
       } else {
         signOut();
       }

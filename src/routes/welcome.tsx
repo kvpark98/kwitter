@@ -12,7 +12,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import SignIn from "../components/auth/sign-in/sign-in";
 import AccountDeleteSuccessModal from "../components/modals/success/sign-in/account-delete-success-modal";
 import PasswordChangeSuccessModal from "../components/modals/success/sign-in/password-change-success-modal";
@@ -26,6 +26,7 @@ import SignInLinkWarningModal from "../components/modals/warning/send-sign-in-li
 import SendSignInLinkErrorModal from "../components/modals/error/send-sign-in-link/send-sign-in-link-error-modal";
 import MainLogo from "../components/welcome/main-logo";
 import MainContent from "../components/welcome/main-content";
+import { doc, setDoc } from "firebase/firestore";
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledWelcome = styled.div`
@@ -285,6 +286,8 @@ export default function Welcome() {
     window.localStorage.removeItem("PasswordChanged");
     window.localStorage.removeItem("accountDeleted");
   }, [isPasswordChanged, accountDeleted]);
+
+  const checkSignInMethod = async () => {};
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -598,7 +601,21 @@ export default function Welcome() {
         auth.setPersistence(browserLocalPersistence);
       }
 
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+
+      // Firestore에 로그인 방식 기록 (문서가 없으면 생성, 있으면 업데이트)
+      const userDocRef = doc(db, "users", user.uid);
+      await setDoc(
+        userDocRef,
+        { signInMethod: "emailPassword" },
+        { merge: true }
+      );
 
       if (auth.currentUser?.emailVerified === true) {
         navigate("/");
