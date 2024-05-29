@@ -10,6 +10,8 @@ import {
   Unsubscribe,
   addDoc,
   collection,
+  doc,
+  getDoc,
   onSnapshot,
   orderBy,
   query,
@@ -43,6 +45,8 @@ export default function Home() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [signInMethod, setSignInMethod] = useState("");
 
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -87,8 +91,25 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // handleShowResetPasswordModal();
-  }, []);
+    checkSignInMethod();
+    if (signInMethod === "emailLink") {
+      handleShowResetPasswordModal();
+    }
+  }, [signInMethod]);
+
+  const checkSignInMethod = async () => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const signInMethod = userDocSnap.data().signInMethod;
+        setSignInMethod(signInMethod);
+      }
+    }
+  };
 
   const signOut = () => {
     auth.signOut();

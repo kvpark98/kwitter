@@ -26,7 +26,8 @@ import SignInLinkWarningModal from "../components/modals/warning/send-sign-in-li
 import SendSignInLinkErrorModal from "../components/modals/error/send-sign-in-link/send-sign-in-link-error-modal";
 import MainLogo from "../components/welcome/main-logo";
 import MainContent from "../components/welcome/main-content";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import ResetPasswordErrorModal from "../components/modals/error/reset-password/reset-password-error-modal";
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledWelcome = styled.div`
@@ -274,6 +275,15 @@ export default function Welcome() {
     setShowSendSignInLinkModal(true);
   };
 
+  const [showResetPasswordErrorModal, setShowResetPasswordErrorModal] =
+    useState(false);
+  const handleShowResetPasswordErrorModal = () => {
+    setShowResetPasswordErrorModal(true);
+  };
+  const handleCloseResetPasswordErrorModal = () => {
+    setShowResetPasswordErrorModal(false);
+  };
+
   useEffect(() => {
     if (isPasswordChanged) {
       handleShowPassordChangeSuccessModal();
@@ -281,13 +291,14 @@ export default function Welcome() {
     if (accountDeleted) {
       handleShowAccountDeleteSuccessModal();
     }
+    if (error === "auth/requires-recent-login") {
+      handleShowResetPasswordErrorModal();
+    }
     window.localStorage.removeItem("error");
     window.localStorage.removeItem("verificationNeeded");
     window.localStorage.removeItem("PasswordChanged");
     window.localStorage.removeItem("accountDeleted");
   }, [isPasswordChanged, accountDeleted]);
-
-  const checkSignInMethod = async () => {};
 
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -835,6 +846,11 @@ export default function Welcome() {
           handleCloseSendSignInLinkErrorModal
         }
         error={error}
+      />
+      <ResetPasswordErrorModal
+        error={error}
+        showResetPasswordErrorModal={showResetPasswordErrorModal}
+        handleCloseResetPasswordErrorModal={handleCloseResetPasswordErrorModal}
       />
     </StyledWelcome>
   );
