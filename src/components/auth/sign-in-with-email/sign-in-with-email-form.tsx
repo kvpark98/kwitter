@@ -10,7 +10,7 @@ export interface SignInWithEmailFormProps {
   isEmail: boolean;
   emailErrorMessage: string;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-  reset: () => void;
+  resetEmail: () => void;
   signInWithEmail: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
@@ -22,7 +22,7 @@ export default function SignInWithEmailForm({
   isEmail,
   emailErrorMessage,
   noSpace,
-  reset,
+  resetEmail,
   signInWithEmail,
 }: SignInWithEmailFormProps) {
   return (
@@ -43,7 +43,7 @@ export default function SignInWithEmailForm({
       <SignInWithEmailFooter
         isLoading={isLoading}
         isEmail={isEmail}
-        reset={reset}
+        resetEmail={resetEmail}
       />
     </Form>
   );

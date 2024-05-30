@@ -1,16 +1,16 @@
 import { Button } from "react-bootstrap";
 
 export interface SendSignInLinkResetProps {
-  resetSendSignInLink: () => void;
+  resetEmail: () => void;
 }
 
 export default function SendSignInLinkReset({
-  resetSendSignInLink,
+  resetEmail,
 }: SendSignInLinkResetProps) {
   return (
     <Button
       type="button"
-      onClick={resetSendSignInLink}
+      onClick={resetEmail}
       title="Reset"
       variant="outline-info"
       className="d-flex align-items-center border-0 rounded-circle"

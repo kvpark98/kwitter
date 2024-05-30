@@ -10,11 +10,7 @@ export default function ProtectedRouteSignIn({
 
   if (user !== null) {
     if (user?.emailVerified === true) {
-      if (window.sessionStorage.getItem("isSignedInWithEmail")) {
-        return <Navigate to="/reset-password" />;
-      } else {
-        return <Navigate to="/" />;
-      }
+      return <Navigate to="/" />;
     } else {
       return children;
     }

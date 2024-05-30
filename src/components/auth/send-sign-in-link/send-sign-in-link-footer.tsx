@@ -5,19 +5,19 @@ import SendSignInLinkSubmit from "./send-sign-in-link-submit";
 export interface SendSignInLinkFooterProps {
   isLoading: boolean;
   isEmail: boolean;
-  resetSendSignInLink: () => void;
+  resetEmail: () => void;
 }
 
 export default function SendSignInLinkFooter({
   isLoading,
   isEmail,
-  resetSendSignInLink,
+  resetEmail,
 }: SendSignInLinkFooterProps) {
   return (
     <Navbar className="flex-fill rounded-bottom bg-body-light border-top">
       <Container className="d-flex">
         <div className="d-flex justify-content-between w-100">
-          <SendSignInLinkReset resetSendSignInLink={resetSendSignInLink} />
+          <SendSignInLinkReset resetEmail={resetEmail} />
           <SendSignInLinkSubmit isLoading={isLoading} isEmail={isEmail} />
         </div>
       </Container>

@@ -10,7 +10,7 @@ export interface SendSignInLinkFormProps {
   isEmail: boolean;
   emailErrorMessage: string;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-  resetSendSignInLink: () => void;
+  resetEmail: () => void;
   sendSignInLink: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
@@ -22,7 +22,7 @@ export default function SendSignInLinkForm({
   isEmail,
   emailErrorMessage,
   noSpace,
-  resetSendSignInLink,
+  resetEmail,
   sendSignInLink,
 }: SendSignInLinkFormProps) {
   return (
@@ -43,7 +43,7 @@ export default function SendSignInLinkForm({
       <SendSignInLinkFooter
         isLoading={isLoading}
         isEmail={isEmail}
-        resetSendSignInLink={resetSendSignInLink}
+        resetEmail={resetEmail}
       />
     </Form>
   );

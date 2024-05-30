@@ -27,7 +27,6 @@ import {
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import ChangePasswordErrorModal from "../components/modals/error/change-password-error-modal";
 import DeleteAccountErrorModal from "../components/modals/error/delete-account-error-modal";
-
 export default function Account() {
   const user = auth.currentUser;
 
@@ -161,14 +160,14 @@ export default function Account() {
     setAllChecked(false);
   };
 
-  const [showDeleteAccountErrorsModal, setShowDeleteAccountErrorsModal] =
+  const [showDeleteAccountErrorModal, setShowDeleteAccountErrorModal] =
     useState(false);
-  const handleShowDeleteAccountErrorsModal = () => {
+  const handleShowDeleteAccountErrorModal = () => {
     setShowDeleteAccountModal(false);
-    setShowDeleteAccountErrorsModal(true);
+    setShowDeleteAccountErrorModal(true);
   };
-  const handleCloseDeleteAccountErrorsModal = () => {
-    setShowDeleteAccountErrorsModal(false);
+  const handleCloseDeleteAccountErrorModal = () => {
+    setShowDeleteAccountErrorModal(false);
     setError("");
     handleShowDeleteAccountModal();
   };
@@ -594,6 +593,16 @@ export default function Account() {
         });
       }
 
+      const signInMethodQuery = query(
+        collection(db, "users"),
+        where("userId", "==", user?.uid)
+      );
+
+      const signInMethodSnapshot = await getDocs(signInMethodQuery);
+      signInMethodSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
       await deleteUser(user!);
 
       window.localStorage.setItem("accountDeleted", "true");
@@ -614,7 +623,7 @@ export default function Account() {
 
       resetDeletePassword();
 
-      handleShowDeleteAccountErrorsModal();
+      handleShowDeleteAccountErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -685,10 +694,8 @@ export default function Account() {
       />
       <DeleteAccountErrorModal
         error={error}
-        showDeleteAccountErrorsModal={showDeleteAccountErrorsModal}
-        handleCloseDeleteAccountErrorsModal={
-          handleCloseDeleteAccountErrorsModal
-        }
+        showDeleteAccountErrorModal={showDeleteAccountErrorModal}
+        handleCloseDeleteAccountErrorModal={handleCloseDeleteAccountErrorModal}
       />
     </Container>
   );

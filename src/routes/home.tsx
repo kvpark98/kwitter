@@ -744,6 +744,7 @@ export default function Home() {
         passwordConfirmErrorMessage={passwordConfirmErrorMessage}
         noSpace={noSpace}
         reset={reset}
+        signInMethod={signInMethod}
         resetPassword={resetPassword}
       />
       <ResetPasswordErrorModal

@@ -18,6 +18,7 @@ export interface ResetPasswordFormProps {
   passwordConfirmErrorMessage: string;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   reset: () => void;
+  signInMethod: string;
   resetPassword: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
@@ -35,6 +36,7 @@ export default function ResetPasswordForm({
   passwordConfirmErrorMessage,
   noSpace,
   reset,
+  signInMethod,
   resetPassword,
 }: ResetPasswordFormProps) {
   return (
@@ -43,9 +45,7 @@ export default function ResetPasswordForm({
         variant="light"
         className="d-flex flex-column row-gap-3 border-0 m-0 p-4 w-100"
       >
-        {window.sessionStorage.getItem("isSignedInWithEmail") && (
-          <SignInWithEmailSuccess />
-        )}
+        {signInMethod === "emailLink" && <SignInWithEmailSuccess />}
         <ResetPasswordPassword
           passwordInputRef={passwordInputRef}
           password={password}

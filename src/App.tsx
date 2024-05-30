@@ -9,8 +9,6 @@ import { useEffect, useState } from "react";
 import Loading from "./components/loading/loading";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-routes/protected-route";
-import SignInWithEmail from "./routes/sign-in-with-email";
-import ProtectedRouteSignInWithEmail from "./components/protected-routes/protected-route-sign-in-with-email";
 import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 import Profile from "./routes/profile";
 import Account from "./routes/account";
@@ -129,14 +127,6 @@ const router = createBrowserRouter([
       <ProtectedRouteSignIn>
         <Welcome />
       </ProtectedRouteSignIn>
-    ),
-  },
-  {
-    path: "/sign-in-with-email",
-    element: (
-      <ProtectedRouteSignInWithEmail>
-        <SignInWithEmail />
-      </ProtectedRouteSignInWithEmail>
     ),
   },
 ]);

@@ -18,6 +18,7 @@ export interface ResetPasswordProps {
   passwordConfirmErrorMessage: string;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   reset: () => void;
+  signInMethod: string;
   resetPassword: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
@@ -37,6 +38,7 @@ export default function ResetPassword({
   passwordConfirmErrorMessage,
   noSpace,
   reset,
+  signInMethod,
   resetPassword,
 }: ResetPasswordProps) {
   return (
@@ -63,6 +65,7 @@ export default function ResetPassword({
         passwordConfirmErrorMessage={passwordConfirmErrorMessage}
         noSpace={noSpace}
         reset={reset}
+        signInMethod={signInMethod}
         resetPassword={resetPassword}
       />
     </Modal>

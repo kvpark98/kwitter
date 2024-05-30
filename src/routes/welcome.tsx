@@ -7,9 +7,11 @@ import {
   browserSessionPersistence,
   createUserWithEmailAndPassword,
   fetchSignInMethodsForEmail,
+  isSignInWithEmailLink,
   sendEmailVerification,
   sendSignInLinkToEmail,
   signInWithEmailAndPassword,
+  signInWithEmailLink,
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
@@ -26,8 +28,10 @@ import SignInLinkWarningModal from "../components/modals/warning/send-sign-in-li
 import SendSignInLinkErrorModal from "../components/modals/error/send-sign-in-link/send-sign-in-link-error-modal";
 import MainLogo from "../components/welcome/main-logo";
 import MainContent from "../components/welcome/main-content";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import ResetPasswordErrorModal from "../components/modals/error/reset-password/reset-password-error-modal";
+import SignInWithEmailErrorModal from "../components/modals/error/sign-in-with-email/sign-in-with-email-error-modal";
+import SignInWithEmail from "../components/auth/sign-in-with-email/sign-in-with-email";
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledWelcome = styled.div`
@@ -250,7 +254,7 @@ export default function Welcome() {
   };
   const handleCloseSendSignInLinkModal = () => {
     setShowSendSignInLinkModal(false);
-    resetSendSignInLink();
+    resetEmail();
     handleShowSignInModal();
   };
 
@@ -258,7 +262,7 @@ export default function Welcome() {
     useState(false);
   const handleShowSignInLinkWarningModal = () => {
     setShowSendSignInLinkModal(false);
-    resetSendSignInLink();
+    resetEmail();
     setShowSignInLinkWarningModal(true);
   };
   const handleCloseSignInLinkWarningModal = () =>
@@ -275,6 +279,26 @@ export default function Welcome() {
     setShowSendSignInLinkModal(true);
   };
 
+  const [showSignInWithEmailModal, setShowSignInWithEmailModal] =
+    useState(false);
+  const handleShowSignInWithEmailModal = () => {
+    setShowSignInWithEmailModal(true);
+  };
+  const handleCloseSignInWithEmailModal = () => {
+    setShowSignInWithEmailModal(false);
+  };
+
+  const [showSignInWithEmailErrorModal, setShowSignInWithEmailErrorModal] =
+    useState(false);
+  const handleShowSignInWithEmailErrorModal = () => {
+    handleCloseSignInWithEmailModal();
+    setShowSignInWithEmailErrorModal(true);
+  };
+  const handleCloseSignInWithEmailErrorModal = () => {
+    setShowSignInWithEmailErrorModal(false);
+    handleShowSignInWithEmailModal();
+  };
+
   const [showResetPasswordErrorModal, setShowResetPasswordErrorModal] =
     useState(false);
   const handleShowResetPasswordErrorModal = () => {
@@ -285,6 +309,9 @@ export default function Welcome() {
   };
 
   useEffect(() => {
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      handleShowSignInWithEmailModal();
+    }
     if (isPasswordChanged) {
       handleShowPassordChangeSuccessModal();
     }
@@ -565,23 +592,22 @@ export default function Welcome() {
     passwordConfirmInputRef.current?.classList.remove("form-control-valid");
   };
 
-  const resetSendSignInLink = () => {
+  const resetEmail = () => {
     setEmail("");
 
     setIsEmail(false);
 
     setEmailErrorMessage("");
 
-    signInLinkEmailInputRef.current?.classList.remove("form-control-invalid");
+    if (showSendSignInLinkModal) {
+      signInLinkEmailInputRef.current?.classList.remove("form-control-invalid");
+    } else {
+      emailInputRef.current?.classList.remove("form-control-invalid");
+    }
   };
 
   const actionCodeSettings = {
     url: "http://127.0.0.1:5173/welcome",
-    handleCodeInApp: true,
-  };
-
-  const actionCodeSettingsSendSignInLink = {
-    url: "http://127.0.0.1:5173/sign-in-with-email",
     handleCodeInApp: true,
   };
 
@@ -624,7 +650,7 @@ export default function Welcome() {
       const userDocRef = doc(db, "users", user.uid);
       await setDoc(
         userDocRef,
-        { signInMethod: "emailPassword" },
+        { signInMethod: "emailPassword", userId: user.uid },
         { merge: true }
       );
 
@@ -712,11 +738,7 @@ export default function Welcome() {
       const signInMethods = await checkIfEmailExists(email);
 
       if (signInMethods.length > 0) {
-        await sendSignInLinkToEmail(
-          auth,
-          email,
-          actionCodeSettingsSendSignInLink
-        );
+        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
         handleShowSignInLinkWarningModal();
       } else {
         throw new Error("auth/no-email");
@@ -729,6 +751,67 @@ export default function Welcome() {
       }
 
       handleShowSendSignInLinkErrorModal();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithEmail = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isLoading || !isEmail) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      setIsLoading(true);
+
+      auth.setPersistence(browserSessionPersistence);
+
+      if (isSignInWithEmailLink(auth, window.location.href)) {
+        const userCredential = await signInWithEmailLink(
+          auth,
+          email,
+          window.location.href
+        );
+
+        const user = userCredential.user;
+
+        // Firestore에 로그인 방식 기록 (문서가 없으면 생성, 있으면 업데이트)
+        const userDocRef = doc(db, "users", user.uid);
+        await setDoc(
+          userDocRef,
+          { signInMethod: "emailLink", userId: user.uid },
+          { merge: true }
+        );
+
+        window.localStorage.removeItem("error");
+
+        navigate("/");
+      } else {
+        signOut();
+      }
+    } catch (error) {
+      window.sessionStorage.removeItem("isSignedInWithEmail");
+
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+
+        window.localStorage.setItem("error", error.code);
+
+        if (
+          error.code !== "auth/user-disabled" &&
+          error.code !== "auth/user-not-found" &&
+          error.code !== "auth/invalid-email" &&
+          error.code !== "auth/too-many-requests"
+        ) {
+          signOut();
+        } else {
+          handleShowSignInWithEmailErrorModal();
+        }
+      }
     } finally {
       setIsLoading(false);
     }
@@ -833,7 +916,7 @@ export default function Welcome() {
         isEmail={isEmail}
         emailErrorMessage={emailErrorMessage}
         noSpace={noSpace}
-        resetSendSignInLink={resetSendSignInLink}
+        resetEmail={resetEmail}
         sendSignInLink={sendSignInLink}
       />
       <SignInLinkWarningModal
@@ -844,6 +927,26 @@ export default function Welcome() {
         showSendSignInLinkErrorModal={showSendSignInLinkErrorModal}
         handleCloseSendSignInLinkErrorModal={
           handleCloseSendSignInLinkErrorModal
+        }
+        error={error}
+      />
+      <SignInWithEmail
+        showSignInWithEmailModal={showSignInWithEmailModal}
+        handleCloseSignInWithEmailModal={handleCloseSignInWithEmailModal}
+        emailInputRef={emailInputRef}
+        isLoading={isLoading}
+        email={email}
+        handleEmail={handleEmail}
+        isEmail={isEmail}
+        emailErrorMessage={emailErrorMessage}
+        noSpace={noSpace}
+        resetEmail={resetEmail}
+        signInWithEmail={signInWithEmail}
+      />
+      <SignInWithEmailErrorModal
+        showSignInWithEmailErrorModal={showSignInWithEmailErrorModal}
+        handleCloseSignInWithEmailErrorModal={
+          handleCloseSignInWithEmailErrorModal
         }
         error={error}
       />

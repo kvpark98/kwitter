@@ -1,16 +1,16 @@
 import { Button } from "react-bootstrap";
 
 export interface SignInWithEmailResetProps {
-  reset: () => void;
+  resetEmail: () => void;
 }
 
 export default function SignInWithEmailReset({
-  reset,
+  resetEmail,
 }: SignInWithEmailResetProps) {
   return (
     <Button
       type="button"
-      onClick={reset}
+      onClick={resetEmail}
       title="Reset"
       variant="outline-info"
       className="d-flex align-items-center border-0 rounded-circle"
