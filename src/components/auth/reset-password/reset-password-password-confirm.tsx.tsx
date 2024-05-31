@@ -21,7 +21,7 @@ export default function ResetPasswordPasswordConfirm({
 }: ResetPasswordPasswordConfirmProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="passwordConfirm">New Password Confirm</Form.Label>
+      <Form.Label htmlFor="passwordConfirm">New password confirm</Form.Label>
       <Form.Control
         ref={passwordConfirmInputRef}
         className="border-none mt-1 mb-1 rounded-pill"

@@ -21,7 +21,7 @@ export default function DeleteAccountAgreeData({
       />
       <div>
         <Form.Label htmlFor="agreeDataRemoval" className="fw-bold mb-3">
-          Data Removal
+          Data removal
         </Form.Label>
         <p>
           Upon withdrawal, all your personal data, including account details,

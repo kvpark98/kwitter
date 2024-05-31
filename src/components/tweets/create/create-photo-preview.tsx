@@ -18,7 +18,7 @@ export default function CreatePhotoPreview({
     <div className="position-relative">
       <img
         src={croppedImagePreviewUrl ? croppedImagePreviewUrl : imagePreviewUrl}
-        alt="Image Preview"
+        alt="Image preview"
         className="w-100 h-100 rounded-4"
       />
       <CreatePhotoPreviewEdit

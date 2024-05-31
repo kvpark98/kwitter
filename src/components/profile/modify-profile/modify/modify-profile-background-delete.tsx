@@ -10,7 +10,7 @@ export default function ModifyProfileBackgroundDelete({
   return (
     <Button
       type="button"
-      title="Delete Background"
+      title="Delete background"
       variant="danger"
       className="d-flex align-items-center position-absolute top-0 end-0 rounded-circle p-2"
       onClick={handleDeleteBackground}

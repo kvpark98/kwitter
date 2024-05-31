@@ -21,7 +21,7 @@ export default function DeleteAccountAgreeContent({
       />
       <div>
         <Form.Label htmlFor="agreeContentRetention" className="fw-bold mb-3">
-          Content Retention
+          Content retention
         </Form.Label>
         <p>
           Please be aware that upon withdrawing your membership, all posted

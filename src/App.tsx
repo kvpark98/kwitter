@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
-import Layout from "./components/styles/layout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./routes/home";
 import { createGlobalStyle } from "styled-components";
@@ -8,11 +7,12 @@ import reset from "styled-reset";
 import { useEffect, useState } from "react";
 import Loading from "./components/loading/loading";
 import { auth } from "./firebase";
-import ProtectedRoute from "./components/protected-routes/protected-route";
-import ProtectedRouteSignIn from "./components/protected-routes/protected-route-sign-in";
 import Profile from "./routes/profile";
 import Account from "./routes/account";
 import Welcome from "./routes/welcome";
+import ProtectedRouteProfileAccount from "./components/protected-routes/protected-route-profile-account";
+import ProtectedRouteHome from "./components/protected-routes/protected-route-home";
+import ProtectedRouteWelcome from "./components/protected-routes/protected-route-welcome";
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -100,33 +100,35 @@ const GlobalStyles = createGlobalStyle`
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
-    ),
-    children: [
-      {
-        path: "",
-        element: <Home />,
-      },
-      {
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        path: "/account",
-        element: <Account />,
-      },
-    ],
-  },
-  {
     path: "/welcome",
     element: (
-      <ProtectedRouteSignIn>
+      <ProtectedRouteWelcome>
         <Welcome />
-      </ProtectedRouteSignIn>
+      </ProtectedRouteWelcome>
+    ),
+  },
+  {
+    path: "/",
+    element: (
+      <ProtectedRouteHome>
+        <Home />
+      </ProtectedRouteHome>
+    ),
+  },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRouteProfileAccount>
+        <Profile />
+      </ProtectedRouteProfileAccount>
+    ),
+  },
+  {
+    path: "/account",
+    element: (
+      <ProtectedRouteProfileAccount>
+        <Account />
+      </ProtectedRouteProfileAccount>
     ),
   },
 ]);

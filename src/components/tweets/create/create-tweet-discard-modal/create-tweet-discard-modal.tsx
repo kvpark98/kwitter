@@ -23,7 +23,7 @@ export default function CreateTweetDiscardModal({
     >
       <Alert variant="light" className="m-0 p-0">
         <Modal.Body className="p-4">
-          <Alert.Heading className="mb-4">Discard Changes?</Alert.Heading>
+          <Alert.Heading className="mb-4">Discard changes?</Alert.Heading>
           <p>This can’t be undone and you’ll lose your changes.</p>
           <div className="mt-4 mb-2">
             <Button

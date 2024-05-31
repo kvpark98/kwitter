@@ -13,7 +13,7 @@ export default function ChangePasswordCurrentPassword({
 }: ChangePasswordCurrentPasswordProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="currentPassword">Current Password</Form.Label>
+      <Form.Label htmlFor="currentPassword">Current password</Form.Label>
       <Form.Control
         className="border-none mt-1 mb-1 rounded-pill"
         onChange={handleCurrentPassword}

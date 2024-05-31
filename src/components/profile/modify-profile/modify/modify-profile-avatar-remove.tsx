@@ -10,7 +10,7 @@ export default function ModifyProfileAvatarRemove({
   return (
     <Button
       type="button"
-      title="Remove Avatar"
+      title="Remove avatar"
       variant="secondary"
       className="d-flex align-items-center position-absolute top-0 end-0 rounded-circle p-2"
       onClick={resetAvatar}

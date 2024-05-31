@@ -10,7 +10,7 @@ export default function ModifyTweetHeader({
   return (
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
-        <Navbar.Brand className="me-0 fw-bold">Edit Tweet</Navbar.Brand>
+        <Navbar.Brand className="me-0 fw-bold">Edit tweet</Navbar.Brand>
         <CloseButton onClick={handleCloseModifyTweetModal} />
       </Container>
     </Navbar>

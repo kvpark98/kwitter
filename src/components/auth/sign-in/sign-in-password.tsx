@@ -22,7 +22,7 @@ export default function SignInPassword({
           onClick={handleShowSendSignInLinkModal}
           className="p-0 mb-2 text-decoration-none"
         >
-          Forgot Password?
+          Forgot password?
         </Button>
       </div>
       <Form.Control

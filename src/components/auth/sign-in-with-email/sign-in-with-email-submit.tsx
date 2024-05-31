@@ -16,7 +16,7 @@ export default function SignInWithEmailSubmit({
       className="fw-bold rounded-pill"
       {...(!isEmail ? { disabled: true } : { disabled: false })}
     >
-      {isLoading ? "Signing in..." : "One-time Sign-in"}
+      {isLoading ? "Signing in..." : "One-time sign-in"}
     </Button>
   );
 }

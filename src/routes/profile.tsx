@@ -637,6 +637,16 @@ export default function Profile() {
         displayName: name,
       });
 
+      const usernameQuery = query(
+        collection(db, "tweets"),
+        where("userId", "==", user?.uid)
+      );
+
+      const usernameSnapshot = await getDocs(usernameQuery);
+      usernameSnapshot.forEach(async (doc) => {
+        await updateDoc(doc.ref, { username: name });
+      });
+
       resetName();
       resetAvatar();
       resetBackground();

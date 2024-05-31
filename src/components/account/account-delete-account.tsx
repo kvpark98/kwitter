@@ -32,7 +32,7 @@ export default function AccountDeleteAccount({
               </svg>
             </div>
             <div>
-              <div className="fs-3 text-start">Delete Account</div>
+              <div className="fs-3 text-start">Delete account</div>
               <div className="text-start">
                 After account deletion, there is no turning back.
               </div>

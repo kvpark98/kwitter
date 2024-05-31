@@ -19,7 +19,7 @@ export default function ModifyPhoto({
           : "position-relative"
       }
     >
-      <img src={photo} alt="Image Preview" className="w-100 h-100 rounded-4" />
+      <img src={photo} alt="Image preview" className="w-100 h-100 rounded-4" />
       <ModifyPhotoDelete handleDeletePhoto={handleDeletePhoto} />
     </div>
   );

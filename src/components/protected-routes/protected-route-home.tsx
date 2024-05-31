@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
-export default function ProtectedRouteSignIn({
+export default function ProtectedRouteHome({
   children,
 }: {
   children: React.ReactNode;
@@ -10,11 +10,11 @@ export default function ProtectedRouteSignIn({
 
   if (user !== null) {
     if (user?.emailVerified === true) {
-      return <Navigate to="/" />;
-    } else {
       return children;
+    } else {
+      return <Navigate to="/welcome" />;
     }
   } else {
-    return children;
+    return <Navigate to="/welcome" />;
   }
 }

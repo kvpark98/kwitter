@@ -22,7 +22,7 @@ export default function TweetBodyProfile({
           title={user?.uid === userId ? user?.displayName! : username}
         >
           <img
-            src={user?.photoURL!}
+            src={user?.photoURL! ?? "/person-circle.svg"}
             width="40"
             height="40"
             className="rounded-circle bg-light"

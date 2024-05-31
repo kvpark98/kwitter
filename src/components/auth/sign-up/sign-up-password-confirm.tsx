@@ -23,7 +23,7 @@ export default function SignUpPasswordConfirm({
 }: SignUpPasswordConfirmProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="passwordConfirm">Password Confirm</Form.Label>
+      <Form.Label htmlFor="passwordConfirm">Password confirm</Form.Label>
       <Form.Control
         ref={passwordConfirmInputRef}
         className="border-none mt-1 mb-1 rounded-pill"

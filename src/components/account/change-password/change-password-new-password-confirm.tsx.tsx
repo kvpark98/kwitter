@@ -23,7 +23,7 @@ export default function ChangePasswordNewPasswordConfirm({
 }: ChangePasswordNewPasswordConfirmProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="newPasswordConfirm">New Password Confirm</Form.Label>
+      <Form.Label htmlFor="newPasswordConfirm">New password confirm</Form.Label>
       <Form.Control
         ref={newPasswordConfirmInputRef}
         className="border-none mt-1 mb-1 rounded-pill"

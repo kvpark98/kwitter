@@ -29,7 +29,7 @@ export default function AccountChangePassword({
               </svg>
             </div>
             <div>
-              <div className="fs-3 text-start">Change Password</div>
+              <div className="fs-3 text-start">Change password</div>
               <div className="text-start">
                 Enhance account security by changing your password.
               </div>

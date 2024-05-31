@@ -19,7 +19,7 @@ export default function ChangePasswordNewPassword({
 }: ChangePasswordNewPasswordProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="newPassword">New Password</Form.Label>
+      <Form.Label htmlFor="newPassword">New password</Form.Label>
       <Form.Control
         ref={newPasswordInputRef}
         className="border-none mt-1 mb-1 rounded-pill"

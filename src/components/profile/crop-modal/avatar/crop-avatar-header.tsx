@@ -10,7 +10,7 @@ export default function CropAvatarHeader({
   return (
     <Navbar className="flex-fill rounded-top bg-body-light border-bottom">
       <Container>
-        <Navbar.Brand className="me-0 fw-bold">Edit Media</Navbar.Brand>
+        <Navbar.Brand className="me-0 fw-bold">Edit media</Navbar.Brand>
         <CloseButton onClick={handleCloseAvatarCropModal} />
       </Container>
     </Navbar>

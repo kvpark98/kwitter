@@ -19,7 +19,7 @@ export default function ResetPasswordPassword({
 }: ResetPasswordPasswordProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="password">New Password</Form.Label>
+      <Form.Label htmlFor="password">New password</Form.Label>
       <Form.Control
         ref={passwordInputRef}
         className="border-none mt-1 mb-1 rounded-pill"

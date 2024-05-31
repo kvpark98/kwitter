@@ -16,7 +16,7 @@ export default function DeleteAccountPasswordSubmit({
       className="fw-bold rounded-pill"
       {...(!isDeletePassword ? { disabled: true } : { disabled: false })}
     >
-      {isLoading ? "Deleting..." : "Delete Account"}
+      {isLoading ? "Deleting..." : "Delete"}
     </Button>
   );
 }

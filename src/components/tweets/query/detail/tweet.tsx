@@ -48,7 +48,9 @@ export default function Tweet({
 }: ITweet) {
   const user = auth.currentUser;
 
-  const [avatar, setAvatar] = useState("");
+  const defaultAvatarURL = "/person-circle.svg";
+
+  const [avatar, setAvatar] = useState(defaultAvatarURL);
 
   const getAvatar = async () => {
     const avatarQuery = query(

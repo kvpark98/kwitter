@@ -10,7 +10,7 @@ export default function DeleteAccountHeader({
   return (
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
-        <Navbar.Brand className="me-0 fw-bold">Delete Account</Navbar.Brand>
+        <Navbar.Brand className="me-0 fw-bold">Delete account</Navbar.Brand>
         <CloseButton onClick={handleCloseDeleteAccountModal} />
       </Container>
     </Navbar>

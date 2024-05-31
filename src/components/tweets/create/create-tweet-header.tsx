@@ -10,7 +10,7 @@ export default function CreateTweetHeader({
   return (
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
-        <Navbar.Brand className="me-0 fw-bold">Post Tweet</Navbar.Brand>
+        <Navbar.Brand className="me-0 fw-bold">Post tweet</Navbar.Brand>
         <CloseButton onClick={handleCloseCreateTweetModal} />
       </Container>
     </Navbar>

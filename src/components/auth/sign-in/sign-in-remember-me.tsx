@@ -13,7 +13,7 @@ export default function SignInRememberMe({
         onClick={handleRememberMe}
         type="checkbox"
         id="remember-me"
-        label="Remember Me"
+        label="Remember me"
         className="m-0"
       />
     </div>

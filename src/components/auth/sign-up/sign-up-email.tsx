@@ -19,7 +19,7 @@ export default function SignUpEmail({
 }: SignUpEmailProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="email">Email Address</Form.Label>
+      <Form.Label htmlFor="email">Email address</Form.Label>
       <Form.Control
         ref={emailInputRef}
         className="border-none mt-1 mb-1 rounded-pill"

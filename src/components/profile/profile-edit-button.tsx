@@ -15,7 +15,7 @@ export default function ProfileEditButton({
         className="rounded-pill"
         onClick={handleShowModifyProfileModal}
       >
-        Edit Profile
+        Edit profile
       </Button>
     </div>
   );

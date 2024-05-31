@@ -6,7 +6,7 @@ export default function CreateTweetProfile() {
       <img
         src={auth.currentUser?.photoURL ?? "/default-profile.png"}
         title={auth.currentUser?.displayName!}
-        alt="Profile Image"
+        alt="Profile image"
         width="40"
         height="40"
         className="rounded-circle bg-light"

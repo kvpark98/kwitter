@@ -1,4 +1,3 @@
-import React from "react";
 import { CloseButton, Container, Navbar } from "react-bootstrap";
 
 export interface ModifyProfileHeaderProps {
@@ -11,7 +10,7 @@ export default function ModifyProfileHeader({
   return (
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
-        <Navbar.Brand className="me-0 fw-bold">Edit Profile</Navbar.Brand>
+        <Navbar.Brand className="me-0 fw-bold">Edit profile</Navbar.Brand>
         <CloseButton onClick={handleCloseModifyProfileModal} />
       </Container>
     </Navbar>
