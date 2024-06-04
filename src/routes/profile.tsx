@@ -19,6 +19,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -328,14 +329,15 @@ export default function Profile() {
   const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    const regName = /^[가-힣a-zA-Z]{2,20}$/;
+    const regName =
+      /^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]{1,20}$/;
 
     setName(value.replace(/\s/gi, ""));
 
     if (value !== "") {
       if (!regName.test(value)) {
         setNameErrorMessage(
-          "Please enter at least 2 characters either in English or Korean."
+          "Please enter 1 to 20 characters, including at least one letter in English or Korean. Numbers and special characters are allowed."
         );
         setIsName(false);
 
@@ -638,12 +640,42 @@ export default function Profile() {
       });
 
       const usernameQuery = query(
-        collection(db, "tweets"),
+        collection(db, "users"),
         where("userId", "==", user?.uid)
       );
 
       const usernameSnapshot = await getDocs(usernameQuery);
       usernameSnapshot.forEach(async (doc) => {
+        await updateDoc(doc.ref, { username: name });
+      });
+
+      const usernameTweetQuery = query(
+        collection(db, "tweets"),
+        where("userId", "==", user?.uid)
+      );
+
+      const usernameTweetSnapshot = await getDocs(usernameTweetQuery);
+      usernameTweetSnapshot.forEach(async (doc) => {
+        await updateDoc(doc.ref, { username: name });
+      });
+
+      const avatarQuery = query(
+        collection(db, "avatars"),
+        where("userId", "==", user?.uid)
+      );
+
+      const avatarSnapshot = await getDocs(avatarQuery);
+      avatarSnapshot.forEach(async (doc) => {
+        await updateDoc(doc.ref, { username: name });
+      });
+
+      const backgroundQuery = query(
+        collection(db, "backgrounds"),
+        where("userId", "==", user?.uid)
+      );
+
+      const backgroundSnapshot = await getDocs(backgroundQuery);
+      backgroundSnapshot.forEach(async (doc) => {
         await updateDoc(doc.ref, { username: name });
       });
 

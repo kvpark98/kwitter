@@ -28,7 +28,14 @@ import SignInLinkWarningModal from "../components/modals/warning/send-sign-in-li
 import SendSignInLinkErrorModal from "../components/modals/error/send-sign-in-link/send-sign-in-link-error-modal";
 import MainLogo from "../components/welcome/main-logo";
 import MainContent from "../components/welcome/main-content";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import ResetPasswordErrorModal from "../components/modals/error/reset-password/reset-password-error-modal";
 import SignInWithEmailErrorModal from "../components/modals/error/sign-in-with-email/sign-in-with-email-error-modal";
 import SignInWithEmail from "../components/auth/sign-in-with-email/sign-in-with-email";
@@ -327,17 +334,24 @@ export default function Welcome() {
     window.localStorage.removeItem("accountDeleted");
   }, [isPasswordChanged, accountDeleted]);
 
-  const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleName = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    const regName = /^[가-힣a-zA-Z]{2,20}$/;
+    const regName =
+      /^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]{1,20}$/;
 
     setName(value.replace(/\s/gi, ""));
+
+    const usernameQuery = query(
+      collection(db, "users"),
+      where("username", "==", name)
+    );
+    const usernameSnapshot = await getDocs(usernameQuery);
 
     if (value !== "") {
       if (!regName.test(value)) {
         setNameErrorMessage(
-          "Please enter at least 2 characters either in English or Korean."
+          "Please enter 1 to 20 characters, including at least one letter in English or Korean. Numbers and special characters are allowed."
         );
         setIsName(false);
 
@@ -699,14 +713,30 @@ export default function Welcome() {
         password
       );
 
-      window.localStorage.setItem("verificationNeeded", "true");
+      const user = credentials.user;
+      const userDocRef = doc(db, "users", user.uid);
+      const usernameQuery = query(
+        collection(db, "users"),
+        where("username", "==", name)
+      );
+      const usernameSnapshot = await getDocs(usernameQuery);
 
-      await sendEmailVerification(credentials.user, actionCodeSettings);
+      usernameSnapshot.forEach(async (doc) => {
+        if (doc.exists()) {
+          setError("same-username");
+          handleShowSignUpErrorModal();
+        } else {
+          window.localStorage.setItem("verificationNeeded", "true");
 
-      handleShowEmailVerificationNeededWarningModal();
+          await sendEmailVerification(credentials.user, actionCodeSettings);
 
-      await updateProfile(credentials.user, {
-        displayName: name,
+          handleShowEmailVerificationNeededWarningModal();
+          await setDoc(userDocRef, { username: name }, { merge: true });
+
+          await updateProfile(credentials.user, {
+            displayName: name,
+          });
+        }
       });
 
       signOut();
@@ -715,6 +745,8 @@ export default function Welcome() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
+      } else {
+        setError("same-username");
       }
 
       handleShowSignUpErrorModal();
