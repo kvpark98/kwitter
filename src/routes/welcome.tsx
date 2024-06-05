@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import { useEffect, useRef, useState } from "react";
+import { debounce } from "lodash";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 import {
@@ -340,16 +341,11 @@ export default function Welcome() {
     const regName =
       /^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]{1,20}$/;
 
-    setName(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setName(trimmedValue);
 
-    const usernameQuery = query(
-      collection(db, "users"),
-      where("username", "==", name)
-    );
-    const usernameSnapshot = await getDocs(usernameQuery);
-
-    if (value !== "") {
-      if (!regName.test(value)) {
+    if (trimmedValue !== "") {
+      if (!regName.test(trimmedValue)) {
         setNameErrorMessage(
           "Please enter 1 to 20 characters, including at least one letter in English or Korean. Numbers and special characters are allowed."
         );
@@ -357,9 +353,7 @@ export default function Welcome() {
 
         nameInputRef.current?.classList.add("form-control-invalid");
       } else {
-        setIsName(true);
-
-        nameInputRef.current?.classList.remove("form-control-invalid");
+        debouncedCheckUsername(trimmedValue);
       }
     } else {
       setNameErrorMessage("");
@@ -368,6 +362,30 @@ export default function Welcome() {
       nameInputRef.current?.classList.remove("form-control-invalid");
     }
   };
+
+  const checkUsername = async (username: string) => {
+    const usernameQuery = query(
+      collection(db, "users"),
+      where("username", "==", username)
+    );
+    const usernameSnapshot = await getDocs(usernameQuery);
+
+    if (!usernameSnapshot.empty) {
+      setNameErrorMessage("This username is already in use.");
+      setIsName(false);
+      nameInputRef.current?.classList.add("form-control-invalid");
+    } else {
+      setIsName(true);
+      nameInputRef.current?.classList.remove("form-control-invalid");
+    }
+  };
+
+  const debouncedCheckUsername = useCallback(
+    debounce((username) => {
+      checkUsername(username);
+    }, 10),
+    []
+  );
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
