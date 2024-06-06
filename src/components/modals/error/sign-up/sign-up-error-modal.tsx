@@ -22,7 +22,6 @@ export default function SignUpErrorModal({
         <Modal.Body>
           <Alert.Heading className="mb-3">Error</Alert.Heading>
           <p>
-            {error === "same-username" && "This username is already in use."}
             {error === "auth/invalid-credential" &&
               "The email or password entered is incorrect."}
             {error === "auth/user-not-found" &&

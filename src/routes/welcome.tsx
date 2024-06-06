@@ -335,6 +335,30 @@ export default function Welcome() {
     window.localStorage.removeItem("accountDeleted");
   }, [isPasswordChanged, accountDeleted]);
 
+  const checkUsername = async (username: string) => {
+    const usernameQuery = query(
+      collection(db, "users"),
+      where("username", "==", username)
+    );
+    const usernameSnapshot = await getDocs(usernameQuery);
+
+    if (!usernameSnapshot.empty) {
+      setNameErrorMessage("This username is already in use.");
+      setIsName(false);
+      nameInputRef.current?.classList.add("form-control-invalid");
+    } else {
+      setIsName(true);
+      nameInputRef.current?.classList.remove("form-control-invalid");
+    }
+  };
+
+  const debouncedCheckUsername = useCallback(
+    debounce((username) => {
+      checkUsername(username);
+    }, 10),
+    []
+  );
+
   const handleName = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
@@ -363,26 +387,27 @@ export default function Welcome() {
     }
   };
 
-  const checkUsername = async (username: string) => {
-    const usernameQuery = query(
+  const checkEmail = async (email: string) => {
+    const emailQuery = query(
       collection(db, "users"),
-      where("username", "==", username)
+      where("email", "==", email)
     );
-    const usernameSnapshot = await getDocs(usernameQuery);
 
-    if (!usernameSnapshot.empty) {
-      setNameErrorMessage("This username is already in use.");
-      setIsName(false);
-      nameInputRef.current?.classList.add("form-control-invalid");
+    const emailSnapshot = await getDocs(emailQuery);
+
+    if (!emailSnapshot.empty) {
+      setEmailErrorMessage("This email is already in use.");
+      setIsEmail(false);
+      emailInputRef.current?.classList.add("form-control-invalid");
     } else {
-      setIsName(true);
-      nameInputRef.current?.classList.remove("form-control-invalid");
+      setIsEmail(true);
+      emailInputRef.current?.classList.remove("form-control-invalid");
     }
   };
 
-  const debouncedCheckUsername = useCallback(
-    debounce((username) => {
-      checkUsername(username);
+  const debouncedCheckEmail = useCallback(
+    debounce((email) => {
+      checkEmail(email);
     }, 10),
     []
   );
@@ -393,10 +418,11 @@ export default function Welcome() {
     const regEmail =
       /^[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]{3,}([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 
-    setEmail(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setEmail(trimmedValue);
 
-    if (value !== "") {
-      if (!regEmail.test(value)) {
+    if (trimmedValue !== "") {
+      if (!regEmail.test(trimmedValue)) {
         setEmailErrorMessage("Email format is not valid.");
         setIsEmail(false);
 
@@ -409,6 +435,10 @@ export default function Welcome() {
         }
       } else {
         setIsEmail(true);
+
+        if (showSignUpModal) {
+          debouncedCheckEmail(trimmedValue);
+        }
 
         if (showSendSignInLinkModal) {
           signInLinkEmailInputRef.current?.classList.remove(
@@ -435,9 +465,10 @@ export default function Welcome() {
   const handleSignInPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    setPassword(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setPassword(trimmedValue);
 
-    if (value !== "") {
+    if (trimmedValue !== "") {
       setIsPassword(true);
     } else {
       setIsPassword(false);
@@ -450,10 +481,11 @@ export default function Welcome() {
     const regPassword =
       /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]).{8,}$/;
 
-    setPassword(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setPassword(trimmedValue);
 
-    if (value !== "") {
-      if (!regPassword.test(value)) {
+    if (trimmedValue !== "") {
+      if (!regPassword.test(trimmedValue)) {
         setPasswordErrorMessage(
           "Please enter at least 8 characters including numbers, English, and special characters."
         );
@@ -486,7 +518,7 @@ export default function Welcome() {
         passwordInputRef.current?.classList.remove("form-control-invalid");
         passwordInputRef.current?.classList.add("form-control-valid");
         if (passwordConfirm) {
-          if (value !== passwordConfirm) {
+          if (trimmedValue !== passwordConfirm) {
             setPasswordConfirmErrorMessage("The password does not match.");
             setIsPasswordConfirm(false);
 
@@ -544,10 +576,11 @@ export default function Welcome() {
   ) => {
     const { value } = event.target;
 
-    setPasswordConfirm(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setPasswordConfirm(trimmedValue);
 
-    if (value !== "") {
-      if (value !== password) {
+    if (trimmedValue !== "") {
+      if (trimmedValue !== password) {
         setPasswordConfirmErrorMessage("The password does not match.");
         setIsPasswordConfirm(false);
 
@@ -678,15 +711,14 @@ export default function Welcome() {
 
       const user = userCredential.user;
 
-      // Firestore에 로그인 방식 기록 (문서가 없으면 생성, 있으면 업데이트)
-      const userDocRef = doc(db, "users", user.uid);
-      await setDoc(
-        userDocRef,
-        { signInMethod: "emailPassword", userId: user.uid },
-        { merge: true }
-      );
-
       if (auth.currentUser?.emailVerified === true) {
+        // Firestore에 로그인 방식 기록 (문서가 없으면 생성, 있으면 업데이트)
+        const userDocRef = doc(db, "users", user.uid);
+        await setDoc(
+          userDocRef,
+          { signInMethod: "emailPassword", userId: user.uid },
+          { merge: true }
+        );
         navigate("/");
       } else {
         handleShowEmailNotVerifiedErrorModal();
@@ -732,29 +764,23 @@ export default function Welcome() {
       );
 
       const user = credentials.user;
+
+      window.localStorage.setItem("verificationNeeded", "true");
+
+      await sendEmailVerification(credentials.user, actionCodeSettings);
+
+      handleShowEmailVerificationNeededWarningModal();
+
       const userDocRef = doc(db, "users", user.uid);
-      const usernameQuery = query(
-        collection(db, "users"),
-        where("username", "==", name)
+
+      await setDoc(
+        userDocRef,
+        { username: name, email: email },
+        { merge: true }
       );
-      const usernameSnapshot = await getDocs(usernameQuery);
 
-      usernameSnapshot.forEach(async (doc) => {
-        if (doc.exists()) {
-          setError("same-username");
-          handleShowSignUpErrorModal();
-        } else {
-          window.localStorage.setItem("verificationNeeded", "true");
-
-          await sendEmailVerification(credentials.user, actionCodeSettings);
-
-          handleShowEmailVerificationNeededWarningModal();
-          await setDoc(userDocRef, { username: name }, { merge: true });
-
-          await updateProfile(credentials.user, {
-            displayName: name,
-          });
-        }
+      await updateProfile(credentials.user, {
+        displayName: name,
       });
 
       signOut();
@@ -763,8 +789,6 @@ export default function Welcome() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-      } else {
-        setError("same-username");
       }
 
       handleShowSignUpErrorModal();
@@ -831,6 +855,7 @@ export default function Welcome() {
 
         // Firestore에 로그인 방식 기록 (문서가 없으면 생성, 있으면 업데이트)
         const userDocRef = doc(db, "users", user.uid);
+
         await setDoc(
           userDocRef,
           { signInMethod: "emailLink", userId: user.uid },

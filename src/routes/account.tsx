@@ -182,9 +182,10 @@ export default function Account() {
   ) => {
     const { value } = event.target;
 
-    setCurrentPassword(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setCurrentPassword(trimmedValue);
 
-    if (value !== "") {
+    if (trimmedValue !== "") {
       setIsCurrentPassword(true);
     } else {
       setIsCurrentPassword(false);
@@ -197,10 +198,11 @@ export default function Account() {
     const regPassword =
       /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]).{8,}$/;
 
-    setNewPassword(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setNewPassword(trimmedValue);
 
-    if (value !== "") {
-      if (!regPassword.test(value)) {
+    if (trimmedValue !== "") {
+      if (!regPassword.test(trimmedValue)) {
         setNewPasswordErrorMessage(
           "Please enter at least 8 characters including numbers, English, and special characters."
         );
@@ -236,7 +238,7 @@ export default function Account() {
         newPasswordInputRef.current?.classList.add("form-control-valid");
 
         if (newPasswordConfirm) {
-          if (value !== newPasswordConfirm) {
+          if (trimmedValue !== newPasswordConfirm) {
             setNewPasswordConfirmErrorMessage("The password does not match.");
             setIsNewPasswordConfirm(false);
 
@@ -300,10 +302,11 @@ export default function Account() {
   ) => {
     const { value } = event.target;
 
-    setNewPasswordConfirm(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setNewPasswordConfirm(trimmedValue);
 
-    if (value !== "") {
-      if (value !== newPassword) {
+    if (trimmedValue !== "") {
+      if (trimmedValue !== newPassword) {
         setNewPasswordConfirmErrorMessage("The password does not match.");
         setIsNewPasswordConfirm(false);
 
@@ -337,9 +340,10 @@ export default function Account() {
   const handleDeletePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    setDeletePassword(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setDeletePassword(trimmedValue);
 
-    if (value !== "") {
+    if (trimmedValue !== "") {
       setIsDeletePassword(true);
     } else {
       setIsDeletePassword(false);

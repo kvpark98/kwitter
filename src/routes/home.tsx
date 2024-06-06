@@ -92,6 +92,7 @@ export default function Home() {
 
   useEffect(() => {
     checkSignInMethod();
+
     if (signInMethod === "emailLink") {
       handleShowResetPasswordModal();
     }
@@ -379,10 +380,11 @@ export default function Home() {
     const regPassword =
       /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]).{8,}$/;
 
-    setPassword(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setPassword(trimmedValue);
 
-    if (value !== "") {
-      if (!regPassword.test(value)) {
+    if (trimmedValue !== "") {
+      if (!regPassword.test(trimmedValue)) {
         setPasswordErrorMessage(
           "Please enter at least 8 characters including numbers, English, and special characters."
         );
@@ -414,7 +416,7 @@ export default function Home() {
         passwordInputRef.current?.classList.remove("form-control-invalid");
         passwordInputRef.current?.classList.add("form-control-valid");
         if (passwordConfirm) {
-          if (value !== passwordConfirm) {
+          if (trimmedValue !== passwordConfirm) {
             setPasswordConfirmErrorMessage("The password does not match.");
             setIsPasswordConfirm(false);
 
@@ -472,10 +474,11 @@ export default function Home() {
   ) => {
     const { value } = event.target;
 
-    setPasswordConfirm(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setPasswordConfirm(trimmedValue);
 
-    if (value !== "") {
-      if (value !== password) {
+    if (trimmedValue !== "") {
+      if (trimmedValue !== password) {
         setPasswordConfirmErrorMessage("The password does not match.");
         setIsPasswordConfirm(false);
 

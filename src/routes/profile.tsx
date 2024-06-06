@@ -1,5 +1,5 @@
 import { auth, db, storage } from "../firebase";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   StorageError,
   deleteObject,
@@ -19,7 +19,6 @@ import {
   onSnapshot,
   orderBy,
   query,
-  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -34,6 +33,7 @@ import ModifyProfileDiscardModal from "../components/profile/discard-modal/modif
 import SideBar from "../components/sidebar/side-bar";
 import ModifyProfileErrorModal from "../components/modals/error/modify-profile-error-modal";
 import ModifyProfileSuccessModal from "../components/modals/success/modify-profile-success-modal";
+import { debounce } from "lodash";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -326,16 +326,41 @@ export default function Profile() {
     navigate(-1);
   };
 
-  const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const checkUsername = async (username: string) => {
+    const usernameQuery = query(
+      collection(db, "users"),
+      where("username", "==", username)
+    );
+    const usernameSnapshot = await getDocs(usernameQuery);
+
+    if (!usernameSnapshot.empty) {
+      setNameErrorMessage("This username is already in use.");
+      setIsName(false);
+      nameInputRef.current?.classList.add("form-control-invalid");
+    } else {
+      setIsName(true);
+      nameInputRef.current?.classList.remove("form-control-invalid");
+    }
+  };
+
+  const debouncedCheckUsername = useCallback(
+    debounce((username) => {
+      checkUsername(username);
+    }, 10),
+    []
+  );
+
+  const handleName = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     const regName =
       /^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/\-]{1,20}$/;
 
-    setName(value.replace(/\s/gi, ""));
+    const trimmedValue = value.replace(/\s/gi, "");
+    setName(trimmedValue);
 
-    if (value !== "") {
-      if (!regName.test(value)) {
+    if (trimmedValue !== "") {
+      if (!regName.test(trimmedValue)) {
         setNameErrorMessage(
           "Please enter 1 to 20 characters, including at least one letter in English or Korean. Numbers and special characters are allowed."
         );
@@ -343,9 +368,7 @@ export default function Profile() {
 
         nameInputRef.current?.classList.add("form-control-invalid");
       } else {
-        setIsName(true);
-
-        nameInputRef.current?.classList.remove("form-control-invalid");
+        debouncedCheckUsername(trimmedValue);
       }
     } else {
       setNameErrorMessage("");
