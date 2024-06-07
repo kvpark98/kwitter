@@ -1,7 +1,10 @@
 import { Form } from "react-bootstrap";
+import SignUpPasswordConfirmType from "./sign-up-password-confirm-type";
 
 export interface SignUpPasswordConfirmProps {
   passwordConfirmInputRef: React.RefObject<HTMLInputElement>;
+  passwordConfirmInputType: boolean;
+  changePasswordConfirmType: () => void;
   passwordConfirm: string;
   handleSignUpPasswordConfirm: (
     event: React.ChangeEvent<HTMLInputElement>
@@ -14,6 +17,8 @@ export interface SignUpPasswordConfirmProps {
 
 export default function SignUpPasswordConfirm({
   passwordConfirmInputRef,
+  passwordConfirmInputType,
+  changePasswordConfirmType,
   passwordConfirm,
   handleSignUpPasswordConfirm,
   isPassword,
@@ -23,7 +28,15 @@ export default function SignUpPasswordConfirm({
 }: SignUpPasswordConfirmProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="passwordConfirm">Password confirm</Form.Label>
+      <div className="d-flex align-items-center mb-2">
+        <Form.Label htmlFor="passwordConfirm" className="m-0">
+          Password confirm
+        </Form.Label>
+        <SignUpPasswordConfirmType
+          passwordConfirmInputType={passwordConfirmInputType}
+          changePasswordConfirmType={changePasswordConfirmType}
+        />
+      </div>
       <Form.Control
         ref={passwordConfirmInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
@@ -32,7 +45,7 @@ export default function SignUpPasswordConfirm({
         id="passwordConfirm"
         name="passwordConfirm"
         value={passwordConfirm}
-        type="password"
+        type={passwordConfirmInputType ? "text" : "password"}
         maxLength={20}
         autoComplete="password"
         {...(!isPassword ? { disabled: true } : { disabled: false })}

@@ -8,6 +8,12 @@ export interface ChangePasswordProps {
   newPasswordInputRef: React.RefObject<HTMLInputElement>;
   newPasswordConfirmInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
+  currentPasswordInputType: boolean;
+  newPasswordInputType: boolean;
+  newPasswordConfirmInputType: boolean;
+  changeCurrentPasswordType: () => void;
+  changeNewPasswordType: () => void;
+  changeNewPasswordConfirmType: () => void;
   currentPassword: string;
   handleCurrentPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isCurrentPassword: boolean;
@@ -32,6 +38,12 @@ export default function ChangePassword({
   newPasswordInputRef,
   newPasswordConfirmInputRef,
   isLoading,
+  currentPasswordInputType,
+  newPasswordInputType,
+  newPasswordConfirmInputType,
+  changeCurrentPasswordType,
+  changeNewPasswordType,
+  changeNewPasswordConfirmType,
   currentPassword,
   handleCurrentPassword,
   isCurrentPassword,
@@ -63,6 +75,12 @@ export default function ChangePassword({
         newPasswordInputRef={newPasswordInputRef}
         newPasswordConfirmInputRef={newPasswordConfirmInputRef}
         isLoading={isLoading}
+        currentPasswordInputType={currentPasswordInputType}
+        newPasswordInputType={newPasswordInputType}
+        newPasswordConfirmInputType={newPasswordConfirmInputType}
+        changeCurrentPasswordType={changeCurrentPasswordType}
+        changeNewPasswordType={changeNewPasswordType}
+        changeNewPasswordConfirmType={changeNewPasswordConfirmType}
         currentPassword={currentPassword}
         handleCurrentPassword={handleCurrentPassword}
         isCurrentPassword={isCurrentPassword}

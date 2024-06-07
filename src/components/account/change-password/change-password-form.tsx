@@ -8,6 +8,12 @@ export interface ChangePasswordFormProps {
   newPasswordInputRef: React.RefObject<HTMLInputElement>;
   newPasswordConfirmInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
+  currentPasswordInputType: boolean;
+  newPasswordInputType: boolean;
+  newPasswordConfirmInputType: boolean;
+  changeCurrentPasswordType: () => void;
+  changeNewPasswordType: () => void;
+  changeNewPasswordConfirmType: () => void;
   currentPassword: string;
   handleCurrentPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isCurrentPassword: boolean;
@@ -30,6 +36,12 @@ export default function ChangePasswordForm({
   newPasswordInputRef,
   newPasswordConfirmInputRef,
   isLoading,
+  currentPasswordInputType,
+  newPasswordInputType,
+  newPasswordConfirmInputType,
+  changeCurrentPasswordType,
+  changeNewPasswordType,
+  changeNewPasswordConfirmType,
   currentPassword,
   handleCurrentPassword,
   isCurrentPassword,
@@ -52,12 +64,16 @@ export default function ChangePasswordForm({
         className="d-flex flex-column row-gap-3 border-0 m-0 p-4 w-100"
       >
         <ChangePasswordCurrentPassword
+          currentPasswordInputType={currentPasswordInputType}
+          changeCurrentPasswordType={changeCurrentPasswordType}
           currentPassword={currentPassword}
           handleCurrentPassword={handleCurrentPassword}
           noSpace={noSpace}
         />
         <ChangePasswordNewPassword
           newPasswordInputRef={newPasswordInputRef}
+          newPasswordInputType={newPasswordInputType}
+          changeNewPasswordType={changeNewPasswordType}
           newPassword={newPassword}
           handleNewPassword={handleNewPassword}
           isNewPassword={isNewPassword}
@@ -66,6 +82,8 @@ export default function ChangePasswordForm({
         />
         <ChangePasswordNewPasswordConfirm
           newPasswordConfirmInputRef={newPasswordConfirmInputRef}
+          newPasswordConfirmInputType={newPasswordConfirmInputType}
+          changeNewPasswordConfirmType={changeNewPasswordConfirmType}
           newPasswordConfirm={newPasswordConfirm}
           handleNewPasswordConfirm={handleNewPasswordConfirm}
           isNewPassword={isNewPassword}

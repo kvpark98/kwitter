@@ -125,6 +125,14 @@ export default function Account() {
   const [newPasswordConfirmErrorMessage, setNewPasswordConfirmErrorMessage] =
     useState("");
 
+  const [currentPasswordInputType, setCurrentPasswordInputType] =
+    useState(false);
+  const [newPasswordInputType, setNewPasswordInputType] = useState(false);
+  const [newPasswordConfirmInputType, setNewPasswordConfirmInputType] =
+    useState(false);
+
+  const [deletePasswordInputType, setDeletePasswordInputType] = useState(false);
+
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const handleShowChangePasswordModal = () => {
     setShowChangePasswordModal(true);
@@ -134,14 +142,14 @@ export default function Account() {
     reset();
   };
 
-  const [showChangePasswordErrorsModal, setShowChangePasswordErrorsModal] =
+  const [showChangePasswordErrorModal, setShowChangePasswordErrorModal] =
     useState(false);
-  const handleShowChangePasswordErrorsModal = () => {
+  const handleShowChangePasswordErrorModal = () => {
     setShowChangePasswordModal(false);
-    setShowChangePasswordErrorsModal(true);
+    setShowChangePasswordErrorModal(true);
   };
-  const handleCloseChangePasswordErrorsModal = () => {
-    setShowChangePasswordErrorsModal(false);
+  const handleCloseChangePasswordErrorModal = () => {
+    setShowChangePasswordErrorModal(false);
     setError("");
     handleShowChangePasswordModal();
   };
@@ -175,6 +183,22 @@ export default function Account() {
   const signOut = () => {
     auth.signOut();
     navigate("/welcome");
+  };
+
+  const changeCurrentPasswordType = () => {
+    setCurrentPasswordInputType((current) => !current);
+  };
+
+  const changeNewPasswordType = () => {
+    setNewPasswordInputType((current) => !current);
+  };
+
+  const changeNewPasswordConfirmType = () => {
+    setNewPasswordConfirmInputType((current) => !current);
+  };
+
+  const changeDeletePasswordType = () => {
+    setDeletePasswordInputType((current) => !current);
   };
 
   const handleCurrentPassword = (
@@ -516,7 +540,7 @@ export default function Account() {
         );
       }
 
-      handleShowChangePasswordErrorsModal();
+      handleShowChangePasswordErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -653,6 +677,12 @@ export default function Account() {
         newPasswordInputRef={newPasswordInputRef}
         newPasswordConfirmInputRef={newPasswordConfirmInputRef}
         isLoading={isLoading}
+        currentPasswordInputType={currentPasswordInputType}
+        newPasswordInputType={newPasswordInputType}
+        newPasswordConfirmInputType={newPasswordConfirmInputType}
+        changeCurrentPasswordType={changeCurrentPasswordType}
+        changeNewPasswordType={changeNewPasswordType}
+        changeNewPasswordConfirmType={changeNewPasswordConfirmType}
         currentPassword={currentPassword}
         handleCurrentPassword={handleCurrentPassword}
         isCurrentPassword={isCurrentPassword}
@@ -670,15 +700,17 @@ export default function Account() {
       />
       <ChangePasswordErrorModal
         error={error}
-        showChangePasswordErrorsModal={showChangePasswordErrorsModal}
-        handleCloseChangePasswordErrorsModal={
-          handleCloseChangePasswordErrorsModal
+        showChangePasswordErrorModal={showChangePasswordErrorModal}
+        handleCloseChangePasswordErrorModal={
+          handleCloseChangePasswordErrorModal
         }
       />
       <DeleteAccount
         showDeleteAccountModal={showDeleteAccountModal}
         handleCloseDeleteAccountModal={handleCloseDeleteAccountModal}
         isLoading={isLoading}
+        deletePasswordInputType={deletePasswordInputType}
+        changeDeletePasswordType={changeDeletePasswordType}
         deletePassword={deletePassword}
         handleDeletePassword={handleDeletePassword}
         isDeletePassword={isDeletePassword}

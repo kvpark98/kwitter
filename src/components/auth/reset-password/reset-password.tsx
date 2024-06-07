@@ -8,6 +8,10 @@ export interface ResetPasswordProps {
   passwordInputRef: React.RefObject<HTMLInputElement>;
   passwordConfirmInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
+  passwordInputType: boolean;
+  passwordConfirmInputType: boolean;
+  changePasswordType: () => void;
+  changePasswordConfirmType: () => void;
   password: string;
   handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
@@ -28,6 +32,10 @@ export default function ResetPassword({
   passwordInputRef,
   passwordConfirmInputRef,
   isLoading,
+  passwordInputType,
+  passwordConfirmInputType,
+  changePasswordType,
+  changePasswordConfirmType,
   password,
   handlePassword,
   isPassword,
@@ -55,6 +63,10 @@ export default function ResetPassword({
         passwordInputRef={passwordInputRef}
         passwordConfirmInputRef={passwordConfirmInputRef}
         isLoading={isLoading}
+        passwordInputType={passwordInputType}
+        passwordConfirmInputType={passwordConfirmInputType}
+        changePasswordType={changePasswordType}
+        changePasswordConfirmType={changePasswordConfirmType}
         password={password}
         handlePassword={handlePassword}
         isPassword={isPassword}

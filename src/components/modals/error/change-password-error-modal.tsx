@@ -2,19 +2,19 @@ import { Alert, Button, Modal } from "react-bootstrap";
 
 export interface ChangePasswordErrorModalProps {
   error: string;
-  showChangePasswordErrorsModal: boolean;
-  handleCloseChangePasswordErrorsModal: () => void;
+  showChangePasswordErrorModal: boolean;
+  handleCloseChangePasswordErrorModal: () => void;
 }
 
 export default function ChangePasswordErrorModal({
   error,
-  showChangePasswordErrorsModal,
-  handleCloseChangePasswordErrorsModal,
+  showChangePasswordErrorModal,
+  handleCloseChangePasswordErrorModal,
 }: ChangePasswordErrorModalProps) {
   return (
     <Modal
-      show={showChangePasswordErrorsModal}
-      onHide={handleCloseChangePasswordErrorsModal}
+      show={showChangePasswordErrorModal}
+      onHide={handleCloseChangePasswordErrorModal}
       backdrop="static"
       keyboard={false}
     >
@@ -53,7 +53,7 @@ export default function ChangePasswordErrorModal({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseChangePasswordErrorsModal}
+            onClick={handleCloseChangePasswordErrorModal}
           >
             Back
           </Button>

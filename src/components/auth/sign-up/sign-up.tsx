@@ -17,6 +17,10 @@ export interface SignUpProps {
   isEmail: boolean;
   emailErrorMessage: string;
   passwordInputRef: React.RefObject<HTMLInputElement>;
+  passwordInputType: boolean;
+  passwordConfirmInputType: boolean;
+  changePasswordType: () => void;
+  changePasswordConfirmType: () => void;
   password: string;
   handleSignUpPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
@@ -48,6 +52,10 @@ export default function SignUp({
   isEmail,
   emailErrorMessage,
   passwordInputRef,
+  passwordInputType,
+  passwordConfirmInputType,
+  changePasswordType,
+  changePasswordConfirmType,
   password,
   handleSignUpPassword,
   isPassword,
@@ -84,6 +92,10 @@ export default function SignUp({
         isEmail={isEmail}
         emailErrorMessage={emailErrorMessage}
         passwordInputRef={passwordInputRef}
+        passwordInputType={passwordInputType}
+        passwordConfirmInputType={passwordConfirmInputType}
+        changePasswordType={changePasswordType}
+        changePasswordConfirmType={changePasswordConfirmType}
         password={password}
         handleSignUpPassword={handleSignUpPassword}
         isPassword={isPassword}

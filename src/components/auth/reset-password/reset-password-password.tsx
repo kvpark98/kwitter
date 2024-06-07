@@ -1,7 +1,10 @@
 import { Form } from "react-bootstrap";
+import ResetPasswordType from "./reset-password-type";
 
 export interface ResetPasswordPasswordProps {
   passwordInputRef: React.RefObject<HTMLInputElement>;
+  passwordInputType: boolean;
+  changePasswordType: () => void;
   password: string;
   handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
@@ -11,6 +14,8 @@ export interface ResetPasswordPasswordProps {
 
 export default function ResetPasswordPassword({
   passwordInputRef,
+  passwordInputType,
+  changePasswordType,
   password,
   handlePassword,
   isPassword,
@@ -19,7 +24,15 @@ export default function ResetPasswordPassword({
 }: ResetPasswordPasswordProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="password">New password</Form.Label>
+      <div className="d-flex align-items-center mb-2">
+        <Form.Label htmlFor="password" className="m-0">
+          New password
+        </Form.Label>
+        <ResetPasswordType
+          passwordInputType={passwordInputType}
+          changePasswordType={changePasswordType}
+        />
+      </div>
       <Form.Control
         ref={passwordInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
@@ -28,7 +41,7 @@ export default function ResetPasswordPassword({
         id="password"
         name="password"
         value={password}
-        type="password"
+        type={passwordInputType ? "text" : "password"}
         maxLength={20}
         autoComplete="password"
       />

@@ -165,6 +165,10 @@ export default function Welcome() {
 
   const [isRememberMe, setIsRememberMe] = useState(false);
 
+  const [passwordInputType, setPasswordInputType] = useState(false);
+  const [passwordConfirmInputType, setPasswordConfirmInputType] =
+    useState(false);
+
   const [isPasswordChanged, setIsPasswordChanged] = useState(
     window.localStorage.getItem("PasswordChanged") || ""
   );
@@ -460,6 +464,13 @@ export default function Welcome() {
         emailInputRef.current?.classList.remove("form-control-invalid");
       }
     }
+  };
+
+  const changePasswordType = () => {
+    setPasswordInputType((current) => !current);
+  };
+  const changePasswordConfirmType = () => {
+    setPasswordConfirmInputType((current) => !current);
   };
 
   const handleSignInPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -908,6 +919,8 @@ export default function Welcome() {
         handleEmail={handleEmail}
         isEmail={isEmail}
         emailErrorMessage={emailErrorMessage}
+        passwordInputType={passwordInputType}
+        changePasswordType={changePasswordType}
         password={password}
         handleSignInPassword={handleSignInPassword}
         isPassword={isPassword}
@@ -963,6 +976,10 @@ export default function Welcome() {
         isEmail={isEmail}
         emailErrorMessage={emailErrorMessage}
         passwordInputRef={passwordInputRef}
+        passwordInputType={passwordInputType}
+        passwordConfirmInputType={passwordConfirmInputType}
+        changePasswordType={changePasswordType}
+        changePasswordConfirmType={changePasswordConfirmType}
         password={password}
         handleSignUpPassword={handleSignUpPassword}
         isPassword={isPassword}

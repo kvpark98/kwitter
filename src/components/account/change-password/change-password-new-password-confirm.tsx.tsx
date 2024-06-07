@@ -1,7 +1,10 @@
 import { Form } from "react-bootstrap";
+import ChangePasswordNewConfirmType from "./change-password-new-confirm-type";
 
 export interface ChangePasswordNewPasswordConfirmProps {
   newPasswordConfirmInputRef: React.RefObject<HTMLInputElement>;
+  newPasswordConfirmInputType: boolean;
+  changeNewPasswordConfirmType: () => void;
   newPasswordConfirm: string;
   handleNewPasswordConfirm: (
     event: React.ChangeEvent<HTMLInputElement>
@@ -14,6 +17,8 @@ export interface ChangePasswordNewPasswordConfirmProps {
 
 export default function ChangePasswordNewPasswordConfirm({
   newPasswordConfirmInputRef,
+  newPasswordConfirmInputType,
+  changeNewPasswordConfirmType,
   newPasswordConfirm,
   handleNewPasswordConfirm,
   isNewPassword,
@@ -23,7 +28,15 @@ export default function ChangePasswordNewPasswordConfirm({
 }: ChangePasswordNewPasswordConfirmProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="newPasswordConfirm">New password confirm</Form.Label>
+      <div className="d-flex align-items-center mb-2">
+        <Form.Label htmlFor="newPasswordConfirm" className="m-0">
+          New password confirm
+        </Form.Label>
+        <ChangePasswordNewConfirmType
+          newPasswordConfirmInputType={newPasswordConfirmInputType}
+          changeNewPasswordConfirmType={changeNewPasswordConfirmType}
+        />
+      </div>
       <Form.Control
         ref={newPasswordConfirmInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
@@ -32,7 +45,7 @@ export default function ChangePasswordNewPasswordConfirm({
         id="newPasswordConfirm"
         name="newPasswordConfirm"
         value={newPasswordConfirm}
-        type="password"
+        type={newPasswordConfirmInputType ? "text" : "password"}
         maxLength={20}
         autoComplete="password"
         {...(!isNewPassword ? { disabled: true } : { disabled: false })}

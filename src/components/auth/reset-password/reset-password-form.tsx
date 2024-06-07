@@ -8,6 +8,10 @@ export interface ResetPasswordFormProps {
   passwordInputRef: React.RefObject<HTMLInputElement>;
   passwordConfirmInputRef: React.RefObject<HTMLInputElement>;
   isLoading: boolean;
+  passwordInputType: boolean;
+  passwordConfirmInputType: boolean;
+  changePasswordType: () => void;
+  changePasswordConfirmType: () => void;
   password: string;
   handlePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
@@ -26,6 +30,10 @@ export default function ResetPasswordForm({
   passwordInputRef,
   passwordConfirmInputRef,
   isLoading,
+  passwordInputType,
+  passwordConfirmInputType,
+  changePasswordType,
+  changePasswordConfirmType,
   password,
   handlePassword,
   isPassword,
@@ -48,6 +56,8 @@ export default function ResetPasswordForm({
         {signInMethod === "emailLink" && <SignInWithEmailSuccess />}
         <ResetPasswordPassword
           passwordInputRef={passwordInputRef}
+          passwordInputType={passwordInputType}
+          changePasswordType={changePasswordType}
           password={password}
           handlePassword={handlePassword}
           isPassword={isPassword}
@@ -56,6 +66,8 @@ export default function ResetPasswordForm({
         />
         <ResetPasswordPasswordConfirm
           passwordConfirmInputRef={passwordConfirmInputRef}
+          passwordConfirmInputType={passwordConfirmInputType}
+          changePasswordConfirmType={changePasswordConfirmType}
           passwordConfirm={passwordConfirm}
           handlePasswordConfirm={handlePasswordConfirm}
           isPassword={isPassword}

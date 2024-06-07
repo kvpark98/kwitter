@@ -11,6 +11,8 @@ export interface SignInProps {
   handleEmail: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isEmail: boolean;
   emailErrorMessage: string;
+  passwordInputType: boolean;
+  changePasswordType: () => void;
   password: string;
   handleSignInPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
@@ -30,6 +32,8 @@ export default function SignIn({
   handleEmail,
   isEmail,
   emailErrorMessage,
+  passwordInputType,
+  changePasswordType,
   password,
   handleSignInPassword,
   isPassword,
@@ -56,6 +60,8 @@ export default function SignIn({
         handleEmail={handleEmail}
         isEmail={isEmail}
         emailErrorMessage={emailErrorMessage}
+        passwordInputType={passwordInputType}
+        changePasswordType={changePasswordType}
         password={password}
         handleSignInPassword={handleSignInPassword}
         isPassword={isPassword}

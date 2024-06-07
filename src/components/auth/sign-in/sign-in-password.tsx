@@ -1,6 +1,9 @@
 import { Button, Form } from "react-bootstrap";
+import SignInPasswordType from "./sign-in-password-type";
 
 export interface SignInPasswordProps {
+  passwordInputType: boolean;
+  changePasswordType: () => void;
   password: string;
   handleSignInPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   noSpace: (event: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -8,6 +11,8 @@ export interface SignInPasswordProps {
 }
 
 export default function SignInPassword({
+  passwordInputType,
+  changePasswordType,
   password,
   handleSignInPassword,
   noSpace,
@@ -15,12 +20,20 @@ export default function SignInPassword({
 }: SignInPasswordProps) {
   return (
     <Form.Group>
-      <div className="d-flex justify-content-between align-items-center">
-        <Form.Label htmlFor="password">Password</Form.Label>
+      <div className="d-flex justify-content-between align-items-center mb-2">
+        <div className="d-flex align-items-center">
+          <Form.Label htmlFor="password" className="m-0">
+            Password
+          </Form.Label>
+          <SignInPasswordType
+            passwordInputType={passwordInputType}
+            changePasswordType={changePasswordType}
+          />
+        </div>
         <Button
           variant="link"
           onClick={handleShowSendSignInLinkModal}
-          className="p-0 mb-2 text-decoration-none"
+          className="p-0 text-decoration-none"
         >
           Forgot password?
         </Button>
@@ -32,7 +45,7 @@ export default function SignInPassword({
         id="password"
         name="password"
         value={password}
-        type="password"
+        type={passwordInputType ? "text" : "password"}
         maxLength={20}
         autoComplete="password"
       />

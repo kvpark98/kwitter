@@ -58,6 +58,10 @@ export default function Home() {
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
 
+  const [passwordInputType, setPasswordInputType] = useState(false);
+  const [passwordConfirmInputType, setPasswordConfirmInputType] =
+    useState(false);
+
   const [tweets, setTweets] = useState<ITweet[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -373,6 +377,14 @@ export default function Home() {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
   }, []);
+
+  const changePasswordType = () => {
+    setPasswordInputType((current) => !current);
+  };
+
+  const changePasswordConfirmType = () => {
+    setPasswordConfirmInputType((current) => !current);
+  };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -737,6 +749,10 @@ export default function Home() {
         passwordInputRef={passwordInputRef}
         passwordConfirmInputRef={passwordConfirmInputRef}
         isLoading={isLoading}
+        passwordInputType={passwordInputType}
+        passwordConfirmInputType={passwordConfirmInputType}
+        changePasswordType={changePasswordType}
+        changePasswordConfirmType={changePasswordConfirmType}
         password={password}
         handlePassword={handlePassword}
         isPassword={isPassword}

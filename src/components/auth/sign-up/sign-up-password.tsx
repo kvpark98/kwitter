@@ -1,7 +1,10 @@
 import { Form } from "react-bootstrap";
+import SignUpPasswordType from "./sign-up-password-type";
 
 export interface SignUpPasswordProps {
   passwordInputRef: React.RefObject<HTMLInputElement>;
+  passwordInputType: boolean;
+  changePasswordType: () => void;
   password: string;
   handleSignUpPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
@@ -11,6 +14,8 @@ export interface SignUpPasswordProps {
 
 export default function SignUpPassword({
   passwordInputRef,
+  passwordInputType,
+  changePasswordType,
   password,
   handleSignUpPassword,
   isPassword,
@@ -19,7 +24,15 @@ export default function SignUpPassword({
 }: SignUpPasswordProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="password">Password</Form.Label>
+      <div className="d-flex align-items-center mb-2">
+        <Form.Label htmlFor="password" className="m-0">
+          Password
+        </Form.Label>
+        <SignUpPasswordType
+          passwordInputType={passwordInputType}
+          changePasswordType={changePasswordType}
+        />
+      </div>
       <Form.Control
         ref={passwordInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
@@ -28,7 +41,7 @@ export default function SignUpPassword({
         id="password"
         name="password"
         value={password}
-        type="password"
+        type={passwordInputType ? "text" : "password"}
         maxLength={20}
         autoComplete="password"
       />

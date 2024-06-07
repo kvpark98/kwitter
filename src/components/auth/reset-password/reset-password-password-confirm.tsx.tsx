@@ -1,7 +1,10 @@
 import { Form } from "react-bootstrap";
+import ResetPasswordConfirmType from "./reset-password-confirm-type";
 
 export interface ResetPasswordPasswordConfirmProps {
   passwordConfirmInputRef: React.RefObject<HTMLInputElement>;
+  passwordConfirmInputType: boolean;
+  changePasswordConfirmType: () => void;
   passwordConfirm: string;
   handlePasswordConfirm: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isPassword: boolean;
@@ -12,6 +15,8 @@ export interface ResetPasswordPasswordConfirmProps {
 
 export default function ResetPasswordPasswordConfirm({
   passwordConfirmInputRef,
+  passwordConfirmInputType,
+  changePasswordConfirmType,
   passwordConfirm,
   handlePasswordConfirm,
   isPassword,
@@ -21,7 +26,15 @@ export default function ResetPasswordPasswordConfirm({
 }: ResetPasswordPasswordConfirmProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="passwordConfirm">New password confirm</Form.Label>
+      <div className="d-flex align-items-center mb-2">
+        <Form.Label htmlFor="passwordConfirm" className="m-0">
+          New password confirm
+        </Form.Label>
+        <ResetPasswordConfirmType
+          passwordConfirmInputType={passwordConfirmInputType}
+          changePasswordConfirmType={changePasswordConfirmType}
+        />
+      </div>
       <Form.Control
         ref={passwordConfirmInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
@@ -30,7 +43,7 @@ export default function ResetPasswordPasswordConfirm({
         id="passwordConfirm"
         name="passwordConfirm"
         value={passwordConfirm}
-        type="password"
+        type={passwordConfirmInputType ? "text" : "password"}
         maxLength={20}
         autoComplete="password"
         {...(!isPassword ? { disabled: true } : { disabled: false })}

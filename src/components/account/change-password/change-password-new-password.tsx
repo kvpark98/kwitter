@@ -1,7 +1,10 @@
 import { Form } from "react-bootstrap";
+import ChangePasswordNewType from "./change-password-new-type";
 
 export interface ChangePasswordNewPasswordProps {
   newPasswordInputRef: React.RefObject<HTMLInputElement>;
+  newPasswordInputType: boolean;
+  changeNewPasswordType: () => void;
   newPassword: string;
   handleNewPassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isNewPassword: boolean;
@@ -11,6 +14,8 @@ export interface ChangePasswordNewPasswordProps {
 
 export default function ChangePasswordNewPassword({
   newPasswordInputRef,
+  newPasswordInputType,
+  changeNewPasswordType,
   newPassword,
   handleNewPassword,
   isNewPassword,
@@ -19,7 +24,15 @@ export default function ChangePasswordNewPassword({
 }: ChangePasswordNewPasswordProps) {
   return (
     <Form.Group>
-      <Form.Label htmlFor="newPassword">New password</Form.Label>
+      <div className="d-flex align-items-center mb-2">
+        <Form.Label htmlFor="newPassword" className="m-0">
+          New password
+        </Form.Label>
+        <ChangePasswordNewType
+          newPasswordInputType={newPasswordInputType}
+          changeNewPasswordType={changeNewPasswordType}
+        />
+      </div>
       <Form.Control
         ref={newPasswordInputRef}
         className="border-none mt-1 mb-1 rounded-pill"
@@ -28,7 +41,7 @@ export default function ChangePasswordNewPassword({
         id="newPassword"
         name="newPassword"
         value={newPassword}
-        type="password"
+        type={newPasswordInputType ? "text" : "password"}
         maxLength={20}
         autoComplete="password"
       />

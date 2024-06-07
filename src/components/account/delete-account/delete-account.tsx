@@ -6,6 +6,8 @@ export interface DeleteAccountProps {
   showDeleteAccountModal: boolean;
   handleCloseDeleteAccountModal: () => void;
   isLoading: boolean;
+  deletePasswordInputType: boolean;
+  changeDeletePasswordType: () => void;
   deletePassword: string;
   handleDeletePassword: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isDeletePassword: boolean;
@@ -28,6 +30,8 @@ export default function DeleteAccount({
   showDeleteAccountModal,
   handleCloseDeleteAccountModal,
   isLoading,
+  deletePasswordInputType,
+  changeDeletePasswordType,
   deletePassword,
   handleDeletePassword,
   isDeletePassword,
@@ -59,6 +63,8 @@ export default function DeleteAccount({
       />
       <DeleteAccountForm
         isLoading={isLoading}
+        deletePasswordInputType={deletePasswordInputType}
+        changeDeletePasswordType={changeDeletePasswordType}
         deletePassword={deletePassword}
         handleDeletePassword={handleDeletePassword}
         isDeletePassword={isDeletePassword}
