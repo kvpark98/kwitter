@@ -134,11 +134,12 @@ export default function Account() {
   const [deletePasswordInputType, setDeletePasswordInputType] = useState(false);
 
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
-  const handleShowChangePasswordModal = () => {
-    setShowChangePasswordModal(true);
-  };
+  const handleShowChangePasswordModal = () => setShowChangePasswordModal(true);
   const handleCloseChangePasswordModal = () => {
     setShowChangePasswordModal(false);
+    setCurrentPasswordInputType(false);
+    setNewPasswordInputType(false);
+    setNewPasswordConfirmInputType(false);
     reset();
   };
 
@@ -150,22 +151,23 @@ export default function Account() {
   };
   const handleCloseChangePasswordErrorModal = () => {
     setShowChangePasswordErrorModal(false);
-    setError("");
+    setCurrentPasswordInputType(false);
+    setNewPasswordInputType(false);
+    setNewPasswordConfirmInputType(false);
     handleShowChangePasswordModal();
   };
 
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
-  const handleShowDeleteAccountModal = () => {
-    setShowDeleteAccountModal(true);
-  };
+  const handleShowDeleteAccountModal = () => setShowDeleteAccountModal(true);
   const handleCloseDeleteAccountModal = () => {
     setShowDeleteAccountModal(false);
-    resetDeletePassword();
     setDataRemovalChecked(false);
     setContentRetentionChecked(false);
     setRejoiningChecked(false);
     setConsiderationChecked(false);
     setAllChecked(false);
+    setDeletePasswordInputType(false);
+    resetDeletePassword();
   };
 
   const [showDeleteAccountErrorModal, setShowDeleteAccountErrorModal] =
@@ -176,7 +178,7 @@ export default function Account() {
   };
   const handleCloseDeleteAccountErrorModal = () => {
     setShowDeleteAccountErrorModal(false);
-    setError("");
+    setDeletePasswordInputType(false);
     handleShowDeleteAccountModal();
   };
 
@@ -393,6 +395,10 @@ export default function Account() {
     setIsNewPassword(false);
     setIsNewPasswordConfirm(false);
 
+    setCurrentPasswordInputType(false);
+    setNewPasswordInputType(false);
+    setNewPasswordConfirmInputType(false);
+
     setNewPasswordErrorMessage("");
     setNewPasswordConfirmErrorMessage("");
 
@@ -409,6 +415,8 @@ export default function Account() {
     setDeletePassword("");
 
     setIsDeletePassword(false);
+
+    setDeletePasswordInputType(false);
   };
 
   useEffect(() => {

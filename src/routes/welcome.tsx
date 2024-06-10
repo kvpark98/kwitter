@@ -193,7 +193,19 @@ export default function Welcome() {
   };
   const handleCloseSignInModal = () => {
     setShowSignInModal(false);
+    setPasswordInputType(false);
     resetSignIn();
+  };
+
+  const [showSignInErrorModal, setShowSignInErrorModal] = useState(false);
+  const handleShowSignInErrorModal = () => {
+    setShowSignInModal(false);
+    setShowSignInErrorModal(true);
+  };
+  const handleCloseSignInErrorModal = () => {
+    setShowSignInErrorModal(false);
+    setPasswordInputType(false);
+    setShowSignInModal(true);
   };
 
   const [showAccountDeleteSuccessModal, setShowAccountDeleteSuccessModal] =
@@ -229,16 +241,7 @@ export default function Welcome() {
   };
   const handleCloseEmailNotVerifiedErrorModal = () => {
     setShowEmailNotVerifiedErrorModal(false);
-    setShowSignInModal(true);
-  };
-
-  const [showSignInErrorModal, setShowSignInErrorModal] = useState(false);
-  const handleShowSignInErrorModal = () => {
-    setShowSignInModal(false);
-    setShowSignInErrorModal(true);
-  };
-  const handleCloseSignInErrorModal = () => {
-    setShowSignInErrorModal(false);
+    setPasswordInputType(false);
     setShowSignInModal(true);
   };
 
@@ -246,6 +249,8 @@ export default function Welcome() {
   const handleShowSignUpModal = () => setShowSignUpModal(true);
   const handleCloseSignUpModal = () => {
     setShowSignUpModal(false);
+    setPasswordInputType(false);
+    setPasswordConfirmInputType(false);
     resetSignUp();
   };
 
@@ -256,6 +261,8 @@ export default function Welcome() {
   };
   const handleCloseSignUpErrorModal = () => {
     setShowSignUpErrorModal(false);
+    setPasswordInputType(false);
+    setPasswordConfirmInputType(false);
     setShowSignUpModal(true);
   };
 
@@ -636,6 +643,8 @@ export default function Welcome() {
     setIsEmail(false);
     setIsPassword(false);
 
+    setPasswordInputType(false);
+
     setEmailErrorMessage("");
 
     emailInputRef.current?.classList.remove("form-control-invalid");
@@ -651,6 +660,9 @@ export default function Welcome() {
     setIsEmail(false);
     setIsPassword(false);
     setIsPasswordConfirm(false);
+
+    setPasswordInputType(false);
+    setPasswordConfirmInputType(false);
 
     setNameErrorMessage("");
     setEmailErrorMessage("");

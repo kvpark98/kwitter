@@ -41,6 +41,7 @@ export default function Home() {
 
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const passwordConfirmInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
@@ -64,8 +65,6 @@ export default function Home() {
 
   const [tweets, setTweets] = useState<ITweet[]>([]);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const [message, setMessage] = useState("");
 
   const [file, setFile] = useState<File | null>(null);
@@ -81,7 +80,11 @@ export default function Home() {
 
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const handleShowResetPasswordModal = () => setShowResetPasswordModal(true);
-  const handleCloseResetPasswordModal = () => setShowResetPasswordModal(false);
+  const handleCloseResetPasswordModal = () => {
+    setShowResetPasswordModal(false);
+    setPasswordInputType(false);
+    setPasswordConfirmInputType(false);
+  };
 
   const [showResetPasswordErrorModal, setShowResetPasswordErrorModal] =
     useState(false);
@@ -91,6 +94,8 @@ export default function Home() {
   };
   const handleCloseResetPasswordErrorModal = () => {
     setShowResetPasswordErrorModal(false);
+    setPasswordInputType(false);
+    setPasswordConfirmInputType(false);
     handleShowResetPasswordModal();
   };
 
@@ -525,6 +530,9 @@ export default function Home() {
 
     setIsPassword(false);
     setIsPasswordConfirm(false);
+
+    setPasswordInputType(false);
+    setPasswordConfirmInputType(false);
 
     setPasswordErrorMessage("");
     setPasswordConfirmErrorMessage("");
