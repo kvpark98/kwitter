@@ -314,8 +314,14 @@ export default function Welcome() {
     setShowSignInWithEmailErrorModal(true);
   };
   const handleCloseSignInWithEmailErrorModal = () => {
-    setShowSignInWithEmailErrorModal(false);
-    handleShowSignInWithEmailModal();
+    if (window.location.href === "http://127.0.0.1:5173/welcome") {
+      setShowSignInWithEmailErrorModal(false);
+      window.localStorage.removeItem("error");
+    } else {
+      setShowSignInWithEmailErrorModal(false);
+      window.localStorage.removeItem("error");
+      handleShowSignInWithEmailModal();
+    }
   };
 
   const [showResetPasswordErrorModal, setShowResetPasswordErrorModal] =
@@ -337,7 +343,12 @@ export default function Welcome() {
     if (accountDeleted) {
       handleShowAccountDeleteSuccessModal();
     }
-    if (error === "auth/requires-recent-login") {
+    if (error) {
+      handleCloseSignInModal();
+      handleCloseSignUpModal();
+      setShowSendSignInLinkModal(false);
+      handleCloseSignInWithEmailModal();
+
       handleShowResetPasswordErrorModal();
     }
     window.localStorage.removeItem("error");
@@ -892,10 +903,9 @@ export default function Welcome() {
         signOut();
       }
     } catch (error) {
-      window.sessionStorage.removeItem("isSignedInWithEmail");
-
       if (error instanceof FirebaseError) {
         setError(error.code);
+        console.log(error.code);
 
         window.localStorage.setItem("error", error.code);
 
@@ -906,9 +916,8 @@ export default function Welcome() {
           error.code !== "auth/too-many-requests"
         ) {
           signOut();
-        } else {
-          handleShowSignInWithEmailErrorModal();
         }
+        handleShowSignInWithEmailErrorModal();
       }
     } finally {
       setIsLoading(false);

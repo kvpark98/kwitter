@@ -22,10 +22,21 @@ export default function ResetPasswordErrorModal({
         <Modal.Body>
           <Alert.Heading className="mb-3">Error</Alert.Heading>
           <p>
+            {error === "auth/no-email" && "This email is not registered."}
+            {error === "auth/invalid-email" &&
+              "The provided email does not correspond to the registered sign-in address."}
+            {error === "auth/invalid-credential" &&
+              "The email or password entered is incorrect."}
             {error === "auth/user-not-found" &&
-              "User not found. Please verify your account and try again."}
+              "We couldn't find a user corresponding to the provided email link. Make sure the link is correct, or consider signing up if you haven't already."}
             {error === "auth/user-disabled" &&
-              "Account disabled. Please contact support to re-enable your account."}
+              "The user associated with the provided email has been disabled."}
+            {error === "auth/expired-action-code" &&
+              "The email link has expired. Please request a new link and ensure you use it within the specified time limit."}
+            {error === "auth/invalid-action-code" &&
+              "The provided link is either incorrect or has already been utilized. Please obtain a new link."}
+            {error === "auth/account-exists-with-different-credential" &&
+              "The email is either invalid or already in use."}
             {error === "auth/requires-recent-login" &&
               "Security concern. For this action, recent sign-in is required. Please sign in again."}
             {error === "auth/too-many-requests" &&
@@ -34,6 +45,8 @@ export default function ResetPasswordErrorModal({
               "An unexpected network error has occurred. Kindly reopen the page."}
             {error === "auth/invalid-user-token" &&
               "Invalid user token. Please sign in again to obtain a valid token."}
+            {error === "auth/user-token-expired" &&
+              "Your credentials have expired. Please try again."}
             {error === "auth/web-storage-unsupported" &&
               "Your browser does not support web storage."}
             {error === "auth/internal-error" &&
