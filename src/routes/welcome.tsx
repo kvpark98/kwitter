@@ -314,12 +314,16 @@ export default function Welcome() {
     setShowSignInWithEmailErrorModal(true);
   };
   const handleCloseSignInWithEmailErrorModal = () => {
-    if (window.location.href === "http://127.0.0.1:5173/welcome") {
-      setShowSignInWithEmailErrorModal(false);
-      window.localStorage.removeItem("error");
+    setShowSignInWithEmailErrorModal(false);
+
+    if (
+      error !== "auth/user-disabled" &&
+      error !== "auth/user-not-found" &&
+      error !== "auth/invalid-email" &&
+      error !== "auth/too-many-requests"
+    ) {
+      signOut();
     } else {
-      setShowSignInWithEmailErrorModal(false);
-      window.localStorage.removeItem("error");
       handleShowSignInWithEmailModal();
     }
   };
@@ -896,8 +900,6 @@ export default function Welcome() {
           { merge: true }
         );
 
-        window.localStorage.removeItem("error");
-
         navigate("/");
       } else {
         signOut();
@@ -905,18 +907,7 @@ export default function Welcome() {
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log(error.code);
 
-        window.localStorage.setItem("error", error.code);
-
-        if (
-          error.code !== "auth/user-disabled" &&
-          error.code !== "auth/user-not-found" &&
-          error.code !== "auth/invalid-email" &&
-          error.code !== "auth/too-many-requests"
-        ) {
-          signOut();
-        }
         handleShowSignInWithEmailErrorModal();
       }
     } finally {
