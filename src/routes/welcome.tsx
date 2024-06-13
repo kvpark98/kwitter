@@ -754,7 +754,7 @@ export default function Welcome() {
         const userDocRef = doc(db, "users", user.uid);
         await setDoc(
           userDocRef,
-          { signInMethod: "emailPassword", userId: user.uid },
+          { signInMethod: "emailPassword" },
           { merge: true }
         );
         navigate("/");
@@ -813,7 +813,7 @@ export default function Welcome() {
 
       await setDoc(
         userDocRef,
-        { username: name, email: email },
+        { username: name, email: email, password: password, userId: user.uid },
         { merge: true }
       );
 

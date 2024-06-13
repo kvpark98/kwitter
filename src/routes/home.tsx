@@ -15,6 +15,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import {
@@ -32,7 +33,11 @@ import SideBar from "../components/sidebar/side-bar";
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import CreateTweetErrorModal from "../components/modals/error/create-tweet-error-modal";
 import CreateTweetSuccessModal from "../components/modals/success/create-tweet-success-modal";
-import { updatePassword } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from "firebase/auth";
 import ResetPassword from "../components/auth/reset-password/reset-password";
 import ResetPasswordErrorModal from "../components/modals/error/reset-password/reset-password-error-modal";
 
@@ -48,6 +53,8 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [signInMethod, setSignInMethod] = useState("");
+
+  const [currentPassword, setCurrentPassword] = useState("");
 
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -101,6 +108,7 @@ export default function Home() {
 
   useEffect(() => {
     checkSignInMethod();
+    checkCurrentPassword();
 
     if (signInMethod === "emailLink") {
       handleShowResetPasswordModal();
@@ -117,6 +125,20 @@ export default function Home() {
       if (userDocSnap.exists()) {
         const signInMethod = userDocSnap.data().signInMethod;
         setSignInMethod(signInMethod);
+      }
+    }
+  };
+
+  const checkCurrentPassword = async () => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const currentPassword = userDocSnap.data().password;
+        setCurrentPassword(currentPassword);
       }
     }
   };
@@ -640,9 +662,20 @@ export default function Home() {
     try {
       setIsLoading(true);
 
-      await updatePassword(auth.currentUser!, password);
+      const user = auth.currentUser!;
 
-      window.localStorage.removeItem("error");
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser?.email!,
+        currentPassword
+      );
+
+      await reauthenticateWithCredential(user, credential);
+
+      await updatePassword(user, password);
+
+      const userDocRef = doc(db, "users", user.uid);
+
+      await setDoc(userDocRef, { password: password }, { merge: true });
 
       window.localStorage.setItem("PasswordChanged", "true");
 
@@ -653,13 +686,7 @@ export default function Home() {
       if (error instanceof FirebaseError) {
         setError(error.code);
 
-        window.localStorage.setItem("error", error.code);
-
-        if (error.code === "auth/requires-recent-login") {
-          signOut();
-        } else {
-          handleShowResetPasswordErrorModal();
-        }
+        handleShowResetPasswordErrorModal();
       }
     } finally {
       setIsLoading(false);

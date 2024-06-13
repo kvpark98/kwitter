@@ -20,8 +20,10 @@ import {
   FirestoreError,
   collection,
   deleteDoc,
+  doc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { ITweet } from "../components/tweets/query/detail/tweet";
@@ -495,15 +497,21 @@ export default function Account() {
     try {
       setIsLoading(true);
 
+      const user = auth.currentUser!;
+
       const credential = EmailAuthProvider.credential(
         auth.currentUser?.email!,
         currentPassword
       );
 
-      await reauthenticateWithCredential(auth.currentUser!, credential);
+      await reauthenticateWithCredential(user, credential);
 
       if (currentPassword !== newPassword) {
-        await updatePassword(auth.currentUser!, newPassword);
+        await updatePassword(user, newPassword);
+
+        const userDocRef = doc(db, "users", user.uid);
+
+        await setDoc(userDocRef, { password: newPassword }, { merge: true });
 
         window.localStorage.setItem("PasswordChanged", "true");
 
