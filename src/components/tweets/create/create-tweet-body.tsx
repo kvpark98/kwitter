@@ -1,6 +1,6 @@
 import { Alert } from "react-bootstrap";
 import CreateMessagePhoto from "./create-message-photo";
-import CreateTweetProfile from "./create-tweet-profile";
+import UserProfile from "../user-profile";
 
 export interface CreateTweetBodyProps {
   message: string;
@@ -27,7 +27,7 @@ export default function CreateTweetBody({
       style={{ maxHeight: "600px" }}
     >
       <div className="d-flex w-100">
-        <CreateTweetProfile />
+        <UserProfile />
         <CreateMessagePhoto
           message={message}
           handleMessage={handleMessage}

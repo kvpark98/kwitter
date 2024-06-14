@@ -13,6 +13,7 @@ export interface TweetCardProps {
   username: string;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
+  handleShowReplyModal: () => void;
 }
 
 export default function TweetCard({
@@ -25,6 +26,7 @@ export default function TweetCard({
   username,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
+  handleShowReplyModal,
 }: TweetCardProps) {
   return (
     <Card className="d-flex rounded-0 border border-0 border-bottom">
@@ -37,6 +39,7 @@ export default function TweetCard({
         userId={userId}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
+        handleShowReplyModal={handleShowReplyModal}
       />
       <TweetFooter timeAgo={timeAgo} />
     </Card>

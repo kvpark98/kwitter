@@ -1,6 +1,6 @@
-import { auth } from "../../../firebase";
+import { auth } from "../../firebase";
 
-export default function CreateTweetProfile() {
+export default function UserProfile() {
   return (
     <div className="me-2">
       <img

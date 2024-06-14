@@ -1,12 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import {
   FirestoreError,
+  Unsubscribe,
+  addDoc,
   collection,
   deleteDoc,
   deleteField,
   doc,
   getDocs,
+  onSnapshot,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -27,6 +31,7 @@ import ModifyTweetDiscardModal from "../../modify/modify-tweet-discard-modal/mod
 import ModifyTweetErrorModal from "../../../modals/error/modify-tweet-error-modal";
 import ModifyTweetSuccessModal from "../../../modals/success/modify-tweet-success-modal";
 import DeleteTweetWarningModal from "../../../modals/warning/delete-tweet-warning-modal";
+import CreateReply from "./reply/create-reply";
 
 export interface ITweet {
   id: string;
@@ -36,6 +41,15 @@ export interface ITweet {
   photo?: string;
   userId: string;
   username: string;
+}
+
+export interface IReply {
+  id: string;
+  timeAgo?: string | undefined;
+  createdAt: string;
+  reply: string;
+  replyUserId: string;
+  replyUsername: string;
 }
 
 export default function Tweet({
@@ -85,6 +99,12 @@ export default function Tweet({
   const [croppedNewImagePreviewUrl, setCroppedNewImagePreviewUrl] =
     useState<string>("");
 
+  const [replys, setReplys] = useState<IReply[]>([]);
+
+  const [reply, setReply] = useState("");
+
+  const [isReply, setIsReply] = useState(false);
+
   const [error, setError] = useState("");
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -112,6 +132,10 @@ export default function Tweet({
       setShowModifyTweetDiscardModal(false);
     }
   };
+
+  const [showReplyModal, setShowReplyModal] = useState(false);
+  const handleShowReplyModal = () => setShowReplyModal(true);
+  const handleCloseReplyModal = () => setShowReplyModal(false);
 
   const handleCloseModifyTweetDiscardBothModal = () => {
     setShowModifyTweetModal(false);
@@ -286,6 +310,18 @@ export default function Tweet({
     }
   };
 
+  const handleReply = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = event.currentTarget.value;
+
+    setReply(value);
+
+    if (value.trim() !== "") {
+      setIsReply(true);
+    } else {
+      setIsReply(false);
+    }
+  };
+
   const handleNewFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCroppedNewImagePreviewUrl("");
 
@@ -334,6 +370,11 @@ export default function Tweet({
 
   const resetMessageButton = () => {
     resetMessageSubmit();
+  };
+
+  const resetReply = () => {
+    setReply("");
+    setIsReply(false);
   };
 
   const resetPhotoSubmit = () => {
@@ -426,16 +467,12 @@ export default function Tweet({
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
       } else if (error instanceof FirestoreError) {
         setError(error.code);
-        console.log("FirestoreError", error.code);
       } else if (error instanceof StorageError) {
         setError(error.code);
-        console.log("StorageError", error.code);
       } else {
         setError("size-exhausted");
-        console.log(error);
       }
 
       // 메시지 및 파일 상태를 초기화
@@ -470,18 +507,140 @@ export default function Tweet({
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
-        console.log("FirebaseError", error.code);
       } else if (error instanceof FirestoreError) {
         setError(error.code);
-        console.log("FirestoreError", error.code);
       } else if (error instanceof StorageError) {
         setError(error.code);
-        console.log("StorageError", error.code);
       } else {
         setError("size-exhausted");
-        console.log(error);
       }
       handleShowDeleteErrorsModal();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // reply 생성일을 시간 경과 표시 형식으로 변환하는 함수
+  const formatTimeAgo = (createdAt: string) => {
+    const now = new Date();
+    const createdDate = new Date(createdAt);
+
+    const diffInMilliseconds = now.getTime() - createdDate.getTime();
+    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays > 0) {
+      if (diffInDays >= 2) {
+        return `${diffInDays} days ago`;
+      } else {
+        return `${diffInDays} day ago`;
+      }
+    } else if (diffInHours > 0) {
+      if (diffInHours >= 2) {
+        return `${diffInHours} hours ago`;
+      } else {
+        return `${diffInHours} hour ago`;
+      }
+    } else if (diffInMinutes > 0) {
+      if (diffInMinutes >= 2) {
+        return `${diffInMinutes} minutes ago`;
+      } else {
+        return `${diffInMinutes} minute ago`;
+      }
+    } else if (diffInSeconds > 0) {
+      if (diffInSeconds >= 2) {
+        return `${diffInSeconds} seconds ago`;
+      } else {
+        return `${diffInSeconds} second ago`;
+      }
+    } else if (diffInMilliseconds > 0) {
+      if (diffInMilliseconds >= 2) {
+        return `${diffInMilliseconds} milliseconds ago`;
+      } else {
+        return `${diffInMilliseconds} millisecond ago`;
+      }
+    }
+  };
+
+  // 컴포넌트가 마운트될 때 reply 가져오기
+  useEffect(() => {
+    // Firestore 구독을 위한 변수
+    let unsubscribe: Unsubscribe | null = null;
+
+    const fetchReplys = async () => {
+      // Firestore 쿼리 생성
+      const replyQuery = query(
+        collection(db, "replys"),
+        where("tweetId", "==", id),
+        orderBy("createdAt", "desc")
+      );
+
+      // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
+      unsubscribe = await onSnapshot(replyQuery, (snapshot) => {
+        // 스냅샷을 reply 배열로 변환
+        const replys = snapshot.docs.map((doc) => {
+          // Firestore 문서에서 필요한 데이터 추출
+          const { createdAt, reply, replyUserId, replyUsername, tweetId } =
+            doc.data();
+
+          // 새로운 reply 객체 생성
+          return {
+            id: doc.id,
+            timeAgo: formatTimeAgo(createdAt),
+            createdAt,
+            reply,
+            replyUserId,
+            replyUsername,
+            tweetId,
+          };
+        });
+        // 상태 업데이트
+        setReplys(replys);
+      });
+    };
+
+    // fetchReplys 함수 호출
+    fetchReplys();
+
+    // 컴포넌트가 언마운트되면 Firestore 구독 해제
+    return () => {
+      unsubscribe && unsubscribe(); // 구독이 존재하면 해제
+    };
+  }, []);
+
+  const createReply = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isLoading || !isReply || reply.length > 180 || !user) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      setIsLoading(true);
+
+      await addDoc(collection(db, "replys"), {
+        tweetId: id,
+        createdAt: Date.now(),
+        reply: reply,
+        replyUserId: user.uid,
+        replyUsername: user.displayName,
+      });
+
+      resetReply();
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+      } else if (error instanceof FirestoreError) {
+        setError(error.code);
+      } else if (error instanceof StorageError) {
+        setError(error.code);
+      }
+
+      resetReply();
     } finally {
       setIsLoading(false);
     }
@@ -499,6 +658,7 @@ export default function Tweet({
         username={username}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
+        handleShowReplyModal={handleShowReplyModal}
       />
       {showModifyTweetModal && (
         <ModifyTweet
@@ -562,6 +722,16 @@ export default function Tweet({
         error={error}
         showModifyTweetErrorsModal={showModifyTweetErrorsModal}
         handleCloseModifyTweetErrorsModal={handleCloseModifyTweetErrorsModal}
+      />
+      <CreateReply
+        showReplyModal={showReplyModal}
+        handleCloseReplyModal={handleCloseReplyModal}
+        isLoading={isLoading}
+        reply={reply}
+        isReply={isReply}
+        handleReply={handleReply}
+        resetReply={resetReply}
+        createReply={createReply}
       />
     </div>
   );

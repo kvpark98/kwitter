@@ -10,6 +10,7 @@ export interface TweetBodyContentProps {
   username: string;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
+  handleShowReplyModal: () => void;
 }
 
 export default function handleShowTweetModifyModalTweetBodyContent({
@@ -20,6 +21,7 @@ export default function handleShowTweetModifyModalTweetBodyContent({
   username,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
+  handleShowReplyModal,
 }: TweetBodyContentProps) {
   return (
     <div className="w-100">
@@ -27,12 +29,13 @@ export default function handleShowTweetModifyModalTweetBodyContent({
         <span className="fw-bold">
           {user?.uid === userId ? user?.displayName! : username}
         </span>
-        {user?.uid === userId && (
-          <TweetFooterDropdown
-            handleShowModifyTweetModal={handleShowModifyTweetModal}
-            handleShowDeleteModal={handleShowDeleteModal}
-          />
-        )}
+        <TweetFooterDropdown
+          user={user}
+          userId={userId}
+          handleShowModifyTweetModal={handleShowModifyTweetModal}
+          handleShowDeleteModal={handleShowDeleteModal}
+          handleShowReplyModal={handleShowReplyModal}
+        />
       </Card.Title>
       <Card.Text>{message}</Card.Text>
       {photo && (

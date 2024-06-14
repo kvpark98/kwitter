@@ -1,6 +1,6 @@
 import { Alert } from "react-bootstrap";
-import ModifyTweetProfile from "./modify-tweet-profile";
 import ModifyMessagePhoto from "./modify-message-photo";
+import UserProfile from "../user-profile";
 
 export interface ModifyTweetBodyProps {
   newMessage: string;
@@ -32,7 +32,7 @@ export default function ModifyTweetBody({
       style={{ maxHeight: "600px" }}
     >
       <div className="d-flex w-100">
-        <ModifyTweetProfile />
+        <UserProfile />
         <ModifyMessagePhoto
           newMessage={newMessage}
           handleNewMessage={handleNewMessage}

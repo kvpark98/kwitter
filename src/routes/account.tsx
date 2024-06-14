@@ -524,37 +524,11 @@ export default function Account() {
 
       if (error instanceof FirebaseError) {
         setError(error.code);
-
-        if (
-          error.code === "auth/invalid-login-credentials" ||
-          error.code === "auth/wrong-password"
-        ) {
-          setCurrentPassword("");
-
-          setIsCurrentPassword(false);
-        }
       } else {
         setError("auth/same-password");
-
-        setNewPassword("");
-        setNewPasswordConfirm("");
-
-        setIsNewPassword(false);
-        setIsNewPasswordConfirm(false);
-
-        setNewPasswordErrorMessage("");
-        setNewPasswordConfirmErrorMessage("");
-
-        newPasswordInputRef.current?.classList.remove("form-control-invalid");
-        newPasswordInputRef.current?.classList.remove("form-control-valid");
-
-        newPasswordConfirmInputRef.current?.classList.remove(
-          "form-control-invalid"
-        );
-        newPasswordConfirmInputRef.current?.classList.remove(
-          "form-control-valid"
-        );
       }
+
+      reset();
 
       handleShowChangePasswordErrorModal();
     } finally {
