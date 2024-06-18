@@ -39,7 +39,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import ResetPassword from "../components/auth/reset-password/reset-password";
-import ResetPasswordErrorModal from "../components/modals/error/reset-password/reset-password-error-modal";
+import ResetPasswordErrorModal from "../components/modals/error/reset-password-error-modal";
 
 export default function Home() {
   const user = auth.currentUser;

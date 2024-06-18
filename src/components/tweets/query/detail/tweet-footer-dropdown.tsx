@@ -8,7 +8,7 @@ export interface TweetFooterDropdownProps {
   userId: string;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
-  handleShowReplyModal: () => void;
+  handleShowCreateReplyModal: () => void;
 }
 
 export default function TweetFooterDropdown({
@@ -16,7 +16,7 @@ export default function TweetFooterDropdown({
   userId,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
-  handleShowReplyModal,
+  handleShowCreateReplyModal,
 }: TweetFooterDropdownProps) {
   return (
     <Dropdown>
@@ -26,7 +26,7 @@ export default function TweetFooterDropdown({
         userId={userId}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
-        handleShowReplyModal={handleShowReplyModal}
+        handleShowCreateReplyModal={handleShowCreateReplyModal}
       />
     </Dropdown>
   );

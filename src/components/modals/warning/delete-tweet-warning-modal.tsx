@@ -7,8 +7,8 @@ export interface DeleteTweetWarningModalProps {
   showDeleteModal: boolean;
   handleCloseDeleteModal: () => void;
   deleteTweet: () => Promise<void>;
-  showDeleteErrorsModal: boolean;
-  handleCloseDeleteErrorsModal: () => void;
+  showDeleteErrorModal: boolean;
+  handleCloseDeleteErrorModal: () => void;
 }
 
 export default function DeleteTweetWarningModal({
@@ -17,8 +17,8 @@ export default function DeleteTweetWarningModal({
   showDeleteModal,
   handleCloseDeleteModal,
   deleteTweet,
-  showDeleteErrorsModal,
-  handleCloseDeleteErrorsModal,
+  showDeleteErrorModal,
+  handleCloseDeleteErrorModal,
 }: DeleteTweetWarningModalProps) {
   return (
     <div>
@@ -59,8 +59,8 @@ export default function DeleteTweetWarningModal({
       {error && (
         <DeleteTweetErrorModal
           error={error}
-          showDeleteErrorsModal={showDeleteErrorsModal}
-          handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}
+          showDeleteErrorModal={showDeleteErrorModal}
+          handleCloseDeleteErrorModal={handleCloseDeleteErrorModal}
         />
       )}
     </div>

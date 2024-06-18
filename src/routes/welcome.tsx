@@ -17,16 +17,16 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import SignIn from "../components/auth/sign-in/sign-in";
-import AccountDeleteSuccessModal from "../components/modals/success/sign-in/account-delete-success-modal";
-import PasswordChangeSuccessModal from "../components/modals/success/sign-in/password-change-success-modal";
+import AccountDeleteSuccessModal from "../components/modals/success/account-delete-success-modal";
+import PasswordChangeSuccessModal from "../components/modals/success/password-change-success-modal";
 import EmailVerificationNeededWarningModal from "../components/modals/warning/sign-in/email-verification-needed-warning-modal";
-import EmailNotVerifiedErrorModal from "../components/modals/error/sign-in/email-not-verified-error-modal";
-import SignInErrorModal from "../components/modals/error/sign-in/sign-in-error-modal";
+import EmailNotVerifiedErrorModal from "../components/modals/error/email-not-verified-error-modal";
+import SignInErrorModal from "../components/modals/error/sign-in-error-modal";
 import SignUp from "../components/auth/sign-up/sign-up";
-import SignUpErrorModal from "../components/modals/error/sign-up/sign-up-error-modal";
+import SignUpErrorModal from "../components/modals/error/sign-up-error-modal";
 import SendSignInLink from "../components/auth/send-sign-in-link/send-sign-in-link";
 import SignInLinkWarningModal from "../components/modals/warning/send-sign-in-link/sign-in-link-warning-modal";
-import SendSignInLinkErrorModal from "../components/modals/error/send-sign-in-link/send-sign-in-link-error-modal";
+import SendSignInLinkErrorModal from "../components/modals/error/send-sign-in-link-error-modal";
 import MainLogo from "../components/welcome/main-logo";
 import MainContent from "../components/welcome/main-content";
 import {
@@ -37,8 +37,8 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import ResetPasswordErrorModal from "../components/modals/error/reset-password/reset-password-error-modal";
-import SignInWithEmailErrorModal from "../components/modals/error/sign-in-with-email/sign-in-with-email-error-modal";
+import ResetPasswordErrorModal from "../components/modals/error/reset-password-error-modal";
+import SignInWithEmailErrorModal from "../components/modals/error/sign-in-with-email-error-modal";
 import SignInWithEmail from "../components/auth/sign-in-with-email/sign-in-with-email";
 
 // 미디어 쿼리를 사용하여 스타일 정의

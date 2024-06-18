@@ -1,6 +1,6 @@
 import { Alert } from "react-bootstrap";
-import UserProfile from "../../../user-profile";
 import CreateReplyMessage from "./create-reply-message";
+import UserProfile from "../../../../user-profile";
 
 export interface CreateReplyBodyProps {
   reply: string;

@@ -9,7 +9,7 @@ export interface TweetFooterDropdownMenuProps {
   userId: string;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
-  handleShowReplyModal: () => void;
+  handleShowCreateReplyModal: () => void;
 }
 
 export default function TweetFooterDropdownMenu({
@@ -17,12 +17,12 @@ export default function TweetFooterDropdownMenu({
   userId,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
-  handleShowReplyModal,
+  handleShowCreateReplyModal,
 }: TweetFooterDropdownMenuProps) {
   return (
     <Dropdown.Menu>
       <TweetFooterDropdownMenuReply
-        handleShowReplyModal={handleShowReplyModal}
+        handleShowCreateReplyModal={handleShowCreateReplyModal}
       />
       {user?.uid === userId && (
         <>

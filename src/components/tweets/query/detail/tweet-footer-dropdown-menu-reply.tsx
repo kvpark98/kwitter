@@ -1,16 +1,16 @@
 import { Dropdown } from "react-bootstrap";
 
 export interface TweetFooterDropdownMenuReplyProps {
-  handleShowReplyModal: () => void;
+  handleShowCreateReplyModal: () => void;
 }
 
 export default function TweetFooterDropdownMenuReply({
-  handleShowReplyModal,
+  handleShowCreateReplyModal,
 }: TweetFooterDropdownMenuReplyProps) {
   return (
     <Dropdown.Item
       className="btn d-flex align-items-center"
-      onClick={handleShowReplyModal}
+      onClick={handleShowCreateReplyModal}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

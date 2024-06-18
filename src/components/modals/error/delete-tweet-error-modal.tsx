@@ -2,19 +2,19 @@ import { Alert, Button, Modal } from "react-bootstrap";
 
 export interface DeleteTweetErrorModalProps {
   error: string;
-  showDeleteErrorsModal: boolean;
-  handleCloseDeleteErrorsModal: () => void;
+  showDeleteErrorModal: boolean;
+  handleCloseDeleteErrorModal: () => void;
 }
 
 export default function DeleteTweetErrorModal({
   error,
-  showDeleteErrorsModal,
-  handleCloseDeleteErrorsModal,
+  showDeleteErrorModal,
+  handleCloseDeleteErrorModal,
 }: DeleteTweetErrorModalProps) {
   return (
     <Modal
-      show={showDeleteErrorsModal}
-      onHide={handleCloseDeleteErrorsModal}
+      show={showDeleteErrorModal}
+      onHide={handleCloseDeleteErrorModal}
       backdrop="static"
       keyboard={false}
     >
@@ -115,7 +115,7 @@ export default function DeleteTweetErrorModal({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseDeleteErrorsModal}
+            onClick={handleCloseDeleteErrorModal}
           >
             Close
           </Button>

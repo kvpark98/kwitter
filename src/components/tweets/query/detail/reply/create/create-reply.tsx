@@ -4,8 +4,8 @@ import CreateReplyBody from "./create-reply-body";
 import CreateReplyFooter from "./create-reply-footer";
 
 export interface CreateReplyProps {
-  showReplyModal: boolean;
-  handleCloseReplyModal: () => void;
+  showCreateReplyModal: boolean;
+  handleCloseCreateReplyModal: () => void;
   isLoading: boolean;
   reply: string;
   isReply: boolean;
@@ -15,8 +15,8 @@ export interface CreateReplyProps {
 }
 
 export default function CreateReply({
-  showReplyModal,
-  handleCloseReplyModal,
+  showCreateReplyModal,
+  handleCloseCreateReplyModal,
   isLoading,
   reply,
   isReply,
@@ -26,14 +26,16 @@ export default function CreateReply({
 }: CreateReplyProps) {
   return (
     <Modal
-      show={showReplyModal}
-      onHide={handleCloseReplyModal}
+      show={showCreateReplyModal}
+      onHide={handleCloseCreateReplyModal}
       backdrop="static"
       keyboard={false}
       className="border-0"
       centered
     >
-      <CreateReplyHeader handleCloseReplyModal={handleCloseReplyModal} />
+      <CreateReplyHeader
+        handleCloseCreateReplyModal={handleCloseCreateReplyModal}
+      />
       <Form className="w-100" onSubmit={createReply}>
         <CreateReplyBody reply={reply} handleReply={handleReply} />
         <CreateReplyFooter

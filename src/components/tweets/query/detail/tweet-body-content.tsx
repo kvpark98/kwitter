@@ -10,7 +10,7 @@ export interface TweetBodyContentProps {
   username: string;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
-  handleShowReplyModal: () => void;
+  handleShowCreateReplyModal: () => void;
 }
 
 export default function handleShowTweetModifyModalTweetBodyContent({
@@ -21,7 +21,7 @@ export default function handleShowTweetModifyModalTweetBodyContent({
   username,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
-  handleShowReplyModal,
+  handleShowCreateReplyModal,
 }: TweetBodyContentProps) {
   return (
     <div className="w-100">
@@ -34,7 +34,7 @@ export default function handleShowTweetModifyModalTweetBodyContent({
           userId={userId}
           handleShowModifyTweetModal={handleShowModifyTweetModal}
           handleShowDeleteModal={handleShowDeleteModal}
-          handleShowReplyModal={handleShowReplyModal}
+          handleShowCreateReplyModal={handleShowCreateReplyModal}
         />
       </Card.Title>
       <Card.Text>{message}</Card.Text>

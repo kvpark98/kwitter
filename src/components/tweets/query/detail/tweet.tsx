@@ -31,7 +31,10 @@ import ModifyTweetDiscardModal from "../../modify/modify-tweet-discard-modal/mod
 import ModifyTweetErrorModal from "../../../modals/error/modify-tweet-error-modal";
 import ModifyTweetSuccessModal from "../../../modals/success/modify-tweet-success-modal";
 import DeleteTweetWarningModal from "../../../modals/warning/delete-tweet-warning-modal";
-import CreateReply from "./reply/create-reply";
+import CreateReplySuccessModal from "../../../modals/success/create-reply-success-modal";
+import CreateReplyErrorModal from "../../../modals/error/create-reply-error-modal";
+import CreateReply from "./reply/create/create-reply";
+import CreateReplyDiscardModal from "./reply/create/create-reply-discard-modal/create-reply-discard-modal";
 
 export interface ITweet {
   id: string;
@@ -133,9 +136,51 @@ export default function Tweet({
     }
   };
 
-  const [showReplyModal, setShowReplyModal] = useState(false);
-  const handleShowReplyModal = () => setShowReplyModal(true);
-  const handleCloseReplyModal = () => setShowReplyModal(false);
+  const [showCreateReplyModal, setShowCreateReplyModal] = useState(false);
+  const handleShowCreateReplyModal = () => setShowCreateReplyModal(true);
+  const handleCloseCreateReplyModal = () => {
+    if (reply.trim() !== "") {
+      handleShowCreateReplyDiscardModal();
+    } else {
+      setShowCreateReplyModal(false);
+      resetReply();
+      handleCloseCreateReplyDiscardModal();
+    }
+  };
+
+  const [showCreateReplySuccessModal, setShowCreateReplySuccessModal] =
+    useState(false);
+  const handleShowCreateReplySuccessModal = () => {
+    setShowCreateReplyModal(false);
+    resetReply();
+    setShowCreateReplySuccessModal(true);
+  };
+  const handleCloseCreateReplySuccessModal = () =>
+    setShowCreateReplySuccessModal(false);
+
+  const [showCreateReplyErrorModal, setShowCreateReplyErrorModal] =
+    useState(false);
+  const handleShowCreateReplyErrorModal = () => {
+    setShowCreateReplyModal(false);
+    setShowCreateReplyErrorModal(true);
+  };
+  const handleCloseCreateReplyErrorModal = () => {
+    setShowCreateReplyErrorModal(false);
+    setShowCreateReplyModal(true);
+  };
+
+  const handleCloseCreateReplyDiscardBothModal = () => {
+    setShowCreateReplyModal(false);
+    resetReply();
+    handleCloseCreateReplyDiscardModal();
+  };
+
+  const [showCreateReplyDiscardModal, setShowCreateReplyDiscardModal] =
+    useState(false);
+  const handleShowCreateReplyDiscardModal = () =>
+    setShowCreateReplyDiscardModal(true);
+  const handleCloseCreateReplyDiscardModal = () =>
+    setShowCreateReplyDiscardModal(false);
 
   const handleCloseModifyTweetDiscardBothModal = () => {
     setShowModifyTweetModal(false);
@@ -149,12 +194,10 @@ export default function Tweet({
 
   const [showModifyTweetDiscardModal, setShowModifyTweetDiscardModal] =
     useState(false);
-  const handleShowModifyTweetDiscardModal = () => {
+  const handleShowModifyTweetDiscardModal = () =>
     setShowModifyTweetDiscardModal(true);
-  };
-  const handleCloseModifyTweetDiscardModal = () => {
+  const handleCloseModifyTweetDiscardModal = () =>
     setShowModifyTweetDiscardModal(false);
-  };
 
   const [showModifyTweetSuccessModal, setShowModifyTweetSuccessModal] =
     useState(false);
@@ -166,24 +209,24 @@ export default function Tweet({
     setShowModifyTweetSuccessModal(false);
   };
 
-  const [showModifyTweetErrorsModal, setShowModifyTweetErrorsModal] =
+  const [showModifyTweetErrorModal, setShowModifyTweetErrorModal] =
     useState(false);
-  const handleShowModifyTweetErrorsModal = () => {
+  const handleShowModifyTweetErrorModal = () => {
     setShowModifyTweetModal(false);
-    setShowModifyTweetErrorsModal(true);
+    setShowModifyTweetErrorModal(true);
   };
-  const handleCloseModifyTweetErrorsModal = () => {
-    setShowModifyTweetErrorsModal(false);
+  const handleCloseModifyTweetErrorModal = () => {
+    setShowModifyTweetErrorModal(false);
     setError("");
     handleShowModifyTweetModal();
   };
 
-  const [showDeleteErrorsModal, setShowDeleteErrorsModal] = useState(false);
-  const handleShowDeleteErrorsModal = () => {
+  const [showDeleteErrorModal, setShowDeleteErrorModal] = useState(false);
+  const handleShowDeleteErrorModal = () => {
     handleCloseDeleteModal();
-    setShowDeleteErrorsModal(true);
+    setShowDeleteErrorModal(true);
   };
-  const handleCloseDeleteErrorsModal = () => setShowDeleteErrorsModal(false);
+  const handleCloseDeleteErrorModal = () => setShowDeleteErrorModal(false);
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -358,7 +401,7 @@ export default function Tweet({
 
         setError("size-exhausted"); // 에러 상태를 'size-exhausted'로 설정
 
-        handleShowModifyTweetErrorsModal();
+        handleShowModifyTweetErrorModal();
       }
     }
   };
@@ -481,7 +524,7 @@ export default function Tweet({
 
       setPhotoDeleteButtonClicked(false);
 
-      handleShowModifyTweetErrorsModal();
+      handleShowModifyTweetErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -514,7 +557,7 @@ export default function Tweet({
       } else {
         setError("size-exhausted");
       }
-      handleShowDeleteErrorsModal();
+      handleShowDeleteErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -630,7 +673,7 @@ export default function Tweet({
         replyUsername: user.displayName,
       });
 
-      resetReply();
+      handleShowCreateReplySuccessModal();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
@@ -640,7 +683,7 @@ export default function Tweet({
         setError(error.code);
       }
 
-      resetReply();
+      handleShowCreateReplyErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -658,7 +701,7 @@ export default function Tweet({
         username={username}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
-        handleShowReplyModal={handleShowReplyModal}
+        handleShowCreateReplyModal={handleShowCreateReplyModal}
       />
       {showModifyTweetModal && (
         <ModifyTweet
@@ -704,8 +747,8 @@ export default function Tweet({
         showDeleteModal={showDeleteModal}
         handleCloseDeleteModal={handleCloseDeleteModal}
         deleteTweet={deleteTweet}
-        showDeleteErrorsModal={showDeleteErrorsModal}
-        handleCloseDeleteErrorsModal={handleCloseDeleteErrorsModal}
+        showDeleteErrorModal={showDeleteErrorModal}
+        handleCloseDeleteErrorModal={handleCloseDeleteErrorModal}
       />
       <ModifyTweetDiscardModal
         showModifyTweetDiscardModal={showModifyTweetDiscardModal}
@@ -720,18 +763,34 @@ export default function Tweet({
       />
       <ModifyTweetErrorModal
         error={error}
-        showModifyTweetErrorsModal={showModifyTweetErrorsModal}
-        handleCloseModifyTweetErrorsModal={handleCloseModifyTweetErrorsModal}
+        showModifyTweetErrorModal={showModifyTweetErrorModal}
+        handleCloseModifyTweetErrorModal={handleCloseModifyTweetErrorModal}
       />
       <CreateReply
-        showReplyModal={showReplyModal}
-        handleCloseReplyModal={handleCloseReplyModal}
+        showCreateReplyModal={showCreateReplyModal}
+        handleCloseCreateReplyModal={handleCloseCreateReplyModal}
         isLoading={isLoading}
         reply={reply}
         isReply={isReply}
         handleReply={handleReply}
         resetReply={resetReply}
         createReply={createReply}
+      />
+      <CreateReplySuccessModal
+        showCreateReplySuccessModal={showCreateReplySuccessModal}
+        handleCloseCreateReplySuccessModal={handleCloseCreateReplySuccessModal}
+      />
+      <CreateReplyErrorModal
+        error={error}
+        showCreateReplyErrorModal={showCreateReplyErrorModal}
+        handleCloseCreateReplyErrorModal={handleCloseCreateReplyErrorModal}
+      />
+      <CreateReplyDiscardModal
+        showCreateReplyDiscardModal={showCreateReplyDiscardModal}
+        handleCloseCreateReplyDiscardModal={handleCloseCreateReplyDiscardModal}
+        handleCloseCreateReplyDiscardBothModal={
+          handleCloseCreateReplyDiscardBothModal
+        }
       />
     </div>
   );
