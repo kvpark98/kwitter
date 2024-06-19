@@ -35,6 +35,7 @@ import CreateReplySuccessModal from "../../../modals/success/create-reply-succes
 import CreateReplyErrorModal from "../../../modals/error/create-reply-error-modal";
 import CreateReply from "./reply/create/create-reply";
 import CreateReplyDiscardModal from "./reply/create/create-reply-discard-modal/create-reply-discard-modal";
+import ReplyListModal from "./reply/query/list/reply-list-modal";
 
 export interface ITweet {
   id: string;
@@ -766,6 +767,18 @@ export default function Tweet({
         showModifyTweetErrorModal={showModifyTweetErrorModal}
         handleCloseModifyTweetErrorModal={handleCloseModifyTweetErrorModal}
       />
+      {/* <ReplyListModal
+        replys={replys}
+        user={user}
+        avatar={avatar}
+        timeAgo={timeAgo}
+        message={message}
+        userId={userId}
+        username={username}
+        handleShowModifyTweetModal={handleShowModifyTweetModal}
+        handleShowDeleteModal={handleShowDeleteModal}
+        handleShowCreateReplyModal={handleShowCreateReplyModal}
+      /> */}
       <CreateReply
         showCreateReplyModal={showCreateReplyModal}
         handleCloseCreateReplyModal={handleCloseCreateReplyModal}

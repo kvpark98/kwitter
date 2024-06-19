@@ -1,11 +1,10 @@
 import { Card } from "react-bootstrap";
-import TweetFooterDropdown from "./tweet-footer-dropdown";
 import { User } from "firebase/auth";
+import TweetFooterDropdown from "../../../tweet-footer-dropdown";
 
-export interface TweetBodyContentProps {
+export interface ReplyBodyContentProps {
   user: User | null;
   message: string;
-  photo?: string | undefined;
   userId: string;
   username: string;
   handleShowModifyTweetModal: () => void;
@@ -13,16 +12,15 @@ export interface TweetBodyContentProps {
   handleShowCreateReplyModal: () => void;
 }
 
-export default function TweetBodyContent({
+export default function ReplyBodyContent({
   user,
   message,
-  photo,
   userId,
   username,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
   handleShowCreateReplyModal,
-}: TweetBodyContentProps) {
+}: ReplyBodyContentProps) {
   return (
     <div className="w-100">
       <Card.Title className="d-flex justify-content-between mb-3">
@@ -38,9 +36,6 @@ export default function TweetBodyContent({
         />
       </Card.Title>
       <Card.Text>{message}</Card.Text>
-      {photo && (
-        <Card.Img variant="top" src={photo} className="mt-3 rounded-4" />
-      )}
     </div>
   );
 }
