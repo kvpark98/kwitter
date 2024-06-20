@@ -5,26 +5,17 @@ import ReplyDropdownMenu from "./reply-dropdown-menu";
 
 export interface ReplyDropdownProps {
   user: User | null;
-  userId: string;
-  handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
+  replyUserId: string;
 }
 
 export default function ReplyDropdown({
   user,
-  userId,
-  handleShowModifyTweetModal,
-  handleShowDeleteModal,
+  replyUserId,
 }: ReplyDropdownProps) {
   return (
     <Dropdown>
       <ReplyDropdownToggle />
-      <ReplyDropdownMenu
-        user={user}
-        userId={userId}
-        handleShowModifyTweetModal={handleShowModifyTweetModal}
-        handleShowDeleteModal={handleShowDeleteModal}
-      />
+      <ReplyDropdownMenu user={user} replyUserId={replyUserId} />
     </Dropdown>
   );
 }

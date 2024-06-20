@@ -1,17 +1,22 @@
 import { CloseButton, Container, Navbar } from "react-bootstrap";
+import { IReply } from "../detail/reply";
 
 export interface ReplyListHeaderProps {
-  handleCloseCreateReplyModal: () => void;
+  replys: IReply[];
+  handleCloseReplyListModal: () => void;
 }
 
 export default function ReplyListHeader({
-  handleCloseCreateReplyModal,
+  replys,
+  handleCloseReplyListModal,
 }: ReplyListHeaderProps) {
   return (
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
-        <Navbar.Brand className="me-0 fw-bold">Replys</Navbar.Brand>
-        <CloseButton onClick={handleCloseCreateReplyModal} />
+        <Navbar.Brand className="me-0 fw-bold">
+          Replys ({replys.length})
+        </Navbar.Brand>
+        <CloseButton onClick={handleCloseReplyListModal} />
       </Container>
     </Navbar>
   );

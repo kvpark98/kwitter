@@ -35,7 +35,8 @@ import CreateReplySuccessModal from "../../../modals/success/create-reply-succes
 import CreateReplyErrorModal from "../../../modals/error/create-reply-error-modal";
 import CreateReply from "./reply/create/create-reply";
 import CreateReplyDiscardModal from "./reply/create/create-reply-discard-modal/create-reply-discard-modal";
-import ReplyListModal from "./reply/query/list/reply-list-modal";
+import ReplyList from "./reply/query/list/reply-list";
+import { IReply } from "./reply/query/detail/reply";
 
 export interface ITweet {
   id: string;
@@ -45,15 +46,6 @@ export interface ITweet {
   photo?: string;
   userId: string;
   username: string;
-}
-
-export interface IReply {
-  id: string;
-  timeAgo?: string | undefined;
-  createdAt: string;
-  reply: string;
-  replyUserId: string;
-  replyUsername: string;
 }
 
 export default function Tweet({
@@ -137,8 +129,15 @@ export default function Tweet({
     }
   };
 
+  const [showReplyListModal, setShowReplyListModal] = useState(false);
+  const handleShowReplyListModal = () => setShowReplyListModal(true);
+  const handleCloseReplyListModal = () => setShowReplyListModal(false);
+
   const [showCreateReplyModal, setShowCreateReplyModal] = useState(false);
-  const handleShowCreateReplyModal = () => setShowCreateReplyModal(true);
+  const handleShowCreateReplyModal = () => {
+    handleCloseReplyListModal();
+    setShowCreateReplyModal(true);
+  };
   const handleCloseCreateReplyModal = () => {
     if (reply.trim() !== "") {
       handleShowCreateReplyDiscardModal();
@@ -146,6 +145,7 @@ export default function Tweet({
       setShowCreateReplyModal(false);
       resetReply();
       handleCloseCreateReplyDiscardModal();
+      handleShowReplyListModal();
     }
   };
 
@@ -174,6 +174,7 @@ export default function Tweet({
     setShowCreateReplyModal(false);
     resetReply();
     handleCloseCreateReplyDiscardModal();
+    handleShowReplyListModal();
   };
 
   const [showCreateReplyDiscardModal, setShowCreateReplyDiscardModal] =
@@ -631,6 +632,8 @@ export default function Tweet({
 
           // 새로운 reply 객체 생성
           return {
+            user: user,
+            avatar: avatar,
             id: doc.id,
             timeAgo: formatTimeAgo(createdAt),
             createdAt,
@@ -700,9 +703,10 @@ export default function Tweet({
         photo={photo}
         userId={userId}
         username={username}
+        replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
-        handleShowCreateReplyModal={handleShowCreateReplyModal}
+        handleShowReplyListModal={handleShowReplyListModal}
       />
       {showModifyTweetModal && (
         <ModifyTweet
@@ -767,18 +771,12 @@ export default function Tweet({
         showModifyTweetErrorModal={showModifyTweetErrorModal}
         handleCloseModifyTweetErrorModal={handleCloseModifyTweetErrorModal}
       />
-      {/* <ReplyListModal
+      <ReplyList
         replys={replys}
-        user={user}
-        avatar={avatar}
-        timeAgo={timeAgo}
-        message={message}
-        userId={userId}
-        username={username}
-        handleShowModifyTweetModal={handleShowModifyTweetModal}
-        handleShowDeleteModal={handleShowDeleteModal}
+        showReplyListModal={showReplyListModal}
+        handleCloseReplyListModal={handleCloseReplyListModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
-      /> */}
+      />
       <CreateReply
         showCreateReplyModal={showCreateReplyModal}
         handleCloseCreateReplyModal={handleCloseCreateReplyModal}

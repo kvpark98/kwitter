@@ -4,22 +4,22 @@ import { User } from "firebase/auth";
 export interface ReplyBodyProfileProps {
   user: User | null;
   avatar: string;
-  userId: string;
-  username: string;
+  replyUserId: string;
+  replyUsername: string;
 }
 
 export default function ReplyBodyProfile({
   user,
   avatar,
-  userId,
-  username,
+  replyUserId,
+  replyUsername,
 }: ReplyBodyProfileProps) {
   return (
     <div className="me-2">
-      {user?.uid === userId ? (
+      {user?.uid === replyUserId ? (
         <Link
           to="/profile"
-          title={user?.uid === userId ? user?.displayName! : username}
+          title={user?.uid === replyUserId ? user?.displayName! : replyUsername}
         >
           <img
             src={user?.photoURL! ?? "/person-circle.svg"}

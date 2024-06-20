@@ -5,27 +5,23 @@ import ReplyDropdownMenuDelete from "./reply-dropdown-menu-delete";
 
 export interface ReplyDropdownMenuProps {
   user: User | null;
-  userId: string;
-  handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
+  replyUserId: string;
 }
 
 export default function ReplyDropdownMenu({
   user,
-  userId,
-  handleShowModifyTweetModal,
-  handleShowDeleteModal,
+  replyUserId,
 }: ReplyDropdownMenuProps) {
   return (
     <Dropdown.Menu>
-      {user?.uid === userId && (
+      {user?.uid === replyUserId && (
         <>
-          <ReplyDropdownMenuEdit
+          {/* <ReplyDropdownMenuEdit
             handleShowModifyTweetModal={handleShowModifyTweetModal}
           />
           <ReplyDropdownMenuDelete
             handleShowDeleteModal={handleShowDeleteModal}
-          />
+          /> */}
         </>
       )}
     </Dropdown.Menu>

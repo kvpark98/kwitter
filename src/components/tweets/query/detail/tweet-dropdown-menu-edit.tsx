@@ -1,12 +1,12 @@
 import { Dropdown } from "react-bootstrap";
 
-export interface TweetFooterDropdownMenuEditProps {
+export interface TweetDropdownMenuEditProps {
   handleShowModifyTweetModal: () => void;
 }
 
-export default function TweetFooterDropdownMenuEdit({
+export default function TweetDropdownMenuEdit({
   handleShowModifyTweetModal,
-}: TweetFooterDropdownMenuEditProps) {
+}: TweetDropdownMenuEditProps) {
   return (
     <Dropdown.Item
       className="btn d-flex align-items-center"

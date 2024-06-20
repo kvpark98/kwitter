@@ -1,12 +1,12 @@
 import { Dropdown } from "react-bootstrap";
 
-export interface TweetFooterDropdownMenuDeleteProps {
+export interface TweetDropdownMenuDeleteProps {
   handleShowDeleteModal: () => void;
 }
 
-export default function TweetFooterDropdownMenuDelete({
+export default function TweetDropdownMenuDelete({
   handleShowDeleteModal,
-}: TweetFooterDropdownMenuDeleteProps) {
+}: TweetDropdownMenuDeleteProps) {
   return (
     <Dropdown.Item
       className="btn d-flex align-items-center text-danger"

@@ -6,44 +6,35 @@ import ReplyBodyContent from "./reply-body-content";
 export interface ReplyBodyProps {
   user: User | null;
   avatar: string;
-  message: string;
-  userId: string;
-  username: string;
-  handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
-  handleShowCreateReplyModal: () => void;
+  reply: string;
+  replyUserId: string;
+  replyUsername: string;
 }
 
 export default function ReplyBody({
   user,
   avatar,
-  message,
-  userId,
-  username,
-  handleShowModifyTweetModal,
-  handleShowDeleteModal,
-  handleShowCreateReplyModal,
+  reply,
+  replyUserId,
+  replyUsername,
 }: ReplyBodyProps) {
   return (
     <Card.Body
-      {...(user?.uid === userId
+      {...(user?.uid === replyUserId
         ? { className: "d-flex bg-primary-subtle" }
         : { className: "d-flex" })}
     >
       <ReplyBodyProfile
         user={user}
         avatar={avatar}
-        userId={userId}
-        username={username}
+        replyUserId={replyUserId}
+        replyUsername={replyUsername}
       />
       <ReplyBodyContent
         user={user}
-        message={message}
-        userId={userId}
-        username={username}
-        handleShowModifyTweetModal={handleShowModifyTweetModal}
-        handleShowDeleteModal={handleShowDeleteModal}
-        handleShowCreateReplyModal={handleShowCreateReplyModal}
+        reply={reply}
+        replyUserId={replyUserId}
+        replyUsername={replyUsername}
       />
     </Card.Body>
   );

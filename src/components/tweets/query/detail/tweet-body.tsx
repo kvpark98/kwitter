@@ -2,6 +2,7 @@ import { Card } from "react-bootstrap";
 import { User } from "firebase/auth";
 import TweetBodyProfile from "./tweet-body-profile";
 import TweetBodyContent from "./tweet-body-content";
+import { IReply } from "./reply/query/detail/reply";
 
 export interface TweetBodyProps {
   user: User | null;
@@ -10,9 +11,10 @@ export interface TweetBodyProps {
   photo?: string | undefined;
   userId: string;
   username: string;
+  replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
-  handleShowCreateReplyModal: () => void;
+  handleShowReplyListModal: () => void;
 }
 
 export default function TweetBody({
@@ -22,9 +24,10 @@ export default function TweetBody({
   photo,
   userId,
   username,
+  replys,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
-  handleShowCreateReplyModal,
+  handleShowReplyListModal,
 }: TweetBodyProps) {
   return (
     <Card.Body
@@ -44,9 +47,10 @@ export default function TweetBody({
         photo={photo}
         userId={userId}
         username={username}
+        replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
-        handleShowCreateReplyModal={handleShowCreateReplyModal}
+        handleShowReplyListModal={handleShowReplyListModal}
       />
     </Card.Body>
   );

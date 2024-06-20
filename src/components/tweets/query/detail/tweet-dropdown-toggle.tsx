@@ -1,6 +1,6 @@
 import { Dropdown } from "react-bootstrap";
 
-export default function TweetFooterDropdownToggle() {
+export default function TweetDropdownToggle() {
   return (
     <Dropdown.Toggle
       variant="link"

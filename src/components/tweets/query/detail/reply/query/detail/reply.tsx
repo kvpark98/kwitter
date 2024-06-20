@@ -3,40 +3,33 @@ import { User } from "firebase/auth";
 import ReplyBody from "./reply-body";
 import ReplyFooter from "./reply-footer";
 
-export interface ReplyProps {
+export interface IReply {
   user: User | null;
   avatar: string;
-  timeAgo: string | undefined;
-  message: string;
-  userId: string;
-  username: string;
-  handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
-  handleShowCreateReplyModal: () => void;
+  id: string;
+  timeAgo?: string | undefined;
+  reply: string;
+  replyUserId: string;
+  replyUsername: string;
 }
 
 export default function Reply({
   user,
   avatar,
+  id,
   timeAgo,
-  message,
-  userId,
-  username,
-  handleShowModifyTweetModal,
-  handleShowDeleteModal,
-  handleShowCreateReplyModal,
-}: ReplyProps) {
+  reply,
+  replyUserId,
+  replyUsername,
+}: IReply) {
   return (
     <Card className="d-flex rounded-0 border border-0 border-bottom">
       <ReplyBody
         user={user}
         avatar={avatar}
-        message={message}
-        username={username}
-        userId={userId}
-        handleShowModifyTweetModal={handleShowModifyTweetModal}
-        handleShowDeleteModal={handleShowDeleteModal}
-        handleShowCreateReplyModal={handleShowCreateReplyModal}
+        reply={reply}
+        replyUserId={replyUserId}
+        replyUsername={replyUsername}
       />
       <ReplyFooter timeAgo={timeAgo} />
     </Card>

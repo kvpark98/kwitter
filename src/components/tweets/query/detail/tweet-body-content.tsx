@@ -1,6 +1,7 @@
 import { Card } from "react-bootstrap";
-import TweetFooterDropdown from "./tweet-footer-dropdown";
 import { User } from "firebase/auth";
+import TweetDropdown from "./tweet-dropdown";
+import { IReply } from "./reply/query/detail/reply";
 
 export interface TweetBodyContentProps {
   user: User | null;
@@ -8,9 +9,10 @@ export interface TweetBodyContentProps {
   photo?: string | undefined;
   userId: string;
   username: string;
+  replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
-  handleShowCreateReplyModal: () => void;
+  handleShowReplyListModal: () => void;
 }
 
 export default function TweetBodyContent({
@@ -19,9 +21,10 @@ export default function TweetBodyContent({
   photo,
   userId,
   username,
+  replys,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
-  handleShowCreateReplyModal,
+  handleShowReplyListModal,
 }: TweetBodyContentProps) {
   return (
     <div className="w-100">
@@ -29,12 +32,13 @@ export default function TweetBodyContent({
         <span className="fw-bold">
           {user?.uid === userId ? user?.displayName! : username}
         </span>
-        <TweetFooterDropdown
+        <TweetDropdown
           user={user}
           userId={userId}
+          replys={replys}
           handleShowModifyTweetModal={handleShowModifyTweetModal}
           handleShowDeleteModal={handleShowDeleteModal}
-          handleShowCreateReplyModal={handleShowCreateReplyModal}
+          handleShowReplyListModal={handleShowReplyListModal}
         />
       </Card.Title>
       <Card.Text>{message}</Card.Text>
