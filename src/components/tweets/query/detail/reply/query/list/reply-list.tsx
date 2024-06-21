@@ -3,8 +3,10 @@ import NoReply from "../../../../../no-reply";
 import { Modal } from "react-bootstrap";
 import ReplyListFooter from "./reply-list-footer";
 import ReplyListHeader from "./reply-list-header";
+import { User } from "firebase/auth";
 
 export interface ReplyListProps {
+  user: User | null;
   replys: IReply[];
   showReplyListModal: boolean;
   handleCloseReplyListModal: () => void;
@@ -12,6 +14,7 @@ export interface ReplyListProps {
 }
 
 export default function ReplyList({
+  user,
   replys,
   showReplyListModal,
   handleCloseReplyListModal,
@@ -33,7 +36,7 @@ export default function ReplyList({
       {replys.length !== 0 ? (
         <div className="overflow-y-auto" style={{ maxHeight: "500px" }}>
           {replys.map((reply) => {
-            return <Reply key={reply.id} {...reply} />;
+            return <Reply key={reply.id} user={user} {...reply} />;
           })}
         </div>
       ) : (

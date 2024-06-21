@@ -1,17 +1,16 @@
 import { Card } from "react-bootstrap";
 import TweetBody from "./tweet-body";
-import TweetFooter from "./tweet-footer";
 import { User } from "firebase/auth";
 import { IReply } from "./reply/query/detail/reply";
 
 export interface TweetCardProps {
   user: User | null;
-  avatar: string;
+  tweetAvatar: string;
   timeAgo: string | undefined;
   message: string;
   photo?: string | undefined;
-  userId: string;
-  username: string;
+  tweetUserId: string;
+  tweetUsername: string;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
@@ -20,32 +19,32 @@ export interface TweetCardProps {
 
 export default function TweetCard({
   user,
-  avatar,
+  tweetAvatar,
   timeAgo,
   message,
   photo,
-  userId,
-  username,
+  tweetUserId,
+  tweetUsername,
   replys,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
   handleShowReplyListModal,
 }: TweetCardProps) {
   return (
-    <Card className="d-flex rounded-0 border border-0 border-bottom">
+    <Card className="d-flex rounded-0 border-0 border-bottom border-secondary-subtle">
       <TweetBody
         user={user}
-        avatar={avatar}
+        tweetAvatar={tweetAvatar}
+        timeAgo={timeAgo}
         message={message}
         photo={photo}
-        userId={userId}
-        username={username}
+        tweetUserId={tweetUserId}
+        tweetUsername={tweetUsername}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
         handleShowReplyListModal={handleShowReplyListModal}
       />
-      <TweetFooter timeAgo={timeAgo} />
     </Card>
   );
 }

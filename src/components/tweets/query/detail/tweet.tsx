@@ -44,8 +44,8 @@ export interface ITweet {
   createdAt: string;
   message: string;
   photo?: string;
-  userId: string;
-  username: string;
+  tweetUserId: string;
+  tweetUsername: string;
 }
 
 export default function Tweet({
@@ -53,29 +53,29 @@ export default function Tweet({
   timeAgo,
   message,
   photo,
-  userId,
-  username,
+  tweetUserId,
+  tweetUsername,
 }: ITweet) {
-  const user = auth.currentUser;
+  const user = auth.currentUser!;
 
   const defaultAvatarURL = "/person-circle.svg";
 
-  const [avatar, setAvatar] = useState(defaultAvatarURL);
+  const [tweetAvatar, setTweetAvatar] = useState(defaultAvatarURL);
 
-  const getAvatar = async () => {
-    const avatarQuery = query(
+  const getTweetAvatar = async () => {
+    const tweetAvatarQuery = query(
       collection(db, "avatars"),
-      where("userId", "==", userId)
+      where("userId", "==", tweetUserId)
     );
 
-    const snapshot = await getDocs(avatarQuery);
+    const snapshot = await getDocs(tweetAvatarQuery);
     snapshot.forEach(async (doc) => {
       const data = doc.data();
-      setAvatar(data.avatar);
+      setTweetAvatar(data.avatar);
     });
   };
 
-  getAvatar();
+  getTweetAvatar();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -473,7 +473,7 @@ export default function Tweet({
           // Firestore db의 문서를 업데이트하여 다운로드 URL을 추가
           await updateDoc(doc(db, "tweets", id), {
             photo: url,
-            username: user.displayName,
+            tweetUsername: user.displayName,
           });
         } else {
           // 파일 크기가 1MB를 초과하면 에러 발생
@@ -500,7 +500,7 @@ export default function Tweet({
       await updateDoc(doc(db, "tweets", id), {
         createdAt: Date.now(),
         message: newMessage,
-        username: user.displayName,
+        tweetUsername: user.displayName,
       });
 
       // 파일 상태를 초기화
@@ -534,7 +534,7 @@ export default function Tweet({
 
   // 트윗 삭제 함수
   const deleteTweet = async () => {
-    if (isLoading || user?.uid !== userId) {
+    if (isLoading || user?.uid !== tweetUserId) {
       return;
     }
 
@@ -577,35 +577,15 @@ export default function Tweet({
     const diffInDays = Math.floor(diffInHours / 24);
 
     if (diffInDays > 0) {
-      if (diffInDays >= 2) {
-        return `${diffInDays} days ago`;
-      } else {
-        return `${diffInDays} day ago`;
-      }
+      return `${diffInDays} d`;
     } else if (diffInHours > 0) {
-      if (diffInHours >= 2) {
-        return `${diffInHours} hours ago`;
-      } else {
-        return `${diffInHours} hour ago`;
-      }
+      return `${diffInHours} h`;
     } else if (diffInMinutes > 0) {
-      if (diffInMinutes >= 2) {
-        return `${diffInMinutes} minutes ago`;
-      } else {
-        return `${diffInMinutes} minute ago`;
-      }
+      return `${diffInMinutes} min`;
     } else if (diffInSeconds > 0) {
-      if (diffInSeconds >= 2) {
-        return `${diffInSeconds} seconds ago`;
-      } else {
-        return `${diffInSeconds} second ago`;
-      }
+      return `${diffInSeconds} sec`;
     } else if (diffInMilliseconds > 0) {
-      if (diffInMilliseconds >= 2) {
-        return `${diffInMilliseconds} milliseconds ago`;
-      } else {
-        return `${diffInMilliseconds} millisecond ago`;
-      }
+      return `${diffInMilliseconds} millisec`;
     }
   };
 
@@ -632,8 +612,6 @@ export default function Tweet({
 
           // 새로운 reply 객체 생성
           return {
-            user: user,
-            avatar: avatar,
             id: doc.id,
             timeAgo: formatTimeAgo(createdAt),
             createdAt,
@@ -697,12 +675,12 @@ export default function Tweet({
     <div className="w-100">
       <TweetCard
         user={user}
-        avatar={avatar}
+        tweetAvatar={tweetAvatar}
         timeAgo={timeAgo}
         message={message}
         photo={photo}
-        userId={userId}
-        username={username}
+        tweetUserId={tweetUserId}
+        tweetUsername={tweetUsername}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
@@ -772,6 +750,7 @@ export default function Tweet({
         handleCloseModifyTweetErrorModal={handleCloseModifyTweetErrorModal}
       />
       <ReplyList
+        user={user}
         replys={replys}
         showReplyListModal={showReplyListModal}
         handleCloseReplyListModal={handleCloseReplyListModal}

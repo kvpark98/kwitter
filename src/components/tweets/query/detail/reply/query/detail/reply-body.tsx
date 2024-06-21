@@ -5,7 +5,8 @@ import ReplyBodyContent from "./reply-body-content";
 
 export interface ReplyBodyProps {
   user: User | null;
-  avatar: string;
+  replyAvatar: string;
+  timeAgo: string | undefined;
   reply: string;
   replyUserId: string;
   replyUsername: string;
@@ -13,7 +14,8 @@ export interface ReplyBodyProps {
 
 export default function ReplyBody({
   user,
-  avatar,
+  replyAvatar,
+  timeAgo,
   reply,
   replyUserId,
   replyUsername,
@@ -26,12 +28,13 @@ export default function ReplyBody({
     >
       <ReplyBodyProfile
         user={user}
-        avatar={avatar}
+        replyAvatar={replyAvatar}
         replyUserId={replyUserId}
         replyUsername={replyUsername}
       />
       <ReplyBodyContent
         user={user}
+        timeAgo={timeAgo}
         reply={reply}
         replyUserId={replyUserId}
         replyUsername={replyUsername}

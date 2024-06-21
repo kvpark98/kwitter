@@ -6,11 +6,12 @@ import { IReply } from "./reply/query/detail/reply";
 
 export interface TweetBodyProps {
   user: User | null;
-  avatar: string;
+  tweetAvatar: string;
+  timeAgo: string | undefined;
   message: string;
   photo?: string | undefined;
-  userId: string;
-  username: string;
+  tweetUserId: string;
+  tweetUsername: string;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
@@ -19,11 +20,12 @@ export interface TweetBodyProps {
 
 export default function TweetBody({
   user,
-  avatar,
+  tweetAvatar,
+  timeAgo,
   message,
   photo,
-  userId,
-  username,
+  tweetUserId,
+  tweetUsername,
   replys,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
@@ -31,22 +33,23 @@ export default function TweetBody({
 }: TweetBodyProps) {
   return (
     <Card.Body
-      {...(user?.uid === userId
+      {...(user?.uid === tweetUserId
         ? { className: "d-flex bg-primary-subtle" }
         : { className: "d-flex" })}
     >
       <TweetBodyProfile
         user={user}
-        avatar={avatar}
-        userId={userId}
-        username={username}
+        tweetAvatar={tweetAvatar}
+        tweetUserId={tweetUserId}
+        tweetUsername={tweetUsername}
       />
       <TweetBodyContent
         user={user}
+        timeAgo={timeAgo}
         message={message}
         photo={photo}
-        userId={userId}
-        username={username}
+        tweetUserId={tweetUserId}
+        tweetUsername={tweetUsername}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}

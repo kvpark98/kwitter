@@ -50,15 +50,16 @@ export default function Account() {
 
       const tweetSnapshot = await getDocs(tweetQuery);
       const tweets = tweetSnapshot.docs.map((doc) => {
-        const { createdAt, message, photo, userId, username } = doc.data();
+        const { createdAt, message, photo, tweetUserId, tweetUsername } =
+          doc.data();
 
         return {
           id: doc.id,
           createdAt,
           message,
           photo,
-          userId,
-          username,
+          tweetUserId,
+          tweetUsername,
         };
       });
       setTweets(tweets);
@@ -602,7 +603,7 @@ export default function Account() {
 
         const tweetQuery = query(
           collection(db, "tweets"),
-          where("userId", "==", user?.uid)
+          where("tweetUserId", "==", user?.uid)
         );
 
         const tweetSnapshot = await getDocs(tweetQuery);

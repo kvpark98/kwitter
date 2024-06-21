@@ -3,23 +3,23 @@ import { User } from "firebase/auth";
 
 export interface TweetBodyProfileProps {
   user: User | null;
-  avatar: string;
-  userId: string;
-  username: string;
+  tweetAvatar: string;
+  tweetUserId: string;
+  tweetUsername: string;
 }
 
 export default function TweetBodyProfile({
   user,
-  avatar,
-  userId,
-  username,
+  tweetAvatar,
+  tweetUserId,
+  tweetUsername,
 }: TweetBodyProfileProps) {
   return (
     <div className="me-2">
-      {user?.uid === userId ? (
+      {user?.uid === tweetUserId ? (
         <Link
           to="/profile"
-          title={user?.uid === userId ? user?.displayName! : username}
+          title={user?.uid === tweetUserId ? user?.displayName! : tweetUsername}
         >
           <img
             src={user?.photoURL! ?? "/person-circle.svg"}
@@ -30,7 +30,7 @@ export default function TweetBodyProfile({
         </Link>
       ) : (
         <img
-          src={avatar}
+          src={tweetAvatar}
           width="40"
           height="40"
           className="rounded-circle bg-light"

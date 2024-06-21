@@ -44,7 +44,7 @@ export type CroppedAreaPixels = {
 };
 
 export default function Profile() {
-  const user = auth.currentUser;
+  const user = auth.currentUser!;
 
   const defaultAvatarURL = "/person-circle.svg";
   const defaultBackgroundURL = "/default-background.png";
@@ -674,12 +674,22 @@ export default function Profile() {
 
       const usernameTweetQuery = query(
         collection(db, "tweets"),
-        where("userId", "==", user?.uid)
+        where("tweetUserId", "==", user?.uid)
       );
 
       const usernameTweetSnapshot = await getDocs(usernameTweetQuery);
       usernameTweetSnapshot.forEach(async (doc) => {
-        await updateDoc(doc.ref, { username: name });
+        await updateDoc(doc.ref, { tweetUsername: name });
+      });
+
+      const usernameReplyQuery = query(
+        collection(db, "replys"),
+        where("replyUserId", "==", user?.uid)
+      );
+
+      const usernameReplySnapshot = await getDocs(usernameReplyQuery);
+      usernameReplySnapshot.forEach(async (doc) => {
+        await updateDoc(doc.ref, { replyUsername: name });
       });
 
       const avatarQuery = query(
@@ -757,35 +767,15 @@ export default function Profile() {
     const diffInDays = Math.floor(diffInHours / 24);
 
     if (diffInDays > 0) {
-      if (diffInDays >= 2) {
-        return `${diffInDays} days ago`;
-      } else {
-        return `${diffInDays} day ago`;
-      }
+      return `${diffInDays} d`;
     } else if (diffInHours > 0) {
-      if (diffInHours >= 2) {
-        return `${diffInHours} hours ago`;
-      } else {
-        return `${diffInHours} hour ago`;
-      }
+      return `${diffInHours} h`;
     } else if (diffInMinutes > 0) {
-      if (diffInMinutes >= 2) {
-        return `${diffInMinutes} minutes ago`;
-      } else {
-        return `${diffInMinutes} minute ago`;
-      }
+      return `${diffInMinutes} min`;
     } else if (diffInSeconds > 0) {
-      if (diffInSeconds >= 2) {
-        return `${diffInSeconds} seconds ago`;
-      } else {
-        return `${diffInSeconds} second ago`;
-      }
+      return `${diffInSeconds} sec`;
     } else if (diffInMilliseconds > 0) {
-      if (diffInMilliseconds >= 2) {
-        return `${diffInMilliseconds} milliseconds ago`;
-      } else {
-        return `${diffInMilliseconds} millisecond ago`;
-      }
+      return `${diffInMilliseconds} millisec`;
     }
   };
 
@@ -799,7 +789,7 @@ export default function Profile() {
       // Firestore 쿼리 생성
       const tweetQuery = query(
         collection(db, "tweets"),
-        where("userId", "==", user?.uid),
+        where("tweetUserId", "==", user?.uid),
         orderBy("createdAt", "desc")
       );
 
@@ -808,7 +798,8 @@ export default function Profile() {
         // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
-          const { createdAt, message, photo, userId, username } = doc.data();
+          const { createdAt, message, photo, tweetUserId, tweetUsername } =
+            doc.data();
 
           // 새로운 tweet 객체 생성
           return {
@@ -817,8 +808,8 @@ export default function Profile() {
             createdAt,
             message,
             photo,
-            userId,
-            username,
+            tweetUserId,
+            tweetUsername,
           };
         });
         // 상태 업데이트

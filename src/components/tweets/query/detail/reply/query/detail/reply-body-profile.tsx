@@ -3,14 +3,14 @@ import { User } from "firebase/auth";
 
 export interface ReplyBodyProfileProps {
   user: User | null;
-  avatar: string;
+  replyAvatar: string;
   replyUserId: string;
   replyUsername: string;
 }
 
 export default function ReplyBodyProfile({
   user,
-  avatar,
+  replyAvatar,
   replyUserId,
   replyUsername,
 }: ReplyBodyProfileProps) {
@@ -30,7 +30,7 @@ export default function ReplyBodyProfile({
         </Link>
       ) : (
         <img
-          src={avatar}
+          src={replyAvatar}
           width="40"
           height="40"
           className="rounded-circle bg-light"

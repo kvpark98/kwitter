@@ -6,7 +6,7 @@ import { IReply } from "./reply/query/detail/reply";
 
 export interface TweetDropdownProps {
   user: User | null;
-  userId: string;
+  tweetUserId: string;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteModal: () => void;
@@ -15,7 +15,7 @@ export interface TweetDropdownProps {
 
 export default function TweetDropdown({
   user,
-  userId,
+  tweetUserId,
   replys,
   handleShowModifyTweetModal,
   handleShowDeleteModal,
@@ -26,7 +26,7 @@ export default function TweetDropdown({
       <TweetDropdownToggle />
       <TweetDropdownMenu
         user={user}
-        userId={userId}
+        tweetUserId={tweetUserId}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteModal={handleShowDeleteModal}
