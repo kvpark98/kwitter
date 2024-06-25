@@ -538,6 +538,8 @@ export default function Tweet({
       return;
     }
 
+    setError("");
+
     try {
       setIsLoading(true);
 
@@ -546,6 +548,17 @@ export default function Tweet({
         const photoRef = ref(storage, `tweets/${user.uid}/${id}`);
         await deleteObject(photoRef);
       }
+
+      // Firestore db에서 댓글 문서 삭제
+      const replyQuery = query(
+        collection(db, "replys"),
+        where("tweetId", "==", id)
+      );
+
+      const replySnapshot = await getDocs(replyQuery);
+      replySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
 
       // Firestore db에서 트윗 문서 삭제
       await deleteDoc(doc(db, "tweets", id));
