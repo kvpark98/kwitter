@@ -8,6 +8,7 @@ export interface ReplyBodyContentProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
+  handleShowReplyDeleteModal: () => void;
 }
 
 export default function ReplyBodyContent({
@@ -16,6 +17,7 @@ export default function ReplyBodyContent({
   reply,
   replyUserId,
   replyUsername,
+  handleShowReplyDeleteModal,
 }: ReplyBodyContentProps) {
   return (
     <div className="w-100">
@@ -26,7 +28,11 @@ export default function ReplyBodyContent({
           </p>
           <span className="fs-6 text-muted">{timeAgo}</span>
         </div>
-        <ReplyDropdown user={user} replyUserId={replyUserId} />
+        <ReplyDropdown
+          user={user}
+          replyUserId={replyUserId}
+          handleShowReplyDeleteModal={handleShowReplyDeleteModal}
+        />
       </Card.Title>
       <Card.Text>{reply}</Card.Text>
     </div>

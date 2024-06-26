@@ -9,6 +9,7 @@ export interface ReplyListProps {
   user: User | null;
   replys: IReply[];
   showReplyListModal: boolean;
+  handleShowReplyListModal: () => void;
   handleCloseReplyListModal: () => void;
   handleShowCreateReplyModal: () => void;
 }
@@ -17,6 +18,7 @@ export default function ReplyList({
   user,
   replys,
   showReplyListModal,
+  handleShowReplyListModal,
   handleCloseReplyListModal,
   handleShowCreateReplyModal,
 }: ReplyListProps) {
@@ -36,7 +38,15 @@ export default function ReplyList({
       {replys.length !== 0 ? (
         <div className="overflow-y-auto" style={{ maxHeight: "500px" }}>
           {replys.map((reply) => {
-            return <Reply key={reply.id} user={user} {...reply} />;
+            return (
+              <Reply
+                key={reply.id}
+                user={user}
+                handleShowReplyListModal={handleShowReplyListModal}
+                handleCloseReplyListModal={handleCloseReplyListModal}
+                {...reply}
+              />
+            );
           })}
         </div>
       ) : (

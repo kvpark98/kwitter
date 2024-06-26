@@ -37,6 +37,8 @@ import CreateReply from "./reply/create/create-reply";
 import CreateReplyDiscardModal from "./reply/create/create-reply-discard-modal/create-reply-discard-modal";
 import ReplyList from "./reply/query/list/reply-list";
 import { IReply } from "./reply/query/detail/reply";
+import DeleteReplyWarningModal from "../../../modals/warning/delete-reply-warning-modal";
+import DeleteReplyErrorModal from "../../../modals/error/delete-reply-error-modal";
 
 export interface ITweet {
   id: string;
@@ -229,6 +231,27 @@ export default function Tweet({
     setShowDeleteErrorModal(true);
   };
   const handleCloseDeleteErrorModal = () => setShowDeleteErrorModal(false);
+
+  // const [showReplyDeleteModal, setShowReplyDeleteModal] = useState(false);
+  // const handleShowReplyDeleteModal = () => {
+  //   handleCloseReplyListModal();
+  //   setShowReplyDeleteModal(true);
+  // };
+  // const handleCloseReplyDeleteModal = () => {
+  //   setShowReplyDeleteModal(false);
+  //   handleShowReplyListModal();
+  // };
+
+  // const [showReplyDeleteErrorModal, setShowReplyDeleteErrorModal] =
+  //   useState(false);
+  // const handleShowReplyDeleteErrorModal = () => {
+  //   handleCloseReplyDeleteModal();
+  //   setShowReplyDeleteErrorModal(true);
+  // };
+  // const handleCloseReplyDeleteErrorModal = () => {
+  //   setShowReplyDeleteErrorModal(false);
+  //   handleShowReplyListModal();
+  // };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -684,6 +707,33 @@ export default function Tweet({
     }
   };
 
+  // const deleteReply = async () => {
+  //   if (isLoading || user?.uid !== replyUserId) {
+  //     return;
+  //   }
+
+  //   setError("");
+
+  //   try {
+  //     setIsLoading(true);
+
+  //     await deleteDoc(doc(db, "replys", id));
+  //   } catch (error) {
+  //     if (error instanceof FirebaseError) {
+  //       setError(error.code);
+  //     } else if (error instanceof FirestoreError) {
+  //       setError(error.code);
+  //     } else if (error instanceof StorageError) {
+  //       setError(error.code);
+  //     } else {
+  //       setError("size-exhausted");
+  //     }
+  //     handleShowReplyDeleteErrorModal();
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   return (
     <div className="w-100">
       <TweetCard
@@ -766,9 +816,11 @@ export default function Tweet({
         user={user}
         replys={replys}
         showReplyListModal={showReplyListModal}
+        handleShowReplyListModal={handleShowReplyListModal}
         handleCloseReplyListModal={handleCloseReplyListModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
       />
+
       <CreateReply
         showCreateReplyModal={showCreateReplyModal}
         handleCloseCreateReplyModal={handleCloseCreateReplyModal}
