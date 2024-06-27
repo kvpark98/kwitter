@@ -13,7 +13,7 @@ export interface TweetCardProps {
   tweetUsername: string;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
+  handleShowDeleteTweetModal: () => void;
   handleShowReplyListModal: () => void;
 }
 
@@ -27,7 +27,7 @@ export default function TweetCard({
   tweetUsername,
   replys,
   handleShowModifyTweetModal,
-  handleShowDeleteModal,
+  handleShowDeleteTweetModal,
   handleShowReplyListModal,
 }: TweetCardProps) {
   return (
@@ -42,7 +42,7 @@ export default function TweetCard({
         tweetUsername={tweetUsername}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
-        handleShowDeleteModal={handleShowDeleteModal}
+        handleShowDeleteTweetModal={handleShowDeleteTweetModal}
         handleShowReplyListModal={handleShowReplyListModal}
       />
     </Card>

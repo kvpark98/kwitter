@@ -1,16 +1,16 @@
 import { Dropdown } from "react-bootstrap";
 
 export interface TweetDropdownMenuDeleteProps {
-  handleShowDeleteModal: () => void;
+  handleShowDeleteTweetModal: () => void;
 }
 
 export default function TweetDropdownMenuDelete({
-  handleShowDeleteModal,
+  handleShowDeleteTweetModal,
 }: TweetDropdownMenuDeleteProps) {
   return (
     <Dropdown.Item
       className="btn d-flex align-items-center text-danger"
-      onClick={handleShowDeleteModal}
+      onClick={handleShowDeleteTweetModal}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

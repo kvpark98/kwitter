@@ -10,7 +10,7 @@ export interface TweetDropdownMenuProps {
   tweetUserId: string;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
+  handleShowDeleteTweetModal: () => void;
   handleShowReplyListModal: () => void;
 }
 
@@ -19,7 +19,7 @@ export default function TweetDropdownMenu({
   tweetUserId,
   replys,
   handleShowModifyTweetModal,
-  handleShowDeleteModal,
+  handleShowDeleteTweetModal,
   handleShowReplyListModal,
 }: TweetDropdownMenuProps) {
   return (
@@ -34,7 +34,7 @@ export default function TweetDropdownMenu({
             handleShowModifyTweetModal={handleShowModifyTweetModal}
           />
           <TweetDropdownMenuDelete
-            handleShowDeleteModal={handleShowDeleteModal}
+            handleShowDeleteTweetModal={handleShowDeleteTweetModal}
           />
         </>
       )}

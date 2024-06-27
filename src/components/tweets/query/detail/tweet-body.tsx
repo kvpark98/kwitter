@@ -14,7 +14,7 @@ export interface TweetBodyProps {
   tweetUsername: string;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
+  handleShowDeleteTweetModal: () => void;
   handleShowReplyListModal: () => void;
 }
 
@@ -28,7 +28,7 @@ export default function TweetBody({
   tweetUsername,
   replys,
   handleShowModifyTweetModal,
-  handleShowDeleteModal,
+  handleShowDeleteTweetModal,
   handleShowReplyListModal,
 }: TweetBodyProps) {
   return (
@@ -52,7 +52,7 @@ export default function TweetBody({
         tweetUsername={tweetUsername}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
-        handleShowDeleteModal={handleShowDeleteModal}
+        handleShowDeleteTweetModal={handleShowDeleteTweetModal}
         handleShowReplyListModal={handleShowReplyListModal}
       />
     </Card.Body>

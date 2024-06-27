@@ -9,7 +9,7 @@ export interface TweetDropdownProps {
   tweetUserId: string;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
-  handleShowDeleteModal: () => void;
+  handleShowDeleteTweetModal: () => void;
   handleShowReplyListModal: () => void;
 }
 
@@ -18,7 +18,7 @@ export default function TweetDropdown({
   tweetUserId,
   replys,
   handleShowModifyTweetModal,
-  handleShowDeleteModal,
+  handleShowDeleteTweetModal,
   handleShowReplyListModal,
 }: TweetDropdownProps) {
   return (
@@ -29,7 +29,7 @@ export default function TweetDropdown({
         tweetUserId={tweetUserId}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
-        handleShowDeleteModal={handleShowDeleteModal}
+        handleShowDeleteTweetModal={handleShowDeleteTweetModal}
         handleShowReplyListModal={handleShowReplyListModal}
       />
     </Dropdown>
