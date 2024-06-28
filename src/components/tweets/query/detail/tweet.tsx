@@ -37,9 +37,6 @@ import CreateReply from "./reply/create/create-reply";
 import CreateReplyDiscardModal from "./reply/create/create-reply-discard-modal/create-reply-discard-modal";
 import ReplyList from "./reply/query/list/reply-list";
 import { IReply } from "./reply/query/detail/reply";
-import DeleteReplyWarningModal from "../../../modals/warning/delete-reply-warning-modal";
-import DeleteReplyErrorModal from "../../../modals/error/delete-reply-error-modal";
-import TweetDeleteSuccessModal from "../../../modals/success/tweet-delete-success-modal";
 import DeleteTweetErrorModal from "../../../modals/error/delete-tweet-error-modal";
 
 export interface ITweet {
@@ -52,6 +49,18 @@ export interface ITweet {
   tweetUsername: string;
 }
 
+export interface TweetProps {
+  id: string;
+  timeAgo?: string | undefined;
+  createdAt: string;
+  message: string;
+  photo?: string;
+  tweetUserId: string;
+  tweetUsername: string;
+  setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export default function Tweet({
   id,
   timeAgo,
@@ -59,7 +68,9 @@ export default function Tweet({
   photo,
   tweetUserId,
   tweetUsername,
-}: ITweet) {
+  setIsTweetDeleted,
+  setIsReplyDeleted,
+}: TweetProps) {
   const user = auth.currentUser!;
 
   const defaultAvatarURL = "/person-circle.svg";
@@ -98,8 +109,6 @@ export default function Tweet({
 
   const [croppedNewImagePreviewUrl, setCroppedNewImagePreviewUrl] =
     useState<string>("");
-
-  const [isTweetDeleted, setIsTweetDeleted] = useState(false);
 
   const [replys, setReplys] = useState<IReply[]>([]);
 
@@ -174,15 +183,6 @@ export default function Tweet({
   const handleShowDeleteTweetModal = () => setShowDeleteTweetModal(true);
   const handleCloseDeleteTweetModal = () => setShowDeleteTweetModal(false);
 
-  const [showDeleteTweetSuccessModal, setShowDeleteTweetSuccessModal] =
-    useState(false);
-  const handleShowDeleteTweetSuccessModal = () => {
-    setShowDeleteTweetSuccessModal(true);
-  };
-  const handleCloseDeleteTweetSuccessModal = () => {
-    setShowDeleteTweetSuccessModal(false);
-  };
-
   const [showDeleteTweetErrorModal, setShowDeleteTweetErrorModal] =
     useState(false);
   const handleShowDeleteTweetErrorModal = () => {
@@ -246,27 +246,6 @@ export default function Tweet({
     setShowCreateReplyDiscardModal(true);
   const handleCloseCreateReplyDiscardModal = () =>
     setShowCreateReplyDiscardModal(false);
-
-  // const [showReplyDeleteModal, setShowReplyDeleteModal] = useState(false);
-  // const handleShowReplyDeleteModal = () => {
-  //   handleCloseReplyListModal();
-  //   setShowReplyDeleteModal(true);
-  // };
-  // const handleCloseReplyDeleteModal = () => {
-  //   setShowReplyDeleteModal(false);
-  //   handleShowReplyListModal();
-  // };
-
-  // const [showReplyDeleteErrorModal, setShowReplyDeleteErrorModal] =
-  //   useState(false);
-  // const handleShowReplyDeleteErrorModal = () => {
-  //   handleCloseReplyDeleteModal();
-  //   setShowReplyDeleteErrorModal(true);
-  // };
-  // const handleCloseReplyDeleteErrorModal = () => {
-  //   setShowReplyDeleteErrorModal(false);
-  //   handleShowReplyListModal();
-  // };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -570,7 +549,6 @@ export default function Tweet({
     }
   };
 
-  // 트윗 삭제 함수
   const deleteTweet = async () => {
     if (isLoading || user?.uid !== tweetUserId) {
       return;
@@ -581,13 +559,11 @@ export default function Tweet({
     try {
       setIsLoading(true);
 
-      // 이미지가 있는 경우 Storage에서 이미지 삭제
       if (photo) {
         const photoRef = ref(storage, `tweets/${user.uid}/${id}`);
         await deleteObject(photoRef);
       }
 
-      // Firestore db에서 댓글 문서 삭제
       const replyQuery = query(
         collection(db, "replys"),
         where("tweetId", "==", id)
@@ -598,10 +574,12 @@ export default function Tweet({
         await deleteDoc(doc.ref);
       });
 
-      handleShowDeleteTweetSuccessModal();
-      // Firestore db에서 트윗 문서 삭제
       await deleteDoc(doc(db, "tweets", id));
+
+      setIsTweetDeleted(true);
     } catch (error) {
+      setIsTweetDeleted(false);
+
       if (error instanceof FirebaseError) {
         setError(error.code);
       } else if (error instanceof FirestoreError) {
@@ -611,6 +589,7 @@ export default function Tweet({
       } else {
         setError("size-exhausted");
       }
+
       handleShowDeleteTweetErrorModal();
     } finally {
       setIsLoading(false);
@@ -723,33 +702,6 @@ export default function Tweet({
     }
   };
 
-  // const deleteReply = async () => {
-  //   if (isLoading || user?.uid !== replyUserId) {
-  //     return;
-  //   }
-
-  //   setError("");
-
-  //   try {
-  //     setIsLoading(true);
-
-  //     await deleteDoc(doc(db, "replys", id));
-  //   } catch (error) {
-  //     if (error instanceof FirebaseError) {
-  //       setError(error.code);
-  //     } else if (error instanceof FirestoreError) {
-  //       setError(error.code);
-  //     } else if (error instanceof StorageError) {
-  //       setError(error.code);
-  //     } else {
-  //       setError("size-exhausted");
-  //     }
-  //     handleShowReplyDeleteErrorModal();
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   return (
     <div className="w-100">
       <TweetCard
@@ -826,10 +778,6 @@ export default function Tweet({
         handleCloseDeleteTweetModal={handleCloseDeleteTweetModal}
         deleteTweet={deleteTweet}
       />
-      <TweetDeleteSuccessModal
-        showDeleteTweetSuccessModal={showDeleteTweetSuccessModal}
-        handleCloseDeleteTweetSuccessModal={handleCloseDeleteTweetSuccessModal}
-      />
       <DeleteTweetErrorModal
         error={error}
         showDeleteTweetErrorModal={showDeleteTweetErrorModal}
@@ -839,9 +787,9 @@ export default function Tweet({
         user={user}
         replys={replys}
         showReplyListModal={showReplyListModal}
-        handleShowReplyListModal={handleShowReplyListModal}
         handleCloseReplyListModal={handleCloseReplyListModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
+        setIsReplyDeleted={setIsReplyDeleted}
       />
       <CreateReply
         showCreateReplyModal={showCreateReplyModal}

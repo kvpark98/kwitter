@@ -1,18 +1,18 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
 export interface ReplyDeleteSuccessModalProps {
-  showAccountDeleteSuccessModal: boolean;
-  handleCloseAccountDeleteSuccessModal: () => void;
+  showDeleteReplySuccessModal: boolean;
+  handleCloseDeleteReplySuccessModal: () => void;
 }
 
 export default function ReplyDeleteSuccessModal({
-  showAccountDeleteSuccessModal,
-  handleCloseAccountDeleteSuccessModal,
+  showDeleteReplySuccessModal,
+  handleCloseDeleteReplySuccessModal,
 }: ReplyDeleteSuccessModalProps) {
   return (
     <Modal
-      show={showAccountDeleteSuccessModal}
-      onHide={handleCloseAccountDeleteSuccessModal}
+      show={showDeleteReplySuccessModal}
+      onHide={handleCloseDeleteReplySuccessModal}
       backdrop="static"
       keyboard={false}
     >
@@ -25,7 +25,7 @@ export default function ReplyDeleteSuccessModal({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseAccountDeleteSuccessModal}
+            onClick={handleCloseDeleteReplySuccessModal}
           >
             Close
           </Button>

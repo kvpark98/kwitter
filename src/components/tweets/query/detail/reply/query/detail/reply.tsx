@@ -33,8 +33,7 @@ export interface ReplyProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
-  handleShowReplyListModal: () => void;
-  handleCloseReplyListModal: () => void;
+  setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function Reply({
@@ -44,8 +43,7 @@ export default function Reply({
   reply,
   replyUserId,
   replyUsername,
-  handleShowReplyListModal,
-  handleCloseReplyListModal,
+  setIsReplyDeleted,
 }: ReplyProps) {
   const defaultAvatarURL = "/person-circle.svg";
 
@@ -57,12 +55,10 @@ export default function Reply({
 
   const [showReplyDeleteModal, setShowReplyDeleteModal] = useState(false);
   const handleShowReplyDeleteModal = () => {
-    // handleCloseReplyListModal();
     setShowReplyDeleteModal(true);
   };
   const handleCloseReplyDeleteModal = () => {
     setShowReplyDeleteModal(false);
-    // handleShowReplyListModal();
   };
 
   const [showReplyDeleteErrorModal, setShowReplyDeleteErrorModal] =
@@ -73,7 +69,6 @@ export default function Reply({
   };
   const handleCloseReplyDeleteErrorModal = () => {
     setShowReplyDeleteErrorModal(false);
-    // handleShowReplyListModal();
   };
 
   const getReplyAvatar = async () => {
@@ -102,7 +97,11 @@ export default function Reply({
       setIsLoading(true);
 
       await deleteDoc(doc(db, "replys", id));
+
+      setIsReplyDeleted(true);
     } catch (error) {
+      setIsReplyDeleted(false);
+
       if (error instanceof FirebaseError) {
         setError(error.code);
       } else if (error instanceof FirestoreError) {
@@ -112,6 +111,7 @@ export default function Reply({
       } else {
         setError("size-exhausted");
       }
+
       handleShowReplyDeleteErrorModal();
     } finally {
       setIsLoading(false);

@@ -40,6 +40,8 @@ import {
 } from "firebase/auth";
 import ResetPassword from "../components/auth/reset-password/reset-password";
 import ResetPasswordErrorModal from "../components/modals/error/reset-password-error-modal";
+import TweetDeleteSuccessModal from "../components/modals/success/tweet-delete-success-modal";
+import ReplyDeleteSuccessModal from "../components/modals/success/reply-delete-success-modal";
 
 export default function Home() {
   const user = auth.currentUser;
@@ -83,6 +85,10 @@ export default function Home() {
   const [croppedImagePreviewUrl, setCroppedImagePreviewUrl] =
     useState<string>("");
 
+  const [isTweetDeleted, setIsTweetDeleted] = useState(false);
+
+  const [isReplyDeleted, setIsReplyDeleted] = useState(false);
+
   const [error, setError] = useState("");
 
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
@@ -104,48 +110,6 @@ export default function Home() {
     setPasswordInputType(false);
     setPasswordConfirmInputType(false);
     handleShowResetPasswordModal();
-  };
-
-  useEffect(() => {
-    checkSignInMethod();
-    checkCurrentPassword();
-
-    if (signInMethod === "emailLink") {
-      handleShowResetPasswordModal();
-    }
-  }, [signInMethod]);
-
-  const checkSignInMethod = async () => {
-    const user = auth.currentUser;
-
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        const signInMethod = userDocSnap.data().signInMethod;
-        setSignInMethod(signInMethod);
-      }
-    }
-  };
-
-  const checkCurrentPassword = async () => {
-    const user = auth.currentUser;
-
-    if (user) {
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        const currentPassword = userDocSnap.data().password;
-        setCurrentPassword(currentPassword);
-      }
-    }
-  };
-
-  const signOut = () => {
-    auth.signOut();
-    navigate("/welcome");
   };
 
   const [showCreateTweetModal, setShowCreateTweetModal] = useState(false);
@@ -201,6 +165,24 @@ export default function Home() {
     setShowCreateTweetErrorsModal(false);
     setError("");
     handleShowCreateTweetModal();
+  };
+
+  const [showDeleteTweetSuccessModal, setShowDeleteTweetSuccessModal] =
+    useState(false);
+  const handleShowDeleteTweetSuccessModal = () =>
+    setShowDeleteTweetSuccessModal(true);
+  const handleCloseDeleteTweetSuccessModal = () => {
+    setShowDeleteTweetSuccessModal(false);
+    setIsTweetDeleted(false);
+  };
+
+  const [showDeleteReplySuccessModal, setShowDeleteReplySuccessModal] =
+    useState(false);
+  const handleShowDeleteReplySuccessModal = () =>
+    setShowDeleteReplySuccessModal(true);
+  const handleCloseDeleteReplySuccessModal = () => {
+    setShowDeleteReplySuccessModal(false);
+    setIsReplyDeleted(false);
   };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
@@ -314,6 +296,57 @@ export default function Home() {
       setShowCreatePhotoCropModal(false);
       setShowCreateTweetModal(true);
     };
+  };
+
+  useEffect(() => {
+    if (isTweetDeleted) {
+      handleShowDeleteTweetSuccessModal();
+    }
+    if (isReplyDeleted) {
+      handleShowDeleteReplySuccessModal();
+    }
+  }, [isTweetDeleted, isReplyDeleted]);
+
+  useEffect(() => {
+    checkSignInMethod();
+    checkCurrentPassword();
+
+    if (signInMethod === "emailLink") {
+      handleShowResetPasswordModal();
+    }
+  }, [signInMethod]);
+
+  const checkSignInMethod = async () => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const signInMethod = userDocSnap.data().signInMethod;
+        setSignInMethod(signInMethod);
+      }
+    }
+  };
+
+  const checkCurrentPassword = async () => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const currentPassword = userDocSnap.data().password;
+        setCurrentPassword(currentPassword);
+      }
+    }
+  };
+
+  const signOut = () => {
+    auth.signOut();
+    navigate("/welcome");
   };
 
   // tweet 생성일을 시간 경과 표시 형식으로 변환하는 함수
@@ -756,7 +789,11 @@ export default function Home() {
         style={{ width: "630px" }}
       >
         <TweetHeader tweets={tweets} back={back} />
-        <TweetList tweets={tweets} />
+        <TweetList
+          tweets={tweets}
+          setIsTweetDeleted={setIsTweetDeleted}
+          setIsReplyDeleted={setIsReplyDeleted}
+        />
         <ScrollHome />
       </div>
       <ResetPassword
@@ -835,6 +872,14 @@ export default function Home() {
         error={error}
         showCreateTweetErrorsModal={showCreateTweetErrorsModal}
         handleCloseCreateTweetErrorsModal={handleCloseCreateTweetErrorsModal}
+      />
+      <TweetDeleteSuccessModal
+        showDeleteTweetSuccessModal={showDeleteTweetSuccessModal}
+        handleCloseDeleteTweetSuccessModal={handleCloseDeleteTweetSuccessModal}
+      />
+      <ReplyDeleteSuccessModal
+        showDeleteReplySuccessModal={showDeleteReplySuccessModal}
+        handleCloseDeleteReplySuccessModal={handleCloseDeleteReplySuccessModal}
       />
     </Container>
   );
