@@ -721,7 +721,7 @@ export default function Home() {
 
       // Firestore에 새로운 문서 추가
       const doc = await addDoc(collection(db, "tweets"), {
-        message,
+        message: message,
         createdAt: Date.now(),
         tweetUserId: user.uid,
         tweetUsername: user.displayName || "Anonymous",

@@ -3,7 +3,7 @@ import ModifyMessagePhoto from "./modify-message-photo";
 import UserProfile from "../user-profile";
 
 export interface ModifyTweetBodyProps {
-  newMessage: string;
+  message: string;
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   photo: string | undefined;
   newImagePreviewUrl: string;
@@ -15,7 +15,7 @@ export interface ModifyTweetBodyProps {
 }
 
 export default function ModifyTweetBody({
-  newMessage,
+  message,
   handleNewMessage,
   photo,
   newImagePreviewUrl,
@@ -34,7 +34,7 @@ export default function ModifyTweetBody({
       <div className="d-flex w-100">
         <UserProfile />
         <ModifyMessagePhoto
-          newMessage={newMessage}
+          message={message}
           handleNewMessage={handleNewMessage}
           photo={photo}
           newImagePreviewUrl={newImagePreviewUrl}

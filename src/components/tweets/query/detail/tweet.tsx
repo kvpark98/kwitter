@@ -99,7 +99,7 @@ export default function Tweet({
   const [photoDeleteButtonClicked, setPhotoDeleteButtonClicked] =
     useState(false);
 
-  const [newMessage, setNewMessage] = useState(message);
+  const [newMessage, setNewMessage] = useState("");
 
   const [newFile, setNewFile] = useState<File | null>(null);
 
@@ -131,7 +131,6 @@ export default function Tweet({
       handleShowModifyTweetDiscardModal();
     } else {
       setShowModifyTweetModal(false);
-      resetMessageButton();
       resetPhotoButton();
       handleModifyRatio1x1();
       setZoom(1);
@@ -426,7 +425,7 @@ export default function Tweet({
   };
 
   const resetMessageSubmit = () => {
-    setNewMessage(message);
+    setNewMessage("");
     setIsNewMessage(true);
   };
 
@@ -722,7 +721,7 @@ export default function Tweet({
           isLoading={isLoading}
           photo={photo}
           newFileInputRef={newFileInputRef}
-          newMessage={newMessage}
+          message={message}
           handleNewMessage={handleNewMessage}
           isNewMessage={isNewMessage}
           handleNewFile={handleNewFile}
