@@ -52,7 +52,6 @@ export interface ITweet {
 export interface TweetProps {
   id: string;
   timeAgo?: string | undefined;
-  createdAt: string;
   message: string;
   photo?: string;
   tweetUserId: string;
@@ -101,6 +100,9 @@ export default function Tweet({
 
   const [newMessage, setNewMessage] = useState("");
 
+  console.log("message:", message);
+  console.log("newMessage:", newMessage);
+
   const [newFile, setNewFile] = useState<File | null>(null);
 
   const [isNewMessage, setIsNewMessage] = useState(true);
@@ -131,6 +133,7 @@ export default function Tweet({
       handleShowModifyTweetDiscardModal();
     } else {
       setShowModifyTweetModal(false);
+      resetMessageButton();
       resetPhotoButton();
       handleModifyRatio1x1();
       setZoom(1);
@@ -159,7 +162,12 @@ export default function Tweet({
   const [showModifyTweetSuccessModal, setShowModifyTweetSuccessModal] =
     useState(false);
   const handleShowModifyTweetSuccessModal = () => {
-    handleCloseModifyTweetDiscardBothModal();
+    setShowModifyTweetModal(false);
+    resetPhotoButton();
+    handleModifyRatio1x1();
+    setZoom(1);
+    setPhotoDeleteButtonClicked(false);
+    setShowModifyTweetDiscardModal(false);
     setShowModifyTweetSuccessModal(true);
   };
   const handleCloseModifyTweetSuccessModal = () => {
@@ -425,7 +433,7 @@ export default function Tweet({
   };
 
   const resetMessageSubmit = () => {
-    setNewMessage("");
+    setNewMessage(message);
     setIsNewMessage(true);
   };
 
@@ -512,14 +520,12 @@ export default function Tweet({
         });
       }
 
-      // Firestore의 트윗 문서 업데이트
       await updateDoc(doc(db, "tweets", id), {
         createdAt: Date.now(),
         message: newMessage,
         tweetUsername: user.displayName,
       });
 
-      // 파일 상태를 초기화
       resetPhotoSubmit();
 
       setPhotoDeleteButtonClicked(false);
@@ -536,7 +542,6 @@ export default function Tweet({
         setError("size-exhausted");
       }
 
-      // 메시지 및 파일 상태를 초기화
       resetMessageSubmit();
       resetPhotoSubmit();
 
@@ -722,6 +727,7 @@ export default function Tweet({
           photo={photo}
           newFileInputRef={newFileInputRef}
           message={message}
+          newMessage={newMessage}
           handleNewMessage={handleNewMessage}
           isNewMessage={isNewMessage}
           handleNewFile={handleNewFile}

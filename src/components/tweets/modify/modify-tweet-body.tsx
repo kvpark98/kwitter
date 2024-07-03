@@ -4,6 +4,7 @@ import UserProfile from "../user-profile";
 
 export interface ModifyTweetBodyProps {
   message: string;
+  newMessage: string;
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   photo: string | undefined;
   newImagePreviewUrl: string;
@@ -16,6 +17,7 @@ export interface ModifyTweetBodyProps {
 
 export default function ModifyTweetBody({
   message,
+  newMessage,
   handleNewMessage,
   photo,
   newImagePreviewUrl,
@@ -35,6 +37,7 @@ export default function ModifyTweetBody({
         <UserProfile />
         <ModifyMessagePhoto
           message={message}
+          newMessage={newMessage}
           handleNewMessage={handleNewMessage}
           photo={photo}
           newImagePreviewUrl={newImagePreviewUrl}
