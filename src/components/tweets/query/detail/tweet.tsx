@@ -94,14 +94,12 @@ export default function Tweet({
   const [isLoading, setIsLoading] = useState(false);
 
   const newFileInputRef = useRef<HTMLInputElement>(null);
+  const messageTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [photoDeleteButtonClicked, setPhotoDeleteButtonClicked] =
     useState(false);
 
   const [newMessage, setNewMessage] = useState("");
-
-  console.log("message:", message);
-  console.log("newMessage:", newMessage);
 
   const [newFile, setNewFile] = useState<File | null>(null);
 
@@ -128,7 +126,7 @@ export default function Tweet({
     if (
       newImagePreviewUrl ||
       photoDeleteButtonClicked ||
-      newMessage !== message
+      messageTextAreaRef.current?.value !== message
     ) {
       handleShowModifyTweetDiscardModal();
     } else {
@@ -435,6 +433,9 @@ export default function Tweet({
   const resetMessageSubmit = () => {
     setNewMessage(message);
     setIsNewMessage(true);
+    if (messageTextAreaRef.current) {
+      messageTextAreaRef.current.value = message;
+    }
   };
 
   const resetMessageButton = () => {
@@ -726,6 +727,7 @@ export default function Tweet({
           isLoading={isLoading}
           photo={photo}
           newFileInputRef={newFileInputRef}
+          messageTextAreaRef={messageTextAreaRef}
           message={message}
           newMessage={newMessage}
           handleNewMessage={handleNewMessage}
