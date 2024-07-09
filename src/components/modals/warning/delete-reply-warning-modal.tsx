@@ -2,21 +2,21 @@ import { Alert, Button, Modal } from "react-bootstrap";
 
 export interface DeleteReplyWarningModalProps {
   isLoading: boolean;
-  showReplyDeleteModal: boolean;
-  handleCloseReplyDeleteModal: () => void;
+  showDeleteReplyModal: boolean;
+  handleCloseDeleteReplyModal: () => void;
   deleteReply: () => Promise<void>;
 }
 
 export default function DeleteReplyWarningModal({
   isLoading,
-  showReplyDeleteModal,
-  handleCloseReplyDeleteModal,
+  showDeleteReplyModal,
+  handleCloseDeleteReplyModal,
   deleteReply,
 }: DeleteReplyWarningModalProps) {
   return (
     <Modal
-      show={showReplyDeleteModal}
-      onHide={handleCloseReplyDeleteModal}
+      show={showDeleteReplyModal}
+      onHide={handleCloseDeleteReplyModal}
       backdrop="static"
       keyboard={false}
     >
@@ -33,7 +33,7 @@ export default function DeleteReplyWarningModal({
             type="button"
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseReplyDeleteModal}
+            onClick={handleCloseDeleteReplyModal}
           >
             Cancel
           </Button>

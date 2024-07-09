@@ -1,7 +1,7 @@
 import { Card } from "react-bootstrap";
 import { User } from "firebase/auth";
 import ReplyBody from "./reply-body";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   FirestoreError,
   collection,
@@ -9,6 +9,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../../../../../../../firebase";
@@ -45,30 +46,40 @@ export default function Reply({
   replyUsername,
   setIsReplyDeleted,
 }: ReplyProps) {
+  const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
+
   const defaultAvatarURL = "/person-circle.svg";
 
   const [isLoading, setIsLoading] = useState(false);
 
   const [replyAvatar, setReplyAvatar] = useState(defaultAvatarURL);
 
+  const [newReply, setNewReply] = useState("");
+
+  const [isNewReply, setIsNewReply] = useState(true);
+
   const [error, setError] = useState("");
 
-  const [showReplyDeleteModal, setShowReplyDeleteModal] = useState(false);
-  const handleShowReplyDeleteModal = () => {
-    setShowReplyDeleteModal(true);
+  const [showModifyReplyModal, setShowModifyReplyModal] = useState(false);
+  const handleShowModifyReplyModal = () => {
+    setShowModifyReplyModal(true);
   };
-  const handleCloseReplyDeleteModal = () => {
-    setShowReplyDeleteModal(false);
+  const handleCloseModifyReplyModal = () => {
+    setShowModifyReplyModal(false);
   };
 
-  const [showReplyDeleteErrorModal, setShowReplyDeleteErrorModal] =
+  const [showDeleteReplyModal, setShowDeleteReplyModal] = useState(false);
+  const handleShowDeleteReplyModal = () => setShowDeleteReplyModal(true);
+  const handleCloseDeleteReplyModal = () => setShowDeleteReplyModal(false);
+
+  const [showDeleteReplyErrorModal, setShowDeleteReplyErrorModal] =
     useState(false);
-  const handleShowReplyDeleteErrorModal = () => {
-    handleCloseReplyDeleteModal();
-    setShowReplyDeleteErrorModal(true);
+  const handleShowDeleteReplyErrorModal = () => {
+    handleCloseDeleteReplyModal();
+    setShowDeleteReplyErrorModal(true);
   };
-  const handleCloseReplyDeleteErrorModal = () => {
-    setShowReplyDeleteErrorModal(false);
+  const handleCloseDeleteReplyErrorModal = () => {
+    setShowDeleteReplyErrorModal(false);
   };
 
   const getReplyAvatar = async () => {
@@ -85,6 +96,60 @@ export default function Reply({
   };
 
   getReplyAvatar();
+
+  const handleNewReply = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = event.currentTarget.value;
+
+    setNewReply(value);
+
+    if (value.trim() !== "") {
+      setIsNewReply(true);
+    } else {
+      setIsNewReply(false);
+    }
+  };
+
+  const resetReply = () => {
+    setNewReply(reply);
+    setIsNewReply(true);
+    if (replyTextAreaRef.current) {
+      replyTextAreaRef.current.value = reply;
+    }
+  };
+
+  const modifyReply = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isLoading || !isNewReply || newReply.length > 180 || !user) {
+      return;
+    }
+
+    setError("");
+
+    try {
+      setIsLoading(true);
+
+      await updateDoc(doc(db, "replys", id), {
+        createdAt: Date.now(),
+        reply: newReply,
+        replyUsername: user.displayName,
+      });
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(error.code);
+      } else if (error instanceof FirestoreError) {
+        setError(error.code);
+      } else if (error instanceof StorageError) {
+        setError(error.code);
+      } else {
+        setError("size-exhausted");
+      }
+
+      resetReply();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const deleteReply = async () => {
     if (isLoading || user?.uid !== replyUserId) {
@@ -112,7 +177,7 @@ export default function Reply({
         setError("size-exhausted");
       }
 
-      handleShowReplyDeleteErrorModal();
+      handleShowDeleteReplyErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -128,19 +193,20 @@ export default function Reply({
           reply={reply}
           replyUserId={replyUserId}
           replyUsername={replyUsername}
-          handleShowReplyDeleteModal={handleShowReplyDeleteModal}
+          handleShowModifyReplyModal={handleShowModifyReplyModal}
+          handleShowDeleteReplyModal={handleShowDeleteReplyModal}
         />
       </Card>
       <DeleteReplyWarningModal
         isLoading={isLoading}
-        showReplyDeleteModal={showReplyDeleteModal}
-        handleCloseReplyDeleteModal={handleCloseReplyDeleteModal}
+        showDeleteReplyModal={showDeleteReplyModal}
+        handleCloseDeleteReplyModal={handleCloseDeleteReplyModal}
         deleteReply={deleteReply}
       />
       <DeleteReplyErrorModal
         error={error}
-        showReplyDeleteErrorModal={showReplyDeleteErrorModal}
-        handleCloseReplyDeleteErrorModal={handleCloseReplyDeleteErrorModal}
+        showDeleteReplyErrorModal={showDeleteReplyErrorModal}
+        handleCloseDeleteReplyErrorModal={handleCloseDeleteReplyErrorModal}
       />
     </>
   );

@@ -1,16 +1,16 @@
 import { Dropdown } from "react-bootstrap";
 
 export interface ReplyDropdownMenuDeleteProps {
-  handleShowReplyDeleteModal: () => void;
+  handleShowDeleteReplyModal: () => void;
 }
 
 export default function ReplyDropdownMenuDelete({
-  handleShowReplyDeleteModal,
+  handleShowDeleteReplyModal,
 }: ReplyDropdownMenuDeleteProps) {
   return (
     <Dropdown.Item
       className="btn d-flex align-items-center text-danger"
-      onClick={handleShowReplyDeleteModal}
+      onClick={handleShowDeleteReplyModal}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -1,16 +1,16 @@
 import { Dropdown } from "react-bootstrap";
 
 export interface ReplyDropdownMenuEditProps {
-  handleShowModifyTweetModal: () => void;
+  handleShowModifyReplyModal: () => void;
 }
 
 export default function ReplyDropdownMenuEdit({
-  handleShowModifyTweetModal,
+  handleShowModifyReplyModal,
 }: ReplyDropdownMenuEditProps) {
   return (
     <Dropdown.Item
       className="btn d-flex align-items-center"
-      onClick={handleShowModifyTweetModal}
+      onClick={handleShowModifyReplyModal}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

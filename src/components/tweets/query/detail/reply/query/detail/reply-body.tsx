@@ -10,7 +10,8 @@ export interface ReplyBodyProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
-  handleShowReplyDeleteModal: () => void;
+  handleShowModifyReplyModal: () => void;
+  handleShowDeleteReplyModal: () => void;
 }
 
 export default function ReplyBody({
@@ -20,7 +21,8 @@ export default function ReplyBody({
   reply,
   replyUserId,
   replyUsername,
-  handleShowReplyDeleteModal,
+  handleShowModifyReplyModal,
+  handleShowDeleteReplyModal,
 }: ReplyBodyProps) {
   return (
     <Card.Body
@@ -40,7 +42,8 @@ export default function ReplyBody({
         reply={reply}
         replyUserId={replyUserId}
         replyUsername={replyUsername}
-        handleShowReplyDeleteModal={handleShowReplyDeleteModal}
+        handleShowModifyReplyModal={handleShowModifyReplyModal}
+        handleShowDeleteReplyModal={handleShowDeleteReplyModal}
       />
     </Card.Body>
   );

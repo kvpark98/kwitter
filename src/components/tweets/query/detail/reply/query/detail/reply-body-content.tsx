@@ -8,7 +8,8 @@ export interface ReplyBodyContentProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
-  handleShowReplyDeleteModal: () => void;
+  handleShowModifyReplyModal: () => void;
+  handleShowDeleteReplyModal: () => void;
 }
 
 export default function ReplyBodyContent({
@@ -17,7 +18,8 @@ export default function ReplyBodyContent({
   reply,
   replyUserId,
   replyUsername,
-  handleShowReplyDeleteModal,
+  handleShowModifyReplyModal,
+  handleShowDeleteReplyModal,
 }: ReplyBodyContentProps) {
   return (
     <div className="w-100">
@@ -31,7 +33,8 @@ export default function ReplyBodyContent({
         <ReplyDropdown
           user={user}
           replyUserId={replyUserId}
-          handleShowReplyDeleteModal={handleShowReplyDeleteModal}
+          handleShowModifyReplyModal={handleShowModifyReplyModal}
+          handleShowDeleteReplyModal={handleShowDeleteReplyModal}
         />
       </Card.Title>
       <Card.Text>{reply}</Card.Text>

@@ -1,33 +1,24 @@
 import { Dropdown } from "react-bootstrap";
-import { User } from "firebase/auth";
 import ReplyDropdownMenuEdit from "./reply-dropdown-menu-edit";
 import ReplyDropdownMenuDelete from "./reply-dropdown-menu-delete";
 
 export interface ReplyDropdownMenuProps {
-  user: User | null;
-  replyUserId: string;
-  handleShowReplyDeleteModal: () => void;
+  handleShowModifyReplyModal: () => void;
+  handleShowDeleteReplyModal: () => void;
 }
 
 export default function ReplyDropdownMenu({
-  user,
-  replyUserId,
-  handleShowReplyDeleteModal,
+  handleShowModifyReplyModal,
+  handleShowDeleteReplyModal,
 }: ReplyDropdownMenuProps) {
   return (
     <Dropdown.Menu>
-      {user?.uid === replyUserId && (
-        <>
-          {
-            //   <ReplyDropdownMenuEdit
-            //   handleShowModifyTweetModal={handleShowModifyTweetModal}
-            // />
-            <ReplyDropdownMenuDelete
-              handleShowReplyDeleteModal={handleShowReplyDeleteModal}
-            />
-          }
-        </>
-      )}
+      <ReplyDropdownMenuEdit
+        handleShowModifyReplyModal={handleShowModifyReplyModal}
+      />
+      <ReplyDropdownMenuDelete
+        handleShowDeleteReplyModal={handleShowDeleteReplyModal}
+      />
     </Dropdown.Menu>
   );
 }
