@@ -99,7 +99,7 @@ export default function Tweet({
   const [photoDeleteButtonClicked, setPhotoDeleteButtonClicked] =
     useState(false);
 
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState(message);
 
   const [newFile, setNewFile] = useState<File | null>(null);
 
@@ -467,7 +467,7 @@ export default function Tweet({
   const modifyTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (isLoading || !isNewMessage || newMessage.length > 180 || !user) {
+    if (isLoading || !isNewMessage || newMessage!.length > 180 || !user) {
       return;
     }
 
@@ -728,7 +728,6 @@ export default function Tweet({
           photo={photo}
           newFileInputRef={newFileInputRef}
           messageTextAreaRef={messageTextAreaRef}
-          message={message}
           newMessage={newMessage}
           handleNewMessage={handleNewMessage}
           isNewMessage={isNewMessage}

@@ -5,7 +5,6 @@ import ModifyPhotoPreview from "./modify-photo-preview";
 
 export interface ModifyMessagePhotoProps {
   messageTextAreaRef: React.RefObject<HTMLTextAreaElement>;
-  message: string;
   newMessage: string;
   handleNewMessage: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   photo: string | undefined;
@@ -19,7 +18,6 @@ export interface ModifyMessagePhotoProps {
 
 export default function ModifyMessagePhoto({
   messageTextAreaRef,
-  message,
   newMessage,
   handleNewMessage,
   photo,
@@ -34,7 +32,6 @@ export default function ModifyMessagePhoto({
     <Form.Group className="w-100">
       <ModifyMessage
         messageTextAreaRef={messageTextAreaRef}
-        message={message}
         newMessage={newMessage}
         handleNewMessage={handleNewMessage}
       />
