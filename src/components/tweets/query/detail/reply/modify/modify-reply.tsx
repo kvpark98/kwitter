@@ -1,12 +1,11 @@
 import { Form, Modal } from "react-bootstrap";
-import ModifyTweetBody from "../../../../modify/modify-tweet-body";
 import ModifyReplyHeader from "./modify-reply-header";
 import ModifyReplyFooter from "./modify-reply-footer";
+import ModifyReplyBody from "./modify-reply-body";
 
 export interface ModifyReplyProps {
   isLoading: boolean;
   replyTextAreaRef: React.RefObject<HTMLTextAreaElement>;
-  reply: string;
   newReply: string;
   handleNewReply: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   isNewReply: boolean;
@@ -19,7 +18,6 @@ export interface ModifyReplyProps {
 export default function ModifyReply({
   isLoading,
   replyTextAreaRef,
-  reply,
   newReply,
   handleNewReply,
   isNewReply,
@@ -41,12 +39,11 @@ export default function ModifyReply({
         handleCloseModifyReplyModal={handleCloseModifyReplyModal}
       />
       <Form className="w-100" onSubmit={modifyReply}>
-        {/* <ModifyTweetBody
-          messageTextAreaRef={messageTextAreaRef}
-          message={message}
-          newMessage={newMessage}
-          handleNewMessage={handleNewMessage}
-        /> */}
+        <ModifyReplyBody
+          replyTextAreaRef={replyTextAreaRef}
+          newReply={newReply}
+          handleNewReply={handleNewReply}
+        />
         <ModifyReplyFooter
           isLoading={isLoading}
           isNewReply={isNewReply}

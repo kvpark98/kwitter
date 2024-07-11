@@ -17,6 +17,9 @@ import { FirebaseError } from "firebase/app";
 import { StorageError } from "firebase/storage";
 import DeleteReplyWarningModal from "../../../../../../modals/warning/delete-reply-warning-modal";
 import DeleteReplyErrorModal from "../../../../../../modals/error/delete-reply-error-modal";
+import ModifyReply from "../../modify/modify-reply";
+import ModifyReplyErrorModal from "../../../../../../modals/error/modify-reply-error-modal";
+import ModifyReplyDiscardModal from "../../modify/modify-reply-discard-modal/modify-reply-discard-modal";
 
 export interface IReply {
   id: string;
@@ -54,7 +57,7 @@ export default function Reply({
 
   const [replyAvatar, setReplyAvatar] = useState(defaultAvatarURL);
 
-  const [newReply, setNewReply] = useState("");
+  const [newReply, setNewReply] = useState(reply);
 
   const [isNewReply, setIsNewReply] = useState(true);
 
@@ -65,7 +68,37 @@ export default function Reply({
     setShowModifyReplyModal(true);
   };
   const handleCloseModifyReplyModal = () => {
+    if (replyTextAreaRef.current?.value !== reply) {
+      handleShowModifyReplyDiscardModal();
+    } else {
+      setShowModifyReplyModal(false);
+      resetReply();
+    }
+  };
+
+  const handleCloseModifyReplyDiscardBothModal = () => {
     setShowModifyReplyModal(false);
+    resetReply();
+    setShowModifyReplyDiscardModal(false);
+  };
+
+  const [showModifyReplyDiscardModal, setShowModifyReplyDiscardModal] =
+    useState(false);
+  const handleShowModifyReplyDiscardModal = () =>
+    setShowModifyReplyDiscardModal(true);
+  const handleCloseModifyReplyDiscardModal = () =>
+    setShowModifyReplyDiscardModal(false);
+
+  const [showModifyReplyErrorModal, setShowModifyReplyErrorModal] =
+    useState(false);
+  const handleShowModifyReplyErrorModal = () => {
+    setShowModifyReplyModal(false);
+    setShowModifyReplyErrorModal(true);
+  };
+  const handleCloseModifyReplyErrorModal = () => {
+    setShowModifyReplyErrorModal(false);
+    setError("");
+    handleShowModifyReplyModal();
   };
 
   const [showDeleteReplyModal, setShowDeleteReplyModal] = useState(false);
@@ -146,6 +179,8 @@ export default function Reply({
       }
 
       resetReply();
+
+      handleShowModifyReplyErrorModal();
     } finally {
       setIsLoading(false);
     }
@@ -197,6 +232,29 @@ export default function Reply({
           handleShowDeleteReplyModal={handleShowDeleteReplyModal}
         />
       </Card>
+      <ModifyReply
+        isLoading={isLoading}
+        replyTextAreaRef={replyTextAreaRef}
+        newReply={newReply}
+        handleNewReply={handleNewReply}
+        isNewReply={isNewReply}
+        resetReply={resetReply}
+        modifyReply={modifyReply}
+        showModifyReplyModal={showModifyReplyModal}
+        handleCloseModifyReplyModal={handleCloseModifyReplyModal}
+      />
+      <ModifyReplyDiscardModal
+        showModifyReplyDiscardModal={showModifyReplyDiscardModal}
+        handleCloseModifyReplyDiscardModal={handleCloseModifyReplyDiscardModal}
+        handleCloseModifyReplyDiscardBothModal={
+          handleCloseModifyReplyDiscardBothModal
+        }
+      />
+      <ModifyReplyErrorModal
+        error={error}
+        showModifyReplyErrorModal={showModifyReplyErrorModal}
+        handleCloseModifyReplyErrorModal={handleCloseModifyReplyErrorModal}
+      />
       <DeleteReplyWarningModal
         isLoading={isLoading}
         showDeleteReplyModal={showDeleteReplyModal}
