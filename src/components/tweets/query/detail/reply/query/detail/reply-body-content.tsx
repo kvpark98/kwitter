@@ -30,12 +30,12 @@ export default function ReplyBodyContent({
           </p>
           <span className="fs-6 text-muted">{timeAgo}</span>
         </div>
-        <ReplyDropdown
-          user={user}
-          replyUserId={replyUserId}
-          handleShowModifyReplyModal={handleShowModifyReplyModal}
-          handleShowDeleteReplyModal={handleShowDeleteReplyModal}
-        />
+        {user?.uid === replyUserId && (
+          <ReplyDropdown
+            handleShowModifyReplyModal={handleShowModifyReplyModal}
+            handleShowDeleteReplyModal={handleShowDeleteReplyModal}
+          />
+        )}
       </Card.Title>
       <Card.Text>{reply}</Card.Text>
     </div>

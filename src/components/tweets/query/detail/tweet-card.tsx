@@ -2,6 +2,7 @@ import { Card } from "react-bootstrap";
 import TweetBody from "./tweet-body";
 import { User } from "firebase/auth";
 import { IReply } from "./reply/query/detail/reply";
+import TweetFooter from "./tweet-footer";
 
 export interface TweetCardProps {
   user: User | null;
@@ -40,9 +41,13 @@ export default function TweetCard({
         photo={photo}
         tweetUserId={tweetUserId}
         tweetUsername={tweetUsername}
-        replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteTweetModal={handleShowDeleteTweetModal}
+      />
+      <TweetFooter
+        user={user}
+        tweetUserId={tweetUserId}
+        replys={replys}
         handleShowReplyListModal={handleShowReplyListModal}
       />
     </Card>

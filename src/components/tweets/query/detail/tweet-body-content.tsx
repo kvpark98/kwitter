@@ -1,7 +1,6 @@
 import { Card } from "react-bootstrap";
 import { User } from "firebase/auth";
 import TweetDropdown from "./tweet-dropdown";
-import { IReply } from "./reply/query/detail/reply";
 
 export interface TweetBodyContentProps {
   user: User | null;
@@ -10,10 +9,8 @@ export interface TweetBodyContentProps {
   photo?: string | undefined;
   tweetUserId: string;
   tweetUsername: string;
-  replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
-  handleShowReplyListModal: () => void;
 }
 
 export default function TweetBodyContent({
@@ -23,10 +20,8 @@ export default function TweetBodyContent({
   photo,
   tweetUserId,
   tweetUsername,
-  replys,
   handleShowModifyTweetModal,
   handleShowDeleteTweetModal,
-  handleShowReplyListModal,
 }: TweetBodyContentProps) {
   return (
     <div className="w-100">
@@ -37,14 +32,12 @@ export default function TweetBodyContent({
           </p>
           <span className="fs-6 text-muted">{timeAgo}</span>
         </div>
-        <TweetDropdown
-          user={user}
-          tweetUserId={tweetUserId}
-          replys={replys}
-          handleShowModifyTweetModal={handleShowModifyTweetModal}
-          handleShowDeleteTweetModal={handleShowDeleteTweetModal}
-          handleShowReplyListModal={handleShowReplyListModal}
-        />
+        {user?.uid === tweetUserId && (
+          <TweetDropdown
+            handleShowModifyTweetModal={handleShowModifyTweetModal}
+            handleShowDeleteTweetModal={handleShowDeleteTweetModal}
+          />
+        )}
       </Card.Title>
       <Card.Text>{message}</Card.Text>
       {photo && (

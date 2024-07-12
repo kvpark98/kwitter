@@ -20,6 +20,7 @@ import DeleteReplyErrorModal from "../../../../../../modals/error/delete-reply-e
 import ModifyReply from "../../modify/modify-reply";
 import ModifyReplyErrorModal from "../../../../../../modals/error/modify-reply-error-modal";
 import ModifyReplyDiscardModal from "../../modify/modify-reply-discard-modal/modify-reply-discard-modal";
+import ModifyReplySuccessModal from "../../../../../../modals/success/modify-reply-success-modal";
 
 export interface IReply {
   id: string;
@@ -88,6 +89,16 @@ export default function Reply({
     setShowModifyReplyDiscardModal(true);
   const handleCloseModifyReplyDiscardModal = () =>
     setShowModifyReplyDiscardModal(false);
+
+  const [showModifyReplySuccessModal, setShowModifyReplySuccessModal] =
+    useState(false);
+  const handleShowModifyReplySuccessModal = () => {
+    setShowModifyReplyModal(false);
+    setShowModifyReplySuccessModal(true);
+  };
+  const handleCloseModifyReplySuccessModal = () => {
+    setShowModifyReplySuccessModal(false);
+  };
 
   const [showModifyReplyErrorModal, setShowModifyReplyErrorModal] =
     useState(false);
@@ -167,6 +178,8 @@ export default function Reply({
         reply: newReply,
         replyUsername: user.displayName,
       });
+
+      handleShowModifyReplySuccessModal();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.code);
@@ -249,6 +262,10 @@ export default function Reply({
         handleCloseModifyReplyDiscardBothModal={
           handleCloseModifyReplyDiscardBothModal
         }
+      />
+      <ModifyReplySuccessModal
+        showModifyReplySuccessModal={showModifyReplySuccessModal}
+        handleCloseModifyReplySuccessModal={handleCloseModifyReplySuccessModal}
       />
       <ModifyReplyErrorModal
         error={error}

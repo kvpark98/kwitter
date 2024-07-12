@@ -1,18 +1,18 @@
 import { Alert, Button, Modal } from "react-bootstrap";
 
 export interface ModifyReplySuccessModalProps {
-  showModifyTweetSuccessModal: boolean;
-  handleCloseModifyTweetSuccessModal: () => void;
+  showModifyReplySuccessModal: boolean;
+  handleCloseModifyReplySuccessModal: () => void;
 }
 
 export default function ModifyReplySuccessModal({
-  showModifyTweetSuccessModal,
-  handleCloseModifyTweetSuccessModal,
+  showModifyReplySuccessModal,
+  handleCloseModifyReplySuccessModal,
 }: ModifyReplySuccessModalProps) {
   return (
     <Modal
-      show={showModifyTweetSuccessModal}
-      onHide={handleCloseModifyTweetSuccessModal}
+      show={showModifyReplySuccessModal}
+      onHide={handleCloseModifyReplySuccessModal}
       backdrop="static"
       keyboard={false}
     >
@@ -25,7 +25,7 @@ export default function ModifyReplySuccessModal({
           <Button
             variant="dark"
             className="rounded-pill"
-            onClick={handleCloseModifyTweetSuccessModal}
+            onClick={handleCloseModifyReplySuccessModal}
           >
             Close
           </Button>
