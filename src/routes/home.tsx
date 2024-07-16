@@ -89,6 +89,8 @@ export default function Home() {
 
   const [isReplyDeleted, setIsReplyDeleted] = useState(false);
 
+  const [likes, setLikes] = useState(0);
+
   const [error, setError] = useState("");
 
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
@@ -391,8 +393,14 @@ export default function Home() {
         // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
-          const { createdAt, message, photo, tweetUserId, tweetUsername } =
-            doc.data();
+          const {
+            createdAt,
+            message,
+            photo,
+            tweetUserId,
+            tweetUsername,
+            likes,
+          } = doc.data();
 
           // 새로운 tweet 객체 생성
           return {
@@ -403,6 +411,7 @@ export default function Home() {
             photo,
             tweetUserId,
             tweetUsername,
+            likes,
           };
         });
         // 상태 업데이트
@@ -725,6 +734,7 @@ export default function Home() {
         createdAt: Date.now(),
         tweetUserId: user.uid,
         tweetUsername: user.displayName || "Anonymous",
+        likes: likes,
       });
 
       // 파일이 있는 경우
@@ -791,6 +801,7 @@ export default function Home() {
         <TweetHeader tweets={tweets} back={back} />
         <TweetList
           tweets={tweets}
+          setLikes={setLikes}
           setIsTweetDeleted={setIsTweetDeleted}
           setIsReplyDeleted={setIsReplyDeleted}
         />

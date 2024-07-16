@@ -12,6 +12,8 @@ export interface TweetCardProps {
   photo?: string | undefined;
   tweetUserId: string;
   tweetUsername: string;
+  likes: number;
+  handleLikes: () => Promise<void>;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
@@ -26,6 +28,8 @@ export default function TweetCard({
   photo,
   tweetUserId,
   tweetUsername,
+  likes,
+  handleLikes,
   replys,
   handleShowModifyTweetModal,
   handleShowDeleteTweetModal,
@@ -47,6 +51,8 @@ export default function TweetCard({
       <TweetFooter
         user={user}
         tweetUserId={tweetUserId}
+        likes={likes}
+        handleLikes={handleLikes}
         replys={replys}
         handleShowReplyListModal={handleShowReplyListModal}
       />

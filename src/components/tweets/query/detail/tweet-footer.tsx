@@ -2,10 +2,13 @@ import { Container, Navbar } from "react-bootstrap";
 import { IReply } from "./reply/query/detail/reply";
 import { User } from "firebase/auth";
 import TweetReplyListButton from "./tweet-reply-list-button";
+import TweetLikesButton from "./tweet-likes-button";
 
 export interface TweetFooterProps {
   user: User | null;
   tweetUserId: string;
+  likes: number;
+  handleLikes: () => Promise<void>;
   replys: IReply[];
   handleShowReplyListModal: () => void;
 }
@@ -13,6 +16,8 @@ export interface TweetFooterProps {
 export default function TweetFooter({
   user,
   tweetUserId,
+  likes,
+  handleLikes,
   replys,
   handleShowReplyListModal,
 }: TweetFooterProps) {
@@ -24,12 +29,11 @@ export default function TweetFooter({
     >
       <Container className="d-flex">
         <div className="d-flex justify-content-between w-100">
-          <div className="d-flex">
-            <TweetReplyListButton
-              replys={replys}
-              handleShowReplyListModal={handleShowReplyListModal}
-            />
-          </div>
+          <TweetReplyListButton
+            replys={replys}
+            handleShowReplyListModal={handleShowReplyListModal}
+          />
+          <TweetLikesButton likes={likes} handleLikes={handleLikes} />
         </div>
       </Container>
     </Navbar>

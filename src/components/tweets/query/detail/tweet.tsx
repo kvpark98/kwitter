@@ -47,6 +47,7 @@ export interface ITweet {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
+  likes: number;
 }
 
 export interface TweetProps {
@@ -56,6 +57,8 @@ export interface TweetProps {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
+  likes: number;
+  setLikes: React.Dispatch<React.SetStateAction<number>>;
   setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -67,6 +70,8 @@ export default function Tweet({
   photo,
   tweetUserId,
   tweetUsername,
+  likes,
+  setLikes,
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: TweetProps) {
@@ -117,6 +122,12 @@ export default function Tweet({
   const [isReply, setIsReply] = useState(false);
 
   const [error, setError] = useState("");
+
+  const handleLikes = async () => {
+    await updateDoc(doc(db, "tweets", id), {
+      likes: likes + 1,
+    });
+  };
 
   const [showModifyTweetModal, setShowModifyTweetModal] = useState(false);
   const handleShowModifyTweetModal = () => {
@@ -717,6 +728,8 @@ export default function Tweet({
         photo={photo}
         tweetUserId={tweetUserId}
         tweetUsername={tweetUsername}
+        likes={likes}
+        handleLikes={handleLikes}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteTweetModal={handleShowDeleteTweetModal}
