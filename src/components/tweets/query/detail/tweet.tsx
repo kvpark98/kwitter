@@ -96,6 +96,22 @@ export default function Tweet({
 
   getTweetAvatar();
 
+  const getLikes = async () => {
+    const likesQuery = query(collection(db, `likes/${user.uid}/${id}`));
+
+    const snapshot = await getDocs(likesQuery);
+    if (!snapshot.empty) {
+      snapshot.forEach(async (doc) => {
+        const data = doc.data();
+        setIsLike(data.isLike);
+      });
+    } else {
+      setIsLike(false);
+    }
+  };
+
+  getLikes();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const newFileInputRef = useRef<HTMLInputElement>(null);
@@ -121,12 +137,42 @@ export default function Tweet({
 
   const [isReply, setIsReply] = useState(false);
 
+  const [isLike, setIsLike] = useState(false);
+
   const [error, setError] = useState("");
 
+  console.log(isLike);
+
   const handleLikes = async () => {
-    await updateDoc(doc(db, "tweets", id), {
-      likes: likes + 1,
-    });
+    if (isLike) {
+      await updateDoc(doc(db, "tweets", id), {
+        likes: likes - 1,
+      });
+
+      const likeMinusQuery = query(collection(db, `likes/${user.uid}/${id}`));
+
+      const likeMinusSnapshot = await getDocs(likeMinusQuery);
+      likeMinusSnapshot.forEach(async (doc) => {
+        await updateDoc(doc.ref, { isLike: false });
+      });
+    } else {
+      await updateDoc(doc(db, "tweets", id), {
+        likes: likes + 1,
+      });
+
+      const likePlusQuery = query(collection(db, `likes/${user.uid}/${id}`));
+
+      const likePlusSnapshot = await getDocs(likePlusQuery);
+      if (!likePlusSnapshot.empty) {
+        likePlusSnapshot.forEach(async (doc) => {
+          await updateDoc(doc.ref, { isLike: true });
+        });
+      } else {
+        await addDoc(collection(db, `likes/${user.uid}/${id}`), {
+          isLike: true,
+        });
+      }
+    }
   };
 
   const [showModifyTweetModal, setShowModifyTweetModal] = useState(false);
