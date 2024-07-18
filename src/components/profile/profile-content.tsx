@@ -11,7 +11,6 @@ import NoTweet from "../tweets/no-tweet";
 export interface ProfileContentProps {
   user: User | null;
   avatar: string | null | undefined;
-
   background: string;
   handleShowModifyProfileModal: () => void;
   isPostActive: boolean;

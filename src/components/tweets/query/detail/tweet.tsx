@@ -47,7 +47,7 @@ export interface ITweet {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
-  likes: number;
+  totalLikes: number;
 }
 
 export interface TweetProps {
@@ -57,8 +57,7 @@ export interface TweetProps {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
-  likes: number;
-  setLikes: React.Dispatch<React.SetStateAction<number>>;
+  totalLikes: number;
   setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -70,8 +69,7 @@ export default function Tweet({
   photo,
   tweetUserId,
   tweetUsername,
-  likes,
-  setLikes,
+  totalLikes,
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: TweetProps) {
@@ -97,11 +95,16 @@ export default function Tweet({
   getTweetAvatar();
 
   const getLikes = async () => {
-    const likesQuery = query(collection(db, `likes/${user.uid}/${id}`));
+    // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
+    const likeQuery = query(
+      collection(db, "likes"),
+      where("userId", "==", user.uid),
+      where("tweetId", "==", id)
+    );
 
-    const snapshot = await getDocs(likesQuery);
-    if (!snapshot.empty) {
-      snapshot.forEach(async (doc) => {
+    const likeSnapshot = await getDocs(likeQuery); // 쿼리 실행하여 결과 가져오기
+    if (!likeSnapshot.empty) {
+      likeSnapshot.forEach(async (doc) => {
         const data = doc.data();
         setIsLike(data.isLike);
       });
@@ -137,43 +140,82 @@ export default function Tweet({
 
   const [isReply, setIsReply] = useState(false);
 
+  const [likes, setLikes] = useState(totalLikes);
+
   const [isLike, setIsLike] = useState(false);
 
   const [error, setError] = useState("");
 
-  console.log(isLike);
+  // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
+  // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
+  function debounce(func: (...args: any[]) => void, wait: number) {
+    let timeout: ReturnType<typeof setTimeout> | undefined; // 타이머를 저장할 변수
+
+    // 반환된 함수는 실제로 호출되는 함수
+    return function (...args: any[]) {
+      // 나중에 실행될 함수 정의
+      const later = () => {
+        clearTimeout(timeout); // 기존 타이머 제거 (later 함수 내에서 clearTimeout(timeout)을 호출하는 것은 이전에 설정된 타이머가 있다면 그것을 취소하고, 새로운 타이머를 설정하는 것을 확실하게 하기 위한 안전장치이다. 이를 통해 debounce 함수가 예상대로 동작하고, 마지막 클릭만 처리될 수 있도록 보장한다.)
+        func(...args); // 주어진 함수 실행 (실제 작업 수행)
+      };
+
+      clearTimeout(timeout); // 함수가 호출될 때마다 이전 타이머 제거
+      timeout = setTimeout(later, wait); // 새로운 타이머 설정 (wait 밀리초 후 later 함수 실행)
+      // clearTimeout(timeout)와 setTimeout(later, wait)는 debounce 함수에서 늘 함께 사용된다. 이 두 코드는 각 함수 호출 시 이전에 설정된 타이머를 취소하고, 새로운 타이머를 설정하여 마지막 클릭만을 처리할 수 있도록 보장한다. 이는 debounce 함수가 예상대로 동작하고, 원하는 기능을 제공할 수 있도록 핵심적인 역할을 한다.
+    };
+  }
 
   const handleLikes = async () => {
-    if (isLike) {
-      await updateDoc(doc(db, "tweets", id), {
-        likes: likes - 1,
-      });
+    try {
+      // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
+      const likeQuery = query(
+        collection(db, "likes"),
+        where("userId", "==", user.uid),
+        where("tweetId", "==", id)
+      );
+      const likeSnapshot = await getDocs(likeQuery); // 쿼리 실행하여 결과 가져오기
 
-      const likeMinusQuery = query(collection(db, `likes/${user.uid}/${id}`));
-
-      const likeMinusSnapshot = await getDocs(likeMinusQuery);
-      likeMinusSnapshot.forEach(async (doc) => {
-        await updateDoc(doc.ref, { isLike: false });
-      });
-    } else {
-      await updateDoc(doc(db, "tweets", id), {
-        likes: likes + 1,
-      });
-
-      const likePlusQuery = query(collection(db, `likes/${user.uid}/${id}`));
-
-      const likePlusSnapshot = await getDocs(likePlusQuery);
-      if (!likePlusSnapshot.empty) {
-        likePlusSnapshot.forEach(async (doc) => {
-          await updateDoc(doc.ref, { isLike: true });
+      if (isLike) {
+        // 좋아요를 취소하는 경우
+        await updateDoc(doc(db, "tweets", id), {
+          totalLikes: likes - 1,
         });
+
+        likeSnapshot.forEach(async (doc) => {
+          await updateDoc(doc.ref, { isLike: false });
+        });
+
+        setIsLike(false);
+
+        setLikes((current) => current - 1);
       } else {
-        await addDoc(collection(db, `likes/${user.uid}/${id}`), {
-          isLike: true,
+        // 좋아요를 추가하는 경우
+        await updateDoc(doc(db, "tweets", id), {
+          totalLikes: likes + 1,
         });
+
+        if (!likeSnapshot.empty) {
+          likeSnapshot.forEach(async (doc) => {
+            await updateDoc(doc.ref, { isLike: true });
+          });
+        } else {
+          await addDoc(collection(db, "likes"), {
+            userId: user.uid,
+            tweetId: id,
+            isLike: true,
+          }); // 새로운 좋아요 문서 추가
+        }
+
+        setIsLike(true);
+
+        setLikes((current) => current + 1);
       }
+    } catch (error) {
+      console.error("Error handling likes: ", error);
     }
   };
+
+  const debouncedHandleLikes = debounce(handleLikes, 300);
 
   const [showModifyTweetModal, setShowModifyTweetModal] = useState(false);
   const handleShowModifyTweetModal = () => {
@@ -775,7 +817,8 @@ export default function Tweet({
         tweetUserId={tweetUserId}
         tweetUsername={tweetUsername}
         likes={likes}
-        handleLikes={handleLikes}
+        isLike={isLike}
+        debouncedHandleLikes={debouncedHandleLikes}
         replys={replys}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteTweetModal={handleShowDeleteTweetModal}

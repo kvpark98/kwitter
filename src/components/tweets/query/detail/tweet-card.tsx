@@ -13,7 +13,8 @@ export interface TweetCardProps {
   tweetUserId: string;
   tweetUsername: string;
   likes: number;
-  handleLikes: () => Promise<void>;
+  isLike: boolean;
+  debouncedHandleLikes: (...args: any[]) => void;
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
@@ -29,7 +30,8 @@ export default function TweetCard({
   tweetUserId,
   tweetUsername,
   likes,
-  handleLikes,
+  isLike,
+  debouncedHandleLikes,
   replys,
   handleShowModifyTweetModal,
   handleShowDeleteTweetModal,
@@ -52,7 +54,8 @@ export default function TweetCard({
         user={user}
         tweetUserId={tweetUserId}
         likes={likes}
-        handleLikes={handleLikes}
+        isLike={isLike}
+        debouncedHandleLikes={debouncedHandleLikes}
         replys={replys}
         handleShowReplyListModal={handleShowReplyListModal}
       />

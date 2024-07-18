@@ -89,8 +89,6 @@ export default function Home() {
 
   const [isReplyDeleted, setIsReplyDeleted] = useState(false);
 
-  const [likes, setLikes] = useState(0);
-
   const [error, setError] = useState("");
 
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
@@ -399,7 +397,7 @@ export default function Home() {
             photo,
             tweetUserId,
             tweetUsername,
-            likes,
+            totalLikes,
           } = doc.data();
 
           // 새로운 tweet 객체 생성
@@ -411,7 +409,7 @@ export default function Home() {
             photo,
             tweetUserId,
             tweetUsername,
-            likes,
+            totalLikes,
           };
         });
         // 상태 업데이트
@@ -734,7 +732,7 @@ export default function Home() {
         createdAt: Date.now(),
         tweetUserId: user.uid,
         tweetUsername: user.displayName || "Anonymous",
-        likes: likes,
+        totalLikes: 0,
       });
 
       // 파일이 있는 경우
@@ -801,7 +799,6 @@ export default function Home() {
         <TweetHeader tweets={tweets} back={back} />
         <TweetList
           tweets={tweets}
-          setLikes={setLikes}
           setIsTweetDeleted={setIsTweetDeleted}
           setIsReplyDeleted={setIsReplyDeleted}
         />

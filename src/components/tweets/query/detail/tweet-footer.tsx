@@ -8,7 +8,8 @@ export interface TweetFooterProps {
   user: User | null;
   tweetUserId: string;
   likes: number;
-  handleLikes: () => Promise<void>;
+  isLike: boolean;
+  debouncedHandleLikes: (...args: any[]) => void;
   replys: IReply[];
   handleShowReplyListModal: () => void;
 }
@@ -17,7 +18,8 @@ export default function TweetFooter({
   user,
   tweetUserId,
   likes,
-  handleLikes,
+  isLike,
+  debouncedHandleLikes,
   replys,
   handleShowReplyListModal,
 }: TweetFooterProps) {
@@ -33,7 +35,11 @@ export default function TweetFooter({
             replys={replys}
             handleShowReplyListModal={handleShowReplyListModal}
           />
-          <TweetLikesButton likes={likes} handleLikes={handleLikes} />
+          <TweetLikesButton
+            likes={likes}
+            isLike={isLike}
+            debouncedHandleLikes={debouncedHandleLikes}
+          />
         </div>
       </Container>
     </Navbar>
