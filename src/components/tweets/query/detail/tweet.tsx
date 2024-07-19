@@ -98,7 +98,7 @@ export default function Tweet({
     // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
     const likeQuery = query(
       collection(db, "likes"),
-      where("userId", "==", user.uid),
+      where("likeUserId", "==", user.uid),
       where("tweetId", "==", id)
     );
 
@@ -170,7 +170,7 @@ export default function Tweet({
       // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
       const likeQuery = query(
         collection(db, "likes"),
-        where("userId", "==", user.uid),
+        where("likeUserId", "==", user.uid),
         where("tweetId", "==", id)
       );
       const likeSnapshot = await getDocs(likeQuery); // 쿼리 실행하여 결과 가져오기
@@ -182,7 +182,7 @@ export default function Tweet({
         });
 
         likeSnapshot.forEach(async (doc) => {
-          await updateDoc(doc.ref, { isLike: false });
+          await deleteDoc(doc.ref);
         });
 
         setIsLike(false);
@@ -194,17 +194,13 @@ export default function Tweet({
           totalLikes: likes + 1,
         });
 
-        if (!likeSnapshot.empty) {
-          likeSnapshot.forEach(async (doc) => {
-            await updateDoc(doc.ref, { isLike: true });
-          });
-        } else {
-          await addDoc(collection(db, "likes"), {
-            userId: user.uid,
-            tweetId: id,
-            isLike: true,
-          }); // 새로운 좋아요 문서 추가
-        }
+        await addDoc(collection(db, "likes"), {
+          createdAt: Date.now(),
+          isLike: true,
+          tweetId: id,
+          tweetUserId: tweetUserId,
+          likeUserId: user.uid,
+        }); // 새로운 좋아요 문서 추가
 
         setIsLike(true);
 
@@ -678,6 +674,16 @@ export default function Tweet({
         await deleteDoc(doc.ref);
       });
 
+      const likeQuery = query(
+        collection(db, "likes"),
+        where("tweetId", "==", id)
+      );
+
+      const likeSnapshot = await getDocs(likeQuery);
+      likeSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
       await deleteDoc(doc(db, "tweets", id));
 
       setIsTweetDeleted(true);
@@ -783,8 +789,9 @@ export default function Tweet({
       setIsLoading(true);
 
       await addDoc(collection(db, "replys"), {
-        tweetId: id,
         createdAt: Date.now(),
+        tweetId: id,
+        tweetUserId: tweetUserId,
         reply: reply,
         replyUserId: user.uid,
         replyUsername: user.displayName,

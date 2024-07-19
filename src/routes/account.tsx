@@ -24,11 +24,22 @@ import {
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import ChangePasswordErrorModal from "../components/modals/error/change-password-error-modal";
 import DeleteAccountErrorModal from "../components/modals/error/delete-account-error-modal";
+
+export interface ILike {
+  id: string;
+  createdAt: string;
+  isLike: boolean;
+  likeUserId: string;
+  tweetId: string;
+  tweetUserId: string;
+}
+
 export default function Account() {
   const user = auth.currentUser;
 
@@ -40,18 +51,25 @@ export default function Account() {
   const [tweets, setTweets] = useState<ITweet[]>([]);
   const [avatar, setAvatar] = useState("");
   const [background, setBackground] = useState("");
+  // const [likes, setLikes] = useState<ILike[]>([]);
 
   useEffect(() => {
     const getTweets = async () => {
       const tweetQuery = query(
         collection(db, "tweets"),
-        where("userId", "==", user?.uid)
+        where("tweetUserId", "==", user?.uid)
       );
 
       const tweetSnapshot = await getDocs(tweetQuery);
       const tweets = tweetSnapshot.docs.map((doc) => {
-        const { createdAt, message, photo, tweetUserId, tweetUsername } =
-          doc.data();
+        const {
+          createdAt,
+          message,
+          photo,
+          tweetUserId,
+          tweetUsername,
+          totalLikes,
+        } = doc.data();
 
         return {
           id: doc.id,
@@ -60,6 +78,7 @@ export default function Account() {
           photo,
           tweetUserId,
           tweetUsername,
+          totalLikes,
         };
       });
       setTweets(tweets);
@@ -96,6 +115,31 @@ export default function Account() {
     };
 
     getBackground();
+
+    // const getLikes = async () => {
+    //   const likeQuery = query(
+    //     collection(db, "likes"),
+    //     where("likeUserId", "==", user?.uid)
+    //   );
+
+    //   const likeSnapshot = await getDocs(likeQuery);
+    //   const likes = likeSnapshot.docs.map((doc) => {
+    //     const { createdAt, isLike, likeUserId, tweetId, tweetUserId } =
+    //       doc.data();
+
+    //     return {
+    //       id: doc.id,
+    //       createdAt,
+    //       isLike,
+    //       likeUserId,
+    //       tweetId,
+    //       tweetUserId,
+    //     };
+    //   });
+    //   setLikes(likes);
+    // };
+
+    // getLikes();
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -573,8 +617,8 @@ export default function Account() {
         );
 
         const avatarSnapshot = await getDocs(avatarQuery);
-        avatarSnapshot.forEach(async (doc) => {
-          await deleteDoc(doc.ref);
+        avatarSnapshot.forEach(async (avatar) => {
+          await deleteDoc(avatar.ref);
         });
       }
 
@@ -588,8 +632,8 @@ export default function Account() {
         );
 
         const backgroundSnapshot = await getDocs(backgroundQuery);
-        backgroundSnapshot.forEach(async (doc) => {
-          await deleteDoc(doc.ref);
+        backgroundSnapshot.forEach(async (background) => {
+          await deleteDoc(background.ref);
         });
       }
 
@@ -607,19 +651,63 @@ export default function Account() {
         );
 
         const tweetSnapshot = await getDocs(tweetQuery);
-        tweetSnapshot.forEach(async (doc) => {
-          await deleteDoc(doc.ref);
+        tweetSnapshot.forEach(async (tweet) => {
+          await deleteDoc(tweet.ref);
         });
       }
 
-      const signInMethodQuery = query(
+      // 내가 작성한 모든 댓글 삭제
+      const myReplyQuery = query(
+        collection(db, "replys"),
+        where("replyUserId", "==", user?.uid)
+      );
+
+      const myReplySnapshot = await getDocs(myReplyQuery);
+      myReplySnapshot.forEach(async (reply) => {
+        await deleteDoc(reply.ref);
+      });
+
+      // 내가 작성한 트윗에 달린 모든 댓글 삭제
+      const othersReplyQuery = query(
+        collection(db, "replys"),
+        where("tweetUserId", "==", user?.uid)
+      );
+
+      const othersReplySnapshot = await getDocs(othersReplyQuery);
+      othersReplySnapshot.forEach(async (reply) => {
+        await deleteDoc(reply.ref);
+      });
+
+      // 내가 한 모든 좋아요 삭제
+      const myLikeQuery = query(
+        collection(db, "likes"),
+        where("likeUserId", "==", user?.uid)
+      );
+
+      const myLikeSnapshot = await getDocs(myLikeQuery);
+      myLikeSnapshot.forEach(async (like) => {
+        await deleteDoc(like.ref);
+      });
+
+      // 내가 작성한 트윗에 달린 모든 좋아요 삭제
+      const othersLikeQuery = query(
+        collection(db, "likes"),
+        where("tweetUserId", "==", user?.uid)
+      );
+
+      const othersLikeSnapshot = await getDocs(othersLikeQuery);
+      othersLikeSnapshot.forEach(async (like) => {
+        await deleteDoc(like.ref);
+      });
+
+      const userQuery = query(
         collection(db, "users"),
         where("userId", "==", user?.uid)
       );
 
-      const signInMethodSnapshot = await getDocs(signInMethodQuery);
-      signInMethodSnapshot.forEach(async (doc) => {
-        await deleteDoc(doc.ref);
+      const userSnapshot = await getDocs(userQuery);
+      userSnapshot.forEach(async (user) => {
+        await deleteDoc(user.ref);
       });
 
       await deleteUser(user!);
