@@ -97,7 +97,7 @@ export default function Tweet({
   const getLikes = async () => {
     // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
     const likeQuery = query(
-      collection(db, "likes"),
+      collection(db, "tweetLikes"),
       where("likeUserId", "==", user.uid),
       where("tweetId", "==", id)
     );
@@ -169,7 +169,7 @@ export default function Tweet({
     try {
       // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
       const likeQuery = query(
-        collection(db, "likes"),
+        collection(db, "tweetLikes"),
         where("likeUserId", "==", user.uid),
         where("tweetId", "==", id)
       );
@@ -194,7 +194,7 @@ export default function Tweet({
           totalLikes: likes + 1,
         });
 
-        await addDoc(collection(db, "likes"), {
+        await addDoc(collection(db, "tweetLikes"), {
           createdAt: Date.now(),
           isLike: true,
           tweetId: id,
@@ -675,7 +675,7 @@ export default function Tweet({
       });
 
       const likeQuery = query(
-        collection(db, "likes"),
+        collection(db, "tweetLikes"),
         where("tweetId", "==", id)
       );
 
@@ -748,8 +748,15 @@ export default function Tweet({
         // 스냅샷을 reply 배열로 변환
         const replys = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
-          const { createdAt, reply, replyUserId, replyUsername, tweetId } =
-            doc.data();
+          const {
+            createdAt,
+            reply,
+            replyUserId,
+            replyUsername,
+            totalLikes,
+            tweetId,
+            tweetUserId,
+          } = doc.data();
 
           // 새로운 reply 객체 생성
           return {
@@ -759,7 +766,9 @@ export default function Tweet({
             reply,
             replyUserId,
             replyUsername,
+            totalLikes,
             tweetId,
+            tweetUserId,
           };
         });
         // 상태 업데이트
@@ -795,6 +804,7 @@ export default function Tweet({
         reply: reply,
         replyUserId: user.uid,
         replyUsername: user.displayName,
+        totalLikes: 0,
       });
 
       handleShowCreateReplySuccessModal();
@@ -870,7 +880,6 @@ export default function Tweet({
         handleModifyRatio4x3={handleModifyRatio4x3}
         handleModifyRatio16x9={handleModifyRatio16x9}
       />
-
       <ModifyTweetDiscardModal
         showModifyTweetDiscardModal={showModifyTweetDiscardModal}
         handleCloseModifyTweetDiscardModal={handleCloseModifyTweetDiscardModal}

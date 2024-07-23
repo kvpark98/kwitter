@@ -678,9 +678,9 @@ export default function Account() {
         await deleteDoc(reply.ref);
       });
 
-      // 내가 한 모든 좋아요 삭제
+      // 내가 한 모든 트윗 좋아요 삭제
       const myLikeQuery = query(
-        collection(db, "likes"),
+        collection(db, "tweetLikes"),
         where("likeUserId", "==", user?.uid)
       );
 
@@ -691,7 +691,7 @@ export default function Account() {
 
       // 내가 작성한 트윗에 달린 모든 좋아요 삭제
       const othersLikeQuery = query(
-        collection(db, "likes"),
+        collection(db, "tweetLikes"),
         where("tweetUserId", "==", user?.uid)
       );
 
