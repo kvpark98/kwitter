@@ -674,13 +674,23 @@ export default function Tweet({
         await deleteDoc(doc.ref);
       });
 
-      const likeQuery = query(
+      const tweetLikeQuery = query(
         collection(db, "tweetLikes"),
         where("tweetId", "==", id)
       );
 
-      const likeSnapshot = await getDocs(likeQuery);
-      likeSnapshot.forEach(async (doc) => {
+      const tweetLikeSnapshot = await getDocs(tweetLikeQuery);
+      tweetLikeSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
+      const replyLikeQuery = query(
+        collection(db, "replyLikes"),
+        where("tweetId", "==", id)
+      );
+
+      const replyLikeSnapshot = await getDocs(replyLikeQuery);
+      replyLikeSnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
 

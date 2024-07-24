@@ -679,24 +679,46 @@ export default function Account() {
       });
 
       // 내가 한 모든 트윗 좋아요 삭제
-      const myLikeQuery = query(
+      const myTweetLikeQuery = query(
         collection(db, "tweetLikes"),
         where("likeUserId", "==", user?.uid)
       );
 
-      const myLikeSnapshot = await getDocs(myLikeQuery);
-      myLikeSnapshot.forEach(async (like) => {
+      const myTweetLikeSnapshot = await getDocs(myTweetLikeQuery);
+      myTweetLikeSnapshot.forEach(async (like) => {
         await deleteDoc(like.ref);
       });
 
       // 내가 작성한 트윗에 달린 모든 좋아요 삭제
-      const othersLikeQuery = query(
+      const othersTweetLikeQuery = query(
         collection(db, "tweetLikes"),
         where("tweetUserId", "==", user?.uid)
       );
 
-      const othersLikeSnapshot = await getDocs(othersLikeQuery);
-      othersLikeSnapshot.forEach(async (like) => {
+      const othersTweetLikeSnapshot = await getDocs(othersTweetLikeQuery);
+      othersTweetLikeSnapshot.forEach(async (like) => {
+        await deleteDoc(like.ref);
+      });
+
+      // 내가 한 모든 댓글 좋아요 삭제
+      const myReplyLikeQuery = query(
+        collection(db, "replyLikes"),
+        where("likeUserId", "==", user?.uid)
+      );
+
+      const myReplyLikeSnapshot = await getDocs(myReplyLikeQuery);
+      myReplyLikeSnapshot.forEach(async (like) => {
+        await deleteDoc(like.ref);
+      });
+
+      // 내가 작성한 댓글에 달린 모든 좋아요 삭제
+      const othersReplyLikeQuery = query(
+        collection(db, "replyLikes"),
+        where("replyUserId", "==", user?.uid)
+      );
+
+      const othersReplyLikeSnapshot = await getDocs(othersReplyLikeQuery);
+      othersReplyLikeSnapshot.forEach(async (like) => {
         await deleteDoc(like.ref);
       });
 

@@ -309,6 +309,16 @@ export default function Reply({
     try {
       setIsLoading(true);
 
+      const replyLikeQuery = query(
+        collection(db, "replyLikes"),
+        where("replyId", "==", id)
+      );
+
+      const replyLikeSnapshot = await getDocs(replyLikeQuery);
+      replyLikeSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
       await deleteDoc(doc(db, "replys", id));
 
       setIsReplyDeleted(true);
