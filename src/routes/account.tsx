@@ -722,6 +722,19 @@ export default function Account() {
         await deleteDoc(like.ref);
       });
 
+      // 내가 작성한 트윗에 달린 다른 사람의 댓글에 달린 모든 좋아요 삭제
+      const othersTweetReplyLikeQuery = query(
+        collection(db, "replyLikes"),
+        where("tweetUserId", "==", user?.uid)
+      );
+
+      const othersTweetReplyLikeSnapshot = await getDocs(
+        othersTweetReplyLikeQuery
+      );
+      othersTweetReplyLikeSnapshot.forEach(async (like) => {
+        await deleteDoc(like.ref);
+      });
+
       const userQuery = query(
         collection(db, "users"),
         where("userId", "==", user?.uid)
