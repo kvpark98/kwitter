@@ -804,14 +804,8 @@ export default function Profile() {
         // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
-          const {
-            createdAt,
-            message,
-            photo,
-            tweetUserId,
-            tweetUsername,
-            totalLikes,
-          } = doc.data();
+          const { createdAt, message, photo, tweetUserId, tweetUsername } =
+            doc.data();
 
           // 새로운 tweet 객체 생성
           return {
@@ -822,7 +816,6 @@ export default function Profile() {
             photo,
             tweetUserId,
             tweetUsername,
-            totalLikes,
           };
         });
         // 상태 업데이트

@@ -51,7 +51,6 @@ export default function Account() {
   const [tweets, setTweets] = useState<ITweet[]>([]);
   const [avatar, setAvatar] = useState("");
   const [background, setBackground] = useState("");
-  // const [likes, setLikes] = useState<ILike[]>([]);
 
   useEffect(() => {
     const getTweets = async () => {
@@ -62,14 +61,8 @@ export default function Account() {
 
       const tweetSnapshot = await getDocs(tweetQuery);
       const tweets = tweetSnapshot.docs.map((doc) => {
-        const {
-          createdAt,
-          message,
-          photo,
-          tweetUserId,
-          tweetUsername,
-          totalLikes,
-        } = doc.data();
+        const { createdAt, message, photo, tweetUserId, tweetUsername } =
+          doc.data();
 
         return {
           id: doc.id,
@@ -78,7 +71,6 @@ export default function Account() {
           photo,
           tweetUserId,
           tweetUsername,
-          totalLikes,
         };
       });
       setTweets(tweets);
@@ -115,31 +107,6 @@ export default function Account() {
     };
 
     getBackground();
-
-    // const getLikes = async () => {
-    //   const likeQuery = query(
-    //     collection(db, "likes"),
-    //     where("likeUserId", "==", user?.uid)
-    //   );
-
-    //   const likeSnapshot = await getDocs(likeQuery);
-    //   const likes = likeSnapshot.docs.map((doc) => {
-    //     const { createdAt, isLike, likeUserId, tweetId, tweetUserId } =
-    //       doc.data();
-
-    //     return {
-    //       id: doc.id,
-    //       createdAt,
-    //       isLike,
-    //       likeUserId,
-    //       tweetId,
-    //       tweetUserId,
-    //     };
-    //   });
-    //   setLikes(likes);
-    // };
-
-    // getLikes();
   }, []);
 
   const [isLoading, setIsLoading] = useState(false);

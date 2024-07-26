@@ -47,7 +47,6 @@ export interface ITweet {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
-  totalLikes: number;
 }
 
 export interface TweetProps {
@@ -57,7 +56,6 @@ export interface TweetProps {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
-  totalLikes: number;
   setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -69,7 +67,6 @@ export default function Tweet({
   photo,
   tweetUserId,
   tweetUsername,
-  totalLikes,
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: TweetProps) {
@@ -78,42 +75,6 @@ export default function Tweet({
   const defaultAvatarURL = "/person-circle.svg";
 
   const [tweetAvatar, setTweetAvatar] = useState(defaultAvatarURL);
-
-  const getTweetAvatar = async () => {
-    const tweetAvatarQuery = query(
-      collection(db, "avatars"),
-      where("userId", "==", tweetUserId)
-    );
-
-    const snapshot = await getDocs(tweetAvatarQuery);
-    snapshot.forEach(async (doc) => {
-      const data = doc.data();
-      setTweetAvatar(data.avatar);
-    });
-  };
-
-  getTweetAvatar();
-
-  const getLikes = async () => {
-    // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
-    const likeQuery = query(
-      collection(db, "tweetLikes"),
-      where("likeUserId", "==", user.uid),
-      where("tweetId", "==", id)
-    );
-
-    const likeSnapshot = await getDocs(likeQuery); // 쿼리 실행하여 결과 가져오기
-    if (!likeSnapshot.empty) {
-      likeSnapshot.forEach(async (doc) => {
-        const data = doc.data();
-        setIsLike(data.isLike);
-      });
-    } else {
-      setIsLike(false);
-    }
-  };
-
-  getLikes();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -140,11 +101,62 @@ export default function Tweet({
 
   const [isReply, setIsReply] = useState(false);
 
-  const [likes, setLikes] = useState(totalLikes);
+  const [likes, setLikes] = useState(0);
 
   const [isLike, setIsLike] = useState(false);
 
   const [error, setError] = useState("");
+
+  const getTweetAvatar = async () => {
+    const tweetAvatarQuery = query(
+      collection(db, "avatars"),
+      where("userId", "==", tweetUserId)
+    );
+
+    const snapshot = await getDocs(tweetAvatarQuery);
+    snapshot.forEach(async (doc) => {
+      const data = doc.data();
+      setTweetAvatar(data.avatar);
+    });
+  };
+
+  getTweetAvatar();
+
+  const getIsLike = async () => {
+    const isLikeQuery = query(
+      collection(db, "tweetLikes"),
+      where("likeUserId", "==", user.uid),
+      where("tweetId", "==", id)
+    );
+
+    const isLikeSnapshot = await getDocs(isLikeQuery);
+    if (!isLikeSnapshot.empty) {
+      isLikeSnapshot.forEach(async (doc) => {
+        const data = doc.data();
+        setIsLike(data.isLike);
+      });
+    } else {
+      setIsLike(false);
+    }
+  };
+
+  getIsLike();
+
+  const getLikeCount = async () => {
+    const likeCountQuery = query(
+      collection(db, "tweetLikes"),
+      where("tweetId", "==", id)
+    );
+
+    const likeCountSnapshot = await getDocs(likeCountQuery);
+    if (!likeCountSnapshot.empty) {
+      setLikes(likeCountSnapshot.size);
+    } else {
+      setLikes(0);
+    }
+  };
+
+  getLikeCount();
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
@@ -167,20 +179,14 @@ export default function Tweet({
 
   const handleLikes = async () => {
     try {
-      // 특정 유저가 특정 트윗에 대해 좋아요를 눌렀는지 확인하는 쿼리
       const likeQuery = query(
         collection(db, "tweetLikes"),
         where("likeUserId", "==", user.uid),
         where("tweetId", "==", id)
       );
-      const likeSnapshot = await getDocs(likeQuery); // 쿼리 실행하여 결과 가져오기
+      const likeSnapshot = await getDocs(likeQuery);
 
       if (isLike) {
-        // 좋아요를 취소하는 경우
-        await updateDoc(doc(db, "tweets", id), {
-          totalLikes: likes - 1,
-        });
-
         likeSnapshot.forEach(async (doc) => {
           await deleteDoc(doc.ref);
         });
@@ -189,18 +195,13 @@ export default function Tweet({
 
         setLikes((current) => current - 1);
       } else {
-        // 좋아요를 추가하는 경우
-        await updateDoc(doc(db, "tweets", id), {
-          totalLikes: likes + 1,
-        });
-
         await addDoc(collection(db, "tweetLikes"), {
           createdAt: Date.now(),
           isLike: true,
           tweetId: id,
           tweetUserId: tweetUserId,
           likeUserId: user.uid,
-        }); // 새로운 좋아요 문서 추가
+        });
 
         setIsLike(true);
 
@@ -763,7 +764,6 @@ export default function Tweet({
             reply,
             replyUserId,
             replyUsername,
-            totalLikes,
             tweetId,
             tweetUserId,
           } = doc.data();
@@ -776,7 +776,6 @@ export default function Tweet({
             reply,
             replyUserId,
             replyUsername,
-            totalLikes,
             tweetId,
             tweetUserId,
           };
@@ -814,7 +813,6 @@ export default function Tweet({
         reply: reply,
         replyUserId: user.uid,
         replyUsername: user.displayName,
-        totalLikes: 0,
       });
 
       handleShowCreateReplySuccessModal();

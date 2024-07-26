@@ -32,7 +32,6 @@ export interface IReply {
   reply: string;
   replyUserId: string;
   replyUsername: string;
-  totalLikes: number;
 }
 
 export interface ReplyProps {
@@ -44,7 +43,6 @@ export interface ReplyProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
-  totalLikes: number;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -57,7 +55,6 @@ export default function Reply({
   reply,
   replyUserId,
   replyUsername,
-  totalLikes,
   setIsReplyDeleted,
 }: ReplyProps) {
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -72,22 +69,22 @@ export default function Reply({
 
   const [isNewReply, setIsNewReply] = useState(true);
 
-  const [likes, setLikes] = useState(totalLikes);
+  const [likes, setLikes] = useState(0);
 
   const [isLike, setIsLike] = useState(false);
 
   const [error, setError] = useState("");
 
-  const getLikes = async () => {
-    const likeQuery = query(
+  const getIsLike = async () => {
+    const isLikeQuery = query(
       collection(db, "replyLikes"),
       where("likeUserId", "==", user?.uid),
       where("replyId", "==", id)
     );
 
-    const likeSnapshot = await getDocs(likeQuery);
-    if (!likeSnapshot.empty) {
-      likeSnapshot.forEach(async (doc) => {
+    const isLikeSnapshot = await getDocs(isLikeQuery);
+    if (!isLikeSnapshot.empty) {
+      isLikeSnapshot.forEach(async (doc) => {
         const data = doc.data();
         setIsLike(data.isLike);
       });
@@ -96,7 +93,23 @@ export default function Reply({
     }
   };
 
-  getLikes();
+  getIsLike();
+
+  const getLikeCount = async () => {
+    const likeCountQuery = query(
+      collection(db, "replyLikes"),
+      where("replyId", "==", id)
+    );
+
+    const likeCountSnapshot = await getDocs(likeCountQuery);
+    if (!likeCountSnapshot.empty) {
+      setLikes(likeCountSnapshot.size);
+    } else {
+      setLikes(0);
+    }
+  };
+
+  getLikeCount();
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
@@ -127,10 +140,6 @@ export default function Reply({
       const likeSnapshot = await getDocs(likeQuery);
 
       if (isLike) {
-        await updateDoc(doc(db, "replys", id), {
-          totalLikes: likes - 1,
-        });
-
         likeSnapshot.forEach(async (doc) => {
           await deleteDoc(doc.ref);
         });
@@ -139,10 +148,6 @@ export default function Reply({
 
         setLikes((current) => current - 1);
       } else {
-        await updateDoc(doc(db, "replys", id), {
-          totalLikes: likes + 1,
-        });
-
         await addDoc(collection(db, "replyLikes"), {
           createdAt: Date.now(),
           isLike: true,
