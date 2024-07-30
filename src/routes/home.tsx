@@ -185,6 +185,16 @@ export default function Home() {
     setIsReplyDeleted(false);
   };
 
+  const [sortCriteria, setSortCriteria] = useState("Sort");
+
+  const handleSortCriteria = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setSortCriteria(event.currentTarget.innerText);
+  };
+
+  const resetCriteria = () => {
+    setSortCriteria("Sort");
+  };
+
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
   const [zoom, setZoom] = useState(1); // 이미지 확대/축소
@@ -788,7 +798,13 @@ export default function Home() {
         className="overflow-y-auto bg-light h-100"
         style={{ width: "630px" }}
       >
-        <TweetHeader tweets={tweets} back={back} />
+        <TweetHeader
+          tweets={tweets}
+          back={back}
+          sortCriteria={sortCriteria}
+          handleSortCriteria={handleSortCriteria}
+          resetCriteria={resetCriteria}
+        />
         <TweetList
           tweets={tweets}
           setIsTweetDeleted={setIsTweetDeleted}
