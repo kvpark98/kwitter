@@ -9,6 +9,9 @@ export interface TweetHeaderProps {
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   resetCriteria: () => void;
+  order: boolean;
+  handleOrder: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  resetOrder: () => void;
 }
 
 export default function TweetHeader({
@@ -17,6 +20,9 @@ export default function TweetHeader({
   sortCriteria,
   handleSortCriteria,
   resetCriteria,
+  order,
+  handleOrder,
+  resetOrder,
 }: TweetHeaderProps) {
   return (
     <Navbar bg="dark" className="d-flex align-items-center" sticky="top">
@@ -47,6 +53,37 @@ export default function TweetHeader({
           />
           <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
         </svg>
+      </Button>
+      <Button variant="light" onClick={handleOrder} className="me-2">
+        {order ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-arrow-down"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule="evenodd"
+              d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"
+            />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-arrow-up"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule="evenodd"
+              d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"
+            />
+          </svg>
+        )}
       </Button>
     </Navbar>
   );

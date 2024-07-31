@@ -195,6 +195,16 @@ export default function Home() {
     setSortCriteria("Sort");
   };
 
+  const [order, setOrder] = useState(true);
+
+  const handleOrder = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setOrder((current) => !current);
+  };
+
+  const resetOrder = () => {
+    setOrder(true);
+  };
+
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
   const [zoom, setZoom] = useState(1); // 이미지 확대/축소
@@ -804,6 +814,9 @@ export default function Home() {
           sortCriteria={sortCriteria}
           handleSortCriteria={handleSortCriteria}
           resetCriteria={resetCriteria}
+          order={order}
+          handleOrder={handleOrder}
+          resetOrder={resetOrder}
         />
         <TweetList
           tweets={tweets}
