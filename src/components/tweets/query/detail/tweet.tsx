@@ -47,6 +47,8 @@ export interface ITweet {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
+  totalReplys: number;
+  totalLikes: number;
 }
 
 export interface TweetProps {
@@ -56,6 +58,8 @@ export interface TweetProps {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
+  totalReplys: number;
+  totalLikes: number;
   setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -67,6 +71,8 @@ export default function Tweet({
   photo,
   tweetUserId,
   tweetUsername,
+  totalReplys,
+  totalLikes,
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: TweetProps) {
@@ -154,6 +160,10 @@ export default function Tweet({
     } else {
       setLikes(0);
     }
+
+    await updateDoc(doc(db, "tweets", id), {
+      totalLikes: likeCountSnapshot.size,
+    });
   };
 
   getLikeCount();

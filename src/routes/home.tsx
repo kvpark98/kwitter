@@ -193,16 +193,13 @@ export default function Home() {
 
   const resetCriteria = () => {
     setSortCriteria("Sort");
+    setSortOrder(true);
   };
 
-  const [order, setOrder] = useState(true);
+  const [sortOrder, setSortOrder] = useState(true);
 
-  const handleOrder = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setOrder((current) => !current);
-  };
-
-  const resetOrder = () => {
-    setOrder(true);
+  const handleSortOrder = () => {
+    setSortOrder((current) => !current);
   };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
@@ -403,16 +400,31 @@ export default function Home() {
       // Firestore 쿼리 생성
       const tweetQuery = query(
         collection(db, "tweets"),
-        orderBy("createdAt", "desc")
+        orderBy("createdAt", sortOrder ? "desc" : "asc")
       );
+
+      // sortCriteria === "Date"
+      //       ? "createdAt"
+      //       : sortCriteria === "Replys"
+      //       ? ""
+      //       : sortCriteria === "Likes"
+      //       ? ""
+      //       : "",
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
       unsubscribe = await onSnapshot(tweetQuery, (snapshot) => {
         // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
-          const { createdAt, message, photo, tweetUserId, tweetUsername } =
-            doc.data();
+          const {
+            createdAt,
+            message,
+            photo,
+            tweetUserId,
+            tweetUsername,
+            totalReplys,
+            totalLikes,
+          } = doc.data();
 
           // 새로운 tweet 객체 생성
           return {
@@ -423,6 +435,8 @@ export default function Home() {
             photo,
             tweetUserId,
             tweetUsername,
+            totalReplys,
+            totalLikes,
           };
         });
         // 상태 업데이트
@@ -437,7 +451,7 @@ export default function Home() {
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
-  }, []);
+  }, [sortOrder]);
 
   const changePasswordType = () => {
     setPasswordInputType((current) => !current);
@@ -745,6 +759,8 @@ export default function Home() {
         createdAt: Date.now(),
         tweetUserId: user.uid,
         tweetUsername: user.displayName || "Anonymous",
+        totalReplys: 0,
+        totalLikes: 0,
       });
 
       // 파일이 있는 경우
@@ -813,10 +829,9 @@ export default function Home() {
           back={back}
           sortCriteria={sortCriteria}
           handleSortCriteria={handleSortCriteria}
+          sortOrder={sortOrder}
+          handleSortOrder={handleSortOrder}
           resetCriteria={resetCriteria}
-          order={order}
-          handleOrder={handleOrder}
-          resetOrder={resetOrder}
         />
         <TweetList
           tweets={tweets}
