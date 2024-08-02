@@ -58,8 +58,6 @@ export interface TweetProps {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
-  totalReplys: number;
-  totalLikes: number;
   setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -71,8 +69,6 @@ export default function Tweet({
   photo,
   tweetUserId,
   tweetUsername,
-  totalReplys,
-  totalLikes,
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: TweetProps) {
@@ -107,11 +103,30 @@ export default function Tweet({
 
   const [isReply, setIsReply] = useState(false);
 
-  const [likes, setLikes] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
 
   const [isLike, setIsLike] = useState(false);
 
+  const [replycount, setReplyCount] = useState(0);
+
   const [error, setError] = useState("");
+
+  const [sortCriteria, setSortCriteria] = useState("Date");
+
+  const handleSortCriteria = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setSortCriteria(event.currentTarget.innerText);
+  };
+
+  const resetCriteria = () => {
+    setSortCriteria("Date");
+    setSortOrder(true);
+  };
+
+  const [sortOrder, setSortOrder] = useState(true);
+
+  const handleSortOrder = () => {
+    setSortOrder((current) => !current);
+  };
 
   const getTweetAvatar = async () => {
     const tweetAvatarQuery = query(
@@ -156,9 +171,9 @@ export default function Tweet({
 
     const likeCountSnapshot = await getDocs(likeCountQuery);
     if (!likeCountSnapshot.empty) {
-      setLikes(likeCountSnapshot.size);
+      setLikeCount(likeCountSnapshot.size);
     } else {
-      setLikes(0);
+      setLikeCount(0);
     }
 
     await updateDoc(doc(db, "tweets", id), {
@@ -167,6 +182,26 @@ export default function Tweet({
   };
 
   getLikeCount();
+
+  const getReplyCount = async () => {
+    const replyCountQuery = query(
+      collection(db, "replys"),
+      where("tweetId", "==", id)
+    );
+
+    const replyCountSnapshot = await getDocs(replyCountQuery);
+    if (!replyCountSnapshot.empty) {
+      setReplyCount(replyCountSnapshot.size);
+    } else {
+      setReplyCount(0);
+    }
+
+    await updateDoc(doc(db, "tweets", id), {
+      totalReplys: replyCountSnapshot.size,
+    });
+  };
+
+  getReplyCount();
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
@@ -203,7 +238,7 @@ export default function Tweet({
 
         setIsLike(false);
 
-        setLikes((current) => current - 1);
+        setLikeCount((current) => current - 1);
       } else {
         await addDoc(collection(db, "tweetLikes"), {
           createdAt: Date.now(),
@@ -215,7 +250,7 @@ export default function Tweet({
 
         setIsLike(true);
 
-        setLikes((current) => current + 1);
+        setLikeCount((current) => current + 1);
       }
     } catch (error) {
       console.error("Error handling likes: ", error);
@@ -757,11 +792,23 @@ export default function Tweet({
     let unsubscribe: Unsubscribe | null = null;
 
     const fetchReplys = async () => {
-      // Firestore 쿼리 생성
+      const getOrderByField = (sortCriteria: string): string => {
+        switch (sortCriteria) {
+          case "Likes":
+            return "totalLikes";
+          case "Date":
+          default:
+            return "createdAt";
+        }
+      };
+
+      const orderByField = getOrderByField(sortCriteria);
+      const orderDirection = sortOrder ? "desc" : "asc";
+
       const replyQuery = query(
         collection(db, "replys"),
         where("tweetId", "==", id),
-        orderBy("createdAt", "desc")
+        orderBy(orderByField, orderDirection)
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
@@ -776,6 +823,7 @@ export default function Tweet({
             replyUsername,
             tweetId,
             tweetUserId,
+            totalLikes,
           } = doc.data();
 
           // 새로운 reply 객체 생성
@@ -788,6 +836,7 @@ export default function Tweet({
             replyUsername,
             tweetId,
             tweetUserId,
+            totalLikes,
           };
         });
         // 상태 업데이트
@@ -802,7 +851,7 @@ export default function Tweet({
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
-  }, []);
+  }, [sortCriteria, sortOrder]);
 
   const createReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -823,6 +872,7 @@ export default function Tweet({
         reply: reply,
         replyUserId: user.uid,
         replyUsername: user.displayName,
+        totalLikes: 0,
       });
 
       handleShowCreateReplySuccessModal();
@@ -851,7 +901,7 @@ export default function Tweet({
         photo={photo}
         tweetUserId={tweetUserId}
         tweetUsername={tweetUsername}
-        likes={likes}
+        likeCount={likeCount}
         isLike={isLike}
         debouncedHandleLikes={debouncedHandleLikes}
         replys={replys}
@@ -932,6 +982,11 @@ export default function Tweet({
         handleCloseReplyListModal={handleCloseReplyListModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
         setIsReplyDeleted={setIsReplyDeleted}
+        sortCriteria={sortCriteria}
+        handleSortCriteria={handleSortCriteria}
+        sortOrder={sortOrder}
+        handleSortOrder={handleSortOrder}
+        resetCriteria={resetCriteria}
       />
       <CreateReply
         showCreateReplyModal={showCreateReplyModal}

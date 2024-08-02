@@ -96,6 +96,9 @@ const GlobalStyles = createGlobalStyle`
   .translate-middle-remove {
     transform: translate(20%, -50%) !important;
   }
+  .dropend .dropdown-toggle::after {
+    display: none;
+  }
 `;
 
 const router = createBrowserRouter([

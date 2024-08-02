@@ -1,17 +1,17 @@
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 
-export interface TweetSortCriteriaProps {
+export interface TweetListSortCriteriaProps {
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export default function TweetSortCriteria({
+export default function TweetListSortCriteria({
   sortCriteria,
   handleSortCriteria,
-}: TweetSortCriteriaProps) {
+}: TweetListSortCriteriaProps) {
   return (
     <DropdownButton
-      className="me-1"
+      as={ButtonGroup}
       variant="light"
       drop="start"
       title={sortCriteria}

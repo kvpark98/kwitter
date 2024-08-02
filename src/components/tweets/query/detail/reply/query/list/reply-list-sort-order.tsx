@@ -1,20 +1,19 @@
 import { Button } from "react-bootstrap";
 
-export interface TweetSortOrderProps {
+export interface ReplyListSortOrderProps {
   sortOrder: boolean;
   handleSortOrder: () => void;
 }
 
-export default function TweetSortOrder({
+export default function ReplyListSortOrder({
   sortOrder,
   handleSortOrder,
-}: TweetSortOrderProps) {
+}: ReplyListSortOrderProps) {
   return (
     <Button
-      variant="light"
+      variant="dark"
       title={sortOrder ? "Descending order" : "Ascending order"}
       onClick={handleSortOrder}
-      className="me-1"
     >
       {sortOrder ? (
         <svg

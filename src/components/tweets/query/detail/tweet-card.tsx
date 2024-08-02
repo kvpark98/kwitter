@@ -12,7 +12,7 @@ export interface TweetCardProps {
   photo?: string | undefined;
   tweetUserId: string;
   tweetUsername: string;
-  likes: number;
+  likeCount: number;
   isLike: boolean;
   debouncedHandleLikes: (...args: any[]) => void;
   replys: IReply[];
@@ -29,7 +29,7 @@ export default function TweetCard({
   photo,
   tweetUserId,
   tweetUsername,
-  likes,
+  likeCount,
   isLike,
   debouncedHandleLikes,
   replys,
@@ -53,7 +53,7 @@ export default function TweetCard({
       <TweetFooter
         user={user}
         tweetUserId={tweetUserId}
-        likes={likes}
+        likeCount={likeCount}
         isLike={isLike}
         debouncedHandleLikes={debouncedHandleLikes}
         replys={replys}

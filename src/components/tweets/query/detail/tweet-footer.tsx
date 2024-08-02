@@ -7,7 +7,7 @@ import TweetLikesButton from "./tweet-likes-button";
 export interface TweetFooterProps {
   user: User | null;
   tweetUserId: string;
-  likes: number;
+  likeCount: number;
   isLike: boolean;
   debouncedHandleLikes: (...args: any[]) => void;
   replys: IReply[];
@@ -17,7 +17,7 @@ export interface TweetFooterProps {
 export default function TweetFooter({
   user,
   tweetUserId,
-  likes,
+  likeCount,
   isLike,
   debouncedHandleLikes,
   replys,
@@ -36,7 +36,7 @@ export default function TweetFooter({
             handleShowReplyListModal={handleShowReplyListModal}
           />
           <TweetLikesButton
-            likes={likes}
+            likeCount={likeCount}
             isLike={isLike}
             debouncedHandleLikes={debouncedHandleLikes}
           />

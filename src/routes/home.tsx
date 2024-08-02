@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import ScrollHome from "../components/scrolls/scrollHome";
 import CreateTweet from "../components/tweets/create/create-tweet";
 import TweetList from "../components/tweets/query/list/tweet-list";
 import { Container } from "react-bootstrap";
@@ -28,7 +27,6 @@ import { FirebaseError } from "firebase/app";
 import CreateCropPhotoModal from "../components/tweets/create/create-crop-modal/create-crop-photo-modal";
 import CreateTweetDiscardModal from "../components/tweets/create/create-tweet-discard-modal/create-tweet-discard-modal";
 import { useNavigate } from "react-router-dom";
-import TweetHeader from "../components/tweets/tweet-header";
 import SideBar from "../components/sidebar/side-bar";
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import CreateTweetErrorModal from "../components/modals/error/create-tweet-error-modal";
@@ -185,14 +183,14 @@ export default function Home() {
     setIsReplyDeleted(false);
   };
 
-  const [sortCriteria, setSortCriteria] = useState("Sort");
+  const [sortCriteria, setSortCriteria] = useState("Date");
 
   const handleSortCriteria = (event: React.MouseEvent<HTMLButtonElement>) => {
     setSortCriteria(event.currentTarget.innerText);
   };
 
   const resetCriteria = () => {
-    setSortCriteria("Sort");
+    setSortCriteria("Date");
     setSortOrder(true);
   };
 
@@ -395,21 +393,27 @@ export default function Home() {
     // Firestore 구독을 위한 변수
     let unsubscribe: Unsubscribe | null = null;
 
-    // 사용자의 tweet을 가져오는 함수
     const fetchTweets = async () => {
+      const getOrderByField = (sortCriteria: string): string => {
+        switch (sortCriteria) {
+          case "Replys":
+            return "totalReplys";
+          case "Likes":
+            return "totalLikes";
+          case "Date":
+          default:
+            return "createdAt";
+        }
+      };
+
+      const orderByField = getOrderByField(sortCriteria);
+      const orderDirection = sortOrder ? "desc" : "asc";
+
       // Firestore 쿼리 생성
       const tweetQuery = query(
         collection(db, "tweets"),
-        orderBy("createdAt", sortOrder ? "desc" : "asc")
+        orderBy(orderByField, orderDirection)
       );
-
-      // sortCriteria === "Date"
-      //       ? "createdAt"
-      //       : sortCriteria === "Replys"
-      //       ? ""
-      //       : sortCriteria === "Likes"
-      //       ? ""
-      //       : "",
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
       unsubscribe = await onSnapshot(tweetQuery, (snapshot) => {
@@ -451,7 +455,7 @@ export default function Home() {
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
-  }, [sortOrder]);
+  }, [sortCriteria, sortOrder]);
 
   const changePasswordType = () => {
     setPasswordInputType((current) => !current);
@@ -820,26 +824,17 @@ export default function Home() {
   return (
     <Container fluid className="d-flex justify-content-center h-100 p-0">
       <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
-      <div
-        className="overflow-y-auto bg-light h-100"
-        style={{ width: "630px" }}
-      >
-        <TweetHeader
-          tweets={tweets}
-          back={back}
-          sortCriteria={sortCriteria}
-          handleSortCriteria={handleSortCriteria}
-          sortOrder={sortOrder}
-          handleSortOrder={handleSortOrder}
-          resetCriteria={resetCriteria}
-        />
-        <TweetList
-          tweets={tweets}
-          setIsTweetDeleted={setIsTweetDeleted}
-          setIsReplyDeleted={setIsReplyDeleted}
-        />
-        <ScrollHome />
-      </div>
+      <TweetList
+        tweets={tweets}
+        back={back}
+        sortCriteria={sortCriteria}
+        handleSortCriteria={handleSortCriteria}
+        sortOrder={sortOrder}
+        handleSortOrder={handleSortOrder}
+        resetCriteria={resetCriteria}
+        setIsTweetDeleted={setIsTweetDeleted}
+        setIsReplyDeleted={setIsReplyDeleted}
+      />
       <ResetPassword
         showResetPasswordModal={showResetPasswordModal}
         handleCloseResetPasswordModal={handleCloseResetPasswordModal}

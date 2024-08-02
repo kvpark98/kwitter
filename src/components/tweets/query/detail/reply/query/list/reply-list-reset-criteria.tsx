@@ -1,19 +1,14 @@
 import { Button } from "react-bootstrap";
 
-export interface TweetResetCriteriaProps {
+export interface ReplyListResetCriteriaProps {
   resetCriteria: () => void;
 }
 
-export default function TweetResetCriteria({
+export default function ReplyListResetCriteria({
   resetCriteria,
-}: TweetResetCriteriaProps) {
+}: ReplyListResetCriteriaProps) {
   return (
-    <Button
-      variant="light"
-      title="Reset criteria"
-      onClick={resetCriteria}
-      className="me-2"
-    >
+    <Button variant="dark" title="Reset criteria" onClick={resetCriteria}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"

@@ -12,6 +12,11 @@ export interface ReplyListProps {
   handleCloseReplyListModal: () => void;
   handleShowCreateReplyModal: () => void;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  sortCriteria: string;
+  handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  sortOrder: boolean;
+  handleSortOrder: () => void;
+  resetCriteria: () => void;
 }
 
 export default function ReplyList({
@@ -21,6 +26,11 @@ export default function ReplyList({
   handleCloseReplyListModal,
   handleShowCreateReplyModal,
   setIsReplyDeleted,
+  sortCriteria,
+  handleSortCriteria,
+  sortOrder,
+  handleSortOrder,
+  resetCriteria,
 }: ReplyListProps) {
   return (
     <Modal
@@ -52,7 +62,13 @@ export default function ReplyList({
         <NoReply />
       )}
       <ReplyListFooter
+        replys={replys}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
+        sortCriteria={sortCriteria}
+        handleSortCriteria={handleSortCriteria}
+        sortOrder={sortOrder}
+        handleSortOrder={handleSortOrder}
+        resetCriteria={resetCriteria}
       />
     </Modal>
   );

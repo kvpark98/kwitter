@@ -32,6 +32,7 @@ export interface IReply {
   reply: string;
   replyUserId: string;
   replyUsername: string;
+  totalLikes: number;
 }
 
 export interface ReplyProps {
@@ -69,7 +70,7 @@ export default function Reply({
 
   const [isNewReply, setIsNewReply] = useState(true);
 
-  const [likes, setLikes] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
 
   const [isLike, setIsLike] = useState(false);
 
@@ -103,10 +104,14 @@ export default function Reply({
 
     const likeCountSnapshot = await getDocs(likeCountQuery);
     if (!likeCountSnapshot.empty) {
-      setLikes(likeCountSnapshot.size);
+      setLikeCount(likeCountSnapshot.size);
     } else {
-      setLikes(0);
+      setLikeCount(0);
     }
+
+    await updateDoc(doc(db, "replys", id), {
+      totalLikes: likeCountSnapshot.size,
+    });
   };
 
   getLikeCount();
@@ -146,7 +151,7 @@ export default function Reply({
 
         setIsLike(false);
 
-        setLikes((current) => current - 1);
+        setLikeCount((current) => current - 1);
       } else {
         await addDoc(collection(db, "replyLikes"), {
           createdAt: Date.now(),
@@ -160,7 +165,7 @@ export default function Reply({
 
         setIsLike(true);
 
-        setLikes((current) => current + 1);
+        setLikeCount((current) => current + 1);
       }
     } catch (error) {
       console.error("Error handling likes: ", error);
@@ -362,7 +367,7 @@ export default function Reply({
         <ReplyFooter
           user={user}
           replyUserId={replyUserId}
-          likes={likes}
+          likeCount={likeCount}
           isLike={isLike}
           debouncedHandleLikes={debouncedHandleLikes}
         />
