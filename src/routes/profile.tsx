@@ -93,11 +93,30 @@ export default function Profile() {
 
   const [nameErrorMessage, setNameErrorMessage] = useState("");
 
-  const [likes, setLikes] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
+
+  const [replycount, setReplyCount] = useState(0);
 
   const [isTweetDeleted, setIsTweetDeleted] = useState(false);
 
   const [isReplyDeleted, setIsReplyDeleted] = useState(false);
+
+  const [sortCriteria, setSortCriteria] = useState("Date");
+
+  const handleSortCriteria = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setSortCriteria(event.currentTarget.innerText);
+  };
+
+  const resetCriteria = () => {
+    setSortCriteria("Date");
+    setSortOrder(true);
+  };
+
+  const [sortOrder, setSortOrder] = useState(true);
+
+  const handleSortOrder = () => {
+    setSortOrder((current) => !current);
+  };
 
   const [showModifyProfileModal, setShowModifyProfileModal] = useState(false);
   const handleShowModifyProfileModal = () => {
@@ -792,11 +811,26 @@ export default function Profile() {
 
     // 사용자의 트윗을 가져오는 함수 정의
     const fetchUserTweets = async () => {
+      const getOrderByField = (sortCriteria: string): string => {
+        switch (sortCriteria) {
+          case "Replys":
+            return "totalReplys";
+          case "Likes":
+            return "totalLikes";
+          case "Date":
+          default:
+            return "createdAt";
+        }
+      };
+
+      const orderByField = getOrderByField(sortCriteria);
+      const orderDirection = sortOrder ? "desc" : "asc";
+
       // Firestore 쿼리 생성
       const tweetQuery = query(
         collection(db, "tweets"),
         where("tweetUserId", "==", user?.uid),
-        orderBy("createdAt", "desc")
+        orderBy(orderByField, orderDirection)
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
@@ -804,8 +838,15 @@ export default function Profile() {
         // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
-          const { createdAt, message, photo, tweetUserId, tweetUsername } =
-            doc.data();
+          const {
+            createdAt,
+            message,
+            photo,
+            tweetUserId,
+            tweetUsername,
+            totalReplys,
+            totalLikes,
+          } = doc.data();
 
           // 새로운 tweet 객체 생성
           return {
@@ -816,6 +857,8 @@ export default function Profile() {
             photo,
             tweetUserId,
             tweetUsername,
+            totalReplys,
+            totalLikes,
           };
         });
         // 상태 업데이트
@@ -830,7 +873,7 @@ export default function Profile() {
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
-  }, []);
+  }, [sortCriteria, sortOrder]);
 
   // 컴포넌트가 마운트될 때 background 가져오기
   useEffect(() => {
@@ -882,6 +925,11 @@ export default function Profile() {
         postActive={postActive}
         tweets={tweets}
         back={back}
+        sortCriteria={sortCriteria}
+        handleSortCriteria={handleSortCriteria}
+        sortOrder={sortOrder}
+        handleSortOrder={handleSortOrder}
+        resetCriteria={resetCriteria}
       />
       <ModifyProfile
         defaultAvatarURL={defaultAvatarURL}

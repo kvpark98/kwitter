@@ -1,11 +1,11 @@
 import { SetStateAction } from "react";
 import Tweet, { ITweet } from "../../tweets/query/detail/tweet";
 
-export interface UserTweetsProps {
+export interface UserTweetListProps {
   tweets: ITweet[];
 }
 
-export default function UserTweets({ tweets }: UserTweetsProps) {
+export default function UserTweetList({ tweets }: UserTweetListProps) {
   return (
     <div className="pt-5">
       {tweets.map((tweet) => {
