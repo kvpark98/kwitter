@@ -28,10 +28,19 @@ export default function ProfileNav({
       defaultActiveKey="posts"
     >
       <Nav.Item className="d-flex ms-2">
-        <Nav.Link onClick={postActive} eventKey="posts">
+        <Nav.Link
+          onClick={postActive}
+          eventKey="posts"
+          className="d-flex justify-content-center align-items-center"
+        >
           Posts
         </Nav.Link>
-        <Nav.Link eventKey="replys">Replys</Nav.Link>
+        <Nav.Link
+          eventKey="replys"
+          className="d-flex justify-content-center align-items-center"
+        >
+          Replys
+        </Nav.Link>
       </Nav.Item>
       {tweets.length !== 0 && (
         <TweetListFilter

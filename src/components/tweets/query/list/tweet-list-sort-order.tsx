@@ -11,7 +11,7 @@ export default function TweetListSortOrder({
 }: TweetListSortOrderProps) {
   return (
     <Button
-      variant="light"
+      variant={window.location.href.includes("profile") ? "dark" : "light"}
       title={sortOrder ? "Descending order" : "Ascending order"}
       onClick={handleSortOrder}
     >

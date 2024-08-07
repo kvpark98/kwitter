@@ -8,7 +8,11 @@ export default function TweetListResetCriteria({
   resetCriteria,
 }: TweetListResetCriteriaProps) {
   return (
-    <Button variant="light" title="Reset criteria" onClick={resetCriteria}>
+    <Button
+      variant={window.location.href.includes("profile") ? "dark" : "light"}
+      title="Reset criteria"
+      onClick={resetCriteria}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"

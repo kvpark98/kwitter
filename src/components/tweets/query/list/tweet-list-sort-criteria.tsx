@@ -12,7 +12,7 @@ export default function TweetListSortCriteria({
   return (
     <DropdownButton
       as={ButtonGroup}
-      variant="light"
+      variant={window.location.href.includes("profile") ? "dark" : "light"}
       drop="start"
       title={sortCriteria}
     >

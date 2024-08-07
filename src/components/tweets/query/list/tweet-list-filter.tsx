@@ -19,7 +19,7 @@ export default function TweetListFilter({
   resetCriteria,
 }: TweetListFilterProps) {
   return (
-    <ButtonGroup className="me-2">
+    <ButtonGroup className="me-2 mb-2">
       <TweetListSortCriteria
         sortCriteria={sortCriteria}
         handleSortCriteria={handleSortCriteria}
