@@ -1,10 +1,14 @@
 import { Nav } from "react-bootstrap";
 import TweetListFilter from "../tweets/query/list/tweet-list-filter";
 import { ITweet } from "../tweets/query/detail/tweet";
+import { IReply } from "../tweets/query/detail/reply/query/detail/reply";
 
 export interface ProfileNavProps {
-  postActive: () => void;
+  isTweetActive: boolean;
+  handleTweetActive: () => void;
+  handleReplyActive: () => void;
   tweets: ITweet[];
+  replys: IReply[];
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
@@ -13,8 +17,11 @@ export interface ProfileNavProps {
 }
 
 export default function ProfileNav({
-  postActive,
+  isTweetActive,
+  handleTweetActive,
+  handleReplyActive,
   tweets,
+  replys,
   sortCriteria,
   handleSortCriteria,
   sortOrder,
@@ -25,25 +32,28 @@ export default function ProfileNav({
     <Nav
       variant="tabs"
       className="d-flex justify-content-between mt-5"
-      defaultActiveKey="posts"
+      defaultActiveKey="tweets"
     >
       <Nav.Item className="d-flex ms-2">
         <Nav.Link
-          onClick={postActive}
-          eventKey="posts"
+          onClick={handleTweetActive}
+          eventKey="tweets"
           className="d-flex justify-content-center align-items-center"
         >
-          Posts
+          Tweets
         </Nav.Link>
         <Nav.Link
+          onClick={handleReplyActive}
           eventKey="replys"
           className="d-flex justify-content-center align-items-center"
         >
           Replys
         </Nav.Link>
       </Nav.Item>
-      {tweets.length !== 0 && (
+      {((isTweetActive && tweets.length !== 0) ||
+        (!isTweetActive && replys.length !== 0)) && (
         <TweetListFilter
+          isTweetActive={isTweetActive}
           sortCriteria={sortCriteria}
           handleSortCriteria={handleSortCriteria}
           sortOrder={sortOrder}

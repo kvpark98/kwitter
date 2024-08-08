@@ -7,15 +7,20 @@ import ProfileEditButton from "./profile-edit-button";
 import ProfileNav from "./profile-nav";
 import NoTweet from "../tweets/no-tweet";
 import UserTweetList from "./user-tweet-list/user-tweet-list";
+import { IReply } from "../tweets/query/detail/reply/query/detail/reply";
+import NoReply from "../tweets/no-reply";
+import UserReplyList from "./user-reply-list/user-reply-list";
 
 export interface ProfileContentProps {
   user: User | null;
   avatar: string | null | undefined;
   background: string;
   handleShowModifyProfileModal: () => void;
-  isPostActive: boolean;
-  postActive: () => void;
+  isTweetActive: boolean;
+  handleTweetActive: () => void;
+  handleReplyActive: () => void;
   tweets: ITweet[];
+  replys: IReply[];
   back: () => void;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -29,9 +34,11 @@ export default function ProfileContent({
   avatar,
   background,
   handleShowModifyProfileModal,
-  isPostActive,
-  postActive,
+  isTweetActive,
+  handleTweetActive,
+  handleReplyActive,
   tweets,
+  replys,
   back,
   sortCriteria,
   handleSortCriteria,
@@ -47,16 +54,25 @@ export default function ProfileContent({
         handleShowModifyProfileModal={handleShowModifyProfileModal}
       />
       <ProfileNav
-        postActive={postActive}
+        isTweetActive={isTweetActive}
+        handleTweetActive={handleTweetActive}
+        handleReplyActive={handleReplyActive}
         tweets={tweets}
+        replys={replys}
         sortCriteria={sortCriteria}
         handleSortCriteria={handleSortCriteria}
         sortOrder={sortOrder}
         handleSortOrder={handleSortOrder}
         resetCriteria={resetCriteria}
       />
-      {isPostActive && tweets.length !== 0 && <UserTweetList tweets={tweets} />}
-      {tweets.length === 0 && <NoTweet />}
+      {isTweetActive && tweets.length !== 0 && (
+        <UserTweetList tweets={tweets} />
+      )}
+      {!isTweetActive && replys.length !== 0 && (
+        <UserReplyList user={user} replys={replys} />
+      )}
+      {isTweetActive && tweets.length === 0 && <NoTweet />}
+      {!isTweetActive && replys.length === 0 && <NoReply />}
       <ScrollProfile />
     </div>
   );

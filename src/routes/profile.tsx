@@ -34,6 +34,7 @@ import SideBar from "../components/sidebar/side-bar";
 import ModifyProfileErrorModal from "../components/modals/error/modify-profile-error-modal";
 import ModifyProfileSuccessModal from "../components/modals/success/modify-profile-success-modal";
 import { debounce } from "lodash";
+import { IReply } from "../components/tweets/query/detail/reply/query/detail/reply";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -89,6 +90,8 @@ export default function Profile() {
 
   const [tweets, setTweets] = useState<ITweet[]>([]);
 
+  const [replys, setReplys] = useState<IReply[]>([]);
+
   const [error, setError] = useState("");
 
   const [nameErrorMessage, setNameErrorMessage] = useState("");
@@ -116,6 +119,20 @@ export default function Profile() {
 
   const handleSortOrder = () => {
     setSortOrder((current) => !current);
+  };
+
+  const [isTweetActive, setIsTweetActive] = useState(true);
+
+  const handleTweetActive = () => {
+    setIsTweetActive(true);
+    setSortCriteria("Date");
+    setSortOrder(true);
+  };
+
+  const handleReplyActive = () => {
+    setIsTweetActive(false);
+    setSortCriteria("Date");
+    setSortOrder(true);
   };
 
   const [showModifyProfileModal, setShowModifyProfileModal] = useState(false);
@@ -339,12 +356,6 @@ export default function Profile() {
       setShowBackgroundCropModal(false);
       setShowModifyProfileModal(true);
     };
-  };
-
-  const [isPostActive, setIsPostActive] = useState(true);
-
-  const postActive = () => {
-    setIsPostActive(true);
   };
 
   const back = () => {
@@ -875,6 +886,64 @@ export default function Profile() {
     };
   }, [sortCriteria, sortOrder]);
 
+  useEffect(() => {
+    let unsubscribe: Unsubscribe | null = null;
+
+    const fetchUserReplys = async () => {
+      const getOrderByField = (sortCriteria: string): string => {
+        switch (sortCriteria) {
+          case "Likes":
+            return "totalLikes";
+          case "Date":
+          default:
+            return "createdAt";
+        }
+      };
+
+      const orderByField = getOrderByField(sortCriteria);
+      const orderDirection = sortOrder ? "desc" : "asc";
+
+      const replyQuery = query(
+        collection(db, "replys"),
+        where("replyUserId", "==", user?.uid),
+        orderBy(orderByField, orderDirection)
+      );
+
+      unsubscribe = onSnapshot(replyQuery, (snapshot) => {
+        const replys = snapshot.docs.map((doc) => {
+          const {
+            createdAt,
+            tweetId,
+            tweetUserId,
+            reply,
+            replyUserId,
+            replyUsername,
+            totalLikes,
+          } = doc.data();
+
+          return {
+            id: doc.id,
+            timeAgo: formatTimeAgo(createdAt),
+            createdAt,
+            tweetId,
+            tweetUserId,
+            reply,
+            replyUserId,
+            replyUsername,
+            totalLikes,
+          };
+        });
+        setReplys(replys);
+      });
+    };
+
+    fetchUserReplys();
+
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [sortCriteria, sortOrder]);
+
   // 컴포넌트가 마운트될 때 background 가져오기
   useEffect(() => {
     // Firestore 구독을 위한 변수 선언
@@ -921,9 +990,11 @@ export default function Profile() {
         avatar={avatar}
         background={background}
         handleShowModifyProfileModal={handleShowModifyProfileModal}
-        isPostActive={isPostActive}
-        postActive={postActive}
+        isTweetActive={isTweetActive}
+        handleTweetActive={handleTweetActive}
+        handleReplyActive={handleReplyActive}
         tweets={tweets}
+        replys={replys}
         back={back}
         sortCriteria={sortCriteria}
         handleSortCriteria={handleSortCriteria}

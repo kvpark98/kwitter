@@ -26,6 +26,7 @@ import ReplyFooter from "./reply-footer";
 
 export interface IReply {
   id: string;
+  createdAt: string;
   timeAgo: string | undefined;
   tweetId: string;
   tweetUserId: string;

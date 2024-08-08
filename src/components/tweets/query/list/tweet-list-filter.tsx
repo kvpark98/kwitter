@@ -4,6 +4,7 @@ import TweetListSortOrder from "./tweet-list-sort-order";
 import TweetListResetCriteria from "./tweet-list-reset-criteria";
 
 export interface TweetListFilterProps {
+  isTweetActive?: boolean;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
@@ -12,6 +13,7 @@ export interface TweetListFilterProps {
 }
 
 export default function TweetListFilter({
+  isTweetActive,
   sortCriteria,
   handleSortCriteria,
   sortOrder,
@@ -21,6 +23,7 @@ export default function TweetListFilter({
   return (
     <ButtonGroup className="me-2 mb-2">
       <TweetListSortCriteria
+        isTweetActive={isTweetActive}
         sortCriteria={sortCriteria}
         handleSortCriteria={handleSortCriteria}
       />
