@@ -7,7 +7,7 @@ export interface UserTweetListProps {
 
 export default function UserTweetList({ tweets }: UserTweetListProps) {
   return (
-    <div className="pt-5">
+    <div className="pt-2">
       {tweets.map((tweet) => {
         return (
           <Tweet

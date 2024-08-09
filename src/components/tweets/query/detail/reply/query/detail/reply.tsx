@@ -1,13 +1,14 @@
 import { Card } from "react-bootstrap";
 import { User } from "firebase/auth";
 import ReplyBody from "./reply-body";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FirestoreError,
   addDoc,
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -23,6 +24,7 @@ import ModifyReplyErrorModal from "../../../../../../modals/error/modify-reply-e
 import ModifyReplyDiscardModal from "../../modify/modify-reply-discard-modal/modify-reply-discard-modal";
 import ModifyReplySuccessModal from "../../../../../../modals/success/modify-reply-success-modal";
 import ReplyFooter from "./reply-footer";
+import { ITweet } from "../../../tweet";
 
 export interface IReply {
   id: string;
@@ -46,6 +48,7 @@ export interface ReplyProps {
   replyUserId: string;
   replyUsername: string;
   setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  isTweetActive?: boolean;
 }
 
 export default function Reply({
@@ -58,12 +61,15 @@ export default function Reply({
   replyUserId,
   replyUsername,
   setIsReplyDeleted,
+  isTweetActive,
 }: ReplyProps) {
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const defaultAvatarURL = "/person-circle.svg";
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [tweets, setTweets] = useState<ITweet[]>([]);
 
   const [replyAvatar, setReplyAvatar] = useState(defaultAvatarURL);
 
@@ -75,7 +81,60 @@ export default function Reply({
 
   const [isLike, setIsLike] = useState(false);
 
+  const [isProcessing, setIsProcessing] = useState(false); // 비동기 작업 보호 플래그
+
   const [error, setError] = useState("");
+
+  const [showReplyTweetModal, setShowReplyTweetModal] = useState(false);
+
+  const handleShowReplyTweetModal = () => {
+    setShowReplyTweetModal(true);
+  };
+
+  const handleCloseReplyTweetModal = () => {
+    setShowReplyTweetModal(false);
+  };
+
+  useEffect(() => {
+    const getTweets = async () => {
+      const replyDocRef = doc(db, "replys", id);
+      const replyDocSnapshot = await getDoc(replyDocRef);
+      const replyDocData = replyDocSnapshot.data();
+      const tweetId = replyDocData!.tweetId;
+
+      const tweetQuery = query(
+        collection(db, "tweets"),
+        where("tweetId", "==", tweetId)
+      );
+
+      const tweetSnapshot = await getDocs(tweetQuery);
+      const tweets = tweetSnapshot.docs.map((doc) => {
+        const {
+          createdAt,
+          message,
+          photo,
+          tweetUserId,
+          tweetUsername,
+          totalReplys,
+          totalLikes,
+        } = doc.data();
+
+        return {
+          id: doc.id,
+          createdAt,
+          message,
+          photo,
+          tweetUserId,
+          tweetUsername,
+          totalReplys,
+          totalLikes,
+        };
+      });
+      setTweets(tweets);
+    };
+
+    getTweets();
+  }, []);
 
   const getIsLike = async () => {
     const isLikeQuery = query(
@@ -97,25 +156,32 @@ export default function Reply({
 
   getIsLike();
 
-  const getLikeCount = async () => {
-    const likeCountQuery = query(
-      collection(db, "replyLikes"),
-      where("replyId", "==", id)
-    );
+  const getReplyLikeCount = async () => {
+    try {
+      const likeCountQuery = query(
+        collection(db, "replyLikes"),
+        where("replyId", "==", id)
+      );
 
-    const likeCountSnapshot = await getDocs(likeCountQuery);
-    if (!likeCountSnapshot.empty) {
-      setLikeCount(likeCountSnapshot.size);
-    } else {
-      setLikeCount(0);
+      const likeCountSnapshot = await getDocs(likeCountQuery);
+      const likeCount = likeCountSnapshot.size || 0;
+
+      setLikeCount(likeCount);
+
+      const replyDocRef = doc(db, "replys", id);
+      const replyDocSnapshot = await getDoc(replyDocRef);
+
+      if (replyDocSnapshot.exists()) {
+        await updateDoc(doc(db, "replys", id), {
+          totalLikes: likeCount,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating like count:", error);
     }
-
-    await updateDoc(doc(db, "replys", id), {
-      totalLikes: likeCountSnapshot.size,
-    });
   };
 
-  getLikeCount();
+  getReplyLikeCount();
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
@@ -137,6 +203,9 @@ export default function Reply({
   }
 
   const handleLikes = async () => {
+    if (isProcessing) return; // 이미 처리 중이라면 바로 반환
+    setIsProcessing(true);
+
     try {
       const likeQuery = query(
         collection(db, "replyLikes"),
@@ -146,14 +215,14 @@ export default function Reply({
       const likeSnapshot = await getDocs(likeQuery);
 
       if (isLike) {
+        // 이미 좋아요 상태일 때, 좋아요 취소
         likeSnapshot.forEach(async (doc) => {
           await deleteDoc(doc.ref);
         });
-
         setIsLike(false);
-
         setLikeCount((current) => current - 1);
       } else {
+        // 좋아요 추가
         await addDoc(collection(db, "replyLikes"), {
           createdAt: Date.now(),
           isLike: true,
@@ -163,13 +232,13 @@ export default function Reply({
           replyUserId: replyUserId,
           likeUserId: user?.uid,
         });
-
         setIsLike(true);
-
         setLikeCount((current) => current + 1);
       }
     } catch (error) {
       console.error("Error handling likes: ", error);
+    } finally {
+      setIsProcessing(false); // 작업 완료 후 플래그 해제
     }
   };
 
@@ -354,7 +423,7 @@ export default function Reply({
 
   return (
     <>
-      <Card className="d-flex rounded-0 border border-0 border-bottom border-secondary-subtle">
+      <Card className="d-flex rounded-0 border-0 border-bottom border-secondary-subtle">
         <ReplyBody
           user={user}
           replyAvatar={replyAvatar}
@@ -371,6 +440,8 @@ export default function Reply({
           likeCount={likeCount}
           isLike={isLike}
           debouncedHandleLikes={debouncedHandleLikes}
+          isTweetActive={isTweetActive}
+          handleShowReplyTweetModal={handleShowReplyTweetModal}
         />
       </Card>
       <ModifyReply

@@ -1,6 +1,7 @@
 import { Container, Navbar } from "react-bootstrap";
 import { User } from "firebase/auth";
 import ReplyLikesButton from "./reply-likes-button";
+import ReplyTweetButton from "./reply-tweet-button";
 
 export interface ReplyFooterProps {
   user: User | null;
@@ -8,6 +9,8 @@ export interface ReplyFooterProps {
   likeCount: number;
   isLike: boolean;
   debouncedHandleLikes: (...args: any[]) => void;
+  isTweetActive?: boolean;
+  handleShowReplyTweetModal: () => void;
 }
 
 export default function ReplyFooter({
@@ -16,6 +19,8 @@ export default function ReplyFooter({
   likeCount,
   isLike,
   debouncedHandleLikes,
+  isTweetActive,
+  handleShowReplyTweetModal,
 }: ReplyFooterProps) {
   return (
     <Navbar
@@ -24,7 +29,19 @@ export default function ReplyFooter({
         : { className: "flex-fill bg-body-light" })}
     >
       <Container className="d-flex">
-        <div className="d-flex justify-content-end w-100">
+        <div
+          className={
+            window.location.href.includes("profile") && isTweetActive === false
+              ? "d-flex justify-content-between w-100"
+              : "d-flex justify-content-end w-100"
+          }
+        >
+          {window.location.href.includes("profile") &&
+            isTweetActive === false && (
+              <ReplyTweetButton
+                handleShowReplyTweetModal={handleShowReplyTweetModal}
+              />
+            )}
           <ReplyLikesButton
             likeCount={likeCount}
             isLike={isLike}

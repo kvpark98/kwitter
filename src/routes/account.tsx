@@ -61,8 +61,15 @@ export default function Account() {
 
       const tweetSnapshot = await getDocs(tweetQuery);
       const tweets = tweetSnapshot.docs.map((doc) => {
-        const { createdAt, message, photo, tweetUserId, tweetUsername } =
-          doc.data();
+        const {
+          createdAt,
+          message,
+          photo,
+          tweetUserId,
+          tweetUsername,
+          totalReplys,
+          totalLikes,
+        } = doc.data();
 
         return {
           id: doc.id,
@@ -71,6 +78,8 @@ export default function Account() {
           photo,
           tweetUserId,
           tweetUsername,
+          totalReplys,
+          totalLikes,
         };
       });
       setTweets(tweets);

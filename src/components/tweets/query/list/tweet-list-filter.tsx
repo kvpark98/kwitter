@@ -21,7 +21,11 @@ export default function TweetListFilter({
   resetCriteria,
 }: TweetListFilterProps) {
   return (
-    <ButtonGroup className="me-2 mb-2">
+    <ButtonGroup
+      className={
+        window.location.href.includes("profile") ? "me-2 mb-2" : "me-2"
+      }
+    >
       <TweetListSortCriteria
         isTweetActive={isTweetActive}
         sortCriteria={sortCriteria}

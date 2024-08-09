@@ -8,6 +8,7 @@ import {
   deleteDoc,
   deleteField,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   orderBy,
@@ -107,7 +108,9 @@ export default function Tweet({
 
   const [isLike, setIsLike] = useState(false);
 
-  const [replycount, setReplyCount] = useState(0);
+  const [replyCount, setReplyCount] = useState(0);
+
+  const [isProcessing, setIsProcessing] = useState(false); // 비동기 작업 보호 플래그
 
   const [error, setError] = useState("");
 
@@ -163,42 +166,56 @@ export default function Tweet({
 
   getIsLike();
 
-  const getLikeCount = async () => {
-    const likeCountQuery = query(
-      collection(db, "tweetLikes"),
-      where("tweetId", "==", id)
-    );
+  const getTweetLikeCount = async () => {
+    try {
+      const likeCountQuery = query(
+        collection(db, "tweetLikes"),
+        where("tweetId", "==", id)
+      );
 
-    const likeCountSnapshot = await getDocs(likeCountQuery);
-    if (!likeCountSnapshot.empty) {
-      setLikeCount(likeCountSnapshot.size);
-    } else {
-      setLikeCount(0);
+      const likeCountSnapshot = await getDocs(likeCountQuery);
+      const likeCount = likeCountSnapshot.size || 0;
+
+      setLikeCount(likeCount);
+
+      const tweetDocRef = doc(db, "tweets", id);
+      const tweetDocSnapshot = await getDoc(tweetDocRef);
+
+      if (tweetDocSnapshot.exists()) {
+        await updateDoc(doc(db, "tweets", id), {
+          totalLikes: likeCount,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating like count:", error);
     }
-
-    await updateDoc(doc(db, "tweets", id), {
-      totalLikes: likeCountSnapshot.size,
-    });
   };
 
-  getLikeCount();
+  getTweetLikeCount();
 
   const getReplyCount = async () => {
-    const replyCountQuery = query(
-      collection(db, "replys"),
-      where("tweetId", "==", id)
-    );
+    try {
+      const replyCountQuery = query(
+        collection(db, "replys"),
+        where("tweetId", "==", id)
+      );
 
-    const replyCountSnapshot = await getDocs(replyCountQuery);
-    if (!replyCountSnapshot.empty) {
-      setReplyCount(replyCountSnapshot.size);
-    } else {
-      setReplyCount(0);
+      const replyCountSnapshot = await getDocs(replyCountQuery);
+      const replyCount = replyCountSnapshot.size || 0;
+
+      setReplyCount(replyCount);
+
+      const tweetDocRef = doc(db, "tweets", id);
+      const tweetDocSnapshot = await getDoc(tweetDocRef);
+
+      if (tweetDocSnapshot.exists()) {
+        await updateDoc(tweetDocRef, {
+          totalReplys: replyCount,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating reply count:", error);
     }
-
-    await updateDoc(doc(db, "tweets", id), {
-      totalReplys: replyCountSnapshot.size,
-    });
   };
 
   getReplyCount();
@@ -223,6 +240,9 @@ export default function Tweet({
   }
 
   const handleLikes = async () => {
+    if (isProcessing) return; // 이미 처리 중이라면 바로 반환
+    setIsProcessing(true);
+
     try {
       const likeQuery = query(
         collection(db, "tweetLikes"),
@@ -232,14 +252,14 @@ export default function Tweet({
       const likeSnapshot = await getDocs(likeQuery);
 
       if (isLike) {
+        // 이미 좋아요 상태일 때, 좋아요 취소
         likeSnapshot.forEach(async (doc) => {
           await deleteDoc(doc.ref);
         });
-
         setIsLike(false);
-
         setLikeCount((current) => current - 1);
       } else {
+        // 좋아요 추가
         await addDoc(collection(db, "tweetLikes"), {
           createdAt: Date.now(),
           isLike: true,
@@ -247,13 +267,13 @@ export default function Tweet({
           tweetUserId: tweetUserId,
           likeUserId: user.uid,
         });
-
         setIsLike(true);
-
         setLikeCount((current) => current + 1);
       }
     } catch (error) {
       console.error("Error handling likes: ", error);
+    } finally {
+      setIsProcessing(false); // 작업 완료 후 플래그 해제
     }
   };
 
@@ -865,7 +885,7 @@ export default function Tweet({
     try {
       setIsLoading(true);
 
-      await addDoc(collection(db, "replys"), {
+      const doc = await addDoc(collection(db, "replys"), {
         createdAt: Date.now(),
         tweetId: id,
         tweetUserId: tweetUserId,
@@ -873,6 +893,14 @@ export default function Tweet({
         replyUserId: user.uid,
         replyUsername: user.displayName,
         totalLikes: 0,
+      });
+
+      // 생성된 문서의 고유 ID 가져오기
+      const replyId = doc.id;
+
+      // 문서에 고유 ID 업데이트
+      await updateDoc(doc, {
+        replyId: replyId,
       });
 
       handleShowCreateReplySuccessModal();

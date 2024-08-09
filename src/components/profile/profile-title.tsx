@@ -13,7 +13,7 @@ export default function ProfileTitle({ user, tweets }: ProfileTitleProps) {
         {user?.displayName ?? "Anonymous"}
       </h1>
       <span className="text-light pe-2">
-        {tweets.length} {tweets.length > 1 ? "Posts" : "Post"}
+        {tweets.length} {tweets.length > 1 ? "Tweets" : "Tweet"}
       </span>
     </div>
   );

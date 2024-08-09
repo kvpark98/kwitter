@@ -767,6 +767,14 @@ export default function Home() {
         totalLikes: 0,
       });
 
+      // 생성된 문서의 고유 ID 가져오기
+      const tweetId = doc.id;
+
+      // 문서에 고유 ID 업데이트
+      await updateDoc(doc, {
+        tweetId: tweetId,
+      });
+
       // 파일이 있는 경우
       if (file) {
         // 파일의 크기가 1MB 이하인지 확인

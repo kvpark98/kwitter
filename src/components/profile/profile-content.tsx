@@ -69,7 +69,11 @@ export default function ProfileContent({
         <UserTweetList tweets={tweets} />
       )}
       {!isTweetActive && replys.length !== 0 && (
-        <UserReplyList user={user} replys={replys} />
+        <UserReplyList
+          user={user}
+          replys={replys}
+          isTweetActive={isTweetActive}
+        />
       )}
       {isTweetActive && tweets.length === 0 && <NoTweet />}
       {!isTweetActive && replys.length === 0 && <NoReply />}
