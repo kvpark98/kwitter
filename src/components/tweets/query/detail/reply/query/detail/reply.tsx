@@ -25,6 +25,7 @@ import ModifyReplyDiscardModal from "../../modify/modify-reply-discard-modal/mod
 import ModifyReplySuccessModal from "../../../../../../modals/success/modify-reply-success-modal";
 import ReplyFooter from "./reply-footer";
 import { ITweet } from "../../../tweet";
+import ReplyTweet from "../../../../../../profile/reply-tweet/reply-tweet";
 
 export interface IReply {
   id: string;
@@ -47,7 +48,7 @@ export interface ReplyProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
-  setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   isTweetActive?: boolean;
 }
 
@@ -132,7 +133,6 @@ export default function Reply({
       });
       setTweets(tweets);
     };
-
     getTweets();
   }, []);
 
@@ -401,9 +401,9 @@ export default function Reply({
 
       await deleteDoc(doc(db, "replys", id));
 
-      setIsReplyDeleted(true);
+      setIsReplyDeleted!(true);
     } catch (error) {
-      setIsReplyDeleted(false);
+      setIsReplyDeleted!(false);
 
       if (error instanceof FirebaseError) {
         setError(error.code);
@@ -444,6 +444,11 @@ export default function Reply({
           handleShowReplyTweetModal={handleShowReplyTweetModal}
         />
       </Card>
+      <ReplyTweet
+        tweets={tweets}
+        showReplyTweetModal={showReplyTweetModal}
+        handleCloseReplyTweetModal={handleCloseReplyTweetModal}
+      />
       <ModifyReply
         isLoading={isLoading}
         replyTextAreaRef={replyTextAreaRef}

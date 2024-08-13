@@ -11,8 +11,8 @@ export interface TweetListProps {
   sortOrder: boolean;
   handleSortOrder: () => void;
   resetCriteria: () => void;
-  setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function TweetList({

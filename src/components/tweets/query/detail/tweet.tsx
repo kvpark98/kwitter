@@ -59,8 +59,8 @@ export interface TweetProps {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
-  setIsTweetDeleted: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function Tweet({
@@ -762,9 +762,9 @@ export default function Tweet({
 
       await deleteDoc(doc(db, "tweets", id));
 
-      setIsTweetDeleted(true);
+      setIsTweetDeleted!(true);
     } catch (error) {
-      setIsTweetDeleted(false);
+      setIsTweetDeleted!(false);
 
       if (error instanceof FirebaseError) {
         setError(error.code);

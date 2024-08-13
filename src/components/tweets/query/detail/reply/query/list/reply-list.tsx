@@ -11,7 +11,7 @@ export interface ReplyListProps {
   showReplyListModal: boolean;
   handleCloseReplyListModal: () => void;
   handleShowCreateReplyModal: () => void;
-  setIsReplyDeleted: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
