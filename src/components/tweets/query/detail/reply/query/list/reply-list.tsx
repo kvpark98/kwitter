@@ -8,8 +8,8 @@ import { User } from "firebase/auth";
 export interface ReplyListProps {
   user: User | null;
   replys: IReply[];
-  showReplyListModal: boolean;
-  handleCloseReplyListModal: () => void;
+  showReplyListModal?: boolean;
+  handleCloseReplyListModal?: () => void;
   handleShowCreateReplyModal: () => void;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   sortCriteria: string;

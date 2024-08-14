@@ -202,6 +202,10 @@ export default function Profile() {
     handleShowModifyProfileModal();
   };
 
+  const [showReplyListModal, setShowReplyListModal] = useState(false);
+  const handleShowReplyListModal = () => setShowReplyListModal(true);
+  const handleCloseReplyListModal = () => setShowReplyListModal(false);
+
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
   const [zoom, setZoom] = useState(1); // 이미지 확대/축소
@@ -1001,6 +1005,9 @@ export default function Profile() {
         sortOrder={sortOrder}
         handleSortOrder={handleSortOrder}
         resetCriteria={resetCriteria}
+        showReplyListModal={showReplyListModal}
+        handleShowReplyListModal={handleShowReplyListModal}
+        handleCloseReplyListModal={handleCloseReplyListModal}
       />
       <ModifyProfile
         defaultAvatarURL={defaultAvatarURL}

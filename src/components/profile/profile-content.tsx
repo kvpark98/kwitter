@@ -27,6 +27,9 @@ export interface ProfileContentProps {
   sortOrder: boolean;
   handleSortOrder: () => void;
   resetCriteria: () => void;
+  showReplyListModal?: boolean;
+  handleShowReplyListModal?: () => void;
+  handleCloseReplyListModal?: () => void;
 }
 
 export default function ProfileContent({
@@ -45,6 +48,9 @@ export default function ProfileContent({
   sortOrder,
   handleSortOrder,
   resetCriteria,
+  showReplyListModal,
+  handleShowReplyListModal,
+  handleCloseReplyListModal,
 }: ProfileContentProps) {
   return (
     <div className="overflow-y-auto h-100 bg-light" style={{ width: "630px" }}>
@@ -66,13 +72,21 @@ export default function ProfileContent({
         resetCriteria={resetCriteria}
       />
       {isTweetActive && tweets.length !== 0 && (
-        <UserTweetList tweets={tweets} />
+        <UserTweetList
+          tweets={tweets}
+          showReplyListModal={showReplyListModal}
+          handleShowReplyListModal={handleShowReplyListModal}
+          handleCloseReplyListModal={handleCloseReplyListModal}
+        />
       )}
       {!isTweetActive && replys.length !== 0 && (
         <UserReplyList
           user={user}
           replys={replys}
           isTweetActive={isTweetActive}
+          showReplyListModal={showReplyListModal}
+          handleShowReplyListModal={handleShowReplyListModal}
+          handleCloseReplyListModal={handleCloseReplyListModal}
         />
       )}
       {isTweetActive && tweets.length === 0 && <NoTweet />}

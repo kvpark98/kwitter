@@ -18,7 +18,7 @@ export interface TweetCardProps {
   replys: IReply[];
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
-  handleShowReplyListModal: () => void;
+  handleShowReplyListModal?: () => void;
 }
 
 export default function TweetCard({

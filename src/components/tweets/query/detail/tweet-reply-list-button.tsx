@@ -3,7 +3,7 @@ import { IReply } from "./reply/query/detail/reply";
 
 export interface TweetReplyListButtonProps {
   replys: IReply[];
-  handleShowReplyListModal: () => void;
+  handleShowReplyListModal?: () => void;
 }
 
 export default function TweetReplyListButton({

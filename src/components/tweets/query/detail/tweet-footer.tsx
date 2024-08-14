@@ -11,7 +11,7 @@ export interface TweetFooterProps {
   isLike: boolean;
   debouncedHandleLikes: (...args: any[]) => void;
   replys: IReply[];
-  handleShowReplyListModal: () => void;
+  handleShowReplyListModal?: () => void;
 }
 
 export default function TweetFooter({

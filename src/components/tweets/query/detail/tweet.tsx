@@ -61,6 +61,9 @@ export interface TweetProps {
   tweetUsername: string;
   setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
+  showReplyListModal?: boolean;
+  handleShowReplyListModal?: () => void;
+  handleCloseReplyListModal?: () => void;
 }
 
 export default function Tweet({
@@ -72,6 +75,9 @@ export default function Tweet({
   tweetUsername,
   setIsTweetDeleted,
   setIsReplyDeleted,
+  showReplyListModal,
+  handleShowReplyListModal,
+  handleCloseReplyListModal,
 }: TweetProps) {
   const user = auth.currentUser!;
 
@@ -358,13 +364,9 @@ export default function Tweet({
   const handleCloseDeleteTweetErrorModal = () =>
     setShowDeleteTweetErrorModal(false);
 
-  const [showReplyListModal, setShowReplyListModal] = useState(false);
-  const handleShowReplyListModal = () => setShowReplyListModal(true);
-  const handleCloseReplyListModal = () => setShowReplyListModal(false);
-
   const [showCreateReplyModal, setShowCreateReplyModal] = useState(false);
   const handleShowCreateReplyModal = () => {
-    handleCloseReplyListModal();
+    handleCloseReplyListModal!();
     setShowCreateReplyModal(true);
   };
   const handleCloseCreateReplyModal = () => {
@@ -374,7 +376,7 @@ export default function Tweet({
       setShowCreateReplyModal(false);
       resetReply();
       handleCloseCreateReplyDiscardModal();
-      handleShowReplyListModal();
+      handleShowReplyListModal!();
     }
   };
 
@@ -403,7 +405,7 @@ export default function Tweet({
     setShowCreateReplyModal(false);
     resetReply();
     handleCloseCreateReplyDiscardModal();
-    handleShowReplyListModal();
+    handleShowReplyListModal!();
   };
 
   const [showCreateReplyDiscardModal, setShowCreateReplyDiscardModal] =

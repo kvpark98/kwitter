@@ -3,7 +3,7 @@ import { IReply } from "../detail/reply";
 
 export interface ReplyListHeaderProps {
   replys: IReply[];
-  handleCloseReplyListModal: () => void;
+  handleCloseReplyListModal?: () => void;
 }
 
 export default function ReplyListHeader({
