@@ -6,8 +6,8 @@ import ReplyTweetFooter from "./reply-tweet-footer";
 
 export interface ReplyTweetProps {
   tweets: ITweet[];
-  showReplyTweetModal: boolean;
-  handleCloseReplyTweetModal: () => void;
+  showReplyTweetModal?: boolean;
+  handleCloseReplyTweetModal?: () => void;
   showReplyListModal?: boolean;
   handleShowReplyListModal?: () => void;
   handleCloseReplyListModal?: () => void;

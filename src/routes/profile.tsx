@@ -35,6 +35,7 @@ import ModifyProfileErrorModal from "../components/modals/error/modify-profile-e
 import ModifyProfileSuccessModal from "../components/modals/success/modify-profile-success-modal";
 import { debounce } from "lodash";
 import { IReply } from "../components/tweets/query/detail/reply/query/detail/reply";
+import ReplyTweet from "../components/profile/reply-tweet/reply-tweet";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -205,6 +206,10 @@ export default function Profile() {
   const [showReplyListModal, setShowReplyListModal] = useState(false);
   const handleShowReplyListModal = () => setShowReplyListModal(true);
   const handleCloseReplyListModal = () => setShowReplyListModal(false);
+
+  const [showReplyTweetModal, setShowReplyTweetModal] = useState(false);
+  const handleShowReplyTweetModal = () => setShowReplyTweetModal(true);
+  const handleCloseReplyTweetModal = () => setShowReplyTweetModal(false);
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -1008,6 +1013,9 @@ export default function Profile() {
         showReplyListModal={showReplyListModal}
         handleShowReplyListModal={handleShowReplyListModal}
         handleCloseReplyListModal={handleCloseReplyListModal}
+        showReplyTweetModal={showReplyTweetModal}
+        handleShowReplyTweetModal={handleShowReplyTweetModal}
+        handleCloseReplyTweetModal={handleCloseReplyTweetModal}
       />
       <ModifyProfile
         defaultAvatarURL={defaultAvatarURL}
@@ -1076,6 +1084,14 @@ export default function Profile() {
         handleCloseModifyProfileSuccessModal={
           handleCloseModifyProfileSuccessModal
         }
+      />
+      <ReplyTweet
+        tweets={tweets}
+        showReplyTweetModal={showReplyTweetModal}
+        handleCloseReplyTweetModal={handleCloseReplyTweetModal}
+        showReplyListModal={showReplyListModal}
+        handleShowReplyListModal={handleShowReplyListModal}
+        handleCloseReplyListModal={handleCloseReplyListModal}
       />
       {error && (
         <ModifyProfileErrorModal

@@ -52,8 +52,8 @@ export default function ReplyList({
               <Reply
                 key={reply.id}
                 user={user}
-                setIsReplyDeleted={setIsReplyDeleted}
                 {...reply}
+                setIsReplyDeleted={setIsReplyDeleted}
               />
             );
           })}

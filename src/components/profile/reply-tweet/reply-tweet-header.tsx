@@ -1,7 +1,7 @@
 import { CloseButton, Container, Navbar } from "react-bootstrap";
 
 export interface ReplyTweetHeaderProps {
-  handleCloseReplyTweetModal: () => void;
+  handleCloseReplyTweetModal?: () => void;
 }
 
 export default function ReplyTweetHeader({

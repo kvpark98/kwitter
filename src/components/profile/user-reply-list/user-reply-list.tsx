@@ -8,18 +8,14 @@ export interface UserReplyListProps {
   user: User | null;
   replys: IReply[];
   isTweetActive?: boolean;
-  showReplyListModal?: boolean;
-  handleShowReplyListModal?: () => void;
-  handleCloseReplyListModal?: () => void;
+  handleShowReplyTweetModal?: () => void;
 }
 
 export default function UserReplyList({
   user,
   replys,
   isTweetActive,
-  showReplyListModal,
-  handleShowReplyListModal,
-  handleCloseReplyListModal,
+  handleShowReplyTweetModal,
 }: UserReplyListProps) {
   return (
     <div className="pt-2">
@@ -33,9 +29,7 @@ export default function UserReplyList({
               throw new Error("Function not implemented.");
             }}
             isTweetActive={isTweetActive}
-            showReplyListModal={showReplyListModal}
-            handleShowReplyListModal={handleShowReplyListModal}
-            handleCloseReplyListModal={handleCloseReplyListModal}
+            handleShowReplyTweetModal={handleShowReplyTweetModal}
           />
         );
       })}

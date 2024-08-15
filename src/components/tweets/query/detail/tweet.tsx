@@ -387,8 +387,10 @@ export default function Tweet({
     resetReply();
     setShowCreateReplySuccessModal(true);
   };
-  const handleCloseCreateReplySuccessModal = () =>
+  const handleCloseCreateReplySuccessModal = () => {
     setShowCreateReplySuccessModal(false);
+    handleShowReplyListModal!();
+  };
 
   const [showCreateReplyErrorModal, setShowCreateReplyErrorModal] =
     useState(false);

@@ -30,6 +30,9 @@ export interface ProfileContentProps {
   showReplyListModal?: boolean;
   handleShowReplyListModal?: () => void;
   handleCloseReplyListModal?: () => void;
+  showReplyTweetModal?: boolean;
+  handleShowReplyTweetModal?: () => void;
+  handleCloseReplyTweetModal?: () => void;
 }
 
 export default function ProfileContent({
@@ -51,6 +54,9 @@ export default function ProfileContent({
   showReplyListModal,
   handleShowReplyListModal,
   handleCloseReplyListModal,
+  showReplyTweetModal,
+  handleShowReplyTweetModal,
+  handleCloseReplyTweetModal,
 }: ProfileContentProps) {
   return (
     <div className="overflow-y-auto h-100 bg-light" style={{ width: "630px" }}>
@@ -87,6 +93,9 @@ export default function ProfileContent({
           showReplyListModal={showReplyListModal}
           handleShowReplyListModal={handleShowReplyListModal}
           handleCloseReplyListModal={handleCloseReplyListModal}
+          showReplyTweetModal={showReplyTweetModal}
+          handleShowReplyTweetModal={handleShowReplyTweetModal}
+          handleCloseReplyTweetModal={handleCloseReplyTweetModal}
         />
       )}
       {isTweetActive && tweets.length === 0 && <NoTweet />}

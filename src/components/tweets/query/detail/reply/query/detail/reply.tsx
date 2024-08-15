@@ -25,7 +25,6 @@ import ModifyReplyDiscardModal from "../../modify/modify-reply-discard-modal/mod
 import ModifyReplySuccessModal from "../../../../../../modals/success/modify-reply-success-modal";
 import ReplyFooter from "./reply-footer";
 import { ITweet } from "../../../tweet";
-import ReplyTweet from "../../../../../../profile/reply-tweet/reply-tweet";
 
 export interface IReply {
   id: string;
@@ -50,9 +49,7 @@ export interface ReplyProps {
   replyUsername: string;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   isTweetActive?: boolean;
-  showReplyListModal?: boolean;
-  handleShowReplyListModal?: () => void;
-  handleCloseReplyListModal?: () => void;
+  handleShowReplyTweetModal?: () => void;
 }
 
 export default function Reply({
@@ -66,9 +63,7 @@ export default function Reply({
   replyUsername,
   setIsReplyDeleted,
   isTweetActive,
-  showReplyListModal,
-  handleShowReplyListModal,
-  handleCloseReplyListModal,
+  handleShowReplyTweetModal,
 }: ReplyProps) {
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -91,16 +86,6 @@ export default function Reply({
   const [isProcessing, setIsProcessing] = useState(false); // 비동기 작업 보호 플래그
 
   const [error, setError] = useState("");
-
-  const [showReplyTweetModal, setShowReplyTweetModal] = useState(false);
-
-  const handleShowReplyTweetModal = () => {
-    setShowReplyTweetModal(true);
-  };
-
-  const handleCloseReplyTweetModal = () => {
-    setShowReplyTweetModal(false);
-  };
 
   useEffect(() => {
     const getTweets = async () => {
@@ -450,14 +435,6 @@ export default function Reply({
           handleShowReplyTweetModal={handleShowReplyTweetModal}
         />
       </Card>
-      <ReplyTweet
-        tweets={tweets}
-        showReplyTweetModal={showReplyTweetModal}
-        handleCloseReplyTweetModal={handleCloseReplyTweetModal}
-        showReplyListModal={showReplyListModal}
-        handleShowReplyListModal={handleShowReplyListModal}
-        handleCloseReplyListModal={handleCloseReplyListModal}
-      />
       <ModifyReply
         isLoading={isLoading}
         replyTextAreaRef={replyTextAreaRef}

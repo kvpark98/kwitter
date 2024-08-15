@@ -10,7 +10,7 @@ export interface ReplyFooterProps {
   isLike: boolean;
   debouncedHandleLikes: (...args: any[]) => void;
   isTweetActive?: boolean;
-  handleShowReplyTweetModal: () => void;
+  handleShowReplyTweetModal?: () => void;
 }
 
 export default function ReplyFooter({

@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
 
 export interface ReplyTweetButtonProps {
-  handleShowReplyTweetModal: () => void;
+  handleShowReplyTweetModal?: () => void;
 }
 
 export default function ReplyTweetButton({
