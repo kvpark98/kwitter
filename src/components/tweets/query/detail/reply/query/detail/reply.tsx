@@ -25,6 +25,7 @@ import ModifyReplyDiscardModal from "../../modify/modify-reply-discard-modal/mod
 import ModifyReplySuccessModal from "../../../../../../modals/success/modify-reply-success-modal";
 import ReplyFooter from "./reply-footer";
 import { ITweet } from "../../../tweet";
+import ReplyTweet from "../../../../../../profile/reply-tweet/reply-tweet";
 
 export interface IReply {
   id: string;
@@ -49,7 +50,6 @@ export interface ReplyProps {
   replyUsername: string;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   isTweetActive?: boolean;
-  handleShowReplyTweetModal?: () => void;
 }
 
 export default function Reply({
@@ -63,7 +63,6 @@ export default function Reply({
   replyUsername,
   setIsReplyDeleted,
   isTweetActive,
-  handleShowReplyTweetModal,
 }: ReplyProps) {
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -86,6 +85,10 @@ export default function Reply({
   const [isProcessing, setIsProcessing] = useState(false); // 비동기 작업 보호 플래그
 
   const [error, setError] = useState("");
+
+  const [showReplyTweetModal, setShowReplyTweetModal] = useState(false);
+  const handleShowReplyTweetModal = () => setShowReplyTweetModal(true);
+  const handleCloseReplyTweetModal = () => setShowReplyTweetModal(false);
 
   useEffect(() => {
     const getTweets = async () => {
@@ -394,8 +397,6 @@ export default function Reply({
 
       setIsReplyDeleted!(true);
     } catch (error) {
-      setIsReplyDeleted!(false);
-
       if (error instanceof FirebaseError) {
         setError(error.code);
       } else if (error instanceof FirestoreError) {
@@ -422,6 +423,7 @@ export default function Reply({
           reply={reply}
           replyUserId={replyUserId}
           replyUsername={replyUsername}
+          showReplyTweetModal={showReplyTweetModal}
           handleShowModifyReplyModal={handleShowModifyReplyModal}
           handleShowDeleteReplyModal={handleShowDeleteReplyModal}
         />
@@ -472,6 +474,11 @@ export default function Reply({
         error={error}
         showDeleteReplyErrorModal={showDeleteReplyErrorModal}
         handleCloseDeleteReplyErrorModal={handleCloseDeleteReplyErrorModal}
+      />
+      <ReplyTweet
+        tweets={tweets}
+        showReplyTweetModal={showReplyTweetModal}
+        handleCloseReplyTweetModal={handleCloseReplyTweetModal}
       />
     </>
   );

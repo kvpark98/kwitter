@@ -11,6 +11,7 @@ export interface TweetBodyProps {
   photo?: string | undefined;
   tweetUserId: string;
   tweetUsername: string;
+  showReplyTweetModal?: boolean;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
 }
@@ -23,6 +24,7 @@ export default function TweetBody({
   photo,
   tweetUserId,
   tweetUsername,
+  showReplyTweetModal,
   handleShowModifyTweetModal,
   handleShowDeleteTweetModal,
 }: TweetBodyProps) {
@@ -45,6 +47,7 @@ export default function TweetBody({
         photo={photo}
         tweetUserId={tweetUserId}
         tweetUsername={tweetUsername}
+        showReplyTweetModal={showReplyTweetModal}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteTweetModal={handleShowDeleteTweetModal}
       />

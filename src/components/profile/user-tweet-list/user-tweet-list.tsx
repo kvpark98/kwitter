@@ -1,18 +1,15 @@
-import { SetStateAction } from "react";
 import Tweet, { ITweet } from "../../tweets/query/detail/tweet";
 
 export interface UserTweetListProps {
   tweets: ITweet[];
-  showReplyListModal?: boolean;
-  handleShowReplyListModal?: () => void;
-  handleCloseReplyListModal?: () => void;
+  setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function UserTweetList({
   tweets,
-  showReplyListModal,
-  handleShowReplyListModal,
-  handleCloseReplyListModal,
+  setIsTweetDeleted,
+  setIsReplyDeleted,
 }: UserTweetListProps) {
   return (
     <div className="pt-2">
@@ -20,16 +17,9 @@ export default function UserTweetList({
         return (
           <Tweet
             key={tweet.id}
+            setIsTweetDeleted={setIsTweetDeleted}
+            setIsReplyDeleted={setIsReplyDeleted}
             {...tweet}
-            setIsTweetDeleted={function (value: SetStateAction<boolean>): void {
-              throw new Error("Function not implemented.");
-            }}
-            setIsReplyDeleted={function (value: SetStateAction<boolean>): void {
-              throw new Error("Function not implemented.");
-            }}
-            showReplyListModal={showReplyListModal}
-            handleShowReplyListModal={handleShowReplyListModal}
-            handleCloseReplyListModal={handleCloseReplyListModal}
           />
         );
       })}

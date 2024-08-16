@@ -8,18 +8,12 @@ export interface ReplyTweetProps {
   tweets: ITweet[];
   showReplyTweetModal?: boolean;
   handleCloseReplyTweetModal?: () => void;
-  showReplyListModal?: boolean;
-  handleShowReplyListModal?: () => void;
-  handleCloseReplyListModal?: () => void;
 }
 
 export default function ReplyTweet({
   tweets,
   showReplyTweetModal,
   handleCloseReplyTweetModal,
-  showReplyListModal,
-  handleShowReplyListModal,
-  handleCloseReplyListModal,
 }: ReplyTweetProps) {
   return (
     <Modal
@@ -39,10 +33,8 @@ export default function ReplyTweet({
             return (
               <Tweet
                 key={tweet.id}
+                showReplyTweetModal={showReplyTweetModal}
                 {...tweet}
-                showReplyListModal={showReplyListModal}
-                handleShowReplyListModal={handleShowReplyListModal}
-                handleCloseReplyListModal={handleCloseReplyListModal}
               />
             );
           })}

@@ -27,12 +27,8 @@ export interface ProfileContentProps {
   sortOrder: boolean;
   handleSortOrder: () => void;
   resetCriteria: () => void;
-  showReplyListModal?: boolean;
-  handleShowReplyListModal?: () => void;
-  handleCloseReplyListModal?: () => void;
-  showReplyTweetModal?: boolean;
-  handleShowReplyTweetModal?: () => void;
-  handleCloseReplyTweetModal?: () => void;
+  setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ProfileContent({
@@ -51,12 +47,8 @@ export default function ProfileContent({
   sortOrder,
   handleSortOrder,
   resetCriteria,
-  showReplyListModal,
-  handleShowReplyListModal,
-  handleCloseReplyListModal,
-  showReplyTweetModal,
-  handleShowReplyTweetModal,
-  handleCloseReplyTweetModal,
+  setIsTweetDeleted,
+  setIsReplyDeleted,
 }: ProfileContentProps) {
   return (
     <div className="overflow-y-auto h-100 bg-light" style={{ width: "630px" }}>
@@ -80,9 +72,8 @@ export default function ProfileContent({
       {isTweetActive && tweets.length !== 0 && (
         <UserTweetList
           tweets={tweets}
-          showReplyListModal={showReplyListModal}
-          handleShowReplyListModal={handleShowReplyListModal}
-          handleCloseReplyListModal={handleCloseReplyListModal}
+          setIsTweetDeleted={setIsTweetDeleted}
+          setIsReplyDeleted={setIsReplyDeleted}
         />
       )}
       {!isTweetActive && replys.length !== 0 && (
@@ -90,12 +81,7 @@ export default function ProfileContent({
           user={user}
           replys={replys}
           isTweetActive={isTweetActive}
-          showReplyListModal={showReplyListModal}
-          handleShowReplyListModal={handleShowReplyListModal}
-          handleCloseReplyListModal={handleCloseReplyListModal}
-          showReplyTweetModal={showReplyTweetModal}
-          handleShowReplyTweetModal={handleShowReplyTweetModal}
-          handleCloseReplyTweetModal={handleCloseReplyTweetModal}
+          setIsReplyDeleted={setIsReplyDeleted}
         />
       )}
       {isTweetActive && tweets.length === 0 && <NoTweet />}

@@ -10,6 +10,7 @@ export interface ReplyBodyProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
+  showReplyTweetModal?: boolean;
   handleShowModifyReplyModal: () => void;
   handleShowDeleteReplyModal: () => void;
 }
@@ -21,6 +22,7 @@ export default function ReplyBody({
   reply,
   replyUserId,
   replyUsername,
+  showReplyTweetModal,
   handleShowModifyReplyModal,
   handleShowDeleteReplyModal,
 }: ReplyBodyProps) {
@@ -42,6 +44,7 @@ export default function ReplyBody({
         reply={reply}
         replyUserId={replyUserId}
         replyUsername={replyUsername}
+        showReplyTweetModal={showReplyTweetModal}
         handleShowModifyReplyModal={handleShowModifyReplyModal}
         handleShowDeleteReplyModal={handleShowDeleteReplyModal}
       />

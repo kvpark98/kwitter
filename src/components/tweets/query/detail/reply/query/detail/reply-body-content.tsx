@@ -8,6 +8,7 @@ export interface ReplyBodyContentProps {
   reply: string;
   replyUserId: string;
   replyUsername: string;
+  showReplyTweetModal?: boolean;
   handleShowModifyReplyModal: () => void;
   handleShowDeleteReplyModal: () => void;
 }
@@ -18,6 +19,7 @@ export default function ReplyBodyContent({
   reply,
   replyUserId,
   replyUsername,
+  showReplyTweetModal,
   handleShowModifyReplyModal,
   handleShowDeleteReplyModal,
 }: ReplyBodyContentProps) {
@@ -30,7 +32,7 @@ export default function ReplyBodyContent({
           </p>
           <span className="fs-6 text-muted">{timeAgo}</span>
         </div>
-        {user?.uid === replyUserId && (
+        {user?.uid === replyUserId && !showReplyTweetModal && (
           <ReplyDropdown
             handleShowModifyReplyModal={handleShowModifyReplyModal}
             handleShowDeleteReplyModal={handleShowDeleteReplyModal}

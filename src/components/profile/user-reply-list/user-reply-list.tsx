@@ -1,4 +1,3 @@
-import { SetStateAction } from "react";
 import Reply, {
   IReply,
 } from "../../tweets/query/detail/reply/query/detail/reply";
@@ -8,14 +7,14 @@ export interface UserReplyListProps {
   user: User | null;
   replys: IReply[];
   isTweetActive?: boolean;
-  handleShowReplyTweetModal?: () => void;
+  setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function UserReplyList({
   user,
   replys,
   isTweetActive,
-  handleShowReplyTweetModal,
+  setIsReplyDeleted,
 }: UserReplyListProps) {
   return (
     <div className="pt-2">
@@ -24,12 +23,9 @@ export default function UserReplyList({
           <Reply
             user={user}
             key={reply.id}
-            {...reply}
-            setIsReplyDeleted={function (value: SetStateAction<boolean>): void {
-              throw new Error("Function not implemented.");
-            }}
             isTweetActive={isTweetActive}
-            handleShowReplyTweetModal={handleShowReplyTweetModal}
+            setIsReplyDeleted={setIsReplyDeleted}
+            {...reply}
           />
         );
       })}

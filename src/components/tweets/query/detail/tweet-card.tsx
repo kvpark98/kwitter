@@ -16,6 +16,7 @@ export interface TweetCardProps {
   isLike: boolean;
   debouncedHandleLikes: (...args: any[]) => void;
   replys: IReply[];
+  showReplyTweetModal?: boolean;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
   handleShowReplyListModal?: () => void;
@@ -33,6 +34,7 @@ export default function TweetCard({
   isLike,
   debouncedHandleLikes,
   replys,
+  showReplyTweetModal,
   handleShowModifyTweetModal,
   handleShowDeleteTweetModal,
   handleShowReplyListModal,
@@ -47,6 +49,7 @@ export default function TweetCard({
         photo={photo}
         tweetUserId={tweetUserId}
         tweetUsername={tweetUsername}
+        showReplyTweetModal={showReplyTweetModal}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteTweetModal={handleShowDeleteTweetModal}
       />

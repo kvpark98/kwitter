@@ -9,6 +9,7 @@ export interface TweetBodyContentProps {
   photo?: string | undefined;
   tweetUserId: string;
   tweetUsername: string;
+  showReplyTweetModal?: boolean;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
 }
@@ -20,6 +21,7 @@ export default function TweetBodyContent({
   photo,
   tweetUserId,
   tweetUsername,
+  showReplyTweetModal,
   handleShowModifyTweetModal,
   handleShowDeleteTweetModal,
 }: TweetBodyContentProps) {
@@ -32,7 +34,7 @@ export default function TweetBodyContent({
           </p>
           <span className="fs-6 text-muted">{timeAgo}</span>
         </div>
-        {user?.uid === tweetUserId && (
+        {user?.uid === tweetUserId && !showReplyTweetModal && (
           <TweetDropdown
             handleShowModifyTweetModal={handleShowModifyTweetModal}
             handleShowDeleteTweetModal={handleShowDeleteTweetModal}

@@ -35,7 +35,8 @@ import ModifyProfileErrorModal from "../components/modals/error/modify-profile-e
 import ModifyProfileSuccessModal from "../components/modals/success/modify-profile-success-modal";
 import { debounce } from "lodash";
 import { IReply } from "../components/tweets/query/detail/reply/query/detail/reply";
-import ReplyTweet from "../components/profile/reply-tweet/reply-tweet";
+import TweetDeleteSuccessModal from "../components/modals/success/tweet-delete-success-modal";
+import ReplyDeleteSuccessModal from "../components/modals/success/reply-delete-success-modal";
 
 // CroppedAreaPixels 타입 정의: 이미지 자르기 위치를 표현하는 객체의 타입
 export type CroppedAreaPixels = {
@@ -96,10 +97,6 @@ export default function Profile() {
   const [error, setError] = useState("");
 
   const [nameErrorMessage, setNameErrorMessage] = useState("");
-
-  const [likeCount, setLikeCount] = useState(0);
-
-  const [replycount, setReplyCount] = useState(0);
 
   const [isTweetDeleted, setIsTweetDeleted] = useState(false);
 
@@ -203,13 +200,32 @@ export default function Profile() {
     handleShowModifyProfileModal();
   };
 
-  const [showReplyListModal, setShowReplyListModal] = useState(false);
-  const handleShowReplyListModal = () => setShowReplyListModal(true);
-  const handleCloseReplyListModal = () => setShowReplyListModal(false);
+  const [showDeleteTweetSuccessModal, setShowDeleteTweetSuccessModal] =
+    useState(false);
+  const handleShowDeleteTweetSuccessModal = () =>
+    setShowDeleteTweetSuccessModal(true);
+  const handleCloseDeleteTweetSuccessModal = () => {
+    setShowDeleteTweetSuccessModal(false);
+    setIsTweetDeleted(false);
+  };
 
-  const [showReplyTweetModal, setShowReplyTweetModal] = useState(false);
-  const handleShowReplyTweetModal = () => setShowReplyTweetModal(true);
-  const handleCloseReplyTweetModal = () => setShowReplyTweetModal(false);
+  const [showDeleteReplySuccessModal, setShowDeleteReplySuccessModal] =
+    useState(false);
+  const handleShowDeleteReplySuccessModal = () =>
+    setShowDeleteReplySuccessModal(true);
+  const handleCloseDeleteReplySuccessModal = () => {
+    setShowDeleteReplySuccessModal(false);
+    setIsReplyDeleted(false);
+  };
+
+  useEffect(() => {
+    if (isTweetDeleted) {
+      handleShowDeleteTweetSuccessModal();
+    }
+    if (isReplyDeleted) {
+      handleShowDeleteReplySuccessModal();
+    }
+  }, [isTweetDeleted, isReplyDeleted]);
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -1010,12 +1026,8 @@ export default function Profile() {
         sortOrder={sortOrder}
         handleSortOrder={handleSortOrder}
         resetCriteria={resetCriteria}
-        showReplyListModal={showReplyListModal}
-        handleShowReplyListModal={handleShowReplyListModal}
-        handleCloseReplyListModal={handleCloseReplyListModal}
-        showReplyTweetModal={showReplyTweetModal}
-        handleShowReplyTweetModal={handleShowReplyTweetModal}
-        handleCloseReplyTweetModal={handleCloseReplyTweetModal}
+        setIsTweetDeleted={setIsTweetDeleted}
+        setIsReplyDeleted={setIsReplyDeleted}
       />
       <ModifyProfile
         defaultAvatarURL={defaultAvatarURL}
@@ -1085,13 +1097,13 @@ export default function Profile() {
           handleCloseModifyProfileSuccessModal
         }
       />
-      <ReplyTweet
-        tweets={tweets}
-        showReplyTweetModal={showReplyTweetModal}
-        handleCloseReplyTweetModal={handleCloseReplyTweetModal}
-        showReplyListModal={showReplyListModal}
-        handleShowReplyListModal={handleShowReplyListModal}
-        handleCloseReplyListModal={handleCloseReplyListModal}
+      <TweetDeleteSuccessModal
+        showDeleteTweetSuccessModal={showDeleteTweetSuccessModal}
+        handleCloseDeleteTweetSuccessModal={handleCloseDeleteTweetSuccessModal}
+      />
+      <ReplyDeleteSuccessModal
+        showDeleteReplySuccessModal={showDeleteReplySuccessModal}
+        handleCloseDeleteReplySuccessModal={handleCloseDeleteReplySuccessModal}
       />
       {error && (
         <ModifyProfileErrorModal
