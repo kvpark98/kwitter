@@ -9,6 +9,7 @@ export interface ReplyListProps {
   user: User | null;
   replys: IReply[];
   showReplyListModal?: boolean;
+  showReplyTweetModal?: boolean;
   handleCloseReplyListModal?: () => void;
   handleShowCreateReplyModal: () => void;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,6 +24,7 @@ export default function ReplyList({
   user,
   replys,
   showReplyListModal,
+  showReplyTweetModal,
   handleCloseReplyListModal,
   handleShowCreateReplyModal,
   setIsReplyDeleted,
@@ -53,6 +55,7 @@ export default function ReplyList({
                 key={reply.id}
                 user={user}
                 setIsReplyDeleted={setIsReplyDeleted}
+                isShowReplyTweetModal={showReplyTweetModal}
                 {...reply}
               />
             );

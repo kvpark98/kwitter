@@ -50,6 +50,7 @@ export interface ReplyProps {
   replyUsername: string;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   isTweetActive?: boolean;
+  isShowReplyTweetModal?: boolean;
 }
 
 export default function Reply({
@@ -63,6 +64,7 @@ export default function Reply({
   replyUsername,
   setIsReplyDeleted,
   isTweetActive,
+  isShowReplyTweetModal,
 }: ReplyProps) {
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -86,7 +88,9 @@ export default function Reply({
 
   const [error, setError] = useState("");
 
-  const [showReplyTweetModal, setShowReplyTweetModal] = useState(false);
+  const [showReplyTweetModal, setShowReplyTweetModal] = useState(
+    isShowReplyTweetModal || false
+  );
   const handleShowReplyTweetModal = () => setShowReplyTweetModal(true);
   const handleCloseReplyTweetModal = () => setShowReplyTweetModal(false);
 
@@ -478,6 +482,7 @@ export default function Reply({
       <ReplyTweet
         tweets={tweets}
         showReplyTweetModal={showReplyTweetModal}
+        setShowReplyTweetModal={setShowReplyTweetModal}
         handleCloseReplyTweetModal={handleCloseReplyTweetModal}
       />
     </>
