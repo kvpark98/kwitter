@@ -88,6 +88,8 @@ export default function Reply({
 
   const [error, setError] = useState("");
 
+  const [isOpenReplyTweetModal, setIsOpenReplyTweetModal] = useState(false);
+
   const [showReplyTweetModal, setShowReplyTweetModal] = useState(
     isShowReplyTweetModal || false
   );
@@ -483,6 +485,8 @@ export default function Reply({
         tweets={tweets}
         showReplyTweetModal={showReplyTweetModal}
         setShowReplyTweetModal={setShowReplyTweetModal}
+        isOpenReplyTweetModal={isOpenReplyTweetModal}
+        setIsOpenReplyTweetModal={setIsOpenReplyTweetModal}
         handleCloseReplyTweetModal={handleCloseReplyTweetModal}
       />
     </>

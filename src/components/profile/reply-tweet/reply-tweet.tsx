@@ -8,6 +8,8 @@ export interface ReplyTweetProps {
   tweets: ITweet[];
   showReplyTweetModal?: boolean;
   setShowReplyTweetModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpenReplyTweetModal?: boolean;
+  setIsOpenReplyTweetModal?: React.Dispatch<React.SetStateAction<boolean>>;
   handleCloseReplyTweetModal?: () => void;
 }
 
@@ -15,6 +17,8 @@ export default function ReplyTweet({
   tweets,
   showReplyTweetModal,
   setShowReplyTweetModal,
+  isOpenReplyTweetModal,
+  setIsOpenReplyTweetModal,
   handleCloseReplyTweetModal,
 }: ReplyTweetProps) {
   return (
@@ -37,6 +41,8 @@ export default function ReplyTweet({
                 key={tweet.id}
                 showReplyTweetModal={showReplyTweetModal}
                 setShowReplyTweetModal={setShowReplyTweetModal}
+                isOpenReplyTweetModal={isOpenReplyTweetModal}
+                setIsOpenReplyTweetModal={setIsOpenReplyTweetModal}
                 {...tweet}
               />
             );

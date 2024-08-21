@@ -61,6 +61,8 @@ export interface TweetProps {
   tweetUsername: string;
   showReplyTweetModal?: boolean;
   setShowReplyTweetModal?: (value: React.SetStateAction<boolean>) => void;
+  isOpenReplyTweetModal?: boolean;
+  setIsOpenReplyTweetModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -74,6 +76,8 @@ export default function Tweet({
   tweetUsername,
   showReplyTweetModal,
   setShowReplyTweetModal,
+  isOpenReplyTweetModal,
+  setIsOpenReplyTweetModal,
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: TweetProps) {
@@ -419,10 +423,13 @@ export default function Tweet({
   const handleShowReplyListModal = () => {
     setShowReplyListModal(true);
     if (showReplyTweetModal !== undefined) {
-      setShowReplyTweetModal!(true);
+      setIsOpenReplyTweetModal!(true);
     }
   };
-  const handleCloseReplyListModal = () => setShowReplyListModal(false);
+  const handleCloseReplyListModal = () => {
+    setShowReplyListModal(false);
+    resetCriteria();
+  };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
 
@@ -1020,6 +1027,7 @@ export default function Tweet({
         replys={replys}
         showReplyListModal={showReplyListModal}
         showReplyTweetModal={showReplyTweetModal}
+        isOpenReplyTweetModal={isOpenReplyTweetModal}
         handleCloseReplyListModal={handleCloseReplyListModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
         setIsReplyDeleted={setIsReplyDeleted}

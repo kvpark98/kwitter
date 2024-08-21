@@ -5,6 +5,7 @@ import { IReply } from "../detail/reply";
 
 export interface ReplyListFooterProps {
   replys: IReply[];
+  isOpenReplyTweetModal?: boolean;
   handleShowCreateReplyModal: () => void;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -15,6 +16,7 @@ export interface ReplyListFooterProps {
 
 export default function ReplyListFooter({
   replys,
+  isOpenReplyTweetModal,
   handleShowCreateReplyModal,
   sortCriteria,
   handleSortCriteria,
@@ -41,9 +43,11 @@ export default function ReplyListFooter({
               resetCriteria={resetCriteria}
             />
           )}
-          <ReplyListPost
-            handleShowCreateReplyModal={handleShowCreateReplyModal}
-          />
+          {!isOpenReplyTweetModal && (
+            <ReplyListPost
+              handleShowCreateReplyModal={handleShowCreateReplyModal}
+            />
+          )}
         </div>
       </Container>
     </Navbar>

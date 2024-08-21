@@ -10,6 +10,7 @@ export interface ReplyListProps {
   replys: IReply[];
   showReplyListModal?: boolean;
   showReplyTweetModal?: boolean;
+  isOpenReplyTweetModal?: boolean;
   handleCloseReplyListModal?: () => void;
   handleShowCreateReplyModal: () => void;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,6 +26,7 @@ export default function ReplyList({
   replys,
   showReplyListModal,
   showReplyTweetModal,
+  isOpenReplyTweetModal,
   handleCloseReplyListModal,
   handleShowCreateReplyModal,
   setIsReplyDeleted,
@@ -55,7 +57,7 @@ export default function ReplyList({
                 key={reply.id}
                 user={user}
                 setIsReplyDeleted={setIsReplyDeleted}
-                isShowReplyTweetModal={showReplyTweetModal}
+                isShowReplyTweetModal={isOpenReplyTweetModal}
                 {...reply}
               />
             );
@@ -66,6 +68,7 @@ export default function ReplyList({
       )}
       <ReplyListFooter
         replys={replys}
+        isOpenReplyTweetModal={isOpenReplyTweetModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
         sortCriteria={sortCriteria}
         handleSortCriteria={handleSortCriteria}
