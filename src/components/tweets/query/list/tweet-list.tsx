@@ -13,9 +13,6 @@ export interface TweetListProps {
   resetCriteria: () => void;
   setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
-  showReplyListModal?: boolean;
-  handleShowReplyListModal?: () => void;
-  handleCloseReplyListModal?: () => void;
 }
 
 export default function TweetList({
@@ -28,9 +25,6 @@ export default function TweetList({
   resetCriteria,
   setIsTweetDeleted,
   setIsReplyDeleted,
-  showReplyListModal,
-  handleShowReplyListModal,
-  handleCloseReplyListModal,
 }: TweetListProps) {
   return (
     <div className="overflow-y-auto bg-light h-100" style={{ width: "630px" }}>
@@ -52,9 +46,6 @@ export default function TweetList({
                 {...tweet}
                 setIsTweetDeleted={setIsTweetDeleted}
                 setIsReplyDeleted={setIsReplyDeleted}
-                showReplyListModal={showReplyListModal}
-                handleShowReplyListModal={handleShowReplyListModal}
-                handleCloseReplyListModal={handleCloseReplyListModal}
               />
             );
           })}

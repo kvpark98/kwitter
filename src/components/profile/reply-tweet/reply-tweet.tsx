@@ -7,7 +7,6 @@ import ReplyTweetFooter from "./reply-tweet-footer";
 export interface ReplyTweetProps {
   tweets: ITweet[];
   showReplyTweetModal?: boolean;
-  setShowReplyTweetModal?: React.Dispatch<React.SetStateAction<boolean>>;
   isOpenReplyTweetModal?: boolean;
   setIsOpenReplyTweetModal?: React.Dispatch<React.SetStateAction<boolean>>;
   handleCloseReplyTweetModal?: () => void;
@@ -16,7 +15,6 @@ export interface ReplyTweetProps {
 export default function ReplyTweet({
   tweets,
   showReplyTweetModal,
-  setShowReplyTweetModal,
   isOpenReplyTweetModal,
   setIsOpenReplyTweetModal,
   handleCloseReplyTweetModal,
@@ -40,7 +38,6 @@ export default function ReplyTweet({
               <Tweet
                 key={tweet.id}
                 showReplyTweetModal={showReplyTweetModal}
-                setShowReplyTweetModal={setShowReplyTweetModal}
                 isOpenReplyTweetModal={isOpenReplyTweetModal}
                 setIsOpenReplyTweetModal={setIsOpenReplyTweetModal}
                 {...tweet}

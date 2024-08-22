@@ -60,7 +60,6 @@ export interface TweetProps {
   tweetUserId: string;
   tweetUsername: string;
   showReplyTweetModal?: boolean;
-  setShowReplyTweetModal?: (value: React.SetStateAction<boolean>) => void;
   isOpenReplyTweetModal?: boolean;
   setIsOpenReplyTweetModal?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -75,7 +74,6 @@ export default function Tweet({
   tweetUserId,
   tweetUsername,
   showReplyTweetModal,
-  setShowReplyTweetModal,
   isOpenReplyTweetModal,
   setIsOpenReplyTweetModal,
   setIsTweetDeleted,
@@ -117,6 +115,8 @@ export default function Tweet({
   const [isLike, setIsLike] = useState(false);
 
   const [replyCount, setReplyCount] = useState(0);
+
+  console.log(replyCount);
 
   const [isProcessing, setIsProcessing] = useState(false); // 비동기 작업 보호 플래그
 
@@ -480,6 +480,7 @@ export default function Tweet({
   ) => {
     // 자른 영역의 픽셀 정보를 상태로 설정
     setCroppedAreaPixels(croppedAreaPixels);
+    console.log(croppedArea);
   };
 
   const handleSaveCroppedPhoto = () => {
@@ -1026,7 +1027,6 @@ export default function Tweet({
         user={user}
         replys={replys}
         showReplyListModal={showReplyListModal}
-        showReplyTweetModal={showReplyTweetModal}
         isOpenReplyTweetModal={isOpenReplyTweetModal}
         handleCloseReplyListModal={handleCloseReplyListModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}

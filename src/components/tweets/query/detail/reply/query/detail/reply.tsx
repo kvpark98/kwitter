@@ -484,7 +484,6 @@ export default function Reply({
       <ReplyTweet
         tweets={tweets}
         showReplyTweetModal={showReplyTweetModal}
-        setShowReplyTweetModal={setShowReplyTweetModal}
         isOpenReplyTweetModal={isOpenReplyTweetModal}
         setIsOpenReplyTweetModal={setIsOpenReplyTweetModal}
         handleCloseReplyTweetModal={handleCloseReplyTweetModal}

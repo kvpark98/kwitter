@@ -174,10 +174,6 @@ export default function Home() {
     setIsTweetDeleted(false);
   };
 
-  const [showReplyListModal, setShowReplyListModal] = useState(false);
-  const handleShowReplyListModal = () => setShowReplyListModal(true);
-  const handleCloseReplyListModal = () => setShowReplyListModal(false);
-
   const [showDeleteReplySuccessModal, setShowDeleteReplySuccessModal] =
     useState(false);
   const handleShowDeleteReplySuccessModal = () =>
@@ -253,6 +249,7 @@ export default function Home() {
   ) => {
     // 자른 영역의 픽셀 정보를 상태로 설정
     setCroppedAreaPixels(croppedAreaPixels);
+    console.log(croppedArea);
   };
 
   const handleSaveCroppedPhoto = () => {
@@ -846,9 +843,6 @@ export default function Home() {
         resetCriteria={resetCriteria}
         setIsTweetDeleted={setIsTweetDeleted}
         setIsReplyDeleted={setIsReplyDeleted}
-        showReplyListModal={showReplyListModal}
-        handleShowReplyListModal={handleShowReplyListModal}
-        handleCloseReplyListModal={handleCloseReplyListModal}
       />
       <ResetPassword
         showResetPasswordModal={showResetPasswordModal}

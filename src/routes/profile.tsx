@@ -259,6 +259,7 @@ export default function Profile() {
   ) => {
     // 자른 영역의 픽셀 정보를 상태로 설정
     setCroppedAreaPixels(croppedAreaPixels);
+    console.log(croppedArea);
   };
 
   const handleSaveCroppedAvatar = () => {

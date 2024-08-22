@@ -9,7 +9,6 @@ export interface ReplyListProps {
   user: User | null;
   replys: IReply[];
   showReplyListModal?: boolean;
-  showReplyTweetModal?: boolean;
   isOpenReplyTweetModal?: boolean;
   handleCloseReplyListModal?: () => void;
   handleShowCreateReplyModal: () => void;
@@ -25,7 +24,6 @@ export default function ReplyList({
   user,
   replys,
   showReplyListModal,
-  showReplyTweetModal,
   isOpenReplyTweetModal,
   handleCloseReplyListModal,
   handleShowCreateReplyModal,

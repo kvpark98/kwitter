@@ -24,7 +24,6 @@ import {
   getDocs,
   query,
   setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { ITweet } from "../components/tweets/query/detail/tweet";

@@ -710,7 +710,7 @@ export default function Welcome() {
   };
 
   const actionCodeSettings = {
-    url: "http://127.0.0.1:5173/welcome",
+    url: "https://learn-korean-well.web.app/welcome",
     handleCodeInApp: true,
   };
 

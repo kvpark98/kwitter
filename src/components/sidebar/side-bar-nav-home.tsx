@@ -23,7 +23,7 @@ const StyledHome = styled.div`
 export default function SideBarNavHome() {
   return (
     <StyledHome
-      {...(window.location.href === "http://127.0.0.1:5173/"
+      {...(window.location.href === "https://learn-korean-well.web.app/"
         ? {
             className:
               "active nav-link rounded-circle d-flex justify-content-center align-items-center",
@@ -36,7 +36,7 @@ export default function SideBarNavHome() {
       <Link
         to="/"
         title="Home"
-        {...(window.location.href === "http://127.0.0.1:5173/"
+        {...(window.location.href === "https://learn-korean-well.web.app/"
           ? {
               className: "text-white",
             }

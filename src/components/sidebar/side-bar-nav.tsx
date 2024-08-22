@@ -20,7 +20,7 @@ export default function SideBarNav({
       <SideBarNavProfile />
       <SideBarNavAccount />
       <SideBarNavSignOut handleShowSignOutModal={handleShowSignOutModal} />
-      {window.location.href === "http://127.0.0.1:5173/" && (
+      {window.location.href === "https://learn-korean-well.web.app/" && (
         <SideBarNavPost
           handleShowCreateTweetModal={handleShowCreateTweetModal}
         />
