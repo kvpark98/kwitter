@@ -43,65 +43,68 @@ import SignInWithEmail from "../components/auth/sign-in-with-email/sign-in-with-
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledWelcome = styled.div`
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 950px) {
     display: flex !important;
+    flex: 1 1 auto !important;
     height: 100% !important;
     overflow-y: auto !important;
   }
-  @media screen and (max-width: 900px) {
-    display: block !important;
+  @media screen and (max-width: 950px) {
+    display: flex !important;
+    flex-direction: column;
     height: 100% !important;
     overflow-y: auto !important;
-    padding: 0 20px 50px;
+    padding: 50px 20px;
   }
   @media screen and (max-width: 500px) {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column;
     height: 100% !important;
     overflow-y: auto !important;
-    padding: 0 20px 50px;
+    padding: 50px 20px;
   }
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledLogoDiv = styled.div`
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 950px) {
     display: flex !important;
     flex: 1 1 auto !important;
     justify-content: center !important;
     align-items: center !important;
   }
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 950px) {
     display: flex !important;
     flex: 1 1 auto !important;
     justify-content: center !important;
     align-items: center !important;
-    margin: 50px 0 !important;
+    margin: 0 0 32px 0 !important;
   }
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledLogoSvg = styled.svg`
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 950px) {
     width: 300px !important;
     height: 300px !important;
   }
-  @media screen and (max-width: 900px) {
-    width: 130px !important;
-    height: 130px !important;
+  @media screen and (max-width: 950px) {
+    width: 140px !important;
+    height: 140px !important;
   }
   @media screen and (max-width: 500px) {
-    width: 80px !important;
-    height: 80px !important;
+    width: 100px !important;
+    height: 100px !important;
   }
 `;
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledTitle = styled.div`
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 950px) {
     text-align: center;
     font-size: 3rem !important;
   }
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 950px) {
     text-align: center;
     font-size: 2.5rem !important;
   }
@@ -113,11 +116,11 @@ export const StyledTitle = styled.div`
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledP = styled.p`
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 950px) {
     font-size: 1.6rem !important;
     margin-bottom: 16px !important;
   }
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 950px) {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
@@ -135,7 +138,7 @@ export const StyledP = styled.p`
 
 // 미디어 쿼리를 사용하여 스타일 정의
 export const StyledButton = styled.div`
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 950px) {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
@@ -710,7 +713,9 @@ export default function Welcome() {
   };
 
   const actionCodeSettings = {
-    url: "https://learn-korean-well.web.app/welcome",
+    url:
+      "https://learn-korean-well.web.app/welcome" ||
+      "https://learn-korean-well.firebaseapp.com/welcome",
     handleCodeInApp: true,
   };
 
@@ -916,149 +921,153 @@ export default function Welcome() {
   };
 
   return (
-    <StyledWelcome>
-      <MainLogo />
-      <MainContent
-        handleShowSignUpModal={handleShowSignUpModal}
-        handleShowSignInModal={handleShowSignInModal}
-      />
-      <SignIn
-        showSignInModal={showSignInModal}
-        handleCloseSignInModal={handleCloseSignInModal}
-        emailInputRef={emailInputRef}
-        isLoading={isLoading}
-        email={email}
-        handleEmail={handleEmail}
-        isEmail={isEmail}
-        emailErrorMessage={emailErrorMessage}
-        passwordInputType={passwordInputType}
-        changePasswordType={changePasswordType}
-        password={password}
-        handleSignInPassword={handleSignInPassword}
-        isPassword={isPassword}
-        handleRememberMe={handleRememberMe}
-        noSpace={noSpace}
-        resetSignIn={resetSignIn}
-        signIn={signIn}
-        handleShowSendSignInLinkModal={handleShowSendSignInLinkModal}
-      />
-      <AccountDeleteSuccessModal
-        showAccountDeleteSuccessModal={showAccountDeleteSuccessModal}
-        handleCloseAccountDeleteSuccessModal={
-          handleCloseAccountDeleteSuccessModal
-        }
-      />
-      <PasswordChangeSuccessModal
-        showPassordChangeSuccessModal={showPassordChangeSuccessModal}
-        handleClosePassordChangeSuccessModal={
-          handleClosePassordChangeSuccessModal
-        }
-      />
-      <EmailVerificationNeededWarningModal
-        showEmailVerificationNeededWarningModal={
-          showEmailVerificationNeededWarningModal
-        }
-        handleCloseEmailVerificationNeededWarningModal={
-          handleCloseEmailVerificationNeededWarningModal
-        }
-      />
-      <EmailNotVerifiedErrorModal
-        showEmailNotVerifiedErrorModal={showEmailNotVerifiedErrorModal}
-        handleCloseEmailNotVerifiedErrorModal={
-          handleCloseEmailNotVerifiedErrorModal
-        }
-      />
-      <SignInErrorModal
-        error={error}
-        showSignInErrorModal={showSignInErrorModal}
-        handleCloseSignInErrorModal={handleCloseSignInErrorModal}
-      />
-      <SignUp
-        showSignUpModal={showSignUpModal}
-        handleCloseSignUpModal={handleCloseSignUpModal}
-        isLoading={isLoading}
-        nameInputRef={nameInputRef}
-        name={name}
-        handleName={handleName}
-        isName={isName}
-        nameErrorMessage={nameErrorMessage}
-        emailInputRef={emailInputRef}
-        email={email}
-        handleEmail={handleEmail}
-        isEmail={isEmail}
-        emailErrorMessage={emailErrorMessage}
-        passwordInputRef={passwordInputRef}
-        passwordInputType={passwordInputType}
-        passwordConfirmInputType={passwordConfirmInputType}
-        changePasswordType={changePasswordType}
-        changePasswordConfirmType={changePasswordConfirmType}
-        password={password}
-        handleSignUpPassword={handleSignUpPassword}
-        isPassword={isPassword}
-        passwordErrorMessage={passwordErrorMessage}
-        passwordConfirmInputRef={passwordConfirmInputRef}
-        passwordConfirm={passwordConfirm}
-        handleSignUpPasswordConfirm={handleSignUpPasswordConfirm}
-        isPasswordConfirm={isPasswordConfirm}
-        passwordConfirmErrorMessage={passwordConfirmErrorMessage}
-        noSpace={noSpace}
-        resetSignUp={resetSignUp}
-        signUp={signUp}
-      />
-      <SignUpErrorModal
-        error={error}
-        showSignUpErrorModal={showSignUpErrorModal}
-        handleCloseSignUpErrorModal={handleCloseSignUpErrorModal}
-      />
-      <SendSignInLink
-        signInLinkEmailInputRef={signInLinkEmailInputRef}
-        showSendSignInLinkModal={showSendSignInLinkModal}
-        handleCloseSendSignInLinkModal={handleCloseSendSignInLinkModal}
-        isLoading={isLoading}
-        email={email}
-        handleEmail={handleEmail}
-        isEmail={isEmail}
-        emailErrorMessage={emailErrorMessage}
-        noSpace={noSpace}
-        resetEmail={resetEmail}
-        sendSignInLink={sendSignInLink}
-      />
-      <SignInLinkWarningModal
-        showSignInLinkWarningModal={showSignInLinkWarningModal}
-        handleCloseSignInLinkWarningModal={handleCloseSignInLinkWarningModal}
-      />
-      <SendSignInLinkErrorModal
-        showSendSignInLinkErrorModal={showSendSignInLinkErrorModal}
-        handleCloseSendSignInLinkErrorModal={
-          handleCloseSendSignInLinkErrorModal
-        }
-        error={error}
-      />
-      <SignInWithEmail
-        showSignInWithEmailModal={showSignInWithEmailModal}
-        handleCloseSignInWithEmailModal={handleCloseSignInWithEmailModal}
-        emailInputRef={emailInputRef}
-        isLoading={isLoading}
-        email={email}
-        handleEmail={handleEmail}
-        isEmail={isEmail}
-        emailErrorMessage={emailErrorMessage}
-        noSpace={noSpace}
-        resetEmail={resetEmail}
-        signInWithEmail={signInWithEmail}
-      />
-      <SignInWithEmailErrorModal
-        showSignInWithEmailErrorModal={showSignInWithEmailErrorModal}
-        handleCloseSignInWithEmailErrorModal={
-          handleCloseSignInWithEmailErrorModal
-        }
-        error={error}
-      />
-      <ResetPasswordErrorModal
-        error={error}
-        showResetPasswordErrorModal={showResetPasswordErrorModal}
-        handleCloseResetPasswordErrorModal={handleCloseResetPasswordErrorModal}
-      />
-    </StyledWelcome>
+    <div className="d-flex justify-content-center align-items-center h-100">
+      <StyledWelcome>
+        <MainLogo />
+        <MainContent
+          handleShowSignUpModal={handleShowSignUpModal}
+          handleShowSignInModal={handleShowSignInModal}
+        />
+        <SignIn
+          showSignInModal={showSignInModal}
+          handleCloseSignInModal={handleCloseSignInModal}
+          emailInputRef={emailInputRef}
+          isLoading={isLoading}
+          email={email}
+          handleEmail={handleEmail}
+          isEmail={isEmail}
+          emailErrorMessage={emailErrorMessage}
+          passwordInputType={passwordInputType}
+          changePasswordType={changePasswordType}
+          password={password}
+          handleSignInPassword={handleSignInPassword}
+          isPassword={isPassword}
+          handleRememberMe={handleRememberMe}
+          noSpace={noSpace}
+          resetSignIn={resetSignIn}
+          signIn={signIn}
+          handleShowSendSignInLinkModal={handleShowSendSignInLinkModal}
+        />
+        <AccountDeleteSuccessModal
+          showAccountDeleteSuccessModal={showAccountDeleteSuccessModal}
+          handleCloseAccountDeleteSuccessModal={
+            handleCloseAccountDeleteSuccessModal
+          }
+        />
+        <PasswordChangeSuccessModal
+          showPassordChangeSuccessModal={showPassordChangeSuccessModal}
+          handleClosePassordChangeSuccessModal={
+            handleClosePassordChangeSuccessModal
+          }
+        />
+        <EmailVerificationNeededWarningModal
+          showEmailVerificationNeededWarningModal={
+            showEmailVerificationNeededWarningModal
+          }
+          handleCloseEmailVerificationNeededWarningModal={
+            handleCloseEmailVerificationNeededWarningModal
+          }
+        />
+        <EmailNotVerifiedErrorModal
+          showEmailNotVerifiedErrorModal={showEmailNotVerifiedErrorModal}
+          handleCloseEmailNotVerifiedErrorModal={
+            handleCloseEmailNotVerifiedErrorModal
+          }
+        />
+        <SignInErrorModal
+          error={error}
+          showSignInErrorModal={showSignInErrorModal}
+          handleCloseSignInErrorModal={handleCloseSignInErrorModal}
+        />
+        <SignUp
+          showSignUpModal={showSignUpModal}
+          handleCloseSignUpModal={handleCloseSignUpModal}
+          isLoading={isLoading}
+          nameInputRef={nameInputRef}
+          name={name}
+          handleName={handleName}
+          isName={isName}
+          nameErrorMessage={nameErrorMessage}
+          emailInputRef={emailInputRef}
+          email={email}
+          handleEmail={handleEmail}
+          isEmail={isEmail}
+          emailErrorMessage={emailErrorMessage}
+          passwordInputRef={passwordInputRef}
+          passwordInputType={passwordInputType}
+          passwordConfirmInputType={passwordConfirmInputType}
+          changePasswordType={changePasswordType}
+          changePasswordConfirmType={changePasswordConfirmType}
+          password={password}
+          handleSignUpPassword={handleSignUpPassword}
+          isPassword={isPassword}
+          passwordErrorMessage={passwordErrorMessage}
+          passwordConfirmInputRef={passwordConfirmInputRef}
+          passwordConfirm={passwordConfirm}
+          handleSignUpPasswordConfirm={handleSignUpPasswordConfirm}
+          isPasswordConfirm={isPasswordConfirm}
+          passwordConfirmErrorMessage={passwordConfirmErrorMessage}
+          noSpace={noSpace}
+          resetSignUp={resetSignUp}
+          signUp={signUp}
+        />
+        <SignUpErrorModal
+          error={error}
+          showSignUpErrorModal={showSignUpErrorModal}
+          handleCloseSignUpErrorModal={handleCloseSignUpErrorModal}
+        />
+        <SendSignInLink
+          signInLinkEmailInputRef={signInLinkEmailInputRef}
+          showSendSignInLinkModal={showSendSignInLinkModal}
+          handleCloseSendSignInLinkModal={handleCloseSendSignInLinkModal}
+          isLoading={isLoading}
+          email={email}
+          handleEmail={handleEmail}
+          isEmail={isEmail}
+          emailErrorMessage={emailErrorMessage}
+          noSpace={noSpace}
+          resetEmail={resetEmail}
+          sendSignInLink={sendSignInLink}
+        />
+        <SignInLinkWarningModal
+          showSignInLinkWarningModal={showSignInLinkWarningModal}
+          handleCloseSignInLinkWarningModal={handleCloseSignInLinkWarningModal}
+        />
+        <SendSignInLinkErrorModal
+          showSendSignInLinkErrorModal={showSendSignInLinkErrorModal}
+          handleCloseSendSignInLinkErrorModal={
+            handleCloseSendSignInLinkErrorModal
+          }
+          error={error}
+        />
+        <SignInWithEmail
+          showSignInWithEmailModal={showSignInWithEmailModal}
+          handleCloseSignInWithEmailModal={handleCloseSignInWithEmailModal}
+          emailInputRef={emailInputRef}
+          isLoading={isLoading}
+          email={email}
+          handleEmail={handleEmail}
+          isEmail={isEmail}
+          emailErrorMessage={emailErrorMessage}
+          noSpace={noSpace}
+          resetEmail={resetEmail}
+          signInWithEmail={signInWithEmail}
+        />
+        <SignInWithEmailErrorModal
+          showSignInWithEmailErrorModal={showSignInWithEmailErrorModal}
+          handleCloseSignInWithEmailErrorModal={
+            handleCloseSignInWithEmailErrorModal
+          }
+          error={error}
+        />
+        <ResetPasswordErrorModal
+          error={error}
+          showResetPasswordErrorModal={showResetPasswordErrorModal}
+          handleCloseResetPasswordErrorModal={
+            handleCloseResetPasswordErrorModal
+          }
+        />
+      </StyledWelcome>
+    </div>
   );
 }

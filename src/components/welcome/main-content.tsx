@@ -14,7 +14,7 @@ export default function MainContent({
   return (
     <div className="d-flex flex-fill justify-content-center align-items-center">
       <div className="d-flex flex-column row-gap-3">
-        <StyledTitle className="fw-bold mb-5">Welcome to Kwitter!</StyledTitle>
+        <StyledTitle className="fw-bold mb-4">Welcome to Kwitter!</StyledTitle>
         <NewToKwitter handleShowSignUpModal={handleShowSignUpModal} />
         <hr />
         <AlreadyHaveAnAccount handleShowSignInModal={handleShowSignInModal} />
