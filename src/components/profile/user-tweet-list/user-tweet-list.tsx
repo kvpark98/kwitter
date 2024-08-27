@@ -1,3 +1,4 @@
+import ScrollProfile from "../../scrolls/scrollProfile";
 import Tweet, { ITweet } from "../../tweets/query/detail/tweet";
 
 export interface UserTweetListProps {
@@ -23,6 +24,7 @@ export default function UserTweetList({
           />
         );
       })}
+      <ScrollProfile />
     </div>
   );
 }

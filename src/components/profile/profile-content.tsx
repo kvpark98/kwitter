@@ -52,7 +52,7 @@ export default function ProfileContent({
 }: ProfileContentProps) {
   return (
     <div className="overflow-y-auto h-100 bg-light" style={{ width: "630px" }}>
-      <ProfileHeader user={user} tweets={tweets} back={back} />
+      <ProfileHeader user={user} back={back} />
       <ProfileImages avatar={avatar} background={background} />
       <ProfileEditButton
         handleShowModifyProfileModal={handleShowModifyProfileModal}

@@ -53,7 +53,11 @@ export default function DeleteAccountForm({
 }: DeleteAccountFormProps) {
   return (
     <Form onSubmit={deleteAccount}>
-      <Alert variant="light" className="rounded-0 m-0 p-4 w-100">
+      <Alert
+        variant="light"
+        className="overflow-y-auto rounded-0 m-0 p-4 w-100"
+        style={{ maxHeight: "500px" }}
+      >
         <DeleteAccountAgreeTitle />
         <DeleteAccountAgreeData
           dataRemovalChecked={dataRemovalChecked}

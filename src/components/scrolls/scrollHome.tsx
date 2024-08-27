@@ -16,6 +16,8 @@ export default function ScrollHome() {
     window.scroll(0, document.body.scrollHeight);
   };
 
+  console.log(document.body.scrollHeight);
+
   useEffect(() => {
     const handleShowButton = () => {
       const scrollLocation = window.scrollY;
@@ -41,7 +43,7 @@ export default function ScrollHome() {
       clearInterval(timer);
       window.removeEventListener("scroll", handleShowButton);
     };
-  }, []);
+  }, [document.body.scrollHeight]);
 
   return (
     showButton && (

@@ -40,14 +40,14 @@ export default function ProfileNav({
           eventKey="tweets"
           className="d-flex justify-content-center align-items-center"
         >
-          Tweets
+          Tweets ({tweets.length})
         </Nav.Link>
         <Nav.Link
           onClick={handleReplyActive}
           eventKey="replys"
           className="d-flex justify-content-center align-items-center"
         >
-          Replys
+          Replys ({replys.length})
         </Nav.Link>
       </Nav.Item>
       {((isTweetActive && tweets.length !== 0) ||

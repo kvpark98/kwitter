@@ -9,7 +9,6 @@ import {
 } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
 import { Container } from "react-bootstrap";
-import ScrollProfile from "../components/scrolls/scrollProfile";
 import AccountContent from "../components/account/account-content";
 import ChangePassword from "../components/account/change-password/change-password";
 import DeleteAccount from "../components/account/delete-account/delete-account";
@@ -747,19 +746,20 @@ export default function Account() {
   };
 
   return (
-    <Container fluid className="d-flex justify-content-center h-100 p-0">
-      <SideBar />
-      <div
-        className="overflow-y-auto bg-light h-100"
-        style={{ width: "630px" }}
-      >
-        <AccountHeader back={back} />
-        <AccountContent
-          handleShowChangePasswordModal={handleShowChangePasswordModal}
-          handleShowDeleteAccountModal={handleShowDeleteAccountModal}
-        />
-        <ScrollProfile />
-      </div>
+    <>
+      <Container fluid className="d-flex justify-content-center h-100 p-0">
+        <SideBar />
+        <div
+          className="overflow-y-auto bg-light h-100"
+          style={{ width: "630px" }}
+        >
+          <AccountHeader back={back} />
+          <AccountContent
+            handleShowChangePasswordModal={handleShowChangePasswordModal}
+            handleShowDeleteAccountModal={handleShowDeleteAccountModal}
+          />
+        </div>
+      </Container>
       <ChangePassword
         showChangePasswordModal={showChangePasswordModal}
         handleCloseChangePasswordModal={handleCloseChangePasswordModal}
@@ -822,6 +822,6 @@ export default function Account() {
         showDeleteAccountErrorModal={showDeleteAccountErrorModal}
         handleCloseDeleteAccountErrorModal={handleCloseDeleteAccountErrorModal}
       />
-    </Container>
+    </>
   );
 }

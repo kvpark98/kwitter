@@ -831,19 +831,21 @@ export default function Home() {
   };
 
   return (
-    <Container fluid className="d-flex justify-content-center h-100 p-0">
-      <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
-      <TweetList
-        tweets={tweets}
-        back={back}
-        sortCriteria={sortCriteria}
-        handleSortCriteria={handleSortCriteria}
-        sortOrder={sortOrder}
-        handleSortOrder={handleSortOrder}
-        resetCriteria={resetCriteria}
-        setIsTweetDeleted={setIsTweetDeleted}
-        setIsReplyDeleted={setIsReplyDeleted}
-      />
+    <>
+      <Container fluid className="d-flex justify-content-center h-100 p-0">
+        <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
+        <TweetList
+          tweets={tweets}
+          back={back}
+          sortCriteria={sortCriteria}
+          handleSortCriteria={handleSortCriteria}
+          sortOrder={sortOrder}
+          handleSortOrder={handleSortOrder}
+          resetCriteria={resetCriteria}
+          setIsTweetDeleted={setIsTweetDeleted}
+          setIsReplyDeleted={setIsReplyDeleted}
+        />
+      </Container>
       <ResetPassword
         showResetPasswordModal={showResetPasswordModal}
         handleCloseResetPasswordModal={handleCloseResetPasswordModal}
@@ -929,6 +931,6 @@ export default function Home() {
         showDeleteReplySuccessModal={showDeleteReplySuccessModal}
         handleCloseDeleteReplySuccessModal={handleCloseDeleteReplySuccessModal}
       />
-    </Container>
+    </>
   );
 }

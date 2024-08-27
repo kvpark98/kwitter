@@ -1009,27 +1009,29 @@ export default function Profile() {
   }, []);
 
   return (
-    <Container fluid className="d-flex justify-content-center h-100 p-0">
-      <SideBar />
-      <ProfileContent
-        user={user}
-        avatar={avatar}
-        background={background}
-        handleShowModifyProfileModal={handleShowModifyProfileModal}
-        isTweetActive={isTweetActive}
-        handleTweetActive={handleTweetActive}
-        handleReplyActive={handleReplyActive}
-        tweets={tweets}
-        replys={replys}
-        back={back}
-        sortCriteria={sortCriteria}
-        handleSortCriteria={handleSortCriteria}
-        sortOrder={sortOrder}
-        handleSortOrder={handleSortOrder}
-        resetCriteria={resetCriteria}
-        setIsTweetDeleted={setIsTweetDeleted}
-        setIsReplyDeleted={setIsReplyDeleted}
-      />
+    <>
+      <Container fluid className="d-flex justify-content-center h-100 p-0">
+        <SideBar />
+        <ProfileContent
+          user={user}
+          avatar={avatar}
+          background={background}
+          handleShowModifyProfileModal={handleShowModifyProfileModal}
+          isTweetActive={isTweetActive}
+          handleTweetActive={handleTweetActive}
+          handleReplyActive={handleReplyActive}
+          tweets={tweets}
+          replys={replys}
+          back={back}
+          sortCriteria={sortCriteria}
+          handleSortCriteria={handleSortCriteria}
+          sortOrder={sortOrder}
+          handleSortOrder={handleSortOrder}
+          resetCriteria={resetCriteria}
+          setIsTweetDeleted={setIsTweetDeleted}
+          setIsReplyDeleted={setIsReplyDeleted}
+        />
+      </Container>
       <ModifyProfile
         defaultAvatarURL={defaultAvatarURL}
         defaultBackgroundURL={defaultBackgroundURL}
@@ -1115,6 +1117,6 @@ export default function Profile() {
           }
         />
       )}
-    </Container>
+    </>
   );
 }

@@ -29,7 +29,7 @@ export default function SideBarNavPost({
   return (
     <StyledPost
       title="Post"
-      className="btn btn-primary rounded-circle d-flex justify-content-center align-items-center border-0"
+      className="btn btn-primary rounded-circle d-flex justify-content-center align-items-center border-0 mb-3"
       onClick={handleShowCreateTweetModal}
     >
       <svg
