@@ -23,8 +23,8 @@ export const ScrollBtn = styled.div`
   height: 60px;
   position: fixed;
   display: inline-grid;
-  right: 1%;
-  bottom: 15%;
+  right: 5%;
+  bottom: 10%;
   z-index: 1;
 `;
 

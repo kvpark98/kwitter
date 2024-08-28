@@ -1,4 +1,3 @@
-import ScrollHome from "../../scrolls/scrollHome";
 import Reply, {
   IReply,
 } from "../../tweets/query/detail/reply/query/detail/reply";
@@ -30,7 +29,6 @@ export default function UserReplyList({
           />
         );
       })}
-      <ScrollHome />
     </div>
   );
 }

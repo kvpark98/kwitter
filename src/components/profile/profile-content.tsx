@@ -1,4 +1,3 @@
-import ScrollProfile from "../scrolls/scrollProfile";
 import { User } from "firebase/auth";
 import { ITweet } from "../tweets/query/detail/tweet";
 import ProfileHeader from "./profile-header";
@@ -10,6 +9,8 @@ import UserTweetList from "./user-tweet-list/user-tweet-list";
 import { IReply } from "../tweets/query/detail/reply/query/detail/reply";
 import NoReply from "../tweets/no-reply";
 import UserReplyList from "./user-reply-list/user-reply-list";
+import ScrollProfile from "../scrolls/scrollProfile";
+import { useRef } from "react";
 
 export interface ProfileContentProps {
   user: User | null;
@@ -50,8 +51,14 @@ export default function ProfileContent({
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: ProfileContentProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="overflow-y-auto h-100 bg-light" style={{ width: "630px" }}>
+    <div
+      ref={scrollContainerRef}
+      className="overflow-y-auto h-100 bg-light"
+      style={{ width: "630px" }}
+    >
       <ProfileHeader user={user} back={back} />
       <ProfileImages avatar={avatar} background={background} />
       <ProfileEditButton
@@ -86,7 +93,7 @@ export default function ProfileContent({
       )}
       {isTweetActive && tweets.length === 0 && <NoTweet />}
       {!isTweetActive && replys.length === 0 && <NoReply />}
-      <ScrollProfile />
+      <ScrollProfile scrollContainerRef={scrollContainerRef} />
     </div>
   );
 }

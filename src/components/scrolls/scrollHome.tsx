@@ -2,27 +2,39 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Bottom, ScrollBtn, Top } from "../styles/auth-components";
 
-export default function ScrollHome() {
+export interface ScrollHomeProps {
+  scrollContainerRef: React.RefObject<HTMLDivElement>;
+}
+
+export default function ScrollHome({ scrollContainerRef }: ScrollHomeProps) {
   const [showButton, setShowButton] = useState(false);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   const scrollToBottom = () => {
-    window.scroll(0, document.body.scrollHeight);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
-  console.log(document.body.scrollHeight);
-
   useEffect(() => {
-    const handleShowButton = () => {
-      const scrollLocation = window.scrollY;
+    const scrollContainer = scrollContainerRef.current;
 
-      scrollLocation > 100 ? setShowButton(true) : setShowButton(false);
+    if (!scrollContainer) return;
+
+    const handleShowButton = () => {
+      const scrollLocation = scrollContainer.scrollTop;
+      setShowButton(scrollLocation > 100);
 
       window.sessionStorage.setItem(
         "homeScrollLocation",
@@ -33,17 +45,17 @@ export default function ScrollHome() {
     const homeScrollLocation =
       window.sessionStorage.getItem("homeScrollLocation");
 
-    window.scrollTo(0, Number(homeScrollLocation));
+    if (homeScrollLocation && scrollContainer) {
+      scrollContainer.scrollTo(0, Number(homeScrollLocation));
+    }
 
-    const timer = setInterval(() => {
-      window.addEventListener("scroll", handleShowButton);
-    }, 100);
+    scrollContainer.addEventListener("scroll", handleShowButton);
 
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
-      clearInterval(timer);
-      window.removeEventListener("scroll", handleShowButton);
+      scrollContainer.removeEventListener("scroll", handleShowButton);
     };
-  }, [document.body.scrollHeight]);
+  }, []);
 
   return (
     showButton && (

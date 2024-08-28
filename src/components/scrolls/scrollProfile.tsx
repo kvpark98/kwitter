@@ -2,45 +2,61 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Bottom, ScrollBtn, Top } from "../styles/auth-components";
 
-export default function ScrollProfile() {
+export interface ScrollProfileProps {
+  scrollContainerRef: React.RefObject<HTMLDivElement>;
+}
+
+export default function ScrollProfile({
+  scrollContainerRef,
+}: ScrollProfileProps) {
   const [showButton, setShowButton] = useState(false);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   const scrollToBottom = () => {
-    window.scroll(0, document.body.scrollHeight);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
   useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+
+    if (!scrollContainer) return;
+
     const handleShowButton = () => {
-      const scrollLocation = window.scrollY;
+      const scrollLocation = scrollContainer.scrollTop;
+      setShowButton(scrollLocation > 100);
 
       window.sessionStorage.setItem(
         "profileScrollLocation",
         scrollLocation.toString()
       );
-
-      scrollLocation > 100 ? setShowButton(true) : setShowButton(false);
     };
 
     const profileScrollLocation = window.sessionStorage.getItem(
       "profileScrollLocation"
     );
 
-    window.scrollTo(0, Number(profileScrollLocation));
+    if (profileScrollLocation && scrollContainer) {
+      scrollContainer.scrollTo(0, Number(profileScrollLocation));
+    }
 
-    const timer = setInterval(() => {
-      window.addEventListener("scroll", handleShowButton);
-    }, 100);
+    scrollContainer.addEventListener("scroll", handleShowButton);
 
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
     return () => {
-      clearInterval(timer);
-      window.removeEventListener("scroll", handleShowButton);
+      scrollContainer.removeEventListener("scroll", handleShowButton);
     };
   }, []);
 

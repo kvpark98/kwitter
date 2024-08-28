@@ -2,6 +2,7 @@ import Tweet, { ITweet } from "../detail/tweet";
 import NoTweet from "../../no-tweet";
 import TweetListHeader from "./tweet-list-header";
 import ScrollHome from "../../../scrolls/scrollHome";
+import { useRef } from "react";
 
 export interface TweetListProps {
   tweets: ITweet[];
@@ -26,8 +27,14 @@ export default function TweetList({
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: TweetListProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className="overflow-y-auto bg-light h-100" style={{ width: "630px" }}>
+    <div
+      ref={scrollContainerRef}
+      className="overflow-y-auto bg-light h-100"
+      style={{ width: "630px" }}
+    >
       <TweetListHeader
         tweets={tweets}
         back={back}
@@ -53,7 +60,7 @@ export default function TweetList({
       ) : (
         <NoTweet />
       )}
-      <ScrollHome />
+      <ScrollHome scrollContainerRef={scrollContainerRef} />
     </div>
   );
 }
