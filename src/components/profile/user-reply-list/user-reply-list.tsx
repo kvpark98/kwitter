@@ -17,7 +17,7 @@ export default function UserReplyList({
   setIsReplyDeleted,
 }: UserReplyListProps) {
   return (
-    <div className="pt-2">
+    <div>
       {replys.map((reply) => {
         return (
           <Reply

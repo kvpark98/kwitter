@@ -31,7 +31,7 @@ export default function ModifyTweetBody({
     <Alert
       variant="light"
       className="overflow-y-auto border-0 m-0 p-4"
-      style={{ maxHeight: "600px" }}
+      style={{ maxHeight: "500px" }}
     >
       <div className="d-flex w-100">
         <UserProfile />

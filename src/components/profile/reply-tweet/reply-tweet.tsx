@@ -32,7 +32,7 @@ export default function ReplyTweet({
         handleCloseReplyTweetModal={handleCloseReplyTweetModal}
       />
       {tweets.length !== 0 ? (
-        <div>
+        <div className="overflow-y-auto" style={{ maxHeight: "500px" }}>
           {tweets.map((tweet) => {
             return (
               <Tweet

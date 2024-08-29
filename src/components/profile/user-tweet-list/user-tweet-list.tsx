@@ -12,7 +12,7 @@ export default function UserTweetList({
   setIsReplyDeleted,
 }: UserTweetListProps) {
   return (
-    <div className="pt-2">
+    <div>
       {tweets.map((tweet) => {
         return (
           <Tweet

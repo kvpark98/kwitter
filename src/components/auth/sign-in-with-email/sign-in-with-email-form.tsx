@@ -29,7 +29,8 @@ export default function SignInWithEmailForm({
     <Form onSubmit={signInWithEmail}>
       <Alert
         variant="light"
-        className="d-flex flex-column row-gap-3 border-0 m-0 p-4 w-100"
+        className="overflow-y-auto d-flex flex-column row-gap-3 border-0 m-0 p-4 w-100"
+        style={{ maxHeight: "500px" }}
       >
         <SignInWithEmailEmail
           emailInputRef={emailInputRef}

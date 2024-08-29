@@ -67,8 +67,8 @@ export default function ModifyProfileForm({
     <Form className="w-100" onSubmit={modifyProfile}>
       <Alert
         variant="light"
-        className="m-0 p-4 overflow-y-auto border-0"
-        style={{ maxHeight: "600px" }}
+        className="overflow-y-auto border-0 m-0 p-4"
+        style={{ maxHeight: "500px" }}
       >
         <ModifyProfileImages
           defaultAvatarURL={defaultAvatarURL}

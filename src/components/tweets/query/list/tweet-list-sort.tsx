@@ -1,9 +1,7 @@
-import { ButtonGroup } from "react-bootstrap";
-import TweetListSortCriteria from "./tweet-list-sort-criteria";
-import TweetListSortOrder from "./tweet-list-sort-order";
-import TweetListResetCriteria from "./tweet-list-reset-criteria";
+import { Navbar } from "react-bootstrap";
+import TweetListFilter from "./tweet-list-filter";
 
-export interface TweetListFilterProps {
+export interface TweetListSortProps {
   isTweetActive?: boolean;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -12,26 +10,27 @@ export interface TweetListFilterProps {
   resetCriteria: () => void;
 }
 
-export default function TweetListFilter({
+export default function TweetListSort({
   isTweetActive,
   sortCriteria,
   handleSortCriteria,
   sortOrder,
   handleSortOrder,
   resetCriteria,
-}: TweetListFilterProps) {
+}: TweetListSortProps) {
   return (
-    <ButtonGroup className="me-2">
-      <TweetListSortCriteria
+    <Navbar
+      bg="light"
+      className="d-flex justify-content-end align-items-center"
+    >
+      <TweetListFilter
         isTweetActive={isTweetActive}
         sortCriteria={sortCriteria}
         handleSortCriteria={handleSortCriteria}
-      />
-      <TweetListSortOrder
         sortOrder={sortOrder}
         handleSortOrder={handleSortOrder}
+        resetCriteria={resetCriteria}
       />
-      <TweetListResetCriteria resetCriteria={resetCriteria} />
-    </ButtonGroup>
+    </Navbar>
   );
 }

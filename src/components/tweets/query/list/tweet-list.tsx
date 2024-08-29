@@ -3,6 +3,7 @@ import NoTweet from "../../no-tweet";
 import TweetListHeader from "./tweet-list-header";
 import ScrollHome from "../../../scrolls/scrollHome";
 import { useRef } from "react";
+import TweetListSort from "./tweet-list-sort";
 
 export interface TweetListProps {
   tweets: ITweet[];
@@ -35,24 +36,25 @@ export default function TweetList({
       className="overflow-y-auto bg-light h-100"
       style={{ width: "630px" }}
     >
-      <TweetListHeader
-        tweets={tweets}
-        back={back}
-        sortCriteria={sortCriteria}
-        handleSortCriteria={handleSortCriteria}
-        sortOrder={sortOrder}
-        handleSortOrder={handleSortOrder}
-        resetCriteria={resetCriteria}
-      />
+      <TweetListHeader tweets={tweets} back={back} />
+      {tweets.length !== 0 && (
+        <TweetListSort
+          sortCriteria={sortCriteria}
+          handleSortCriteria={handleSortCriteria}
+          sortOrder={sortOrder}
+          handleSortOrder={handleSortOrder}
+          resetCriteria={resetCriteria}
+        />
+      )}
       {tweets.length !== 0 ? (
         <div>
           {tweets.map((tweet) => {
             return (
               <Tweet
                 key={tweet.id}
-                {...tweet}
                 setIsTweetDeleted={setIsTweetDeleted}
                 setIsReplyDeleted={setIsReplyDeleted}
+                {...tweet}
               />
             );
           })}

@@ -11,6 +11,7 @@ import NoReply from "../tweets/no-reply";
 import UserReplyList from "./user-reply-list/user-reply-list";
 import ScrollProfile from "../scrolls/scrollProfile";
 import { useRef } from "react";
+import ProfileSort from "./profile-sort";
 
 export interface ProfileContentProps {
   user: User | null;
@@ -65,9 +66,13 @@ export default function ProfileContent({
         handleShowModifyProfileModal={handleShowModifyProfileModal}
       />
       <ProfileNav
-        isTweetActive={isTweetActive}
         handleTweetActive={handleTweetActive}
         handleReplyActive={handleReplyActive}
+        tweets={tweets}
+        replys={replys}
+      />
+      <ProfileSort
+        isTweetActive={isTweetActive}
         tweets={tweets}
         replys={replys}
         sortCriteria={sortCriteria}
