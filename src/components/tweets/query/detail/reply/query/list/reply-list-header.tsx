@@ -14,7 +14,7 @@ export default function ReplyListHeader({
     <Navbar className="bg-body-light rounded-top border-bottom">
       <Container>
         <Navbar.Brand className="me-0 fw-bold">
-          Replys ({replys.length})
+          Replies ({replys.length})
         </Navbar.Brand>
         <CloseButton onClick={handleCloseReplyListModal} />
       </Container>

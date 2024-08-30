@@ -21,11 +21,16 @@ export default function SideBarNav({
   handleShowCreateTweetModal,
 }: SideBarNavProps) {
   return (
-    <Offcanvas show={showSidebar} onHide={handleCloseSidebar} backdrop={true}>
+    <Offcanvas
+      show={showSidebar}
+      onHide={handleCloseSidebar}
+      backdrop={true}
+      style={{ width: "84px" }}
+    >
       <Offcanvas.Header>
         <SideBarLogo />
       </Offcanvas.Header>
-      <Offcanvas.Body style={{ width: "84px" }}>
+      <Offcanvas.Body>
         <Nav className="nav-pills flex-column gap-2 fs-5">
           <SideBarNavHome />
           <SideBarNavProfile />

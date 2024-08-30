@@ -34,7 +34,7 @@ export default function ProfileNav({
           eventKey="replys"
           className="d-flex justify-content-center align-items-center"
         >
-          Replys ({replys.length})
+          Replies ({replys.length})
         </Nav.Link>
       </Nav.Item>
     </Nav>
