@@ -21,12 +21,7 @@ export default function SideBarNav({
   handleShowCreateTweetModal,
 }: SideBarNavProps) {
   return (
-    <Offcanvas
-      show={showSidebar}
-      onHide={handleCloseSidebar}
-      backdrop={false}
-      scroll={true}
-    >
+    <Offcanvas show={showSidebar} onHide={handleCloseSidebar} backdrop={true}>
       <Offcanvas.Header>
         <SideBarLogo />
       </Offcanvas.Header>
