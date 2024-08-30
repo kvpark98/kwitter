@@ -1,6 +1,7 @@
 import { ListGroup } from "react-bootstrap";
 import AccountChangePassword from "./account-change-password";
 import AccountDeleteAccount from "./account-delete-account";
+import Header from "../tweets/header";
 
 export interface AccountContentProps {
   handleShowChangePasswordModal: () => void;
@@ -12,13 +13,16 @@ export default function AccountContent({
   handleShowDeleteAccountModal,
 }: AccountContentProps) {
   return (
-    <ListGroup>
-      <AccountChangePassword
-        handleShowChangePasswordModal={handleShowChangePasswordModal}
-      />
-      <AccountDeleteAccount
-        handleShowDeleteAccountModal={handleShowDeleteAccountModal}
-      />
-    </ListGroup>
+    <div className="overflow-y-auto bg-light h-100" style={{ width: "700px" }}>
+      <Header />
+      <ListGroup>
+        <AccountChangePassword
+          handleShowChangePasswordModal={handleShowChangePasswordModal}
+        />
+        <AccountDeleteAccount
+          handleShowDeleteAccountModal={handleShowDeleteAccountModal}
+        />
+      </ListGroup>
+    </div>
   );
 }

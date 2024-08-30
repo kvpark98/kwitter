@@ -12,8 +12,6 @@ import { Container } from "react-bootstrap";
 import AccountContent from "../components/account/account-content";
 import ChangePassword from "../components/account/change-password/change-password";
 import DeleteAccount from "../components/account/delete-account/delete-account";
-import AccountHeader from "../components/account/account-header";
-import SideBar from "../components/sidebar/side-bar";
 import { StorageError, deleteObject, ref } from "firebase/storage";
 import {
   FirestoreError,
@@ -403,10 +401,6 @@ export default function Account() {
     }
   };
 
-  const back = () => {
-    navigate(-1);
-  };
-
   const reset = () => {
     setCurrentPassword("");
     setNewPassword("");
@@ -748,17 +742,10 @@ export default function Account() {
   return (
     <>
       <Container fluid className="d-flex justify-content-center h-100 p-0">
-        <SideBar />
-        <div
-          className="overflow-y-auto bg-light h-100"
-          style={{ width: "630px" }}
-        >
-          <AccountHeader back={back} />
-          <AccountContent
-            handleShowChangePasswordModal={handleShowChangePasswordModal}
-            handleShowDeleteAccountModal={handleShowDeleteAccountModal}
-          />
-        </div>
+        <AccountContent
+          handleShowChangePasswordModal={handleShowChangePasswordModal}
+          handleShowDeleteAccountModal={handleShowDeleteAccountModal}
+        />
       </Container>
       <ChangePassword
         showChangePasswordModal={showChangePasswordModal}

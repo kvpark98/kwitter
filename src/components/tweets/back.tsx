@@ -1,10 +1,10 @@
 import { Button } from "react-bootstrap";
 
-export interface AccountBackProps {
+export interface BackProps {
   back: () => void;
 }
 
-export default function AccountBack({ back }: AccountBackProps) {
+export default function Back({ back }: BackProps) {
   return (
     <Button
       type="button"

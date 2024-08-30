@@ -2,21 +2,9 @@ import styled from "@emotion/styled";
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledLogo = styled.div`
-  @media screen and (min-width: 700px) {
-    width: 52px !important;
-    height: 52px !important;
-    padding: 11px !important;
-  }
-  @media screen and (max-width: 700px) {
-    width: 48px !important;
-    height: 48px !important;
-    padding: 9px !important;
-  }
-  @media screen and (max-width: 600px) {
-    width: 46px !important;
-    height: 46px !important;
-    padding: 8px !important;
-  }
+  width: 52px !important;
+  height: 52px !important;
+  padding: 11px !important;
 `;
 
 export default function SideBarLogo() {

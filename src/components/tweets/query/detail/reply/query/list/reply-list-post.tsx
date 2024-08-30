@@ -14,7 +14,7 @@ export default function ReplyListPost({
       className="fw-bold rounded-pill"
       onClick={handleShowCreateReplyModal}
     >
-      Post reply
+      Post
     </Button>
   );
 }

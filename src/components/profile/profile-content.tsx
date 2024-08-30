@@ -1,6 +1,5 @@
 import { User } from "firebase/auth";
 import { ITweet } from "../tweets/query/detail/tweet";
-import ProfileHeader from "./profile-header";
 import ProfileImages from "./profile-images";
 import ProfileEditButton from "./profile-edit-button";
 import ProfileNav from "./profile-nav";
@@ -12,9 +11,10 @@ import UserReplyList from "./user-reply-list/user-reply-list";
 import ScrollProfile from "../scrolls/scrollProfile";
 import { useRef } from "react";
 import ProfileSort from "./profile-sort";
+import Header from "../tweets/header";
 
 export interface ProfileContentProps {
-  user: User | null;
+  user?: User | null;
   avatar: string | null | undefined;
   background: string;
   handleShowModifyProfileModal: () => void;
@@ -23,7 +23,6 @@ export interface ProfileContentProps {
   handleReplyActive: () => void;
   tweets: ITweet[];
   replys: IReply[];
-  back: () => void;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
@@ -43,7 +42,6 @@ export default function ProfileContent({
   handleReplyActive,
   tweets,
   replys,
-  back,
   sortCriteria,
   handleSortCriteria,
   sortOrder,
@@ -58,9 +56,9 @@ export default function ProfileContent({
     <div
       ref={scrollContainerRef}
       className="overflow-y-auto h-100 bg-light"
-      style={{ width: "630px" }}
+      style={{ width: "700px" }}
     >
-      <ProfileHeader user={user} back={back} />
+      <Header user={user} />
       <ProfileImages avatar={avatar} background={background} />
       <ProfileEditButton
         handleShowModifyProfileModal={handleShowModifyProfileModal}

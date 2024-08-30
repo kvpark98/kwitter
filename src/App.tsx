@@ -99,6 +99,9 @@ const GlobalStyles = createGlobalStyle`
   .dropend .dropdown-toggle::after {
     display: none;
   }
+  .offcanvas.offcanvas-start {
+    width: 84px;
+  }
 `;
 
 const router = createBrowserRouter([

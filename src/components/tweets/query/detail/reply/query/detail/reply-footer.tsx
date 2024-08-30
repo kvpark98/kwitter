@@ -4,7 +4,7 @@ import ReplyLikesButton from "./reply-likes-button";
 import ReplyTweetButton from "./reply-tweet-button";
 
 export interface ReplyFooterProps {
-  user: User | null;
+  user?: User | null;
   replyUserId: string;
   likeCount: number;
   isLike: boolean;

@@ -3,7 +3,7 @@ import { User } from "firebase/auth";
 import ReplyDropdown from "./reply-dropdown";
 
 export interface ReplyBodyContentProps {
-  user: User | null;
+  user?: User | null;
   timeAgo: string | undefined;
   reply: string;
   replyUserId: string;

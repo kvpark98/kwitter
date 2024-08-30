@@ -4,7 +4,7 @@ import ReplyBodyProfile from "./reply-body-profile";
 import ReplyBodyContent from "./reply-body-content";
 
 export interface ReplyBodyProps {
-  user: User | null;
+  user?: User | null;
   replyAvatar: string;
   timeAgo: string | undefined;
   reply: string;

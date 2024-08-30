@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { User } from "firebase/auth";
 
 export interface ReplyBodyProfileProps {
-  user: User | null;
+  user?: User | null;
   replyAvatar: string;
   replyUserId: string;
   replyUsername: string;

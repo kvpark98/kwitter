@@ -3,21 +3,9 @@ import styled from "@emotion/styled";
 
 // 미디어 쿼리를 사용하여 스타일 정의
 const StyledHome = styled.div`
-  @media screen and (min-width: 700px) {
-    width: 52px !important;
-    height: 52px !important;
-    padding: 16px !important;
-  }
-  @media screen and (max-width: 700px) {
-    width: 48px !important;
-    height: 48px !important;
-    padding: 14px !important;
-  }
-  @media screen and (max-width: 500px) {
-    width: 46px !important;
-    height: 46px !important;
-    padding: 13px !important;
-  }
+  width: 52px !important;
+  height: 52px !important;
+  padding: 16px !important;
 `;
 
 export default function SideBarNavHome() {

@@ -25,12 +25,10 @@ import {
 import ProfileContent from "../components/profile/profile-content";
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import { Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import CropAvatarModal from "../components/profile/crop-modal/avatar/crop-avatar-modal";
 import CropBackgroundModal from "../components/profile/crop-modal/background/crop-background-modal";
 import ModifyProfile from "../components/profile/modify-profile/modify/modify-profile";
 import ModifyProfileDiscardModal from "../components/profile/discard-modal/modify-profile-discard-modal";
-import SideBar from "../components/sidebar/side-bar";
 import ModifyProfileErrorModal from "../components/modals/error/modify-profile-error-modal";
 import ModifyProfileSuccessModal from "../components/modals/success/modify-profile-success-modal";
 import { debounce } from "lodash";
@@ -51,8 +49,6 @@ export default function Profile() {
 
   const defaultAvatarURL = "/person-circle.svg";
   const defaultBackgroundURL = "/default-background.png";
-
-  const navigate = useNavigate();
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -384,10 +380,6 @@ export default function Profile() {
     };
   };
 
-  const back = () => {
-    navigate(-1);
-  };
-
   const checkUsername = async (username: string) => {
     const usernameQuery = query(
       collection(db, "users"),
@@ -396,9 +388,15 @@ export default function Profile() {
     const usernameSnapshot = await getDocs(usernameQuery);
 
     if (!usernameSnapshot.empty) {
-      setNameErrorMessage("This username is already in use.");
-      setIsName(false);
-      nameInputRef.current?.classList.add("form-control-invalid");
+      if (user.displayName === username) {
+        setNameErrorMessage("");
+        setIsName(true);
+        nameInputRef.current?.classList.remove("form-control-invalid");
+      } else {
+        setNameErrorMessage("This username is already in use.");
+        setIsName(false);
+        nameInputRef.current?.classList.add("form-control-invalid");
+      }
     } else {
       setIsName(true);
       nameInputRef.current?.classList.remove("form-control-invalid");
@@ -1011,7 +1009,6 @@ export default function Profile() {
   return (
     <>
       <Container fluid className="d-flex justify-content-center h-100 p-0">
-        <SideBar />
         <ProfileContent
           user={user}
           avatar={avatar}
@@ -1022,7 +1019,6 @@ export default function Profile() {
           handleReplyActive={handleReplyActive}
           tweets={tweets}
           replys={replys}
-          back={back}
           sortCriteria={sortCriteria}
           handleSortCriteria={handleSortCriteria}
           sortOrder={sortOrder}

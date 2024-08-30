@@ -4,7 +4,7 @@ import Reply, {
 import { User } from "firebase/auth";
 
 export interface UserReplyListProps {
-  user: User | null;
+  user?: User | null;
   replys: IReply[];
   isTweetActive?: boolean;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;

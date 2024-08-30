@@ -40,7 +40,7 @@ export interface IReply {
 }
 
 export interface ReplyProps {
-  user: User | null;
+  user?: User | null;
   id: string;
   timeAgo: string | undefined;
   tweetId: string;

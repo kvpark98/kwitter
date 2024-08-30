@@ -27,7 +27,6 @@ import { FirebaseError } from "firebase/app";
 import CreateCropPhotoModal from "../components/tweets/create/create-crop-modal/create-crop-photo-modal";
 import CreateTweetDiscardModal from "../components/tweets/create/create-tweet-discard-modal/create-tweet-discard-modal";
 import { useNavigate } from "react-router-dom";
-import SideBar from "../components/sidebar/side-bar";
 import { ITweet } from "../components/tweets/query/detail/tweet";
 import CreateTweetErrorModal from "../components/modals/error/create-tweet-error-modal";
 import CreateTweetSuccessModal from "../components/modals/success/create-tweet-success-modal";
@@ -694,10 +693,6 @@ export default function Home() {
     setError("");
   };
 
-  const back = () => {
-    navigate(-1);
-  };
-
   const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -833,10 +828,8 @@ export default function Home() {
   return (
     <>
       <Container fluid className="d-flex justify-content-center h-100 p-0">
-        <SideBar handleShowCreateTweetModal={handleShowCreateTweetModal} />
         <TweetList
           tweets={tweets}
-          back={back}
           sortCriteria={sortCriteria}
           handleSortCriteria={handleSortCriteria}
           sortOrder={sortOrder}
@@ -844,6 +837,7 @@ export default function Home() {
           resetCriteria={resetCriteria}
           setIsTweetDeleted={setIsTweetDeleted}
           setIsReplyDeleted={setIsReplyDeleted}
+          handleShowCreateTweetModal={handleShowCreateTweetModal}
         />
       </Container>
       <ResetPassword
