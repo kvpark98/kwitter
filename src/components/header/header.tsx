@@ -1,11 +1,12 @@
-import { Button, Navbar } from "react-bootstrap";
-import { ITweet } from "./query/detail/tweet";
+import { Navbar } from "react-bootstrap";
+import { ITweet } from "../tweets/query/detail/tweet";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SideBar from "../sidebar/side-bar";
 import Back from "./back";
-import Title from "./title";
 import { User } from "firebase/auth";
+import Title from "./title";
+import Menu from "./menu";
 
 export interface HeaderProps {
   user?: User | null;
@@ -34,9 +35,7 @@ export default function Header({
       <Navbar bg="dark" className="d-flex align-items-center" sticky="top">
         <Back back={back} />
         <Title user={user} tweets={tweets} />
-        <Button variant="light" onClick={toggleShowSidebar} className="me-2">
-          Sidebar
-        </Button>
+        <Menu toggleShowSidebar={toggleShowSidebar} />
       </Navbar>
       <SideBar
         showSidebar={showSidebar}

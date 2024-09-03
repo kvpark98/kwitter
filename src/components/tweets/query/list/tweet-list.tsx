@@ -3,7 +3,7 @@ import NoTweet from "../../no-tweet";
 import ScrollHome from "../../../scrolls/scrollHome";
 import { useRef } from "react";
 import TweetListSort from "./tweet-list-sort";
-import Header from "../../header";
+import Header from "../../../header/header";
 
 export interface TweetListProps {
   tweets: ITweet[];

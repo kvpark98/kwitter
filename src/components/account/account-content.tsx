@@ -1,7 +1,7 @@
 import { ListGroup } from "react-bootstrap";
 import AccountChangePassword from "./account-change-password";
 import AccountDeleteAccount from "./account-delete-account";
-import Header from "../tweets/header";
+import Header from "../header/header";
 
 export interface AccountContentProps {
   handleShowChangePasswordModal: () => void;

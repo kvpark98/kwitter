@@ -11,7 +11,7 @@ import UserReplyList from "./user-reply-list/user-reply-list";
 import ScrollProfile from "../scrolls/scrollProfile";
 import { useRef } from "react";
 import ProfileSort from "./profile-sort";
-import Header from "../tweets/header";
+import Header from "../header/header";
 
 export interface ProfileContentProps {
   user?: User | null;
