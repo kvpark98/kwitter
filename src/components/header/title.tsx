@@ -13,7 +13,7 @@ export default function Title({ user, tweets }: TitleProps) {
         {!(
           window.location.href.includes("profile") ||
           window.location.href.includes("account")
-        ) && `${tweets?.length} Tweets`}
+        ) && `${tweets?.length} Tweet(s)`}
         {window.location.href.includes("profile") && user?.displayName}
         {window.location.href.includes("account") && "Account"}
       </h1>
