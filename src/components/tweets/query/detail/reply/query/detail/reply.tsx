@@ -156,7 +156,8 @@ export default function Reply({
 
   getIsLike();
 
-  const getReplyLikeCount = async () => {
+  // 댓글의 좋아요 수를 가져오는 함수
+  const getReplyLikeCount = async (): Promise<number> => {
     try {
       const likeCountQuery = query(
         collection(db, "replyLikes"),
@@ -164,24 +165,44 @@ export default function Reply({
       );
 
       const likeCountSnapshot = await getDocs(likeCountQuery);
-      const likeCount = likeCountSnapshot.size || 0;
+      const newLikeCount = likeCountSnapshot.size || 0;
+      setLikeCount(newLikeCount);
 
-      setLikeCount(likeCount);
+      return newLikeCount; // 반환값 추가
+    } catch (error) {
+      console.error("Error getting ReplyLike count:", error);
+      return 0; // 에러 발생 시 0 반환
+    }
+  };
 
+  // 댓글의 좋아요 수를 업데이트하는 함수
+  const updateReplyLikeCount = async (newLikeCount: number) => {
+    try {
       const replyDocRef = doc(db, "replys", id);
       const replyDocSnapshot = await getDoc(replyDocRef);
 
       if (replyDocSnapshot.exists()) {
-        await updateDoc(doc(db, "replys", id), {
-          totalLikes: likeCount,
+        await updateDoc(replyDocRef, {
+          totalLikes: newLikeCount,
         });
       }
     } catch (error) {
-      console.error("Error updating like count:", error);
+      console.error("Error updating ReplyLike count:", error);
     }
   };
 
-  getReplyLikeCount();
+  useEffect(() => {
+    const updateReplyCounts = async () => {
+      try {
+        const newLikeCount = await getReplyLikeCount();
+        await updateReplyLikeCount(newLikeCount);
+      } catch (error) {
+        console.error("Error updating reply counts:", error);
+      }
+    };
+
+    updateReplyCounts();
+  }, [id]);
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.

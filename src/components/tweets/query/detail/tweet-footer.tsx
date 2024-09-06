@@ -26,10 +26,10 @@ export default function TweetFooter({
   return (
     <Navbar
       {...(user?.uid === tweetUserId
-        ? { className: "flex-fill bg-primary-subtle" }
-        : { className: "flex-fill bg-body-light" })}
+        ? { className: "flex-fill bg-primary-subtle py-3" }
+        : { className: "flex-fill bg-body-light py-3" })}
     >
-      <Container className="d-flex">
+      <Container className="d-flex px-3" fluid>
         <div className="d-flex justify-content-between w-100">
           <TweetReplyListButton
             replys={replys}

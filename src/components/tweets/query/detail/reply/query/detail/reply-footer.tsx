@@ -25,10 +25,10 @@ export default function ReplyFooter({
   return (
     <Navbar
       {...(user?.uid === replyUserId
-        ? { className: "flex-fill bg-primary-subtle" }
-        : { className: "flex-fill bg-body-light" })}
+        ? { className: "flex-fill bg-primary-subtle py-3" }
+        : { className: "flex-fill bg-body-light py-3" })}
     >
-      <Container className="d-flex">
+      <Container className="d-flex px-3" fluid>
         <div
           className={
             window.location.href.includes("profile") && isTweetActive === false

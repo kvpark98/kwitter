@@ -174,6 +174,7 @@ export default function Tweet({
 
   getIsLike();
 
+  // 트윗의 좋아요 수를 가져오는 함수
   const getTweetLikeCount = async () => {
     try {
       const likeCountQuery = query(
@@ -182,25 +183,17 @@ export default function Tweet({
       );
 
       const likeCountSnapshot = await getDocs(likeCountQuery);
-      const likeCount = likeCountSnapshot.size || 0;
+      const newLikeCount = likeCountSnapshot.size || 0;
+      setLikeCount(newLikeCount);
 
-      setLikeCount(likeCount);
-
-      const tweetDocRef = doc(db, "tweets", id);
-      const tweetDocSnapshot = await getDoc(tweetDocRef);
-
-      if (tweetDocSnapshot.exists()) {
-        await updateDoc(doc(db, "tweets", id), {
-          totalLikes: likeCount,
-        });
-      }
+      return newLikeCount; // 반환값 추가
     } catch (error) {
-      console.error("Error updating like count:", error);
+      console.error("Error getting TweetLike count:", error);
+      return 0; // 에러 발생 시 0 반환
     }
   };
 
-  getTweetLikeCount();
-
+  // 트윗의 댓글 수를 가져오는 함수
   const getReplyCount = async () => {
     try {
       const replyCountQuery = query(
@@ -209,24 +202,39 @@ export default function Tweet({
       );
 
       const replyCountSnapshot = await getDocs(replyCountQuery);
-      const replyCount = replyCountSnapshot.size || 0;
+      const newReplyCount = replyCountSnapshot.size || 0;
+      setReplyCount(newReplyCount);
 
-      setReplyCount(replyCount);
-
-      const tweetDocRef = doc(db, "tweets", id);
-      const tweetDocSnapshot = await getDoc(tweetDocRef);
-
-      if (tweetDocSnapshot.exists()) {
-        await updateDoc(tweetDocRef, {
-          totalReplys: replyCount,
-        });
-      }
+      return newReplyCount; // 반환값 추가
     } catch (error) {
-      console.error("Error updating reply count:", error);
+      console.error("Error getting reply count:", error);
+      return 0; // 에러 발생 시 0 반환
     }
   };
 
-  getReplyCount();
+  useEffect(() => {
+    // 트윗의 좋아요 수를 업데이트하는 함수
+    const updateTweetCounts = async () => {
+      try {
+        const newLikeCount = await getTweetLikeCount();
+        const newReplyCount = await getReplyCount();
+
+        const tweetDocRef = doc(db, "tweets", id);
+        const tweetDocSnapshot = await getDoc(tweetDocRef);
+
+        if (tweetDocSnapshot.exists()) {
+          await updateDoc(tweetDocRef, {
+            totalLikes: newLikeCount,
+            totalReplys: newReplyCount,
+          });
+        }
+      } catch (error) {
+        console.error("Error updating tweet counts:", error);
+      }
+    };
+
+    updateTweetCounts();
+  }, [id]);
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
