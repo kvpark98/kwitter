@@ -396,7 +396,7 @@ export default function Home() {
     const fetchTweets = async () => {
       const getOrderByField = (sortCriteria: string): string => {
         switch (sortCriteria) {
-          case "Replys":
+          case "Replies":
             return "totalReplys";
           case "Likes":
             return "totalLikes";

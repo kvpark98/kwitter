@@ -66,6 +66,15 @@ export interface TweetProps {
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface ITweetLikes {
+  id: string;
+  createdAt: string;
+  isLike: boolean;
+  likeUserId: string;
+  tweetId: string;
+  tweetUserId: string;
+}
+
 export default function Tweet({
   id,
   timeAgo,
@@ -106,17 +115,17 @@ export default function Tweet({
 
   const [replys, setReplys] = useState<IReply[]>([]);
 
+  const [tweetLikes, setTweetLikes] = useState<ITweetLikes[]>([]);
+
   const [reply, setReply] = useState("");
+
+  const [replyCount, setReplyCount] = useState(0);
 
   const [isReply, setIsReply] = useState(false);
 
   const [likeCount, setLikeCount] = useState(0);
 
   const [isLike, setIsLike] = useState(false);
-
-  const [replyCount, setReplyCount] = useState(0);
-
-  console.log(replyCount);
 
   const [isProcessing, setIsProcessing] = useState(false); // 비동기 작업 보호 플래그
 
@@ -174,67 +183,31 @@ export default function Tweet({
 
   getIsLike();
 
-  // 트윗의 좋아요 수를 가져오는 함수
-  const getTweetLikeCount = async () => {
-    try {
-      const likeCountQuery = query(
-        collection(db, "tweetLikes"),
-        where("tweetId", "==", id)
-      );
-
-      const likeCountSnapshot = await getDocs(likeCountQuery);
-      const newLikeCount = likeCountSnapshot.size || 0;
-      setLikeCount(newLikeCount);
-
-      return newLikeCount; // 반환값 추가
-    } catch (error) {
-      console.error("Error getting TweetLike count:", error);
-      return 0; // 에러 발생 시 0 반환
-    }
-  };
-
-  // 트윗의 댓글 수를 가져오는 함수
-  const getReplyCount = async () => {
-    try {
-      const replyCountQuery = query(
-        collection(db, "replys"),
-        where("tweetId", "==", id)
-      );
-
-      const replyCountSnapshot = await getDocs(replyCountQuery);
-      const newReplyCount = replyCountSnapshot.size || 0;
-      setReplyCount(newReplyCount);
-
-      return newReplyCount; // 반환값 추가
-    } catch (error) {
-      console.error("Error getting reply count:", error);
-      return 0; // 에러 발생 시 0 반환
-    }
-  };
-
   useEffect(() => {
-    // 트윗의 좋아요 수를 업데이트하는 함수
+    setLikeCount(tweetLikes.length);
+    setReplyCount(replys.length);
+  }, [tweetLikes, replys]);
+
+  // 트윗의 좋아요 수와 댓글 수를 Firestore에 업데이트하는 함수
+  useEffect(() => {
     const updateTweetCounts = async () => {
       try {
-        const newLikeCount = await getTweetLikeCount();
-        const newReplyCount = await getReplyCount();
-
         const tweetDocRef = doc(db, "tweets", id);
         const tweetDocSnapshot = await getDoc(tweetDocRef);
 
         if (tweetDocSnapshot.exists()) {
           await updateDoc(tweetDocRef, {
-            totalLikes: newLikeCount,
-            totalReplys: newReplyCount,
+            totalLikes: likeCount,
+            totalReplys: replyCount,
           });
         }
       } catch (error) {
-        console.error("Error updating tweet counts:", error);
+        console.error("Error updating tweetLikes or reply counts:", error);
       }
     };
 
     updateTweetCounts();
-  }, [id]);
+  }, [likeCount, replyCount]);
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
@@ -273,7 +246,6 @@ export default function Tweet({
           await deleteDoc(doc.ref);
         });
         setIsLike(false);
-        setLikeCount((current) => current - 1);
       } else {
         // 좋아요 추가
         await addDoc(collection(db, "tweetLikes"), {
@@ -284,10 +256,9 @@ export default function Tweet({
           likeUserId: user.uid,
         });
         setIsLike(true);
-        setLikeCount((current) => current + 1);
       }
     } catch (error) {
-      console.error("Error handling likes: ", error);
+      console.error("Error handling tweetLikes: ", error);
     } finally {
       setIsProcessing(false); // 작업 완료 후 플래그 해제
     }
@@ -899,6 +870,43 @@ export default function Tweet({
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
   }, [sortCriteria, sortOrder]);
+
+  // 컴포넌트가 마운트될 때 tweetLikes를 Firestore에서 가져오기
+  useEffect(() => {
+    let unsubscribe: Unsubscribe | null = null;
+
+    const fetchTweetLikes = async () => {
+      const tweetLikesQuery = query(
+        collection(db, "tweetLikes"),
+        where("tweetId", "==", id)
+      );
+
+      // 실시간으로 트윗 좋아요 업데이트 수신
+      unsubscribe = onSnapshot(tweetLikesQuery, (snapshot) => {
+        const tweetLikes = snapshot.docs.map((doc) => {
+          const { createdAt, isLike, likeUserId, tweetId, tweetUserId } =
+            doc.data();
+
+          return {
+            id: doc.id,
+            createdAt,
+            isLike,
+            likeUserId,
+            tweetId,
+            tweetUserId,
+          };
+        });
+
+        setTweetLikes(tweetLikes); // 상태 업데이트
+      });
+    };
+
+    fetchTweetLikes();
+
+    return () => {
+      unsubscribe && unsubscribe(); // 구독 해제
+    };
+  }, [id]);
 
   const createReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

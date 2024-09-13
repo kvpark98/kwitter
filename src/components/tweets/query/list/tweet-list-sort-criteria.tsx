@@ -20,7 +20,7 @@ export default function TweetListSortCriteria({
     >
       <Dropdown.Item onClick={handleSortCriteria}>Date</Dropdown.Item>
       {(!window.location.href.includes("profile") || isTweetActive) && (
-        <Dropdown.Item onClick={handleSortCriteria}>Replys</Dropdown.Item>
+        <Dropdown.Item onClick={handleSortCriteria}>Replies</Dropdown.Item>
       )}
       <Dropdown.Item onClick={handleSortCriteria}>Likes</Dropdown.Item>
     </DropdownButton>

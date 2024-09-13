@@ -4,12 +4,14 @@ import ReplyBody from "./reply-body";
 import { useEffect, useRef, useState } from "react";
 import {
   FirestoreError,
+  Unsubscribe,
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   updateDoc,
   where,
@@ -53,6 +55,17 @@ export interface ReplyProps {
   isShowReplyTweetModal?: boolean;
 }
 
+export interface IReplyLikes {
+  id: string;
+  createdAt: string;
+  isLike: boolean;
+  likeUserId: string;
+  replyId: string;
+  replyUserId: string;
+  tweetId: string;
+  tweetUserId: string;
+}
+
 export default function Reply({
   user,
   id,
@@ -73,6 +86,8 @@ export default function Reply({
   const [isLoading, setIsLoading] = useState(false);
 
   const [tweets, setTweets] = useState<ITweet[]>([]);
+
+  const [replyLikes, setReplyLikes] = useState<IReplyLikes[]>([]);
 
   const [replyAvatar, setReplyAvatar] = useState(defaultAvatarURL);
 
@@ -136,6 +151,52 @@ export default function Reply({
     getTweets();
   }, []);
 
+  // 컴포넌트가 마운트될 때 replyLikes를 Firestore에서 가져오기
+  useEffect(() => {
+    let unsubscribe: Unsubscribe | null = null;
+
+    const fetchReplyLikes = async () => {
+      const replyLikesQuery = query(
+        collection(db, "replyLikes"),
+        where("replyId", "==", id)
+      );
+
+      // 실시간으로 댓글 좋아요 업데이트 수신
+      unsubscribe = onSnapshot(replyLikesQuery, (snapshot) => {
+        const replyLikes = snapshot.docs.map((doc) => {
+          const {
+            createdAt,
+            isLike,
+            likeUserId,
+            replyId,
+            replyUserId,
+            tweetId,
+            tweetUserId,
+          } = doc.data();
+
+          return {
+            id: doc.id,
+            createdAt,
+            isLike,
+            likeUserId,
+            replyId,
+            replyUserId,
+            tweetId,
+            tweetUserId,
+          };
+        });
+
+        setReplyLikes(replyLikes); // 상태 업데이트
+      });
+    };
+
+    fetchReplyLikes();
+
+    return () => {
+      unsubscribe && unsubscribe(); // 구독 해제
+    };
+  }, [id]);
+
   const getIsLike = async () => {
     const isLikeQuery = query(
       collection(db, "replyLikes"),
@@ -156,53 +217,29 @@ export default function Reply({
 
   getIsLike();
 
-  // 댓글의 좋아요 수를 가져오는 함수
-  const getReplyLikeCount = async (): Promise<number> => {
-    try {
-      const likeCountQuery = query(
-        collection(db, "replyLikes"),
-        where("replyId", "==", id)
-      );
+  useEffect(() => {
+    setLikeCount(replyLikes.length);
+  }, [replyLikes]);
 
-      const likeCountSnapshot = await getDocs(likeCountQuery);
-      const newLikeCount = likeCountSnapshot.size || 0;
-      setLikeCount(newLikeCount);
-
-      return newLikeCount; // 반환값 추가
-    } catch (error) {
-      console.error("Error getting ReplyLike count:", error);
-      return 0; // 에러 발생 시 0 반환
-    }
-  };
-
-  // 댓글의 좋아요 수를 업데이트하는 함수
-  const updateReplyLikeCount = async (newLikeCount: number) => {
-    try {
-      const replyDocRef = doc(db, "replys", id);
-      const replyDocSnapshot = await getDoc(replyDocRef);
-
-      if (replyDocSnapshot.exists()) {
-        await updateDoc(replyDocRef, {
-          totalLikes: newLikeCount,
-        });
-      }
-    } catch (error) {
-      console.error("Error updating ReplyLike count:", error);
-    }
-  };
-
+  // 댓글의 좋아요 수를 Firestore에 업데이트하는 함수
   useEffect(() => {
     const updateReplyCounts = async () => {
       try {
-        const newLikeCount = await getReplyLikeCount();
-        await updateReplyLikeCount(newLikeCount);
+        const replyDocRef = doc(db, "replys", id);
+        const replyDocSnapshot = await getDoc(replyDocRef);
+
+        if (replyDocSnapshot.exists()) {
+          await updateDoc(replyDocRef, {
+            totalLikes: likeCount,
+          });
+        }
       } catch (error) {
-        console.error("Error updating reply counts:", error);
+        console.error("Error updating replyLikes counts:", error);
       }
     };
 
     updateReplyCounts();
-  }, [id]);
+  }, [likeCount]);
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
@@ -241,7 +278,6 @@ export default function Reply({
           await deleteDoc(doc.ref);
         });
         setIsLike(false);
-        setLikeCount((current) => current - 1);
       } else {
         // 좋아요 추가
         await addDoc(collection(db, "replyLikes"), {
@@ -254,10 +290,9 @@ export default function Reply({
           likeUserId: user?.uid,
         });
         setIsLike(true);
-        setLikeCount((current) => current + 1);
       }
     } catch (error) {
-      console.error("Error handling likes: ", error);
+      console.error("Error handling replyLikes: ", error);
     } finally {
       setIsProcessing(false); // 작업 완료 후 플래그 해제
     }
