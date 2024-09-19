@@ -1,7 +1,6 @@
 import { Card } from "react-bootstrap";
 import TweetBody from "./tweet-body";
 import { User } from "firebase/auth";
-import { IReply } from "./reply/query/detail/reply";
 import TweetFooter from "./tweet-footer";
 
 export interface TweetCardProps {
@@ -15,7 +14,7 @@ export interface TweetCardProps {
   likeCount: number;
   isLike: boolean;
   debouncedHandleLikes: (...args: any[]) => void;
-  replys: IReply[];
+  replyCount: number;
   showReplyTweetModal?: boolean;
   handleShowModifyTweetModal: () => void;
   handleShowDeleteTweetModal: () => void;
@@ -33,7 +32,7 @@ export default function TweetCard({
   likeCount,
   isLike,
   debouncedHandleLikes,
-  replys,
+  replyCount,
   showReplyTweetModal,
   handleShowModifyTweetModal,
   handleShowDeleteTweetModal,
@@ -59,7 +58,7 @@ export default function TweetCard({
         likeCount={likeCount}
         isLike={isLike}
         debouncedHandleLikes={debouncedHandleLikes}
-        replys={replys}
+        replyCount={replyCount}
         handleShowReplyListModal={handleShowReplyListModal}
       />
     </Card>

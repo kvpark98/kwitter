@@ -2,7 +2,6 @@ import { Navbar } from "react-bootstrap";
 import TweetListFilter from "./tweet-list-filter";
 
 export interface TweetListSortProps {
-  isTweetActive?: boolean;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
@@ -11,7 +10,6 @@ export interface TweetListSortProps {
 }
 
 export default function TweetListSort({
-  isTweetActive,
   sortCriteria,
   handleSortCriteria,
   sortOrder,
@@ -24,7 +22,6 @@ export default function TweetListSort({
       className="d-flex justify-content-end align-items-center"
     >
       <TweetListFilter
-        isTweetActive={isTweetActive}
         sortCriteria={sortCriteria}
         handleSortCriteria={handleSortCriteria}
         sortOrder={sortOrder}

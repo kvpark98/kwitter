@@ -32,7 +32,6 @@ export default function ProfileSort({
       {((isTweetActive && tweets.length !== 0) ||
         (!isTweetActive && replys.length !== 0)) && (
         <TweetListFilter
-          isTweetActive={isTweetActive}
           sortCriteria={sortCriteria}
           handleSortCriteria={handleSortCriteria}
           sortOrder={sortOrder}

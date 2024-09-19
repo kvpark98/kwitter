@@ -396,10 +396,6 @@ export default function Home() {
     const fetchTweets = async () => {
       const getOrderByField = (sortCriteria: string): string => {
         switch (sortCriteria) {
-          case "Replies":
-            return "totalReplys";
-          case "Likes":
-            return "totalLikes";
           case "Date":
           default:
             return "createdAt";
@@ -416,19 +412,12 @@ export default function Home() {
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
-      unsubscribe = await onSnapshot(tweetQuery, (snapshot) => {
+      unsubscribe = onSnapshot(tweetQuery, (snapshot) => {
         // 스냅샷을 tweet 배열로 변환
         const tweets = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
-          const {
-            createdAt,
-            message,
-            photo,
-            tweetUserId,
-            tweetUsername,
-            totalReplys,
-            totalLikes,
-          } = doc.data();
+          const { createdAt, message, photo, tweetUserId, tweetUsername } =
+            doc.data();
 
           // 새로운 tweet 객체 생성
           return {
@@ -439,8 +428,6 @@ export default function Home() {
             photo,
             tweetUserId,
             tweetUsername,
-            totalReplys,
-            totalLikes,
           };
         });
         // 상태 업데이트
@@ -448,7 +435,6 @@ export default function Home() {
       });
     };
 
-    // fetchTweets 함수 호출
     fetchTweets();
 
     // 컴포넌트가 언마운트되면 Firestore 구독 해제
@@ -759,8 +745,6 @@ export default function Home() {
         createdAt: Date.now(),
         tweetUserId: user.uid,
         tweetUsername: user.displayName || "Anonymous",
-        totalReplys: 0,
-        totalLikes: 0,
       });
 
       // 생성된 문서의 고유 ID 가져오기

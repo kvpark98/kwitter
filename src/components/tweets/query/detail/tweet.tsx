@@ -8,7 +8,6 @@ import {
   deleteDoc,
   deleteField,
   doc,
-  getDoc,
   getDocs,
   onSnapshot,
   orderBy,
@@ -48,8 +47,6 @@ export interface ITweet {
   photo?: string;
   tweetUserId: string;
   tweetUsername: string;
-  totalReplys: number;
-  totalLikes: number;
 }
 
 export interface TweetProps {
@@ -187,27 +184,6 @@ export default function Tweet({
     setLikeCount(tweetLikes.length);
     setReplyCount(replys.length);
   }, [tweetLikes, replys]);
-
-  // 트윗의 좋아요 수와 댓글 수를 Firestore에 업데이트하는 함수
-  useEffect(() => {
-    const updateTweetCounts = async () => {
-      try {
-        const tweetDocRef = doc(db, "tweets", id);
-        const tweetDocSnapshot = await getDoc(tweetDocRef);
-
-        if (tweetDocSnapshot.exists()) {
-          await updateDoc(tweetDocRef, {
-            totalLikes: likeCount,
-            totalReplys: replyCount,
-          });
-        }
-      } catch (error) {
-        console.error("Error updating tweetLikes or reply counts:", error);
-      }
-    };
-
-    updateTweetCounts();
-  }, []);
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
@@ -812,8 +788,6 @@ export default function Tweet({
     const fetchReplys = async () => {
       const getOrderByField = (sortCriteria: string): string => {
         switch (sortCriteria) {
-          case "Likes":
-            return "totalLikes";
           case "Date":
           default:
             return "createdAt";
@@ -830,7 +804,7 @@ export default function Tweet({
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
-      unsubscribe = await onSnapshot(replyQuery, (snapshot) => {
+      unsubscribe = onSnapshot(replyQuery, (snapshot) => {
         // 스냅샷을 reply 배열로 변환
         const replys = snapshot.docs.map((doc) => {
           // Firestore 문서에서 필요한 데이터 추출
@@ -841,7 +815,6 @@ export default function Tweet({
             replyUsername,
             tweetId,
             tweetUserId,
-            totalLikes,
           } = doc.data();
 
           // 새로운 reply 객체 생성
@@ -854,7 +827,6 @@ export default function Tweet({
             replyUsername,
             tweetId,
             tweetUserId,
-            totalLikes,
           };
         });
         // 상태 업데이트
@@ -906,7 +878,7 @@ export default function Tweet({
     return () => {
       unsubscribe && unsubscribe(); // 구독 해제
     };
-  }, [id]);
+  }, []);
 
   const createReply = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -927,7 +899,6 @@ export default function Tweet({
         reply: reply,
         replyUserId: user.uid,
         replyUsername: user.displayName,
-        totalLikes: 0,
       });
 
       // 생성된 문서의 고유 ID 가져오기
@@ -967,7 +938,7 @@ export default function Tweet({
         likeCount={likeCount}
         isLike={isLike}
         debouncedHandleLikes={debouncedHandleLikes}
-        replys={replys}
+        replyCount={replyCount}
         showReplyTweetModal={showReplyTweetModal}
         handleShowModifyTweetModal={handleShowModifyTweetModal}
         handleShowDeleteTweetModal={handleShowDeleteTweetModal}

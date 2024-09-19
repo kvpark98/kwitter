@@ -1,13 +1,11 @@
 import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 
 export interface TweetListSortCriteriaProps {
-  isTweetActive?: boolean;
   sortCriteria: string;
   handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function TweetListSortCriteria({
-  isTweetActive,
   sortCriteria,
   handleSortCriteria,
 }: TweetListSortCriteriaProps) {
@@ -19,10 +17,6 @@ export default function TweetListSortCriteria({
       title={sortCriteria}
     >
       <Dropdown.Item onClick={handleSortCriteria}>Date</Dropdown.Item>
-      {(!window.location.href.includes("profile") || isTweetActive) && (
-        <Dropdown.Item onClick={handleSortCriteria}>Replies</Dropdown.Item>
-      )}
-      <Dropdown.Item onClick={handleSortCriteria}>Likes</Dropdown.Item>
     </DropdownButton>
   );
 }

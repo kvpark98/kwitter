@@ -38,7 +38,6 @@ export interface IReply {
   reply: string;
   replyUserId: string;
   replyUsername: string;
-  totalLikes: number;
 }
 
 export interface ReplyProps {
@@ -125,15 +124,8 @@ export default function Reply({
 
       const tweetSnapshot = await getDocs(tweetQuery);
       const tweets = tweetSnapshot.docs.map((doc) => {
-        const {
-          createdAt,
-          message,
-          photo,
-          tweetUserId,
-          tweetUsername,
-          totalReplys,
-          totalLikes,
-        } = doc.data();
+        const { createdAt, message, photo, tweetUserId, tweetUsername } =
+          doc.data();
 
         return {
           id: doc.id,
@@ -142,8 +134,6 @@ export default function Reply({
           photo,
           tweetUserId,
           tweetUsername,
-          totalReplys,
-          totalLikes,
         };
       });
       setTweets(tweets);
@@ -185,17 +175,14 @@ export default function Reply({
             tweetUserId,
           };
         });
-
         setReplyLikes(replyLikes); // 상태 업데이트
       });
     };
-
     fetchReplyLikes();
-
     return () => {
       unsubscribe && unsubscribe(); // 구독 해제
     };
-  }, [id]);
+  }, []);
 
   const getIsLike = async () => {
     const isLikeQuery = query(
@@ -220,26 +207,6 @@ export default function Reply({
   useEffect(() => {
     setLikeCount(replyLikes.length);
   }, [replyLikes]);
-
-  // 댓글의 좋아요 수를 Firestore에 업데이트하는 함수
-  useEffect(() => {
-    const updateReplyCounts = async () => {
-      try {
-        const replyDocRef = doc(db, "replys", id);
-        const replyDocSnapshot = await getDoc(replyDocRef);
-
-        if (replyDocSnapshot.exists()) {
-          await updateDoc(replyDocRef, {
-            totalLikes: likeCount,
-          });
-        }
-      } catch (error) {
-        console.error("Error updating replyLikes counts:", error);
-      }
-    };
-
-    updateReplyCounts();
-  }, []);
 
   // debounce 함수: 주어진 시간 동안 이벤트를 무시하고, 마지막 호출만 실행하는 함수
   // debounce 함수는 연속적인 호출을 관리하고, 마지막 호출만 유효하게 처리할 수 있다. 따라서, 사용자가 빠르게 여러 번 클릭할 때 마지막 클릭만이 실제로 처리되어 예기치 않은 동작을 방지할 수 있다.
