@@ -175,7 +175,7 @@ export default function Reply({
             tweetUserId,
           };
         });
-        setReplyLikes(replyLikes); // 상태 업데이트
+        setReplyLikes(replyLikes);
       });
     };
     fetchReplyLikes();

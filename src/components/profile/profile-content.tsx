@@ -23,11 +23,8 @@ export interface ProfileContentProps {
   handleReplyActive: () => void;
   tweets: ITweet[];
   replys: IReply[];
-  sortCriteria: string;
-  handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
   handleSortOrder: () => void;
-  resetCriteria: () => void;
   setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -42,11 +39,8 @@ export default function ProfileContent({
   handleReplyActive,
   tweets,
   replys,
-  sortCriteria,
-  handleSortCriteria,
   sortOrder,
   handleSortOrder,
-  resetCriteria,
   setIsTweetDeleted,
   setIsReplyDeleted,
 }: ProfileContentProps) {
@@ -73,11 +67,8 @@ export default function ProfileContent({
         isTweetActive={isTweetActive}
         tweets={tweets}
         replys={replys}
-        sortCriteria={sortCriteria}
-        handleSortCriteria={handleSortCriteria}
         sortOrder={sortOrder}
         handleSortOrder={handleSortOrder}
-        resetCriteria={resetCriteria}
       />
       {isTweetActive && tweets.length !== 0 && (
         <UserTweetList

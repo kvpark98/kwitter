@@ -7,22 +7,16 @@ export interface ReplyListFooterProps {
   replys: IReply[];
   isOpenReplyTweetModal?: boolean;
   handleShowCreateReplyModal: () => void;
-  sortCriteria: string;
-  handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
   handleSortOrder: () => void;
-  resetCriteria: () => void;
 }
 
 export default function ReplyListFooter({
   replys,
   isOpenReplyTweetModal,
   handleShowCreateReplyModal,
-  sortCriteria,
-  handleSortCriteria,
   sortOrder,
   handleSortOrder,
-  resetCriteria,
 }: ReplyListFooterProps) {
   return (
     <Navbar className="flex-fill rounded-bottom bg-body-light border-top">
@@ -36,11 +30,8 @@ export default function ReplyListFooter({
         >
           {replys.length !== 0 && (
             <ReplyListFilter
-              sortCriteria={sortCriteria}
-              handleSortCriteria={handleSortCriteria}
               sortOrder={sortOrder}
               handleSortOrder={handleSortOrder}
-              resetCriteria={resetCriteria}
             />
           )}
           {!isOpenReplyTweetModal && (

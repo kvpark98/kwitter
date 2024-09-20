@@ -98,17 +98,6 @@ export default function Profile() {
 
   const [isReplyDeleted, setIsReplyDeleted] = useState(false);
 
-  const [sortCriteria, setSortCriteria] = useState("Date");
-
-  const handleSortCriteria = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setSortCriteria(event.currentTarget.innerText);
-  };
-
-  const resetCriteria = () => {
-    setSortCriteria("Date");
-    setSortOrder(true);
-  };
-
   const [sortOrder, setSortOrder] = useState(true);
 
   const handleSortOrder = () => {
@@ -119,13 +108,11 @@ export default function Profile() {
 
   const handleTweetActive = () => {
     setIsTweetActive(true);
-    setSortCriteria("Date");
     setSortOrder(true);
   };
 
   const handleReplyActive = () => {
     setIsTweetActive(false);
-    setSortCriteria("Date");
     setSortOrder(true);
   };
 
@@ -846,26 +833,12 @@ export default function Profile() {
 
     // 사용자의 트윗을 가져오는 함수 정의
     const fetchUserTweets = async () => {
-      const getOrderByField = (sortCriteria: string): string => {
-        switch (sortCriteria) {
-          case "Replys":
-            return "totalReplys";
-          case "Likes":
-            return "totalLikes";
-          case "Date":
-          default:
-            return "createdAt";
-        }
-      };
-
-      const orderByField = getOrderByField(sortCriteria);
       const orderDirection = sortOrder ? "desc" : "asc";
 
-      // Firestore 쿼리 생성
       const tweetQuery = query(
         collection(db, "tweets"),
         where("tweetUserId", "==", user?.uid),
-        orderBy(orderByField, orderDirection)
+        orderBy("createdAt", orderDirection)
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
@@ -896,41 +869,26 @@ export default function Profile() {
             totalLikes,
           };
         });
-        // 상태 업데이트
         setTweets(tweets);
       });
     };
-
-    // fetchUserTweets 함수 호출
     fetchUserTweets();
-
     // 컴포넌트가 언마운트될 때 Firestore 구독 해제
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
-  }, [sortCriteria, sortOrder]);
+  }, [sortOrder]);
 
   useEffect(() => {
     let unsubscribe: Unsubscribe | null = null;
 
     const fetchUserReplys = async () => {
-      const getOrderByField = (sortCriteria: string): string => {
-        switch (sortCriteria) {
-          case "Likes":
-            return "totalLikes";
-          case "Date":
-          default:
-            return "createdAt";
-        }
-      };
-
-      const orderByField = getOrderByField(sortCriteria);
       const orderDirection = sortOrder ? "desc" : "asc";
 
       const replyQuery = query(
         collection(db, "replys"),
         where("replyUserId", "==", user?.uid),
-        orderBy(orderByField, orderDirection)
+        orderBy("createdAt", orderDirection)
       );
 
       unsubscribe = onSnapshot(replyQuery, (snapshot) => {
@@ -960,13 +918,11 @@ export default function Profile() {
         setReplys(replys);
       });
     };
-
     fetchUserReplys();
-
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [sortCriteria, sortOrder]);
+  }, [sortOrder]);
 
   // 컴포넌트가 마운트될 때 background 가져오기
   useEffect(() => {
@@ -996,10 +952,7 @@ export default function Profile() {
         }
       });
     };
-
-    // fetchUserBackground 함수 호출
     fetchUserBackground();
-
     // 컴포넌트가 언마운트될 때 Firestore 구독 해제
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
@@ -1019,11 +972,8 @@ export default function Profile() {
           handleReplyActive={handleReplyActive}
           tweets={tweets}
           replys={replys}
-          sortCriteria={sortCriteria}
-          handleSortCriteria={handleSortCriteria}
           sortOrder={sortOrder}
           handleSortOrder={handleSortOrder}
-          resetCriteria={resetCriteria}
           setIsTweetDeleted={setIsTweetDeleted}
           setIsReplyDeleted={setIsReplyDeleted}
         />

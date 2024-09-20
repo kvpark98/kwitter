@@ -7,22 +7,16 @@ export interface ProfileSortProps {
   isTweetActive: boolean;
   tweets: ITweet[];
   replys: IReply[];
-  sortCriteria: string;
-  handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
   handleSortOrder: () => void;
-  resetCriteria: () => void;
 }
 
 export default function ProfileSort({
   isTweetActive,
   tweets,
   replys,
-  sortCriteria,
-  handleSortCriteria,
   sortOrder,
   handleSortOrder,
-  resetCriteria,
 }: ProfileSortProps) {
   return (
     <Navbar
@@ -32,11 +26,8 @@ export default function ProfileSort({
       {((isTweetActive && tweets.length !== 0) ||
         (!isTweetActive && replys.length !== 0)) && (
         <TweetListFilter
-          sortCriteria={sortCriteria}
-          handleSortCriteria={handleSortCriteria}
           sortOrder={sortOrder}
           handleSortOrder={handleSortOrder}
-          resetCriteria={resetCriteria}
         />
       )}
     </Navbar>

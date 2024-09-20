@@ -182,17 +182,6 @@ export default function Home() {
     setIsReplyDeleted(false);
   };
 
-  const [sortCriteria, setSortCriteria] = useState("Date");
-
-  const handleSortCriteria = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setSortCriteria(event.currentTarget.innerText);
-  };
-
-  const resetCriteria = () => {
-    setSortCriteria("Date");
-    setSortOrder(true);
-  };
-
   const [sortOrder, setSortOrder] = useState(true);
 
   const handleSortOrder = () => {
@@ -394,21 +383,11 @@ export default function Home() {
     let unsubscribe: Unsubscribe | null = null;
 
     const fetchTweets = async () => {
-      const getOrderByField = (sortCriteria: string): string => {
-        switch (sortCriteria) {
-          case "Date":
-          default:
-            return "createdAt";
-        }
-      };
-
-      const orderByField = getOrderByField(sortCriteria);
       const orderDirection = sortOrder ? "desc" : "asc";
 
-      // Firestore 쿼리 생성
       const tweetQuery = query(
         collection(db, "tweets"),
-        orderBy(orderByField, orderDirection)
+        orderBy("createdAt", orderDirection)
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
@@ -430,18 +409,15 @@ export default function Home() {
             tweetUsername,
           };
         });
-        // 상태 업데이트
         setTweets(tweets);
       });
     };
-
     fetchTweets();
-
     // 컴포넌트가 언마운트되면 Firestore 구독 해제
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
-  }, [sortCriteria, sortOrder]);
+  }, [sortOrder]);
 
   const changePasswordType = () => {
     setPasswordInputType((current) => !current);
@@ -741,8 +717,8 @@ export default function Home() {
 
       // Firestore에 새로운 문서 추가
       const doc = await addDoc(collection(db, "tweets"), {
-        message: message,
         createdAt: Date.now(),
+        message: message,
         tweetUserId: user.uid,
         tweetUsername: user.displayName || "Anonymous",
       });
@@ -814,11 +790,8 @@ export default function Home() {
       <Container fluid className="d-flex justify-content-center h-100 p-0">
         <TweetList
           tweets={tweets}
-          sortCriteria={sortCriteria}
-          handleSortCriteria={handleSortCriteria}
           sortOrder={sortOrder}
           handleSortOrder={handleSortOrder}
-          resetCriteria={resetCriteria}
           setIsTweetDeleted={setIsTweetDeleted}
           setIsReplyDeleted={setIsReplyDeleted}
           handleShowCreateTweetModal={handleShowCreateTweetModal}

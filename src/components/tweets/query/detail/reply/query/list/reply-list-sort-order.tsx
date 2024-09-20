@@ -12,7 +12,7 @@ export default function ReplyListSortOrder({
   return (
     <Button
       variant="dark"
-      title={sortOrder ? "Descending order" : "Ascending order"}
+      title={sortOrder ? "Latest" : "Oldest"}
       onClick={handleSortOrder}
     >
       {sortOrder ? (

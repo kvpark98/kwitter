@@ -128,17 +128,6 @@ export default function Tweet({
 
   const [error, setError] = useState("");
 
-  const [sortCriteria, setSortCriteria] = useState("Date");
-
-  const handleSortCriteria = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setSortCriteria(event.currentTarget.innerText);
-  };
-
-  const resetCriteria = () => {
-    setSortCriteria("Date");
-    setSortOrder(true);
-  };
-
   const [sortOrder, setSortOrder] = useState(true);
 
   const handleSortOrder = () => {
@@ -383,7 +372,7 @@ export default function Tweet({
   };
   const handleCloseReplyListModal = () => {
     setShowReplyListModal(false);
-    resetCriteria();
+    setSortOrder(true);
   };
 
   const [crop, setCrop] = useState({ x: 0, y: 0 }); // 이미지 자르는 위치
@@ -786,21 +775,12 @@ export default function Tweet({
     let unsubscribe: Unsubscribe | null = null;
 
     const fetchReplys = async () => {
-      const getOrderByField = (sortCriteria: string): string => {
-        switch (sortCriteria) {
-          case "Date":
-          default:
-            return "createdAt";
-        }
-      };
-
-      const orderByField = getOrderByField(sortCriteria);
       const orderDirection = sortOrder ? "desc" : "asc";
 
       const replyQuery = query(
         collection(db, "replys"),
         where("tweetId", "==", id),
-        orderBy(orderByField, orderDirection)
+        orderBy("createdAt", orderDirection)
       );
 
       // 실시간 업데이트를 수신하기 위해 onSnapshot 이벤트 리스너 등록
@@ -829,19 +809,15 @@ export default function Tweet({
             tweetUserId,
           };
         });
-        // 상태 업데이트
         setReplys(replys);
       });
     };
-
-    // fetchReplys 함수 호출
     fetchReplys();
-
     // 컴포넌트가 언마운트되면 Firestore 구독 해제
     return () => {
       unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
-  }, [sortCriteria, sortOrder]);
+  }, [sortOrder]);
 
   // 컴포넌트가 마운트될 때 tweetLikes를 Firestore에서 가져오기
   useEffect(() => {
@@ -868,15 +844,13 @@ export default function Tweet({
             tweetUserId,
           };
         });
-
-        setTweetLikes(tweetLikes); // 상태 업데이트
+        setTweetLikes(tweetLikes);
       });
     };
-
     fetchTweetLikes();
-
+    // 컴포넌트가 언마운트되면 Firestore 구독 해제
     return () => {
-      unsubscribe && unsubscribe(); // 구독 해제
+      unsubscribe && unsubscribe(); // 구독이 존재하면 해제
     };
   }, []);
 
@@ -1018,11 +992,8 @@ export default function Tweet({
         handleCloseReplyListModal={handleCloseReplyListModal}
         handleShowCreateReplyModal={handleShowCreateReplyModal}
         setIsReplyDeleted={setIsReplyDeleted}
-        sortCriteria={sortCriteria}
-        handleSortCriteria={handleSortCriteria}
         sortOrder={sortOrder}
         handleSortOrder={handleSortOrder}
-        resetCriteria={resetCriteria}
       />
       <CreateReply
         showCreateReplyModal={showCreateReplyModal}

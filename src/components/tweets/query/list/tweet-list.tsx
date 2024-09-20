@@ -7,11 +7,8 @@ import Header from "../../../header/header";
 
 export interface TweetListProps {
   tweets: ITweet[];
-  sortCriteria: string;
-  handleSortCriteria: (event: React.MouseEvent<HTMLButtonElement>) => void;
   sortOrder: boolean;
   handleSortOrder: () => void;
-  resetCriteria: () => void;
   setIsTweetDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   setIsReplyDeleted?: React.Dispatch<React.SetStateAction<boolean>>;
   handleShowCreateTweetModal?: () => void;
@@ -19,11 +16,8 @@ export interface TweetListProps {
 
 export default function TweetList({
   tweets,
-  sortCriteria,
-  handleSortCriteria,
   sortOrder,
   handleSortOrder,
-  resetCriteria,
   setIsTweetDeleted,
   setIsReplyDeleted,
   handleShowCreateTweetModal,
@@ -43,11 +37,8 @@ export default function TweetList({
       {tweets.length !== 0 ? (
         <>
           <TweetListSort
-            sortCriteria={sortCriteria}
-            handleSortCriteria={handleSortCriteria}
             sortOrder={sortOrder}
             handleSortOrder={handleSortOrder}
-            resetCriteria={resetCriteria}
           />
           <div>
             {tweets.map((tweet) => {
